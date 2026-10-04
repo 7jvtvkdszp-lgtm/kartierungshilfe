@@ -320,7 +320,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 17</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 18</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1025,7 +1025,7 @@ function obsPoint(o, ref) {
   return { id: o.id, la, lo, date: o.observed_on, x: !!o.obscured, acc: o.positional_accuracy || null,
     user: o.user ? o.user.login : '', own: o.user && o.user.login === settings.user, d: dist(ref, { la, lo }) };
 }
-const nearCache = new Map();
+const nearCache = new Map(store.get('near', [])); // gemerkt, damit nach einem Neustart der App nichts neu geladen werden muss
 // Liefert alle Funde im Quadranten und den nächsten Fund (genaue Koordinaten bevorzugt) im Umkreis bis 200 km
 async function nearestAll(s, Q, ref) {
   const key = s + '|' + Q.id + '|' + ref.lat.toFixed(3) + '|' + ref.lon.toFixed(3);
@@ -1049,6 +1049,7 @@ async function nearestAll(s, Q, ref) {
   const all = [...pts.values()].sort((a, c) => a.d - c.d);
   const res = { pts: all, best: exact()[0] || all[0] || null, inQ: all.filter(p => p.inQ).length };
   nearCache.set(key, res);
+  store.set('near', [...nearCache].slice(-15));
   return res;
 }
 const km = d => d < 1000 ? Math.round(d) + ' m' : (d / 1000).toFixed(1).replace('.', ',') + ' km';
@@ -1393,19 +1394,32 @@ $('btnTrip').onclick = async () => {
         if (isLifer(s)) { lscore += w; lifers.push([s, w]); } else score += w;
       }
       lifers.sort((a, b) => b[1] - a[1]);
-      return { Q, d, score, lscore, lifers: lifers.map(x => x[0]), open, now, cov: quadCoverage(Q.id) };
+      return { q: Q.id, d, score, lscore, lifers: lifers.map(x => x[0]), open, now, pct: quadCoverage(Q.id).pct ?? 0 };
     }).sort((a, b) => b.lscore - a.lscore || b.score - a.score).slice(0, 10);
-    st.textContent = rows.length ? `Die ${rows.length} lohnendsten Quadranten im Umkreis von ${radius} km:` : 'Keine Daten für diesen Umkreis.';
-    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.Q.id}"><span><b class="num">${r.Q.id}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.lifers.length ? `<b>${r.lifers.length} Lifer</b>: ${esc(r.lifers.slice(0, 3).join(', '))}${r.lifers.length > 3 ? ' …' : ''}<br>` : ''}${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.cov.pct ?? 0} %</span></span><span class="chips">${r.lifers.length ? `<span class="chip lifer num">${r.lifers.length}</span>` : ''}<span class="chip ok num">${Math.round(r.score + r.lscore)}</span></span></li>`).join('');
+    tripState = { radius, sea: !!sea, rows, t: Date.now() }; store.set('trip', tripState);
+    renderTrip();
+  } catch (e) {
+    st.textContent = e instanceof TypeError ? 'iNaturalist ist nicht erreichbar.' : e.message;
+  } finally { btn.disabled = false; }
+};
+// Ergebnis bleibt gespeichert, auch wenn das iPhone die App im Hintergrund beendet
+let tripState = store.get('trip', null);
+function renderTrip() {
+  const st = $('tripStatus'), out = $('tripList');
+  if (!tripState) return;
+  const { radius, rows } = tripState, sea = tripState.sea;
+  $('tripRadius').value = String(radius);
+  st.textContent = rows.length ? `Die ${rows.length} lohnendsten Quadranten im Umkreis von ${radius} km (Stand ${new Date(tripState.t).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}):` : 'Keine Daten für diesen Umkreis.';
+  {
+    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.q}"><span><b class="num">${r.q}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.lifers.length ? `<b>${r.lifers.length} Lifer</b>: ${esc(r.lifers.slice(0, 3).join(', '))}${r.lifers.length > 3 ? ' …' : ''}<br>` : ''}${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.pct} %</span></span><span class="chips">${r.lifers.length ? `<span class="chip lifer num">${r.lifers.length}</span>` : ''}<span class="chip ok num">${Math.round(r.score + r.lscore)}</span></span></li>`).join('');
     out.querySelectorAll('li.tap').forEach(li => li.onclick = () => {
       setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' });
       if (map) { const b = quadBounds(here); map.fitBounds([[b.s, b.w], [b.n, b.e]], { padding: [30, 30] }); }
       setListMode('miss'); showTab('list');
     });
-  } catch (e) {
-    st.textContent = e instanceof TypeError ? 'iNaturalist ist nicht erreichbar.' : e.message;
-  } finally { btn.disabled = false; }
-};
+  }
+}
+renderTrip();
 
 // ---------- Offene Bestimmungen ----------
 function renderOpenIds() {
@@ -1495,8 +1509,21 @@ buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
 statsReady = true; renderOpenIds(); renderYear();
+// Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
+const ui = store.get('ui', null);
+if (ui && Date.now() - ui.t < 12 * 3600e3) {
+  if (ui.cur) { current = ui.cur; $('q').value = ui.cur.s; lastQuery = ui.lastQuery || ''; $('back').hidden = !lastQuery || lastQuery === ui.cur.s; showResult(current); }
+  else if (ui.q) $('q').value = ui.q;
+  if (ui.filter) { $('listFilter').value = ui.filter; renderList(); }
+  setTimeout(() => window.scrollTo(0, ui.y || 0), 50);
+}
+function saveUi() { store.set('ui', { t: Date.now(), cur: current, lastQuery, q: $('q').value, filter: $('listFilter').value, y: window.scrollY }); }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveUi(); });
+window.addEventListener('pagehide', saveUi);
+document.addEventListener('click', e => { if (e.target.closest('a[target="_blank"]')) saveUi(); }, true);
 kvInit().then(() => {
   renderList(); drawGrid(); if (current) showResult(current);
+  if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here) locate(); else if (navigator.onLine) loadArea(false);
 });
 // Funde beim Öffnen automatisch abgleichen (höchstens alle 5 Minuten, nur mit Empfang)
