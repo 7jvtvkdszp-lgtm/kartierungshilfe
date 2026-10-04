@@ -284,7 +284,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="expStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 9</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 10</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -544,6 +544,7 @@ function showResult(cur) {
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
+      ${nbLine(cur.s)}
       ${extraLines(cur.s, !due)}
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a>
       ${dayButton(cur, due ? 'due' : 'ok')}</div>`;
@@ -554,8 +555,6 @@ function showResult(cur) {
   if (fuzzy.length) lines.push(fuzzy.length > 1
     ? `${fuzzy.length} Funde mit verschleierten Koordinaten liegen rechnerisch hier. Der echte Quadrant kann abweichen.`
     : '1 Fund mit verschleierten Koordinaten liegt rechnerisch hier. Der echte Quadrant kann abweichen.');
-  const inGf = [...new Set(all.filter(o => !o.x && o.k && o.k !== here.id && o.k.startsWith(here.gf + '/')).map(o => o.k))].sort();
-  if (inGf.length) lines.push(`Im Grundfeld ${here.gf} schon in ${inGf.join(', ')}.`);
   if (!all.length) lines.push('Diese Art hast du auf iNaturalist noch nirgends gemeldet.');
   else {
     const near = all.filter(o => o.la != null && !o.x).map(o => ({ o, d: dist(here, o) })).sort((a, b) => a.d - b.d)[0];
@@ -566,10 +565,27 @@ function showResult(cur) {
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+    ${nbLine(cur.s)}
     ${extraLines(cur.s, false)}
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}
     ${dayButton(cur, 'new')}</div>`;
   afterResult(cur, false);
+}
+// Funde der Art in den acht Nachbarquadranten: alle iNaturalist-Nutzer und eigene
+function nbLine(s) {
+  if (!here) return '';
+  const parts = []; let known = 0;
+  for (const [dr, dc] of NB) {
+    const Q = neighbour(here, dr, dc);
+    if (area[Q.id]) known++;
+    const n = area[Q.id]?.sp[s]?.[0] || 0;
+    const own = (index.byQuad.get(Q.id)?.get(s) || []).filter(o => !o.x);
+    if (!n && !own.length) continue;
+    const last = own.map(o => o.d).sort().pop();
+    parts.push(`<b>${Q.id}</b> ${n ? n + ' Beob.' : ''}${own.length ? `${n ? ', ' : ''}<span class="due" style="color:var(--found)">von dir ${last ? last.slice(0, 4) : ''}</span>` : ''}`);
+  }
+  if (!parts.length && !known) return '';
+  return `<div class="small">${parts.length ? `In den Nachbarquadranten (${parts.length} von 8): ${parts.join(' · ')}` : 'In keinem der acht Nachbarquadranten gemeldet.'}</div>`;
 }
 function dist(a, o) {
   const R = 6371000, toR = Math.PI / 180;
@@ -646,7 +662,7 @@ const mySpeciesIn = id => new Set([...(index.byQuad.get(id) || new Map())].filte
 function areaLine(s) {
   if (!here || !area[here.id]) return '';
   const c = chance(s, here);
-  return `Auf iNaturalist hier ${c.inQ ? c.inQ + ' Beobachtung' + (c.inQ > 1 ? 'en' : '') : 'noch nicht gemeldet'}, in ${c.nb} von 8 Nachbarquadranten. Fundchance ${c.pct} %.`;
+  return `Auf iNaturalist hier ${c.inQ ? c.inQ + ' Beobachtung' + (c.inQ > 1 ? 'en' : '') : 'noch nicht gemeldet'}. Fundchance ${c.pct} %.`;
 }
 
 let listMode = store.get('listMode', 'mine');
