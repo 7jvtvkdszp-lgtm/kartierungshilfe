@@ -1,5 +1,5 @@
 // Offline-Cache für die App-Dateien. Bei jeder Änderung an der App VERSION erhöhen.
-const VERSION = 'kh-4';
+const VERSION = 'kh-5';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

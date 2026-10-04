@@ -77,6 +77,13 @@ button { cursor: pointer }
 .chip.unsure { border: 1px solid var(--line); color: var(--muted) }
 .back { align-self: flex-start; border: 0; background: transparent; color: var(--accent); font-weight: 600; padding: 8px 0; min-height: 40px }
 .list li.ok .sci, .list li.ok .d { color: var(--found) }
+.list li.tap { cursor: pointer }
+.tabs.seg { grid-template-columns: repeat(2, 1fr) }
+.grid3 button .tot { font-size: 12px; opacity: .75 }
+.cover { display: flex; flex-direction: column; gap: 6px; font-size: 14px }
+.bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden }
+.bar div { height: 100%; background: var(--found) }
+.chance { display: flex; flex-direction: column; align-items: flex-end; gap: 3px }
 .list li.due .sci, .list li.due .d { color: var(--new) }
 
 .result { border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line) }
@@ -95,6 +102,8 @@ button { cursor: pointer }
 .panel h2 { font-size: 15px; margin: 0; letter-spacing: .02em }
 .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
 .row > input { flex: 1 1 160px; min-width: 0 }
+label.row { flex-wrap: nowrap; align-items: flex-start }
+label.row > input { flex: none; margin-top: 3px }
 
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px }
 .grid3 button { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 8px 4px; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px }
@@ -157,11 +166,20 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
   <section id="view-list" class="view" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="panel">
-        <h2>Umgebung <span class="muted small">Arten je Quadrant, tippen zum Wechseln</span></h2>
+        <h2>Umgebung <span class="muted small">deine Arten / alle auf iNaturalist, tippen zum Wechseln</span></h2>
         <div class="grid3" id="grid3"></div>
+        <div class="row"><button class="btn" id="btnArea">Umgebung von iNaturalist neu laden</button></div>
+        <div class="small muted" id="areaStatus"></div>
       </div>
       <div class="panel">
         <h2 id="listTitle">Schon gefundene Arten</h2>
+        <div class="cover" id="cover"></div>
+        <div class="tabs seg" role="tablist">
+          <button role="tab" id="mode-mine" aria-selected="true">Meine Arten</button>
+          <button role="tab" id="mode-miss" aria-selected="false">Noch nicht gefunden</button>
+        </div>
+        <label class="row small" id="nbWrap" hidden><input type="checkbox" id="withNb"> Auch Arten, die nur in Nachbarquadranten gemeldet sind</label>
+        <p class="small muted" id="chanceHint" style="margin:0" hidden>Fundchance: Zahl der Beobachtungen aller Nutzer im Quadranten (60 %) und Verbreitung in den acht Nachbarquadranten (40 %). Ein grober Richtwert, keine echte Wahrscheinlichkeit.</p>
         <input class="field" id="listFilter" placeholder="Liste filtern" autocomplete="off">
         <ul class="list" id="speciesList"></ul>
       </div>
@@ -315,6 +333,7 @@ function renderHead() {
 function setHere(h) {
   here = h; store.set('here', h);
   renderHead(); renderList(); if (current) showResult(current);
+  if (navigator.onLine) loadArea(false);
 }
 
 // ---------- GPS ----------
@@ -451,6 +470,7 @@ function showResult(cur) {
     el.innerHTML = `<div class="result ${due ? 'new' : 'found'}"><div class="verdict">${due ? 'Wieder kartieren in ' : 'Schon kartiert in '}${here.id}</div>${taxon}
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
+      ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
     return;
   }
@@ -467,6 +487,7 @@ function showResult(cur) {
     else if (here.lat != null) lines.push(`Nächster eigener Fund: ${near.o.k}, ${(near.d / 1000).toFixed(1).replace('.', ',')} km entfernt (${fmtDate(near.o.d)}).`);
     else lines.push(`Insgesamt ${all.length} eigene Funde in ${new Set(all.map(o => o.k)).size} Quadranten.`);
   }
+  if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
@@ -479,26 +500,129 @@ function dist(a, o) {
 }
 
 // ---------- Artenliste ----------
+// ---------- iNaturalist-Daten aller Nutzer je Quadrant ----------
+const NB = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+const AREA_MAX = 300, AREA_MAX_AGE = 30 * 864e5;
+let area = store.get('area', {}); // Quadrant -> { t, f, sp: { Art: [Beobachtungen, deutscher Name] } }
+let areaBusy = false;
+const areaOk = id => area[id] && area[id].f === filterKey();
+async function fetchQuadSpecies(Q) {
+  const b = quadBounds(Q), sp = {};
+  for (let page = 1; ; page++) {
+    const p = new URLSearchParams({ swlat: b.s, swlng: b.w, nelat: b.n, nelng: b.e, verifiable: 'true', per_page: '500', page: String(page), locale: 'de' });
+    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+    if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+    const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + p);
+    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+    const j = await r.json();
+    for (const { count, taxon: t } of j.results) {
+      if (!t || t.rank_level > 10) continue; // nur Arten und darunter
+      const n = speciesName(t.name, t.rank_level);
+      const e = sp[n] || (sp[n] = [0, '']);
+      e[0] += count;
+      if (t.rank_level === 10 && t.preferred_common_name) e[1] = t.preferred_common_name;
+    }
+    if (page * 500 >= j.total_results) break;
+    await sleep(1100);
+  }
+  return { t: new Date().toISOString(), f: filterKey(), sp };
+}
+async function loadArea(force) {
+  if (!here || areaBusy) return;
+  const center = here;
+  const quads = [center, ...NB.map(([dr, dc]) => neighbour(center, dr, dc))];
+  const todo = quads.filter(Q => force || !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE);
+  if (!todo.length) return;
+  areaBusy = true; $('btnArea').disabled = true;
+  const st = $('areaStatus');
+  try {
+    for (let i = 0; i < todo.length; i++) {
+      st.textContent = `Lade iNaturalist-Daten für ${todo[i].id} (${i + 1} von ${todo.length}) …`;
+      area[todo[i].id] = await fetchQuadSpecies(todo[i]);
+      const ids = Object.keys(area);
+      if (ids.length > AREA_MAX) ids.sort((a, b) => area[a].t.localeCompare(area[b].t)).slice(0, ids.length - AREA_MAX).forEach(id => delete area[id]);
+      store.set('area', area);
+      if (i < todo.length - 1) await sleep(1100);
+    }
+    st.textContent = '';
+  } catch (e) {
+    st.textContent = e instanceof TypeError ? 'iNaturalist ist gerade nicht erreichbar. Gespeicherte Daten bleiben nutzbar.' : e.message;
+  } finally {
+    areaBusy = false; $('btnArea').disabled = false;
+    renderList(); if (current) showResult(current);
+  }
+}
+$('btnArea').onclick = () => loadArea(true);
+function chance(s, Q) {
+  const inQ = area[Q.id]?.sp[s]?.[0] || 0;
+  let nb = 0;
+  for (const [dr, dc] of NB) if (area[neighbour(Q, dr, dc).id]?.sp[s]) nb++;
+  const pct = Math.round(100 * (0.6 * Math.min(1, Math.log(1 + inQ) / Math.log(31)) + 0.4 * nb / 8));
+  return { inQ, nb, pct };
+}
+const commonName = s => index.common.get(s) || Object.values(area).map(a => a.sp[s]?.[1]).find(Boolean) || '';
+const mySpeciesIn = id => new Set([...(index.byQuad.get(id) || new Map())].filter(([, os]) => os.some(o => !o.x)).map(([sp]) => sp));
+function areaLine(s) {
+  if (!here || !area[here.id]) return '';
+  const c = chance(s, here);
+  return `Auf iNaturalist hier ${c.inQ ? c.inQ + ' Beobachtung' + (c.inQ > 1 ? 'en' : '') : 'noch nicht gemeldet'}, in ${c.nb} von 8 Nachbarquadranten. Fundchance ${c.pct} %.`;
+}
+
+let listMode = store.get('listMode', 'mine');
+function setListMode(m) { listMode = m; store.set('listMode', m); renderList(); }
+$('mode-mine').onclick = () => setListMode('mine');
+$('mode-miss').onclick = () => setListMode('miss');
+$('withNb').addEventListener('change', renderList);
+
 function renderList() {
   if (!here) { $('grid3').innerHTML = ''; $('speciesList').innerHTML = '<li class="muted">Noch keine Position.</li>'; return; }
   const g = [];
   for (const dr of [-1, 0, 1]) for (const dc of [-1, 0, 1]) {
     const Q = dr || dc ? neighbour(here, dr, dc) : here;
     const n = index.byQuad.get(Q.id)?.size || 0;
-    g.push(`<button class="${dr || dc ? '' : 'here'}" data-q="${Q.id}"><b class="num">${n}</b>${Q.id}</button>`);
+    const tot = area[Q.id] ? new Set([...Object.keys(area[Q.id].sp), ...mySpeciesIn(Q.id)]).size : null;
+    g.push(`<button class="${dr || dc ? '' : 'here'}" data-q="${Q.id}"><span><b class="num">${n}</b><span class="tot num">${tot != null ? ' / ' + tot : ''}</span></span>${Q.id}</button>`);
   }
   $('grid3').innerHTML = g.join('');
   $('grid3').querySelectorAll('button').forEach(b => b.onclick = () => { if (b.dataset.q !== here.id) setHere({ ...parseQuad(b.dataset.q), acc: null, t: Date.now(), src: 'manual' }); });
+  if (!areaBusy) $('areaStatus').textContent = area[here.id] ? `iNaturalist-Stand ${new Date(area[here.id].t).toLocaleDateString('de-AT')}` : (navigator.onLine ? '' : 'Für diesen Quadranten sind noch keine iNaturalist-Daten gespeichert. Lade sie, sobald du Empfang hast.');
+
   const m = index.byQuad.get(here.id) || new Map();
+  const mine = mySpeciesIn(here.id);
+  const a = area[here.id];
+  // Abdeckung: alle im Quadranten bekannten Arten (iNaturalist plus eigene Funde)
+  if (a) {
+    const total = new Set([...Object.keys(a.sp), ...mine]).size;
+    const pct = total ? Math.round(mine.size / total * 100) : 0;
+    $('cover').innerHTML = `<div>Im Quadranten sind <b class="num">${total}</b> Arten bekannt. Du hast <b class="num">${mine.size}</b> davon gefunden (<b class="num">${pct} %</b>).</div><div class="bar"><div style="width:${pct}%"></div></div>`;
+  } else $('cover').innerHTML = '';
+
+  $('mode-mine').setAttribute('aria-selected', listMode === 'mine');
+  $('mode-miss').setAttribute('aria-selected', listMode === 'miss');
+  $('nbWrap').hidden = $('chanceHint').hidden = listMode !== 'miss';
   const f = norm($('listFilter').value);
-  const rows = [...m.entries()].filter(([s]) => !f || norm(s).includes(f) || norm(index.common.get(s)).includes(f)).sort((a, b) => a[0].localeCompare(b[0]));
-  const nDue = [...m.values()].filter(os => isDue(os.map(o => o.d).sort().pop())).length;
-  $('listTitle').textContent = `Schon gefundene Arten in ${here.id} (${m.size}${nDue ? ', davon ' + nDue + ' wieder fällig' : ''})`;
-  $('speciesList').innerHTML = rows.length ? rows.map(([s, os]) => {
-    const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
-    const st = quadStatus(s);
-    return `<li class="${st ? st.cls : ''}"><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
-  }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
+  const match = s => !f || norm(s).includes(f) || norm(commonName(s)).includes(f);
+  const ul = $('speciesList');
+
+  if (listMode === 'mine') {
+    const rows = [...m.entries()].filter(([s]) => match(s)).sort((x, y) => x[0].localeCompare(y[0]));
+    const nDue = [...m.values()].filter(os => isDue(os.map(o => o.d).sort().pop())).length;
+    $('listTitle').textContent = `Deine Arten in ${here.id} (${m.size}${nDue ? ', davon ' + nDue + ' wieder fällig' : ''})`;
+    ul.innerHTML = rows.length ? rows.map(([s, os]) => {
+      const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
+      const st = quadStatus(s);
+      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+    }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
+  } else {
+    const cand = new Set(a ? Object.keys(a.sp) : []);
+    if ($('withNb').checked) for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(x => cand.add(x));
+    const rows = [...cand].filter(s => !mine.has(s) && match(s)).map(s => ({ s, ...chance(s, here) })).sort((x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+    $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
+    ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
+  }
+  ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
 }
 $('listFilter').addEventListener('input', renderList);
 
@@ -633,7 +757,7 @@ $('onlyAT').checked = settings.onlyAT;
 $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
-if (!here) locate();
+if (!here) locate(); else if (navigator.onLine) loadArea(false);
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
