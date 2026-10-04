@@ -77,6 +77,7 @@ button { cursor: pointer }
 .result .verdict { font-size: 22px; font-weight: 700; line-height: 1.2 }
 .result.found .verdict { color: var(--found) }
 .result.new .verdict { color: var(--new) }
+.due { color: var(--new); font-weight: 600 }
 .result .taxon { font-size: 17px }
 .result .taxon i { font-weight: 600 }
 .result ul { margin: 0; padding-left: 18px }
@@ -271,6 +272,11 @@ function buildIndex() {
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmtDate = d => d ? d.split('-').reverse().join('.') : '–';
+// Wiederholungskartierung: eine Art im Quadranten zählt nach REPEAT_YEARS Jahren wieder als fällig
+const REPEAT_YEARS = 3;
+const dueDate = d => { const [y, m, t] = d.split('-'); return `${+y + REPEAT_YEARS}-${m}-${t}`; };
+const todayIso = () => { const n = new Date(); return `${n.getFullYear()}-${pad(n.getMonth() + 1)}-${pad(n.getDate())}`; };
+const isDue = d => !d || dueDate(d) <= todayIso();
 
 function renderHead() {
   if (!here) return;
@@ -406,8 +412,10 @@ function showResult(cur) {
   const b = quadBounds(here);
   if (exact.length) {
     const last = exact.map(o => o.d).sort().pop();
-    el.innerHTML = `<div class="result found"><div class="verdict">Schon gefunden in ${here.id}</div>${taxon}
-      <div>${exact.length} Fund${exact.length > 1 ? 'e' : ''}, zuletzt am ${fmtDate(last)}.</div>
+    const due = isDue(last);
+    el.innerHTML = `<div class="result ${due ? 'new' : 'found'}"><div class="verdict">${due ? 'Wieder kartieren in ' : 'Schon kartiert in '}${here.id}</div>${taxon}
+      <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
+      <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
     return;
   }
@@ -449,10 +457,11 @@ function renderList() {
   const m = index.byQuad.get(here.id) || new Map();
   const f = norm($('listFilter').value);
   const rows = [...m.entries()].filter(([s]) => !f || norm(s).includes(f) || norm(index.common.get(s)).includes(f)).sort((a, b) => a[0].localeCompare(b[0]));
-  $('listTitle').textContent = `Schon gefundene Arten in ${here.id} (${m.size})`;
+  const nDue = [...m.values()].filter(os => isDue(os.map(o => o.d).sort().pop())).length;
+  $('listTitle').textContent = `Schon gefundene Arten in ${here.id} (${m.size}${nDue ? ', davon ' + nDue + ' wieder fällig' : ''})`;
   $('speciesList').innerHTML = rows.length ? rows.map(([s, os]) => {
     const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
-    return `<li><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}</span></li>`;
+    return `<li><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${isDue(last) ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
   }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
 }
 $('listFilter').addEventListener('input', renderList);
