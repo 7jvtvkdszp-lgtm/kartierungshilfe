@@ -66,7 +66,11 @@ button { cursor: pointer }
 
 .field { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 14px; min-height: 48px; font-size: 17px }
 .sugg { list-style: none; margin: 6px 0 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden }
-.sugg li button { width: 100%; text-align: left; border: 0; border-top: 1px solid var(--line); background: transparent; padding: 10px 14px; min-height: 44px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline }
+.sugg li { display: flex; border-top: 1px solid var(--line) }
+.sugg li:first-child { border-top: 0 }
+.sugg li .add { flex: none; width: 52px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--accent); font-size: 22px; font-weight: 700; padding: 0 }
+.sugg li .add:disabled { color: var(--found); font-size: 18px; opacity: 1 }
+.sugg li button.pick { flex: 1; min-width: 0; width: 100%; text-align: left; border: 0; background: transparent; padding: 10px 14px; min-height: 44px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline }
 .sugg li:first-child button { border-top: 0 }
 .sugg .sci { font-style: italic }
 .sugg .tag { font-size: 12px; color: var(--muted); white-space: nowrap }
@@ -286,7 +290,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="expStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 12</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 13</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -476,9 +480,15 @@ function renderSugg(local, online) {
   const extra = (online || []).filter(x => !seen.has(x.s)).slice(0, 6);
   const items = [...local, ...extra];
   if (!items.length) { ul.hidden = true; ul.innerHTML = ''; return; }
-  ul.innerHTML = items.map((x, i) => `<li><button data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span>${chip(x.s)}</button></li>`).join('');
+  ul.innerHTML = items.map((x, i) => `<li><button class="pick" data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span>${chip(x.s)}</button>${here ? `<button class="add" data-add="${i}" aria-label="Auf die Tagesliste" ${onDayToday(x.s) ? 'disabled>✓' : '>+'}</button>` : ''}</li>`).join('');
   ul.hidden = false;
-  ul.querySelectorAll('button').forEach(b => b.onclick = () => pick(items[+b.dataset.i]));
+  ul.querySelectorAll('button.pick').forEach(b => b.onclick = () => pick(items[+b.dataset.i]));
+  // „+“: direkt aus der Vorschlagsliste auf die Tagesliste, ohne die Art zu öffnen
+  ul.querySelectorAll('button.add').forEach(b => b.onclick = () => {
+    const x = items[+b.dataset.add], st = quadStatus(x.s);
+    addDay({ s: x.s, c: x.c || commonName(x.s) }, st && (st.cls === 'ok' || st.cls === 'due') ? st.cls : 'new');
+    b.disabled = true; b.textContent = '✓';
+  });
 }
 async function onlineSearch(q, seq) {
   if (!navigator.onLine || q.length < 3) return;
@@ -500,7 +510,7 @@ $('q').addEventListener('input', e => {
   debounce = setTimeout(() => onlineSearch(q, seq), 350);
 });
 $('q').addEventListener('keydown', e => {
-  if (e.key === 'Enter') { e.preventDefault(); const f = $('sugg').querySelector('button'); if (f) f.click(); else if (e.target.value.trim()) pick({ s: speciesName(e.target.value.trim()) }); }
+  if (e.key === 'Enter') { e.preventDefault(); const f = $('sugg').querySelector('button.pick'); if (f) f.click(); else if (e.target.value.trim()) pick({ s: speciesName(e.target.value.trim()) }); }
 });
 // Status der Art im aktuellen Quadranten: kartiert (grün), wieder fällig (orange), neu
 function quadStatus(s) {
@@ -543,13 +553,13 @@ function showResult(cur) {
     const last = exact.map(o => o.d).sort().pop();
     const due = isDue(last);
     el.innerHTML = `<div class="result ${due ? 'new' : 'found'}"><div class="verdict">${due ? 'Wieder kartieren in ' : 'Schon kartiert in '}${here.id}</div>${taxon}
+      ${dayButton(cur, due ? 'due' : 'ok')}
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
       ${nbLine(cur.s)}
       ${extraLines(cur.s, !due)}
-      <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a>
-      ${dayButton(cur, due ? 'due' : 'ok')}</div>`;
+      <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
     afterResult(cur, !due);
     return;
   }
@@ -566,11 +576,11 @@ function showResult(cur) {
   }
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
+    ${dayButton(cur, 'new')}
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
     ${nbLine(cur.s)}
     ${extraLines(cur.s, false)}
-    ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}
-    ${dayButton(cur, 'new')}</div>`;
+    ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
   afterResult(cur, false);
 }
 // Funde der Art in den acht Nachbarquadranten: alle iNaturalist-Nutzer und eigene
@@ -1041,8 +1051,9 @@ function afterResult(cur, mapped) {
 
 // ---------- Tagesliste ----------
 let day = store.get('day', []); // { id, s, c, q, lat, lon, t, st: new|due|ok, done }
+const onDayToday = s => day.some(e => e.s === s && here && e.q === here.id && e.t.slice(0, 10) === todayIso());
 function dayButton(cur, st) {
-  const listed = day.some(e => e.s === cur.s && here && e.q === here.id && e.t.slice(0, 10) === todayIso());
+  const listed = onDayToday(cur.s);
   return `<button class="btn addday" data-st="${st}" ${listed ? 'disabled' : ''}>${listed ? '✓ Auf der Tagesliste' : '+ Auf die Tagesliste'}</button>`;
 }
 function addDay(cur, st) {
