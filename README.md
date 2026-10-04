@@ -7,6 +7,14 @@ Web-App fürs iPhone: bestimmt per GPS den Quadranten der Floristischen Kartieru
 - `sw.js` – Service Worker, damit die App ohne Empfang startet. Bei Änderungen `VERSION` erhöhen.
 - `manifest.webmanifest`, `icon-*.png` – für „Zum Home-Bildschirm“
 
+## Funktionen
+- **Prüfen:** Quadrant per GPS, Status der Art im Quadranten (kartiert / nach 3 Jahren wieder fällig / neu), Kürzelsuche („aju rep“), Fundchance, Rote Liste, Saison, Entfernung zum nächsten Fund aller iNaturalist-Nutzer, „+ Auf die Tagesliste“.
+- **Arten:** eigene Arten je Quadrant (grün/orange), Abdeckung in %, „Noch nicht gefunden“ sortiert nach Saison und Fundchance.
+- **Karte:** basemap.at/Luftbild/OSM mit Raster, Quadranten nach Abdeckung eingefärbt; Offline-Paket für das sichtbare Gebiet (Arten + Kartenkacheln).
+- **Heute:** Tagesliste, wird automatisch abgehakt, sobald der Fund auf iNaturalist ist.
+- **Mitlaufen:** verfolgt die Position und meldet mit Ton und Hinweis den Wechsel in einen neuen Quadranten (nur bei geöffneter App; iPhone erlaubt Web-Apps keine Vibration).
+- **Export für observation.org:** CSV (Semikolon, UTF-8): species;date;time;lat;lng;accuracy;abundance;remarks.
+
 ## Raster
 Grundfeld 10′ Länge × 6′ Breite, Zeile = floor((56 − Breite) × 10), Spalte = floor((Länge − 5°40′) × 6).
 Viertel 1 NW, 2 NO, 3 SW, 4 SO. Geprüft gegen 13 Quadranten-Mittelpunkte aus dem GBIF-Datensatz

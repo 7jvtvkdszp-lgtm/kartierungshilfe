@@ -60,8 +60,8 @@ button { cursor: pointer }
 .manual { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap }
 .manual input { flex: 1 1 180px; min-width: 0 }
 
-.tabs { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
-.tabs button { border: 0; background: transparent; border-radius: 9px; min-height: 40px; font-weight: 600; color: var(--muted) }
+.tabs { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
+.tabs button { border: 0; background: transparent; border-radius: 9px; min-height: 40px; font-weight: 600; color: var(--muted); font-size: 14px; padding: 0 2px }
 .tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg) }
 
 .field { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 14px; min-height: 48px; font-size: 17px }
@@ -123,8 +123,26 @@ label.row > input { flex: none; margin-top: 3px }
 .progress { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden }
 .progress div { height: 100%; width: 0; background: var(--accent); transition: width .2s }
 details summary { cursor: pointer; font-weight: 600; min-height: 32px }
+.map { height: 62vh; min-height: 320px; border-radius: 14px; border: 1px solid var(--line); overflow: hidden; background: var(--surface) }
+.qlabel-map { background: transparent; border: 0; color: #16201a; font: 600 11px/1.15 var(--mono); text-align: center; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff; white-space: nowrap }
+.leaflet-popup-content { font: 14px/1.4 var(--font) }
+.leaflet-popup-content .btn { min-height: 36px; padding: 6px 10px; margin-top: 6px }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12px; color: var(--muted) }
+.legend i { display: inline-block; width: 14px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 4px }
+.chip.rl { background: var(--warn-bg); color: var(--warn) }
+.chip.season { border: 1px solid var(--accent); color: var(--accent) }
+.chips { display: inline-flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end }
+.btn.on { background: var(--found-bg); color: var(--found); border-color: var(--found) }
+.qchange { grid-column: 1 / -1; background: var(--accent); color: var(--accent-fg); border-radius: 10px; padding: 10px 12px; font-weight: 600 }
+.result .addday { align-self: flex-start }
+.daygroup { font-size: 13px; font-weight: 700; color: var(--muted); padding-top: 8px; letter-spacing: .04em; text-transform: uppercase }
+.list li .x { border: 0; background: transparent; color: var(--muted); font-size: 20px; min-width: 36px; min-height: 36px }
+.list li.done .sci { text-decoration: line-through; color: var(--muted) }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important } }
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
 <div class="wrap">
   <section class="qhead" aria-live="polite">
@@ -135,7 +153,9 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
     <div class="qbtns">
       <button class="btn primary" id="btnGps">Position</button>
       <button class="btn" id="btnManual">Eingeben</button>
+      <button class="btn" id="btnFollow" aria-pressed="false">Mitlaufen</button>
     </div>
+    <div class="qchange" id="qchange" hidden></div>
     <div class="qmeta" id="qmeta"><span>Noch keine Position. Tippe auf „Position“ oder gib einen Quadranten ein.</span></div>
     <div class="edge" id="edge" hidden></div>
     <form class="manual" id="manualForm" hidden>
@@ -146,7 +166,9 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 
   <nav class="tabs" role="tablist">
     <button role="tab" id="tab-check" aria-selected="true">Prüfen</button>
-    <button role="tab" id="tab-list" aria-selected="false">Artenliste</button>
+    <button role="tab" id="tab-list" aria-selected="false">Arten</button>
+    <button role="tab" id="tab-map" aria-selected="false">Karte</button>
+    <button role="tab" id="tab-day" aria-selected="false">Heute</button>
     <button role="tab" id="tab-data" aria-selected="false">Daten</button>
   </nav>
 
@@ -178,10 +200,49 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
           <button role="tab" id="mode-mine" aria-selected="true">Meine Arten</button>
           <button role="tab" id="mode-miss" aria-selected="false">Noch nicht gefunden</button>
         </div>
-        <label class="row small" id="nbWrap" hidden><input type="checkbox" id="withNb"> Auch Arten, die nur in Nachbarquadranten gemeldet sind</label>
-        <p class="small muted" id="chanceHint" style="margin:0" hidden>Fundchance: Zahl der Beobachtungen aller Nutzer im Quadranten (60 %) und Verbreitung in den acht Nachbarquadranten (40 %). Ein grober Richtwert, keine echte Wahrscheinlichkeit.</p>
+        <div id="missOpts" hidden style="display:flex;flex-direction:column;gap:8px">
+          <label class="row small"><input type="checkbox" id="withNb"> Auch Arten, die nur in Nachbarquadranten gemeldet sind</label>
+          <label class="row small"><input type="checkbox" id="onlySeason"> Nur Arten, die in der Umgebung in diesem Monat beobachtet wurden</label>
+          <label class="row small"><input type="checkbox" id="onlyRed"> Nur gefährdete Arten</label>
+          <p class="small muted" style="margin:0">Fundchance: Zahl der Beobachtungen aller Nutzer im Quadranten (60 %) und Verbreitung in den acht Nachbarquadranten (40 %). Ein grober Richtwert, keine echte Wahrscheinlichkeit. Arten mit „jetzt“ wurden in diesem Monat im Umkreis von etwa 15 km beobachtet und stehen oben. „RL“: auf iNaturalist für Österreich als gefährdet geführt.</p>
+        </div>
         <input class="field" id="listFilter" placeholder="Liste filtern" autocomplete="off">
         <ul class="list" id="speciesList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-map" class="view" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div id="map" class="map"></div>
+      <div class="legend" id="mapLegend">
+        <span>Deine Abdeckung je Quadrant:</span>
+        <span><i style="background:hsl(8 75% 50%)"></i>0 %</span>
+        <span><i style="background:hsl(45 85% 48%)"></i>50 %</span>
+        <span><i style="background:hsl(125 55% 38%)"></i>100 %</span>
+        <span><i style="border:1px dashed var(--muted)"></i>noch keine iNaturalist-Daten</span>
+      </div>
+      <div class="small muted" id="mapNote"></div>
+      <div class="panel">
+        <h2>Offline-Paket für eine Tour</h2>
+        <p class="small muted" style="margin:0">Zoom die Karte auf dein Tourgebiet. Die App lädt dann für alle sichtbaren Quadranten die iNaturalist-Arten und auf Wunsch die Kartenkacheln, damit im Funkloch alles da ist.</p>
+        <label class="row small"><input type="checkbox" id="pkTiles" checked> Karte mitladen (bis Zoomstufe 15)</label>
+        <div class="row"><button class="btn primary" id="btnPack">Sichtbares Gebiet offline laden</button></div>
+        <div class="progress" id="pkProgWrap" hidden><div id="pkProg"></div></div>
+        <div class="small muted" id="pkStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-day" class="view" hidden>
+    <div class="panel">
+      <h2>Tagesliste</h2>
+      <p class="small muted" style="margin:0">Arten, die du im Feld unter „Prüfen“ notierst. Sobald die Art im selben Quadranten auf iNaturalist auftaucht, wird sie automatisch abgehakt.</p>
+      <div class="small" id="daySum"></div>
+      <ul class="list" id="dayList"></ul>
+      <div class="row">
+        <a class="btn" href="https://www.inaturalist.org/observations/upload" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;color:inherit">iNaturalist-Upload öffnen</a>
+        <button class="btn" id="dayClear">Erledigte entfernen</button>
       </div>
     </div>
   </section>
@@ -214,8 +275,15 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <p class="small muted" style="margin:0">Alternative ohne Internet in der App: Export unter <a href="https://www.inaturalist.org/observations/export" target="_blank" rel="noopener">inaturalist.org/observations/export</a> mit den Spalten id, observed_on, latitude, longitude, private_latitude, private_longitude, scientific_name, common_name, taxon_species_name, iconic_taxon_name, taxon_phylum_name, place_country_name. Ersetzt die gespeicherten Funde.</p>
         <input type="file" id="csv" accept=".csv,text/csv">
       </div>
+      <div class="panel">
+        <h2>Export für observation.org</h2>
+        <p class="small muted" style="margin:0">CSV-Datei mit allen geladenen Funden (Semikolon-getrennt, UTF-8) mit den Spalten species, date, time, lat, lng, accuracy, abundance, remarks. In „remarks“ stehen iNaturalist-Nummer und Quadrant. Funde mit verschleierten Koordinaten werden ausgelassen.</p>
+        <label class="row small"><input type="checkbox" id="expNew"> <span id="expNewLabel">Nur Funde seit dem letzten Export</span></label>
+        <div class="row"><button class="btn primary" id="btnExport">CSV erstellen</button></div>
+        <div class="small muted" id="expStatus"></div>
+      </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 7</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 8</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -333,6 +401,7 @@ function renderHead() {
 function setHere(h) {
   here = h; store.set('here', h);
   renderHead(); renderList(); if (current) showResult(current);
+  drawGrid();
   if (navigator.onLine) loadArea(false);
 }
 
@@ -368,11 +437,13 @@ $('manualForm').onsubmit = e => {
 };
 
 // ---------- Tabs ----------
-const tabs = ['check', 'list', 'data'];
+const tabs = ['check', 'list', 'map', 'day', 'data'];
 function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
   if (t === 'list') renderList();
+  if (t === 'map') showMap();
+  if (t === 'day') renderDay();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
 
@@ -471,7 +542,10 @@ function showResult(cur) {
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
-      <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
+      ${extraLines(cur.s)}
+      <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a>
+      ${dayButton(cur, due ? 'due' : 'ok')}</div>`;
+    afterResult(cur);
     return;
   }
   const lines = [];
@@ -490,7 +564,10 @@ function showResult(cur) {
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
-    ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
+    ${extraLines(cur.s)}
+    ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}
+    ${dayButton(cur, 'new')}</div>`;
+  afterResult(cur);
 }
 function dist(a, o) {
   const R = 6371000, toR = Math.PI / 180;
@@ -502,8 +579,8 @@ function dist(a, o) {
 // ---------- Artenliste ----------
 // ---------- iNaturalist-Daten aller Nutzer je Quadrant ----------
 const NB = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-const AREA_MAX = 300, AREA_MAX_AGE = 30 * 864e5;
-let area = store.get('area', {}); // Quadrant -> { t, f, sp: { Art: [Beobachtungen, deutscher Name] } }
+const AREA_MAX = 1500, AREA_MAX_AGE = 30 * 864e5;
+let area = {}; // Quadrant -> { t, f, sp: { Art: [Beobachtungen, deutscher Name] } }, liegt in IndexedDB
 let areaBusy = false;
 const areaOk = id => area[id] && area[id].f === filterKey();
 async function fetchQuadSpecies(Q) {
@@ -541,15 +618,17 @@ async function loadArea(force) {
       area[todo[i].id] = await fetchQuadSpecies(todo[i]);
       const ids = Object.keys(area);
       if (ids.length > AREA_MAX) ids.sort((a, b) => area[a].t.localeCompare(area[b].t)).slice(0, ids.length - AREA_MAX).forEach(id => delete area[id]);
-      store.set('area', area);
+      kv.set('area', area);
       if (i < todo.length - 1) await sleep(1100);
     }
     st.textContent = '';
+    await loadSeason(center).catch(() => {});
+    await loadRedlist().catch(() => {});
   } catch (e) {
     st.textContent = e instanceof TypeError ? 'iNaturalist ist gerade nicht erreichbar. Gespeicherte Daten bleiben nutzbar.' : e.message;
   } finally {
     areaBusy = false; $('btnArea').disabled = false;
-    renderList(); if (current) showResult(current);
+    renderList(); if (current) showResult(current); drawGrid();
   }
 }
 $('btnArea').onclick = () => loadArea(true);
@@ -572,7 +651,7 @@ let listMode = store.get('listMode', 'mine');
 function setListMode(m) { listMode = m; store.set('listMode', m); renderList(); }
 $('mode-mine').onclick = () => setListMode('mine');
 $('mode-miss').onclick = () => setListMode('miss');
-$('withNb').addEventListener('change', renderList);
+for (const id of ['withNb', 'onlySeason', 'onlyRed']) $(id).addEventListener('change', renderList);
 
 function renderList() {
   if (!here) { $('grid3').innerHTML = ''; $('speciesList').innerHTML = '<li class="muted">Noch keine Position.</li>'; return; }
@@ -599,7 +678,7 @@ function renderList() {
 
   $('mode-mine').setAttribute('aria-selected', listMode === 'mine');
   $('mode-miss').setAttribute('aria-selected', listMode === 'miss');
-  $('nbWrap').hidden = $('chanceHint').hidden = listMode !== 'miss';
+  $('missOpts').hidden = listMode !== 'miss';
   const f = norm($('listFilter').value);
   const match = s => !f || norm(s).includes(f) || norm(commonName(s)).includes(f);
   const ul = $('speciesList');
@@ -611,15 +690,18 @@ function renderList() {
     ul.innerHTML = rows.length ? rows.map(([s, os]) => {
       const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
       const st = quadStatus(s);
-      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${isRed(s) ? ' <span class="chip rl">RL</span>' : ''}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
     }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []);
     if ($('withNb').checked) for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(x => cand.add(x));
-    const rows = [...cand].filter(s => !mine.has(s) && match(s)).map(s => ({ s, ...chance(s, here) })).sort((x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+    const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked;
+    const rows = [...cand].filter(s => !mine.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)))
+      .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s) }))
+      .sort((x, y) => (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
@@ -629,7 +711,7 @@ $('listFilter').addEventListener('input', renderList);
 // ---------- Daten laden ----------
 function saveAll() {
   const ok = store.set('obs', obs) && store.set('meta', meta);
-  buildIndex(); renderStats(); renderList(); if (current) showResult(current);
+  buildIndex(); renderStats(); renderList(); renderDay(); drawGrid(); if (current) showResult(current);
   if (!ok) $('syncStatus').textContent = 'Achtung: Der Speicher des Browsers ist voll, die Funde sind nur bis zum Schließen verfügbar.';
 }
 function renderStats() {
@@ -647,9 +729,14 @@ function fromApi(o) {
   const priv = !!o.private_location;
   if (!loc) return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? t.preferred_common_name || '' : '', d: o.observed_on || '', la: null, lo: null, x: 0 };
   const [la, lo] = loc.split(',').map(Number);
-  return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null };
+  return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', ti: viennaTime(o.time_observed_at), la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null };
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const DATA_V = 2; // bei Änderungen am gespeicherten Format erhöhen: erzwingt einmal komplettes Neuladen
+function viennaTime(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' }); } catch { return ''; }
+}
 async function fetchAll(extra, onPage) {
   let idAbove = 0, got = 0, total = null;
   for (;;) {
@@ -681,7 +768,7 @@ async function sync(full) {
   const status = $('syncStatus');
   try {
     const started = new Date().toISOString();
-    if (meta.filter !== filterKey()) full = true; // geänderte Filter: alles neu laden
+    if (meta.filter !== filterKey() || meta.v !== DATA_V) full = true; // geänderte Filter oder Datenformat: alles neu laden
     const map = full ? new Map() : new Map(obs.map(o => [o.i, o]));
     const passes = full || !meta.lastSync ? [{}] : [{ updated_since: meta.lastSync }];
     for (const extra of passes) {
@@ -692,7 +779,7 @@ async function sync(full) {
       });
     }
     obs = [...map.values()];
-    meta = { lastSync: started, user: settings.user, filter: filterKey() };
+    meta = { lastSync: started, user: settings.user, filter: filterKey(), v: DATA_V };
     saveAll();
   } catch (e) {
     status.textContent = (e instanceof TypeError)
@@ -747,13 +834,380 @@ $('csv').addEventListener('change', async e => {
     const usePriv = !isNaN(pla) && !isNaN(plo);
     const s = v(r, 'taxon_species_name') || speciesName(v(r, 'scientific_name'));
     if (!s) continue;
-    out.push({ i: +v(r, 'id'), s, c: v(r, 'common_name'), d: v(r, 'observed_on'), la: usePriv ? pla : (isNaN(la) ? null : la), lo: usePriv ? plo : (isNaN(lo) ? null : lo), x: !usePriv && /true/i.test(v(r, 'coordinates_obscured')) ? 1 : 0, a: +v(r, 'positional_accuracy') || null });
+    out.push({ i: +v(r, 'id'), s, c: v(r, 'common_name'), d: v(r, 'observed_on'), ti: viennaTime(v(r, 'time_observed_at')), la: usePriv ? pla : (isNaN(la) ? null : la), lo: usePriv ? plo : (isNaN(lo) ? null : lo), x: !usePriv && /true/i.test(v(r, 'coordinates_obscured')) ? 1 : 0, a: +v(r, 'positional_accuracy') || null });
   }
-  obs = out; meta = { lastSync: new Date().toISOString(), user: settings.user, src: 'csv', filter: filterKey() };
+  obs = out; meta = { lastSync: new Date().toISOString(), user: settings.user, src: 'csv', filter: filterKey(), v: DATA_V };
   saveAll();
   $('syncStatus').textContent = `${out.length} Funde aus der CSV übernommen. ` + $('syncStatus').textContent;
   e.target.value = '';
 });
+
+// ---------- Größere Daten in IndexedDB (localStorage ist auf dem iPhone auf ~5 MB begrenzt) ----------
+const kv = (() => {
+  let dbp = null;
+  const open = () => dbp || (dbp = new Promise((res, rej) => {
+    const r = indexedDB.open('kartierungshilfe', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const tx = (mode, fn) => open().then(db => new Promise((res, rej) => {
+    const t = db.transaction('kv', mode); const req = fn(t.objectStore('kv'));
+    t.oncomplete = () => res(req && req.result); t.onerror = () => rej(t.error);
+  }));
+  const timers = {};
+  return {
+    get: k => tx('readonly', st => st.get(k)).catch(() => undefined),
+    // Schreiben gebündelt, damit schnelle Folgeänderungen nur einmal gespeichert werden
+    set(k, v) { clearTimeout(timers[k]); timers[k] = setTimeout(() => tx('readwrite', st => st.put(v, k)).catch(() => {}), 300); },
+  };
+})();
+let season = {}, redlist = null, redSet = new Set();
+async function kvInit() {
+  const old = store.get('area', null); // ältere Versionen speicherten im localStorage
+  area = (await kv.get('area')) || old || {};
+  if (old) { kv.set('area', area); try { localStorage.removeItem('kh.area'); } catch {} }
+  season = (await kv.get('season')) || {};
+  redlist = (await kv.get('redlist')) || null;
+  redSet = new Set(redlist ? redlist.sp : []);
+}
+
+// ---------- Saison: Arten, die in diesem Monat im Umkreis beobachtet wurden ----------
+const monthNow = () => new Date().getMonth() + 1;
+function speciesCountsParams(extra) {
+  const p = new URLSearchParams({ verifiable: 'true', per_page: '500', locale: 'de', ...extra });
+  if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+  if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+  return p;
+}
+async function speciesCountsNames(extra) {
+  const names = new Set();
+  for (let page = 1; ; page++) {
+    const p = speciesCountsParams({ ...extra, page: String(page) });
+    const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + p);
+    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+    const j = await r.json();
+    for (const { taxon: t } of j.results) if (t && t.rank_level <= 10) names.add(speciesName(t.name, t.rank_level));
+    if (page * 500 >= j.total_results || page >= 10) break;
+    await sleep(1100);
+  }
+  return [...names];
+}
+async function loadSeason(Q, force) {
+  const key = Q.id + '|' + monthNow();
+  if (!force && season[key] && season[key].f === filterKey() && Date.now() - new Date(season[key].t) < AREA_MAX_AGE) return;
+  // Umkreis: 5 × 5 Quadranten (rund 30 × 28 km) um den aktuellen Quadranten
+  const nw = quadBounds(neighbour(Q, -2, -2)), se = quadBounds(neighbour(Q, 2, 2));
+  const sp = await speciesCountsNames({ swlat: se.s, swlng: nw.w, nelat: nw.n, nelng: se.e, month: String(monthNow()) });
+  season[key] = { t: new Date().toISOString(), f: filterKey(), sp };
+  const keys = Object.keys(season);
+  if (keys.length > 200) keys.sort((a, b) => season[a].t.localeCompare(season[b].t)).slice(0, keys.length - 200).forEach(k => delete season[k]);
+  seasonCache = {};
+  kv.set('season', season);
+}
+let seasonCache = {};
+function seasonSet(Q) {
+  if (!Q) return null;
+  const key = Q.id + '|' + monthNow();
+  if (!season[key]) return null;
+  return seasonCache[key] || (seasonCache[key] = new Set(season[key].sp));
+}
+// ---------- Rote Liste: auf iNaturalist für Österreich als gefährdet geführte Arten ----------
+async function loadRedlist(force) {
+  if (!force && redlist && redlist.f === filterKey() && Date.now() - new Date(redlist.t) < 90 * 864e5) return;
+  const sp = await speciesCountsNames({ place_id: PLACE_AT, threatened: 'true' });
+  redlist = { t: new Date().toISOString(), f: filterKey(), sp };
+  redSet = new Set(sp);
+  kv.set('redlist', redlist);
+}
+const isRed = s => redSet.has(s);
+
+// ---------- Zusatzzeilen im Prüfergebnis ----------
+function extraLines(s) {
+  const out = [];
+  if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
+  const sea = seasonSet(here);
+  if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
+  out.push('<span id="nearAll">' + (navigator.onLine && here && here.lat != null ? 'Suche nächsten Fund aller Nutzer …' : here && here.lat == null ? 'Entfernung zum nächsten Fund gibt es nur mit GPS-Position.' : 'Nächster Fund aller Nutzer: nur mit Empfang.') + '</span>');
+  return out.map(l => `<div class="small">${l}</div>`).join('');
+}
+const nearCache = new Map();
+async function nearestAll(s, lat, lon) {
+  const key = s + '|' + lat.toFixed(3) + '|' + lon.toFixed(3);
+  if (nearCache.has(key)) return nearCache.get(key);
+  let best = null;
+  for (const radius of [2, 10, 50, 200]) {
+    const p = new URLSearchParams({ taxon_name: s, lat, lng: lon, radius, verifiable: 'true', per_page: '200', locale: 'de' });
+    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+    const r = await fetch('https://api.inaturalist.org/v1/observations?' + p);
+    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+    const j = await r.json();
+    for (const o of j.results) {
+      if (!o.location) continue;
+      const [la, lo] = o.location.split(',').map(Number);
+      const d = dist({ lat, lon }, { la, lo });
+      if (!best || d < best.d) best = { d, id: o.id, date: o.observed_on, x: !!o.obscured, own: o.user && o.user.login === settings.user };
+    }
+    if (best) break;
+    await sleep(1100);
+  }
+  nearCache.set(key, best);
+  return best;
+}
+const km = d => d < 1000 ? Math.round(d) + ' m' : (d / 1000).toFixed(1).replace('.', ',') + ' km';
+function afterResult(cur) {
+  const btn = $('result').querySelector('.addday');
+  if (btn) btn.onclick = () => { addDay(cur, btn.dataset.st); btn.textContent = '✓ Auf der Tagesliste'; btn.disabled = true; };
+  if (!navigator.onLine || !here || here.lat == null) return;
+  const at = here;
+  nearestAll(cur.s, at.lat, at.lon).then(n => {
+    const el = $('nearAll'); if (!el || current !== cur || here !== at) return;
+    el.innerHTML = n
+      ? `Nächster Fund aller Nutzer: <b>${km(n.d)}</b> entfernt (${fmtDate(n.date)}${n.own ? ', von dir' : ''}${n.x ? ', Koordinaten verschleiert' : ''}). <a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Ansehen</a>`
+      : 'Im Umkreis von 200 km gibt es auf iNaturalist keinen Fund.';
+  }).catch(() => { const el = $('nearAll'); if (el) el.textContent = 'Nächster Fund aller Nutzer: iNaturalist gerade nicht erreichbar.'; });
+}
+
+// ---------- Tagesliste ----------
+let day = store.get('day', []); // { id, s, c, q, lat, lon, t, st: new|due|ok, done }
+function dayButton(cur, st) {
+  const listed = day.some(e => e.s === cur.s && here && e.q === here.id && e.t.slice(0, 10) === todayIso());
+  return `<button class="btn addday" data-st="${st}" ${listed ? 'disabled' : ''}>${listed ? '✓ Auf der Tagesliste' : '+ Auf die Tagesliste'}</button>`;
+}
+function addDay(cur, st) {
+  if (!here) return;
+  const n = new Date();
+  day.push({ id: Date.now(), s: cur.s, c: cur.c || commonName(cur.s), q: here.id, lat: here.lat ?? null, lon: here.lon ?? null,
+    t: `${todayIso()}T${pad(n.getHours())}:${pad(n.getMinutes())}`, st, done: false });
+  store.set('day', day); renderDay();
+}
+// Erledigt, sobald ein eigener Fund dieser Art im selben Quadranten ab dem Notiztag auf iNaturalist ist
+const dayOnInat = e => (index.byQuad.get(e.q)?.get(e.s) || []).some(o => o.d && o.d >= e.t.slice(0, 10));
+function renderDay() {
+  const open = day.filter(e => !e.done && !dayOnInat(e)).length;
+  $('tab-day').textContent = open ? `Heute (${open})` : 'Heute';
+  if ($('view-day').hidden) return;
+  const ST = { new: ['new', 'neu'], due: ['due', 'fällig'], ok: ['ok', 'schon kartiert'] };
+  const sorted = [...day].sort((a, b) => b.t.localeCompare(a.t));
+  const html = []; let lastDate = '', lastQ = '';
+  for (const e of sorted) {
+    const date = e.t.slice(0, 10);
+    if (date !== lastDate || e.q !== lastQ) { html.push(`<li class="daygroup">${fmtDate(date)} · ${esc(e.q)}</li>`); lastDate = date; lastQ = e.q; }
+    const inat = dayOnInat(e), done = e.done || inat;
+    html.push(`<li class="${done ? 'done' : ''}" data-id="${e.id}"><span><span class="sci">${esc(e.s)}</span> <span class="chip ${ST[e.st][0]}">${ST[e.st][1]}</span>${e.c ? `<br><span class="cn">${esc(e.c)}</span>` : ''}<br><span class="cn">${e.t.slice(11)}${inat ? ' · auf iNaturalist ✓' : ''}</span></span>
+      <span class="row" style="flex-wrap:nowrap">${inat ? '' : `<label class="small" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-done ${e.done ? 'checked' : ''}> erledigt</label>`}<button class="x" data-del aria-label="Entfernen">×</button></span></li>`);
+  }
+  $('dayList').innerHTML = html.join('') || '<li class="muted">Noch nichts notiert. Unter „Prüfen“ fügst du eine Art mit „+ Auf die Tagesliste“ hinzu.</li>';
+  const cnt = k => day.filter(e => e.st === k).length;
+  $('daySum').textContent = day.length ? `${day.length} ${day.length === 1 ? 'Eintrag' : 'Einträge'}: ${cnt('new')} neu, ${cnt('due')} fällig, ${cnt('ok')} schon kartiert. ${open} noch nicht auf iNaturalist.` : '';
+  $('dayList').querySelectorAll('li[data-id]').forEach(li => {
+    const e = day.find(x => x.id === +li.dataset.id);
+    const cb = li.querySelector('[data-done]');
+    if (cb) cb.onchange = () => { e.done = cb.checked; store.set('day', day); renderDay(); };
+    li.querySelector('[data-del]').onclick = () => { day = day.filter(x => x !== e); store.set('day', day); renderDay(); };
+  });
+}
+let clearArm = null;
+$('dayClear').onclick = () => {
+  const btn = $('dayClear');
+  if (!clearArm) { btn.textContent = 'Wirklich entfernen?'; clearArm = setTimeout(() => { clearArm = null; btn.textContent = 'Erledigte entfernen'; }, 4000); return; }
+  clearTimeout(clearArm); clearArm = null; btn.textContent = 'Erledigte entfernen';
+  day = day.filter(e => !(e.done || dayOnInat(e))); store.set('day', day); renderDay();
+};
+
+// ---------- Karte ----------
+const TILES = {
+  'Karte': { url: 'https://maps1.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png', attr: '© <a href="https://basemap.at">basemap.at</a>' },
+  'Luftbild': { url: 'https://maps1.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg', attr: '© <a href="https://basemap.at">basemap.at</a>' },
+  'OpenStreetMap': { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' },
+};
+let map = null, gridLayer = null, posLayer = null, activeBase = 'Karte';
+function showMap() {
+  if (!window.L) { $('mapNote').textContent = 'Die Karte lädt beim ersten Öffnen mit Empfang und ist danach offline verfügbar.'; return; }
+  if (!map) {
+    map = L.map('map', { zoomSnap: 0.5 });
+    const layers = {};
+    for (const [name, t] of Object.entries(TILES)) layers[name] = L.tileLayer(t.url, { maxZoom: 19, attribution: t.attr });
+    activeBase = store.get('mapBase', 'Karte');
+    (layers[activeBase] || layers['Karte']).addTo(map);
+    L.control.layers(layers, null, { position: 'topright' }).addTo(map);
+    map.on('baselayerchange', e => { activeBase = e.name; store.set('mapBase', e.name); });
+    gridLayer = L.layerGroup().addTo(map);
+    posLayer = L.layerGroup().addTo(map);
+    map.on('moveend', drawGrid);
+    map.on('popupopen', e => {
+      const el = e.popup.getElement();
+      el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { map.closePopup(); setHere({ ...parseQuad(b.dataset.go), acc: null, t: Date.now(), src: 'manual' }); if (b.dataset.list) showTab('list'); });
+    });
+    const v = store.get('mapView', null);
+    if (here) { const b = quadBounds(here); map.setView(here.lat != null ? [here.lat, here.lon] : [(b.n + b.s) / 2, (b.w + b.e) / 2], 11); }
+    else if (v) map.setView(v.c, v.z); else map.setView([47.6, 13.5], 8);
+  }
+  setTimeout(() => { map.invalidateSize(); drawGrid(); }, 0);
+}
+function quadsInBounds(s, n, w, e, max) {
+  const r2a = Math.floor((LAT0 - n) * 20), r2b = Math.floor((LAT0 - s) * 20 - 1e-9);
+  const c2a = Math.floor((w - LON0) * 12), c2b = Math.floor((e - LON0) * 12 - 1e-9);
+  if ((r2b - r2a + 1) * (c2b - c2a + 1) > max) return null;
+  const out = [];
+  for (let r2 = r2a; r2 <= r2b; r2++) for (let c2 = c2a; c2 <= c2b; c2++)
+    out.push(quadFromRC(Math.floor(r2 / 2), Math.floor(c2 / 2), 1 + (r2 % 2) * 2 + (c2 % 2)));
+  return out;
+}
+function quadCoverage(id) {
+  const mine = mySpeciesIn(id), a = area[id];
+  if (!a) return { mine: mine.size, total: null, pct: null };
+  const total = new Set([...Object.keys(a.sp), ...mine]).size;
+  return { mine: mine.size, total, pct: total ? Math.round(mine.size / total * 100) : 0 };
+}
+const covColor = pct => `hsl(${Math.round(8 + pct * 1.17)} ${pct > 60 ? 55 : 75}% ${pct > 60 ? 38 : 50}%)`;
+function drawGrid() {
+  if (!map || $('view-map').hidden) return;
+  gridLayer.clearLayers(); posLayer.clearLayers();
+  const b = map.getBounds(), z = map.getZoom();
+  store.set('mapView', { c: [map.getCenter().lat, map.getCenter().lng], z });
+  const quads = z >= 9 ? quadsInBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast(), 500) : null;
+  $('mapNote').textContent = quads ? '' : 'Zoom näher heran, um das Kartierungsraster zu sehen.';
+  for (const Q of quads || []) {
+    const qb = quadBounds(Q), c = quadCoverage(Q.id), isHere = here && here.id === Q.id;
+    const style = c.pct != null
+      ? { color: isHere ? '#1d4ed8' : '#444', weight: isHere ? 3 : 1, fillColor: covColor(c.pct), fillOpacity: 0.32 }
+      : { color: isHere ? '#1d4ed8' : '#666', weight: isHere ? 3 : 1, dashArray: '4 4', fill: true, fillOpacity: 0 };
+    const rect = L.rectangle([[qb.s, qb.w], [qb.n, qb.e]], style).addTo(gridLayer);
+    const info = c.total != null ? `Du hast ${c.mine} von ${c.total} bekannten Arten (${c.pct} %).` : `${c.mine} eigene Arten. Noch keine iNaturalist-Daten.`;
+    rect.bindPopup(`<b>${Q.id}</b><br>${info}<br><button class="btn" data-go="${Q.id}">Als Quadrant wählen</button> <button class="btn" data-go="${Q.id}" data-list="1">Artenliste</button>`);
+    if (z >= 11.5) L.marker([(qb.n + qb.s) / 2, (qb.w + qb.e) / 2], { interactive: false, icon: L.divIcon({ className: 'qlabel-map', html: `${Q.id}<br>${c.total != null ? `${c.mine}/${c.total} · ${c.pct} %` : c.mine ? c.mine + ' Arten' : ''}`, iconSize: [90, 28] }) }).addTo(gridLayer);
+  }
+  if (here && here.lat != null) L.circleMarker([here.lat, here.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#1d4ed8', fillOpacity: 1 }).addTo(posLayer);
+}
+
+// ---------- Offline-Paket ----------
+const lon2x = (lon, z) => Math.floor((lon + 180) / 360 * 2 ** z);
+const lat2y = (lat, z) => { const r = lat * Math.PI / 180; return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z); };
+let packBusy = false;
+$('btnPack').onclick = async () => {
+  if (packBusy) return;
+  if (!map) return;
+  const st = $('pkStatus');
+  if (!navigator.onLine) { st.textContent = 'Dafür brauchst du Empfang.'; return; }
+  const b = map.getBounds();
+  const quads = quadsInBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast(), 80);
+  if (!quads) { st.textContent = 'Das Gebiet ist zu groß (höchstens 80 Quadranten). Zoom näher heran.'; return; }
+  const tiles = [];
+  if ($('pkTiles').checked) {
+    const url = TILES[activeBase].url;
+    for (let z = Math.max(8, Math.floor(map.getZoom()) - 2); z <= 15; z++) {
+      for (let x = lon2x(b.getWest(), z); x <= lon2x(b.getEast(), z); x++)
+        for (let y = lat2y(b.getNorth(), z); y <= lat2y(b.getSouth(), z); y++)
+          tiles.push(url.replace('{z}', z).replace('{x}', x).replace('{y}', y));
+    }
+    if (tiles.length > 6000) { st.textContent = `Das wären ${tiles.length} Kartenkacheln. Zoom näher heran oder lade ohne Karte.`; return; }
+  }
+  packBusy = true; $('btnPack').disabled = true; $('pkProgWrap').hidden = false;
+  const todo = quads.filter(Q => !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE);
+  const steps = todo.length + 2 + tiles.length; let done = 0;
+  const tick = () => { $('pkProg').style.width = Math.round(++done / steps * 100) + '%'; };
+  try {
+    for (let i = 0; i < todo.length; i++) {
+      st.textContent = `Arten für ${todo[i].id} (${i + 1} von ${todo.length}) …`;
+      area[todo[i].id] = await fetchQuadSpecies(todo[i]); kv.set('area', area); tick();
+      await sleep(1100);
+    }
+    st.textContent = 'Saison und Rote Liste …';
+    const mid = toQuad(map.getCenter().lat, map.getCenter().lng);
+    await loadSeason(here || mid); tick();
+    await loadRedlist(); tick();
+    if (tiles.length) {
+      const cache = await caches.open('kh-tiles');
+      let i = 0, failed = 0;
+      const worker = async () => {
+        while (i < tiles.length) {
+          const u = tiles[i++];
+          try { if (!(await cache.match(u))) { const r = await fetch(u, { mode: 'cors' }).catch(() => fetch(u, { mode: 'no-cors' })); await cache.put(u, r); } }
+          catch { failed++; }
+          tick(); if (i % 50 === 0) st.textContent = `Kartenkacheln ${i} von ${tiles.length} …`;
+        }
+      };
+      await Promise.all([worker(), worker(), worker(), worker()]);
+      if (failed) st.textContent = `${failed} Kacheln konnten nicht geladen werden.`;
+    }
+    st.textContent = `Fertig: ${quads.length} Quadranten${tiles.length ? ` und ${tiles.length} Kartenkacheln` : ''} sind offline verfügbar.`;
+  } catch (e) {
+    st.textContent = (e instanceof TypeError ? 'Verbindung abgebrochen.' : e.message) + ' Was schon geladen ist, bleibt gespeichert.';
+  } finally {
+    packBusy = false; $('btnPack').disabled = false; $('pkProgWrap').hidden = true;
+    renderList(); drawGrid();
+  }
+};
+
+// ---------- Mitlaufen: Hinweis beim Wechsel in einen neuen Quadranten ----------
+let watchId = null, wakeLock = null, audio = null, lastFollowRender = 0, qchangeTimer = null;
+function beep() {
+  try {
+    if (!audio) return;
+    const t = audio.currentTime;
+    for (const [f, at] of [[880, 0], [1175, 0.18]]) {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.frequency.value = f; o.connect(g); g.connect(audio.destination);
+      g.gain.setValueAtTime(0.0001, t + at); g.gain.exponentialRampToValueAtTime(0.3, t + at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + at + 0.16);
+      o.start(t + at); o.stop(t + at + 0.17);
+    }
+  } catch {}
+}
+function announceQuad(Q) {
+  const c = quadCoverage(Q.id);
+  const el = $('qchange');
+  el.textContent = `Neuer Quadrant ${Q.id}: ` + (c.total != null ? `du hast ${c.mine} von ${c.total} Arten (${c.pct} %).` : `${c.mine} eigene Arten.`);
+  el.hidden = false; clearTimeout(qchangeTimer); qchangeTimer = setTimeout(() => { el.hidden = true; }, 30000);
+  beep(); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
+}
+async function requestWake() { try { wakeLock = await navigator.wakeLock?.request('screen'); } catch { wakeLock = null; } }
+function setFollow(on) {
+  const btn = $('btnFollow');
+  if (on) {
+    if (!('geolocation' in navigator)) return;
+    try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); } catch {}
+    requestWake();
+    watchId = navigator.geolocation.watchPosition(p => {
+      const { latitude: lat, longitude: lon, accuracy: acc } = p.coords;
+      const Q = toQuad(lat, lon);
+      const changed = !here || here.id !== Q.id;
+      if (changed && here) announceQuad(Q);
+      // Bei gleichem Quadranten nur gelegentlich neu zeichnen, das schont den Akku
+      if (changed || Date.now() - lastFollowRender > 15000) { lastFollowRender = Date.now(); setHere({ ...Q, lat, lon, acc, t: Date.now(), src: 'gps' }); }
+    }, () => {}, { enableHighAccuracy: true, maximumAge: 5000 });
+    btn.classList.add('on'); btn.setAttribute('aria-pressed', 'true'); btn.textContent = 'Mitlaufen an';
+  } else {
+    if (watchId != null) navigator.geolocation.clearWatch(watchId);
+    watchId = null; try { wakeLock && wakeLock.release(); } catch {} wakeLock = null;
+    btn.classList.remove('on'); btn.setAttribute('aria-pressed', 'false'); btn.textContent = 'Mitlaufen';
+  }
+}
+$('btnFollow').onclick = () => setFollow(watchId == null);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && watchId != null) requestWake(); });
+
+// ---------- Export für observation.org ----------
+let expMeta = store.get('export', null); // { t, maxId }
+function renderExpLabel() { $('expNewLabel').textContent = expMeta ? `Nur Funde seit dem letzten Export (${new Date(expMeta.t).toLocaleDateString('de-AT')})` : 'Nur Funde seit dem letzten Export (noch keiner)'; }
+$('btnExport').onclick = async () => {
+  const onlyNew = $('expNew').checked && expMeta;
+  const rows = obs.filter(o => o.la != null && o.s && (!onlyNew || o.i > expMeta.maxId)).sort((a, b) => (a.d || '').localeCompare(b.d || '') || a.i - b.i);
+  const skipped = rows.filter(o => o.x).length;
+  const out = rows.filter(o => !o.x);
+  if (!out.length) { $('expStatus').textContent = 'Keine Funde zum Exportieren.'; return; }
+  const q = v => { const t = String(v ?? ''); return /[";\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const lines = ['species;date;time;lat;lng;accuracy;abundance;remarks'];
+  for (const o of out) lines.push([o.s, o.d, o.ti || '', o.la.toFixed(6), o.lo.toFixed(6), o.a ? Math.round(o.a) : '', 1, `iNaturalist ${o.i}, Quadrant ${o.k}`].map(q).join(';'));
+  const name = `kartierung-observation-org-${todayIso()}.csv`;
+  const file = new File([lines.join('\r\n') + '\r\n'], name, { type: 'text/csv' });
+  let shared = false;
+  try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); shared = true; } }
+  catch (e) { if (e && e.name === 'AbortError') { $('expStatus').textContent = 'Export abgebrochen.'; return; } }
+  if (!shared) { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 10000); }
+  expMeta = { t: new Date().toISOString(), maxId: Math.max(expMeta ? expMeta.maxId : 0, ...out.map(o => o.i)) };
+  store.set('export', expMeta); renderExpLabel();
+  $('expStatus').textContent = `${out.length} Funde exportiert.` + (skipped ? ` ${skipped} mit verschleierten Koordinaten ausgelassen.` : '');
+};
+renderExpLabel();
 
 // ---------- Start ----------
 $('user').value = settings.user;
@@ -763,11 +1217,15 @@ $('onlyAT').checked = settings.onlyAT;
 $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
-if (!here) locate(); else if (navigator.onLine) loadArea(false);
+renderDay();
+kvInit().then(() => {
+  renderList(); drawGrid(); if (current) showResult(current);
+  if (!here) locate(); else if (navigator.onLine) loadArea(false);
+});
 // Funde beim Öffnen automatisch abgleichen (höchstens alle 5 Minuten, nur mit Empfang)
 function autoSync() {
   if (!navigator.onLine || syncBusy) return;
-  if (meta.lastSync && Date.now() - new Date(meta.lastSync) < 5 * 60e3) return;
+  if (meta.lastSync && meta.v === DATA_V && Date.now() - new Date(meta.lastSync) < 5 * 60e3) return;
   sync(false);
 }
 autoSync();
