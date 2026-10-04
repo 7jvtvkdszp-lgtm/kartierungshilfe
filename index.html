@@ -1,0 +1,584 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Kartierung">
+<meta name="theme-color" content="#2f6b45">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+</head><body>
+<title>Kartierungshilfe</title>
+<style>
+/* Layout: one-column field tool, quadrant header on top, three tabs below; large touch targets, high contrast for sunlight */
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --fg: #16201a;
+  --muted: #5b6a60;
+  --line: #d5ddd6;
+  --accent: #2f6b45;
+  --accent-fg: #ffffff;
+  --found: #1f7a3d;
+  --found-bg: #e2f2e6;
+  --new: #9a5a00;
+  --new-bg: #fdf0d8;
+  --warn: #a33a2a;
+  --warn-bg: #fbe5e1;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111613; --surface: #1a211c; --fg: #e8eee9; --muted: #9aaa9f; --line: #2c3730;
+  --accent: #6fbf8a; --accent-fg: #0d1a12; --found: #7fd69a; --found-bg: #173222;
+  --new: #f2b552; --new-bg: #3a2a10; --warn: #f08b7a; --warn-bg: #3d1d18; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111613; --surface: #1a211c; --fg: #e8eee9; --muted: #9aaa9f; --line: #2c3730;
+  --accent: #6fbf8a; --accent-fg: #0d1a12; --found: #7fd69a; --found-bg: #173222;
+  --new: #f2b552; --new-bg: #3a2a10; --warn: #f08b7a; --warn-bg: #3d1d18; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.4; margin: 0 }
+.wrap { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 12px 40px; display: flex; flex-direction: column; gap: 14px }
+button, input, select { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 10px 14px; min-height: 44px; font-weight: 600 }
+.btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent) }
+.btn:disabled { opacity: .5 }
+.muted { color: var(--muted) }
+.small { font-size: 13px }
+.num { font-variant-numeric: tabular-nums }
+
+.qhead { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: 1fr auto; gap: 10px 12px; align-items: center }
+.qhead .label { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.qid { font-family: var(--mono); font-size: clamp(40px, 13vw, 56px); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em }
+.qid .slash { color: var(--muted); font-weight: 400 }
+.qmeta { grid-column: 1 / -1; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px }
+.qbtns { display: flex; flex-direction: column; gap: 8px }
+.edge { grid-column: 1 / -1; font-size: 13px; background: var(--new-bg); color: var(--new); border-radius: 8px; padding: 6px 10px }
+.manual { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap }
+.manual input { flex: 1 1 180px; min-width: 0 }
+
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
+.tabs button { border: 0; background: transparent; border-radius: 9px; min-height: 40px; font-weight: 600; color: var(--muted) }
+.tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg) }
+
+.field { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 14px; min-height: 48px; font-size: 17px }
+.sugg { list-style: none; margin: 6px 0 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden }
+.sugg li button { width: 100%; text-align: left; border: 0; border-top: 1px solid var(--line); background: transparent; padding: 10px 14px; min-height: 44px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline }
+.sugg li:first-child button { border-top: 0 }
+.sugg .sci { font-style: italic }
+.sugg .tag { font-size: 12px; color: var(--muted); white-space: nowrap }
+
+.result { border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line) }
+.result.found { background: var(--found-bg); border-color: transparent }
+.result.new { background: var(--new-bg); border-color: transparent }
+.result .verdict { font-size: 22px; font-weight: 700; line-height: 1.2 }
+.result.found .verdict { color: var(--found) }
+.result.new .verdict { color: var(--new) }
+.result .taxon { font-size: 17px }
+.result .taxon i { font-weight: 600 }
+.result ul { margin: 0; padding-left: 18px }
+.result a { color: inherit }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px }
+.panel h2 { font-size: 15px; margin: 0; letter-spacing: .02em }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+.row > input { flex: 1 1 160px; min-width: 0 }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px }
+.grid3 button { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 8px 4px; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px }
+.grid3 button b { font-size: 18px; font-family: var(--font) }
+.grid3 button.here { background: var(--accent); color: var(--accent-fg); border-color: var(--accent) }
+
+.list { list-style: none; margin: 0; padding: 0 }
+.list li { border-top: 1px solid var(--line); padding: 9px 2px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline }
+.list li:first-child { border-top: 0 }
+.list .sci { font-style: italic }
+.list .cn { color: var(--muted); font-size: 13px }
+.list .d { color: var(--muted); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums }
+
+.msg { border-radius: 10px; padding: 10px 12px; font-size: 14px }
+.msg.warn { background: var(--warn-bg); color: var(--warn) }
+.msg.info { background: var(--bg); color: var(--muted); border: 1px solid var(--line) }
+.progress { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden }
+.progress div { height: 100%; width: 0; background: var(--accent); transition: width .2s }
+details summary { cursor: pointer; font-weight: 600; min-height: 32px }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+  <section class="qhead" aria-live="polite">
+    <div>
+      <div class="label" id="qlabel">Quadrant</div>
+      <div class="qid" id="qid">––––<span class="slash">/</span>–</div>
+    </div>
+    <div class="qbtns">
+      <button class="btn primary" id="btnGps">Position</button>
+      <button class="btn" id="btnManual">Eingeben</button>
+    </div>
+    <div class="qmeta" id="qmeta"><span>Noch keine Position. Tippe auf „Position“ oder gib einen Quadranten ein.</span></div>
+    <div class="edge" id="edge" hidden></div>
+    <form class="manual" id="manualForm" hidden>
+      <input class="field" id="manualInput" placeholder="8146/1 oder 47.85, 13.37" autocomplete="off" inputmode="text">
+      <button class="btn primary" type="submit">Übernehmen</button>
+    </form>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-check" aria-selected="true">Prüfen</button>
+    <button role="tab" id="tab-list" aria-selected="false">Artenliste</button>
+    <button role="tab" id="tab-data" aria-selected="false">Daten</button>
+  </nav>
+
+  <section id="view-check" class="view">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label for="q" class="small muted">Art eingeben (wissenschaftlich oder deutsch)</label>
+        <input class="field" id="q" placeholder="z. B. Gentiana clusii oder Enzian" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <ul class="sugg" id="sugg" hidden></ul>
+      </div>
+      <div id="result"></div>
+      <div id="dataHint"></div>
+    </div>
+  </section>
+
+  <section id="view-list" class="view" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <h2>Umgebung <span class="muted small">Arten je Quadrant, tippen zum Wechseln</span></h2>
+        <div class="grid3" id="grid3"></div>
+      </div>
+      <div class="panel">
+        <h2 id="listTitle">Schon gefundene Arten</h2>
+        <input class="field" id="listFilter" placeholder="Liste filtern" autocomplete="off">
+        <ul class="list" id="speciesList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-data" class="view" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <h2>iNaturalist</h2>
+        <div class="row">
+          <input class="field" id="user" placeholder="Benutzername" autocomplete="off" autocapitalize="off">
+        </div>
+        <label class="row small"><input type="checkbox" id="onlyPlants" checked> Nur Pflanzen (Plantae)</label>
+        <div class="row">
+          <button class="btn primary" id="btnSync">Funde aktualisieren</button>
+          <button class="btn" id="btnFull">Alles neu laden</button>
+        </div>
+        <div class="progress" id="progWrap" hidden><div id="prog"></div></div>
+        <div class="small muted" id="syncStatus"></div>
+      </div>
+      <div class="panel">
+        <h2>Verschleierte Koordinaten</h2>
+        <p class="small muted" style="margin:0">Bei Beobachtungen mit Geoprivacy liefert iNaturalist öffentlich nur ungenaue Koordinaten. Mit einem API-Token (gilt 24 Stunden, abrufbar unter <a href="https://www.inaturalist.org/users/api_token" target="_blank" rel="noopener">inaturalist.org/users/api_token</a>) lädt die App deine genauen Koordinaten. Der Token bleibt nur auf diesem Gerät.</p>
+        <input class="field" id="token" placeholder="API-Token einfügen (optional)" autocomplete="off">
+        <div class="small" id="obscStat"></div>
+      </div>
+      <div class="panel">
+        <h2>CSV-Export importieren</h2>
+        <p class="small muted" style="margin:0">Alternative ohne Internet in der App: Export unter <a href="https://www.inaturalist.org/observations/export" target="_blank" rel="noopener">inaturalist.org/observations/export</a> mit den Spalten id, observed_on, latitude, longitude, private_latitude, private_longitude, scientific_name, common_name, taxon_species_name, iconic_taxon_name. Ersetzt die gespeicherten Funde.</p>
+        <input type="file" id="csv" accept=".csv,text/csv">
+      </div>
+      <details class="panel">
+        <summary>Zum Raster</summary>
+        <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+// ---------- Raster ----------
+const LAT0 = 56, LON0 = 5 + 40 / 60;
+const pad = n => String(n).padStart(2, '0');
+const QNAME = { 1: 'NW', 2: 'NO', 3: 'SW', 4: 'SO' };
+function toQuad(lat, lon) {
+  const r = (LAT0 - lat) * 10, c = (lon - LON0) * 6;
+  const R = Math.floor(r), C = Math.floor(c);
+  const q = (r - R < 0.5 ? 1 : 3) + (c - C < 0.5 ? 0 : 1);
+  return quadFromRC(R, C, q);
+}
+function quadFromRC(R, C, q) {
+  const gf = pad(R) + pad(C);
+  return { R, C, q, gf, id: gf + '/' + q };
+}
+function quadBounds(Q) {
+  const n = LAT0 - Q.R / 10 - (Q.q > 2 ? 0.05 : 0);
+  const w = LON0 + Q.C / 6 + (Q.q % 2 === 0 ? 1 / 12 : 0);
+  return { n, s: n - 0.05, w, e: w + 1 / 12 };
+}
+function neighbour(Q, dr, dc) {
+  const r2 = Q.R * 2 + (Q.q > 2 ? 1 : 0) + dr, c2 = Q.C * 2 + (Q.q % 2 === 0 ? 1 : 0) + dc;
+  return quadFromRC(Math.floor(r2 / 2), Math.floor(c2 / 2), 1 + (r2 % 2) * 2 + (c2 % 2));
+}
+function parseQuad(s) {
+  const m = s.trim().match(/^(\d{2})(\d{2})\s*[\/\-\s]?\s*([1-4])$/);
+  if (m) return quadFromRC(+m[1], +m[2], +m[3]);
+  const g = s.trim().replace(/,(?=\d)/g, '.').match(/^(-?\d+(?:\.\d+)?)[\s;,]+(-?\d+(?:\.\d+)?)$/);
+  if (g) return { ...toQuad(+g[1], +g[2]), lat: +g[1], lon: +g[2] };
+  return null;
+}
+
+// ---------- Storage ----------
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('kh.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('kh.' + k, JSON.stringify(v)); return true; } catch { return false; } },
+};
+let settings = Object.assign({ user: 'mondseeirrsee', onlyPlants: true, token: '' }, store.get('settings', {}));
+let meta = store.get('meta', { lastSync: null, maxId: 0 });
+let obs = store.get('obs', []); // {i,s,c,d,la,lo,x,a}
+let here = store.get('here', null); // {R,C,q,gf,id,lat,lon,acc,t,src}
+let index = null;
+
+// Artname auf Artebene: Unterarten/Varietäten werden zur Art zusammengefasst
+function speciesName(name, rankLevel) {
+  if (!name) return '';
+  if (rankLevel != null && rankLevel >= 10) return name;
+  const t = name.split(/\s+/);
+  if (t.length <= 2) return name;
+  return t[1] === '×' ? t.slice(0, 3).join(' ') : t.slice(0, 2).join(' ');
+}
+const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim();
+
+function buildIndex() {
+  const byQuad = new Map(), bySp = new Map(), common = new Map();
+  for (const o of obs) {
+    if (o.la == null || !o.s) continue;
+    const Q = toQuad(o.la, o.lo); o.k = Q.id;
+    if (!byQuad.has(Q.id)) byQuad.set(Q.id, new Map());
+    const m = byQuad.get(Q.id);
+    if (!m.has(o.s)) m.set(o.s, []);
+    m.get(o.s).push(o);
+    if (!bySp.has(o.s)) bySp.set(o.s, []);
+    bySp.get(o.s).push(o);
+    if (o.c && !common.has(o.s)) common.set(o.s, o.c);
+  }
+  index = { byQuad, bySp, common, names: [...bySp.keys()].sort() };
+}
+
+// ---------- UI refs ----------
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtDate = d => d ? d.split('-').reverse().join('.') : '–';
+
+function renderHead() {
+  if (!here) return;
+  $('qid').innerHTML = esc(here.gf) + '<span class="slash">/</span>' + here.q;
+  $('qlabel').textContent = 'Quadrant · Viertel ' + QNAME[here.q];
+  const parts = [];
+  if (here.lat != null) parts.push(`<span class="num">${here.lat.toFixed(5)}, ${here.lon.toFixed(5)}</span>`);
+  if (here.acc != null) parts.push(`<span class="num">± ${Math.round(here.acc)} m</span>`);
+  parts.push(`<span>${here.src === 'gps' ? 'GPS' : 'manuell'}${here.t ? ' · ' + new Date(here.t).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' }) : ''}</span>`);
+  $('qmeta').innerHTML = parts.join('');
+  // Randlage: Abstand zur Quadrantengrenze kleiner als Genauigkeit oder 150 m
+  const edge = $('edge'); edge.hidden = true;
+  if (here.lat != null) {
+    const b = quadBounds(here), mLat = 111320, mLon = 111320 * Math.cos(here.lat * Math.PI / 180);
+    const d = [
+      { d: (b.n - here.lat) * mLat, dr: -1, dc: 0 }, { d: (here.lat - b.s) * mLat, dr: 1, dc: 0 },
+      { d: (here.lon - b.w) * mLon, dr: 0, dc: -1 }, { d: (b.e - here.lon) * mLon, dr: 0, dc: 1 },
+    ].sort((a, b) => a.d - b.d)[0];
+    const lim = Math.max(150, here.acc || 0);
+    if (d.d < lim) {
+      edge.hidden = false;
+      edge.textContent = `Randlage: nur ${Math.round(d.d)} m bis ${neighbour(here, d.dr, d.dc).id}.`;
+    }
+  }
+}
+
+function setHere(h) {
+  here = h; store.set('here', h);
+  renderHead(); renderList(); if (current) showResult(current);
+}
+
+// ---------- GPS ----------
+function locate() {
+  const btn = $('btnGps');
+  if (!('geolocation' in navigator)) { manualOpen('Dieses Gerät liefert keine Position. Gib den Quadranten oder Koordinaten ein.'); return; }
+  btn.disabled = true; btn.textContent = 'Suche …';
+  navigator.geolocation.getCurrentPosition(p => {
+    btn.disabled = false; btn.textContent = 'Position';
+    const { latitude: lat, longitude: lon, accuracy: acc } = p.coords;
+    setHere({ ...toQuad(lat, lon), lat, lon, acc, t: Date.now(), src: 'gps' });
+  }, err => {
+    btn.disabled = false; btn.textContent = 'Position';
+    manualOpen(err.code === 1
+      ? 'Standortzugriff ist nicht erlaubt. Erlaube ihn in den Einstellungen oder gib den Quadranten ein.'
+      : 'Keine Position gefunden. Versuch es nochmal oder gib den Quadranten ein.');
+  }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 });
+}
+function manualOpen(note) {
+  $('manualForm').hidden = false;
+  if (note) $('qmeta').innerHTML = `<span>${esc(note)}</span>`;
+  $('manualInput').focus();
+}
+$('btnGps').onclick = locate;
+$('btnManual').onclick = () => { const f = $('manualForm'); f.hidden = !f.hidden; if (!f.hidden) $('manualInput').focus(); };
+$('manualForm').onsubmit = e => {
+  e.preventDefault();
+  const Q = parseQuad($('manualInput').value);
+  if (!Q) { $('qmeta').innerHTML = '<span>Format nicht erkannt. Beispiele: 8146/1 oder 47.85, 13.37</span>'; return; }
+  $('manualForm').hidden = true; $('manualInput').value = '';
+  setHere({ ...Q, acc: null, t: Date.now(), src: 'manual' });
+};
+
+// ---------- Tabs ----------
+const tabs = ['check', 'list', 'data'];
+function showTab(t) {
+  for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
+  store.set('tab', t);
+  if (t === 'list') renderList();
+}
+for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
+
+// ---------- Suche ----------
+let current = null, debounce = null, onlineSeq = 0;
+function localMatches(q) {
+  const n = norm(q); if (!n) return [];
+  const out = [];
+  for (const s of index.names) {
+    const a = norm(s), b = norm(index.common.get(s));
+    const score = a.startsWith(n) ? 0 : b.startsWith(n) ? 1 : a.includes(n) ? 2 : b.includes(n) ? 3 : -1;
+    if (score >= 0) out.push({ s, c: index.common.get(s), score });
+  }
+  return out.sort((x, y) => x.score - y.score || x.s.localeCompare(y.s)).slice(0, 8);
+}
+function renderSugg(local, online) {
+  const ul = $('sugg');
+  const seen = new Set(local.map(x => x.s));
+  const extra = (online || []).filter(x => !seen.has(x.s)).slice(0, 6);
+  const items = [...local.map(x => ({ ...x, tag: (index.bySp.get(x.s) || []).length + '× von dir' })), ...extra.map(x => ({ ...x, tag: 'iNat' }))];
+  if (!items.length) { ul.hidden = true; ul.innerHTML = ''; return; }
+  ul.innerHTML = items.map((x, i) => `<li><button data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span><span class="tag">${esc(x.tag)}</span></button></li>`).join('');
+  ul.hidden = false;
+  ul.querySelectorAll('button').forEach(b => b.onclick = () => pick(items[+b.dataset.i]));
+}
+async function onlineSearch(q, seq) {
+  if (!navigator.onLine || q.length < 3) return;
+  try {
+    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&iconic_taxa=Plantae' : ''}`);
+    if (!r.ok || seq !== onlineSeq) return;
+    const j = await r.json();
+    const res = j.results.map(t => ({ s: speciesName(t.name, t.rank_level), c: t.rank_level < 10 ? null : t.preferred_common_name, id: t.id }));
+    const uniq = []; const seen = new Set();
+    for (const x of res) if (!seen.has(x.s)) { seen.add(x.s); uniq.push(x); }
+    if (seq === onlineSeq) renderSugg(localMatches(q), uniq);
+  } catch { /* offline oder blockiert: lokale Vorschläge genügen */ }
+}
+$('q').addEventListener('input', e => {
+  const q = e.target.value;
+  renderSugg(localMatches(q));
+  clearTimeout(debounce); const seq = ++onlineSeq;
+  debounce = setTimeout(() => onlineSearch(q, seq), 350);
+});
+$('q').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); const f = $('sugg').querySelector('button'); if (f) f.click(); else if (e.target.value.trim()) pick({ s: speciesName(e.target.value.trim()) }); }
+});
+function pick(x) {
+  current = { s: x.s, c: x.c || index.common.get(x.s) || '' };
+  $('sugg').hidden = true; $('q').value = x.s; $('q').blur();
+  showResult(current);
+}
+
+function inatLink(sp, b) {
+  const p = new URLSearchParams({ user_id: settings.user, taxon_name: sp, verifiable: 'any' });
+  if (b) { p.set('swlat', b.s); p.set('swlng', b.w); p.set('nelat', b.n); p.set('nelng', b.e); }
+  return 'https://www.inaturalist.org/observations?' + p.toString();
+}
+function showResult(cur) {
+  const el = $('result');
+  if (!here) { el.innerHTML = `<div class="msg info">Erst die Position bestimmen, dann sage ich dir, ob <i>${esc(cur.s)}</i> hier schon gefunden ist.</div>`; return; }
+  const all = index.bySp.get(cur.s) || [];
+  const inQ = all.filter(o => o.k === here.id);
+  const exact = inQ.filter(o => !o.x), fuzzy = inQ.filter(o => o.x);
+  const taxon = `<div class="taxon"><i>${esc(cur.s)}</i>${cur.c ? ' · ' + esc(cur.c) : ''}</div>`;
+  const b = quadBounds(here);
+  if (exact.length) {
+    const last = exact.map(o => o.d).sort().pop();
+    el.innerHTML = `<div class="result found"><div class="verdict">Schon gefunden in ${here.id}</div>${taxon}
+      <div>${exact.length} Fund${exact.length > 1 ? 'e' : ''}, zuletzt am ${fmtDate(last)}.</div>
+      <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
+    return;
+  }
+  const lines = [];
+  if (fuzzy.length) lines.push(fuzzy.length > 1
+    ? `${fuzzy.length} Funde mit verschleierten Koordinaten liegen rechnerisch hier. Der echte Quadrant kann abweichen.`
+    : '1 Fund mit verschleierten Koordinaten liegt rechnerisch hier. Der echte Quadrant kann abweichen.');
+  const inGf = [...new Set(all.filter(o => !o.x && o.k && o.k !== here.id && o.k.startsWith(here.gf + '/')).map(o => o.k))].sort();
+  if (inGf.length) lines.push(`Im Grundfeld ${here.gf} schon in ${inGf.join(', ')}.`);
+  if (!all.length) lines.push('Diese Art hast du auf iNaturalist noch nirgends gemeldet.');
+  else {
+    const near = all.filter(o => o.la != null && !o.x).map(o => ({ o, d: dist(here, o) })).sort((a, b) => a.d - b.d)[0];
+    if (!near) { if (!fuzzy.length) lines.push('Alle eigenen Funde dieser Art haben verschleierte Koordinaten.'); }
+    else if (here.lat != null) lines.push(`Nächster eigener Fund: ${near.o.k}, ${(near.d / 1000).toFixed(1).replace('.', ',')} km entfernt (${fmtDate(near.o.d)}).`);
+    else lines.push(`Insgesamt ${all.length} eigene Funde in ${new Set(all.map(o => o.k)).size} Quadranten.`);
+  }
+  el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
+    <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+    ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
+}
+function dist(a, o) {
+  const R = 6371000, toR = Math.PI / 180;
+  const dLat = (o.la - a.lat) * toR, dLon = (o.lo - a.lon) * toR;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * toR) * Math.cos(o.la * toR) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+// ---------- Artenliste ----------
+function renderList() {
+  if (!here) { $('grid3').innerHTML = ''; $('speciesList').innerHTML = '<li class="muted">Noch keine Position.</li>'; return; }
+  const g = [];
+  for (const dr of [-1, 0, 1]) for (const dc of [-1, 0, 1]) {
+    const Q = dr || dc ? neighbour(here, dr, dc) : here;
+    const n = index.byQuad.get(Q.id)?.size || 0;
+    g.push(`<button class="${dr || dc ? '' : 'here'}" data-q="${Q.id}"><b class="num">${n}</b>${Q.id}</button>`);
+  }
+  $('grid3').innerHTML = g.join('');
+  $('grid3').querySelectorAll('button').forEach(b => b.onclick = () => { if (b.dataset.q !== here.id) setHere({ ...parseQuad(b.dataset.q), acc: null, t: Date.now(), src: 'manual' }); });
+  const m = index.byQuad.get(here.id) || new Map();
+  const f = norm($('listFilter').value);
+  const rows = [...m.entries()].filter(([s]) => !f || norm(s).includes(f) || norm(index.common.get(s)).includes(f)).sort((a, b) => a[0].localeCompare(b[0]));
+  $('listTitle').textContent = `Schon gefundene Arten in ${here.id} (${m.size})`;
+  $('speciesList').innerHTML = rows.length ? rows.map(([s, os]) => {
+    const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
+    return `<li><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}</span></li>`;
+  }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
+}
+$('listFilter').addEventListener('input', renderList);
+
+// ---------- Daten laden ----------
+function saveAll() {
+  const ok = store.set('obs', obs) && store.set('meta', meta);
+  buildIndex(); renderStats(); renderList(); if (current) showResult(current);
+  if (!ok) $('syncStatus').textContent = 'Achtung: Der Speicher des Browsers ist voll, die Funde sind nur bis zum Schließen verfügbar.';
+}
+function renderStats() {
+  const x = obs.filter(o => o.x).length;
+  $('obscStat').innerHTML = obs.length ? (x ? `<span style="color:var(--warn)">${x} von ${obs.length} Funden haben verschleierte Koordinaten.</span>` : `Alle ${obs.length} Funde haben genaue Koordinaten.`) : '';
+  $('syncStatus').textContent = meta.lastSync ? `${obs.length} Funde, ${index.names.length} Arten, ${index.byQuad.size} Quadranten. Stand ${new Date(meta.lastSync).toLocaleString('de-AT')}.` : 'Noch keine Funde geladen.';
+  const hint = $('dataHint');
+  hint.innerHTML = obs.length ? '' : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
+}
+function fromApi(o) {
+  const t = o.taxon; if (!t) return null;
+  let loc = o.private_location || o.location;
+  const priv = !!o.private_location;
+  if (!loc) return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? t.preferred_common_name || '' : '', d: o.observed_on || '', la: null, lo: null, x: 0 };
+  const [la, lo] = loc.split(',').map(Number);
+  return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null };
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function fetchAll(extra, onPage) {
+  let idAbove = 0, got = 0, total = null;
+  for (;;) {
+    const p = new URLSearchParams({ user_login: settings.user, per_page: '200', order_by: 'id', order: 'asc', id_above: String(idAbove), locale: 'de', ...extra });
+    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+    const headers = settings.token ? { Authorization: settings.token } : {};
+    const r = await fetch('https://api.inaturalist.org/v1/observations?' + p, { headers });
+    if (r.status === 401) throw new Error('Der API-Token ist abgelaufen oder ungültig. Hol dir einen neuen oder lass das Feld leer.');
+    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+    const j = await r.json();
+    if (total == null) total = j.total_results;
+    if (!j.results.length) break;
+    onPage(j.results, got += j.results.length, total);
+    idAbove = j.results[j.results.length - 1].id;
+    if (j.results.length < 200) break;
+    await sleep(1100); // iNaturalist bittet um höchstens ~1 Anfrage pro Sekunde
+  }
+}
+async function sync(full) {
+  settings.user = $('user').value.trim() || 'mondseeirrsee';
+  store.set('settings', settings);
+  const btns = [$('btnSync'), $('btnFull')]; btns.forEach(b => b.disabled = true);
+  $('progWrap').hidden = false; $('prog').style.width = '0%';
+  const status = $('syncStatus');
+  try {
+    const started = new Date().toISOString();
+    const map = full ? new Map() : new Map(obs.map(o => [o.i, o]));
+    const passes = full || !meta.lastSync ? [{}] : [{ updated_since: meta.lastSync }];
+    for (const extra of passes) {
+      await fetchAll(extra, (res, got, total) => {
+        for (const o of res) { const m = fromApi(o); if (m) map.set(m.i, m); else map.delete(o.id); }
+        $('prog').style.width = Math.min(100, Math.round(got / Math.max(total, 1) * 100)) + '%';
+        status.textContent = `${got} von ${total} Beobachtungen geladen …`;
+      });
+    }
+    obs = [...map.values()];
+    meta = { lastSync: started, user: settings.user, onlyPlants: settings.onlyPlants };
+    saveAll();
+  } catch (e) {
+    status.textContent = (e instanceof TypeError)
+      ? 'iNaturalist ist nicht erreichbar. Prüfe den Empfang, oder nutze den CSV-Import. Deine gespeicherten Funde bleiben erhalten.'
+      : e.message;
+  } finally {
+    btns.forEach(b => b.disabled = false); $('progWrap').hidden = true;
+  }
+}
+$('btnSync').onclick = () => sync(false);
+$('btnFull').onclick = () => sync(true);
+$('user').addEventListener('change', e => {
+  const u = e.target.value.trim();
+  if (u && u !== settings.user) { settings.user = u; store.set('settings', settings); obs = []; meta = { lastSync: null }; saveAll(); }
+});
+$('onlyPlants').addEventListener('change', e => { settings.onlyPlants = e.target.checked; store.set('settings', settings); meta.lastSync = null; $('syncStatus').textContent = 'Filter geändert. Bitte „Alles neu laden“.'; });
+$('token').addEventListener('change', e => { settings.token = e.target.value.trim(); store.set('settings', settings); });
+
+// CSV
+function parseCSV(text) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { row.push(f); f = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+    else f += ch;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  return rows;
+}
+$('csv').addEventListener('change', async e => {
+  const file = e.target.files[0]; if (!file) return;
+  const rows = parseCSV(await file.text());
+  const h = rows.shift().map(x => x.trim());
+  const col = n => h.indexOf(n);
+  const need = ['id', 'latitude', 'longitude', 'scientific_name'];
+  const miss = need.filter(n => col(n) < 0);
+  if (miss.length) { $('syncStatus').textContent = 'In der CSV fehlen die Spalten: ' + miss.join(', ') + '.'; return; }
+  const v = (r, n) => col(n) >= 0 ? r[col(n)] : '';
+  const out = [];
+  for (const r of rows) {
+    if (r.length < h.length / 2) continue;
+    if (settings.onlyPlants && col('iconic_taxon_name') >= 0 && v(r, 'iconic_taxon_name') !== 'Plantae') continue;
+    const pla = parseFloat(v(r, 'private_latitude')), plo = parseFloat(v(r, 'private_longitude'));
+    const la = parseFloat(v(r, 'latitude')), lo = parseFloat(v(r, 'longitude'));
+    const usePriv = !isNaN(pla) && !isNaN(plo);
+    const s = v(r, 'taxon_species_name') || speciesName(v(r, 'scientific_name'));
+    if (!s) continue;
+    out.push({ i: +v(r, 'id'), s, c: v(r, 'common_name'), d: v(r, 'observed_on'), la: usePriv ? pla : (isNaN(la) ? null : la), lo: usePriv ? plo : (isNaN(lo) ? null : lo), x: !usePriv && /true/i.test(v(r, 'coordinates_obscured')) ? 1 : 0, a: +v(r, 'positional_accuracy') || null });
+  }
+  obs = out; meta = { lastSync: new Date().toISOString(), user: settings.user, src: 'csv' };
+  saveAll();
+  $('syncStatus').textContent = `${out.length} Funde aus der CSV übernommen. ` + $('syncStatus').textContent;
+  e.target.value = '';
+});
+
+// ---------- Start ----------
+$('user').value = settings.user;
+$('onlyPlants').checked = settings.onlyPlants;
+$('token').value = settings.token;
+buildIndex(); renderStats(); renderHead(); renderList();
+showTab(store.get('tab', 'check'));
+if (!here) locate();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
+
+</body></html>
