@@ -290,7 +290,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="expStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 13</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 14</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -744,9 +744,17 @@ function saveAll() {
   buildIndex(); renderStats(); renderList(); renderDay(); drawGrid(); if (current) showResult(current);
   if (!ok) $('syncStatus').textContent = 'Achtung: Der Speicher des Browsers ist voll, die Funde sind nur bis zum Schließen verfügbar.';
 }
+// Arten mit verschleierten Koordinaten, je Art mit Anzahl und letztem Datum
+function obscList() {
+  const m = new Map();
+  for (const o of obs) if (o.x) { const e = m.get(o.s) || { n: 0, d: '', c: o.c }; e.n++; if ((o.d || '') > e.d) e.d = o.d; m.set(o.s, e); }
+  const rows = [...m].sort((a, b) => a[0].localeCompare(b[0]));
+  return `<details style="margin-top:6px"><summary>Arten anzeigen (${rows.length})</summary><ul class="list">${rows.map(([sp, e]) =>
+    `<li><span><a class="sci" href="https://www.inaturalist.org/observations?${new URLSearchParams({ user_id: settings.user, taxon_name: sp, verifiable: 'any' })}" target="_blank" rel="noopener" style="color:inherit">${esc(sp)}</a>${e.c ? `<br><span class="cn">${esc(e.c)}</span>` : ''}</span><span class="d">${e.n}× · ${fmtDate(e.d)}</span></li>`).join('')}</ul></details>`;
+}
 function renderStats() {
   const x = obs.filter(o => o.x).length;
-  $('obscStat').innerHTML = obs.length ? (x ? `<span style="color:var(--warn)">${x} von ${obs.length} Funden haben verschleierte Koordinaten.</span>` : `Alle ${obs.length} Funde haben genaue Koordinaten.`) : '';
+  $('obscStat').innerHTML = obs.length ? (x ? `<span style="color:var(--warn)">${x} von ${obs.length} Funden haben verschleierte Koordinaten.</span>${obscList()}` : `Alle ${obs.length} Funde haben genaue Koordinaten.`) : '';
   $('syncStatus').textContent = meta.lastSync ? `${obs.length} Funde, ${index.names.length} Arten, ${index.byQuad.size} Quadranten. Stand ${new Date(meta.lastSync).toLocaleString('de-AT')}.` : 'Noch keine Funde geladen.';
   const hint = $('dataHint');
   hint.innerHTML = obs.length
