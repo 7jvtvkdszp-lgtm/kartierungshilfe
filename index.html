@@ -215,7 +215,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <input type="file" id="csv" accept=".csv,text/csv">
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 6</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 7</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -637,7 +637,9 @@ function renderStats() {
   $('obscStat').innerHTML = obs.length ? (x ? `<span style="color:var(--warn)">${x} von ${obs.length} Funden haben verschleierte Koordinaten.</span>` : `Alle ${obs.length} Funde haben genaue Koordinaten.`) : '';
   $('syncStatus').textContent = meta.lastSync ? `${obs.length} Funde, ${index.names.length} Arten, ${index.byQuad.size} Quadranten. Stand ${new Date(meta.lastSync).toLocaleString('de-AT')}.` : 'Noch keine Funde geladen.';
   const hint = $('dataHint');
-  hint.innerHTML = obs.length ? '' : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
+  hint.innerHTML = obs.length
+    ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
+    : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
 }
 function fromApi(o) {
   const t = o.taxon; if (!t) return null;
@@ -668,7 +670,10 @@ async function fetchAll(extra, onPage) {
     await sleep(1100); // iNaturalist bittet um höchstens ~1 Anfrage pro Sekunde
   }
 }
+let syncBusy = false;
 async function sync(full) {
+  if (syncBusy) return;
+  syncBusy = true; $('dataHint').innerHTML = '<div class="small muted">Deine Funde werden aktualisiert …</div>';
   settings.user = $('user').value.trim() || 'mondseeirrsee';
   store.set('settings', settings);
   const btns = [$('btnSync'), $('btnFull')]; btns.forEach(b => b.disabled = true);
@@ -695,6 +700,7 @@ async function sync(full) {
       : e.message;
   } finally {
     btns.forEach(b => b.disabled = false); $('progWrap').hidden = true;
+    syncBusy = false; renderStats();
   }
 }
 $('btnSync').onclick = () => sync(false);
@@ -758,6 +764,14 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 if (!here) locate(); else if (navigator.onLine) loadArea(false);
+// Funde beim Öffnen automatisch abgleichen (höchstens alle 5 Minuten, nur mit Empfang)
+function autoSync() {
+  if (!navigator.onLine || syncBusy) return;
+  if (meta.lastSync && Date.now() - new Date(meta.lastSync) < 5 * 60e3) return;
+  sync(false);
+}
+autoSync();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') autoSync(); });
 // Updates: neue Version suchen, sobald die App geöffnet wird, und nach dem Wechsel einmal neu laden
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const hadController = !!navigator.serviceWorker.controller;
