@@ -215,7 +215,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <input type="file" id="csv" accept=".csv,text/csv">
       </div>
       <details class="panel">
-        <summary>Zum Raster</summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 6</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -758,7 +758,15 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 if (!here) locate(); else if (navigator.onLine) loadArea(false);
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+// Updates: neue Version suchen, sobald die App geöffnet wird, und nach dem Wechsel einmal neu laden
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
+  }).catch(() => {});
+}
 })();
 </script>
 
