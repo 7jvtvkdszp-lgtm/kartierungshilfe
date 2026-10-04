@@ -135,6 +135,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .legend i { display: inline-block; width: 14px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 4px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
+.chip.lifer { background: #7c3aed; color: #fff }
 .chips { display: inline-flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end }
 .btn.on { background: var(--found-bg); color: var(--found); border-color: var(--found) }
 .qchange { grid-column: 1 / -1; background: var(--accent); color: var(--accent-fg); border-radius: 10px; padding: 10px 12px; font-weight: 600 }
@@ -319,7 +320,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 15</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 16</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -383,6 +384,8 @@ function speciesName(name, rankLevel) {
 }
 const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim();
 
+// Lifer: Art, die du in Österreich noch nie gefunden hast
+const isLifer = s => !index.bySp.has(s);
 function buildIndex() {
   const byQuad = new Map(), bySp = new Map(), common = new Map();
   for (const o of obs) {
@@ -757,11 +760,11 @@ function renderList() {
     if ($('withNb').checked) for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(x => cand.add(x));
     const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked;
     const rows = [...cand].filter(s => !mine.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)))
-      .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s) }))
-      .sort((x, y) => (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+      .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s) }))
+      .sort((x, y) => (y.lif - x.lif) || (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
@@ -1378,19 +1381,22 @@ $('btnTrip').onclick = async () => {
     }
     await loadSeason(here).catch(() => {});
     const sea = seasonSet(here);
-    // Punkte je Quadrant: jede fehlende Art zählt nach Häufigkeit (wie die Fundchance), Arten in Saison zählen 1,5-fach
+    // Punkte je Quadrant: jede fehlende Art zählt nach Häufigkeit (wie die Fundchance), Arten in Saison zählen 1,5-fach.
+    // Lifer (in Österreich noch nie gefunden) haben absoluten Vorrang: zuerst nach Lifer-Punkten sortiert, dann nach den übrigen.
     const rows = quads.filter(x => area[x.Q.id]).map(({ Q, d }) => {
       const mine = mySpeciesIn(Q.id);
-      let score = 0, open = 0, now = 0;
+      let score = 0, lscore = 0, open = 0, now = 0; const lifers = [];
       for (const [s, [n]] of Object.entries(area[Q.id].sp)) {
         if (mine.has(s)) continue;
         open++; const inSea = sea && sea.has(s); if (inSea) now++;
-        score += Math.min(1, Math.log(1 + n) / Math.log(31)) * (inSea ? 1.5 : 1);
+        const w = Math.min(1, Math.log(1 + n) / Math.log(31)) * (inSea ? 1.5 : 1);
+        if (isLifer(s)) { lscore += w; lifers.push([s, w]); } else score += w;
       }
-      return { Q, d, score, open, now, cov: quadCoverage(Q.id) };
-    }).sort((a, b) => b.score - a.score).slice(0, 10);
+      lifers.sort((a, b) => b[1] - a[1]);
+      return { Q, d, score, lscore, lifers: lifers.map(x => x[0]), open, now, cov: quadCoverage(Q.id) };
+    }).sort((a, b) => b.lscore - a.lscore || b.score - a.score).slice(0, 10);
     st.textContent = rows.length ? `Die ${rows.length} lohnendsten Quadranten im Umkreis von ${radius} km:` : 'Keine Daten für diesen Umkreis.';
-    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.Q.id}"><span><b class="num">${r.Q.id}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.cov.pct ?? 0} %</span></span><span class="chip ok num">${Math.round(r.score)}</span></li>`).join('');
+    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.Q.id}"><span><b class="num">${r.Q.id}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.lifers.length ? `<b>${r.lifers.length} Lifer</b>: ${esc(r.lifers.slice(0, 3).join(', '))}${r.lifers.length > 3 ? ' …' : ''}<br>` : ''}${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.cov.pct ?? 0} %</span></span><span class="chips">${r.lifers.length ? `<span class="chip lifer num">${r.lifers.length}</span>` : ''}<span class="chip ok num">${Math.round(r.score + r.lscore)}</span></span></li>`).join('');
     out.querySelectorAll('li.tap').forEach(li => li.onclick = () => {
       setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' });
       if (map) { const b = quadBounds(here); map.fitBounds([[b.s, b.w], [b.n, b.e]], { padding: [30, 30] }); }

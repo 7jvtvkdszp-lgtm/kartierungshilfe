@@ -10,7 +10,7 @@ Web-App fürs iPhone: bestimmt per GPS den Quadranten der Floristischen Kartieru
 ## Funktionen
 - **Prüfen:** Quadrant per GPS, Status der Art im Quadranten (kartiert / nach 3 Jahren wieder fällig / neu), Kürzelsuche („aju rep“), Fundchance, Rote Liste, Saison, Entfernung zum nächsten Fund aller iNaturalist-Nutzer, „+ Auf die Tagesliste“.
 - **Arten:** eigene Arten je Quadrant (grün/orange), Abdeckung in %, „Noch nicht gefunden“ sortiert nach Saison und Fundchance.
-- **Karte:** OSM mit Raster (Grundfelder fett, beschriftet), Quadranten nach Abdeckung eingefärbt; Offline-Paket für das sichtbare Gebiet; „Lohnende Quadranten“ im Umkreis 5–50 km (offene Arten nach Häufigkeit, Saison zählt 1,5-fach).
+- **Karte:** OSM mit Raster (Grundfelder fett, beschriftet), Quadranten nach Abdeckung eingefärbt; Offline-Paket für das sichtbare Gebiet; „Lohnende Quadranten“ im Umkreis 5–50 km (Lifer = in Österreich noch nie gefunden haben Vorrang, dann offene Arten nach Häufigkeit, Saison zählt 1,5-fach); Lifer auch in der Artenliste markiert und zuerst.
 - **Heute:** Tagesliste, wird automatisch abgehakt, sobald der Fund auf iNaturalist ist.
 - **Mitlaufen:** verfolgt die Position und meldet mit Ton und Hinweis den Wechsel in einen neuen Quadranten (nur bei geöffneter App; iPhone erlaubt Web-Apps keine Vibration).
 - **Daten:** offene Bestimmungen (nur Gattung / Needs ID; Gattungsfunde zählen nicht als kartiert), Jahresbilanz (Funde, Erstnachweise je Quadrant, am längsten nicht besuchte Quadranten), Sicherung/Wiederherstellung als JSON (ohne Token).
