@@ -166,6 +166,8 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
           <input class="field" id="user" placeholder="Benutzername" autocomplete="off" autocapitalize="off">
         </div>
         <label class="row small"><input type="checkbox" id="onlyPlants" checked> Nur Pflanzen (Plantae)</label>
+        <label class="row small"><input type="checkbox" id="noMoss" checked> Ohne Moose (Laub-, Leber- und Hornmoose)</label>
+        <label class="row small"><input type="checkbox" id="onlyAT" checked> Nur Funde in Österreich</label>
         <div class="row">
           <button class="btn primary" id="btnSync">Funde aktualisieren</button>
           <button class="btn" id="btnFull">Alles neu laden</button>
@@ -181,7 +183,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
       </div>
       <div class="panel">
         <h2>CSV-Export importieren</h2>
-        <p class="small muted" style="margin:0">Alternative ohne Internet in der App: Export unter <a href="https://www.inaturalist.org/observations/export" target="_blank" rel="noopener">inaturalist.org/observations/export</a> mit den Spalten id, observed_on, latitude, longitude, private_latitude, private_longitude, scientific_name, common_name, taxon_species_name, iconic_taxon_name. Ersetzt die gespeicherten Funde.</p>
+        <p class="small muted" style="margin:0">Alternative ohne Internet in der App: Export unter <a href="https://www.inaturalist.org/observations/export" target="_blank" rel="noopener">inaturalist.org/observations/export</a> mit den Spalten id, observed_on, latitude, longitude, private_latitude, private_longitude, scientific_name, common_name, taxon_species_name, iconic_taxon_name, taxon_phylum_name, place_country_name. Ersetzt die gespeicherten Funde.</p>
         <input type="file" id="csv" accept=".csv,text/csv">
       </div>
       <details class="panel">
@@ -231,7 +233,9 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kh.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem('kh.' + k, JSON.stringify(v)); return true; } catch { return false; } },
 };
-let settings = Object.assign({ user: 'mondseeirrsee', onlyPlants: true, token: '' }, store.get('settings', {}));
+const MOSS_IDS = '311249,64615,56327'; // iNat: Bryophyta, Marchantiophyta, Anthocerotophyta
+const PLACE_AT = '8057'; // iNat: Österreich
+let settings = Object.assign({ user: 'mondseeirrsee', onlyPlants: true, noMoss: true, onlyAT: true, token: '' }, store.get('settings', {}));
 let meta = store.get('meta', { lastSync: null, maxId: 0 });
 let obs = store.get('obs', []); // {i,s,c,d,la,lo,x,a}
 let here = store.get('here', null); // {R,C,q,gf,id,lat,lon,acc,t,src}
@@ -363,7 +367,7 @@ function renderSugg(local, online) {
 async function onlineSearch(q, seq) {
   if (!navigator.onLine || q.length < 3) return;
   try {
-    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&iconic_taxa=Plantae' : ''}`);
+    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&iconic_taxa=Plantae' : ''}${settings.noMoss ? '&without_taxon_id=' + MOSS_IDS : ''}`);
     if (!r.ok || seq !== onlineSeq) return;
     const j = await r.json();
     const res = j.results.map(t => ({ s: speciesName(t.name, t.rank_level), c: t.rank_level < 10 ? null : t.preferred_common_name, id: t.id }));
@@ -480,6 +484,8 @@ async function fetchAll(extra, onPage) {
   for (;;) {
     const p = new URLSearchParams({ user_login: settings.user, per_page: '200', order_by: 'id', order: 'asc', id_above: String(idAbove), locale: 'de', ...extra });
     if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+    if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+    if (settings.onlyAT) p.set('place_id', PLACE_AT);
     const headers = settings.token ? { Authorization: settings.token } : {};
     const r = await fetch('https://api.inaturalist.org/v1/observations?' + p, { headers });
     if (r.status === 401) throw new Error('Der API-Token ist abgelaufen oder ungültig. Hol dir einen neuen oder lass das Feld leer.');
@@ -501,6 +507,7 @@ async function sync(full) {
   const status = $('syncStatus');
   try {
     const started = new Date().toISOString();
+    if (meta.filter !== filterKey()) full = true; // geänderte Filter: alles neu laden
     const map = full ? new Map() : new Map(obs.map(o => [o.i, o]));
     const passes = full || !meta.lastSync ? [{}] : [{ updated_since: meta.lastSync }];
     for (const extra of passes) {
@@ -511,7 +518,7 @@ async function sync(full) {
       });
     }
     obs = [...map.values()];
-    meta = { lastSync: started, user: settings.user, onlyPlants: settings.onlyPlants };
+    meta = { lastSync: started, user: settings.user, filter: filterKey() };
     saveAll();
   } catch (e) {
     status.textContent = (e instanceof TypeError)
@@ -527,7 +534,8 @@ $('user').addEventListener('change', e => {
   const u = e.target.value.trim();
   if (u && u !== settings.user) { settings.user = u; store.set('settings', settings); obs = []; meta = { lastSync: null }; saveAll(); }
 });
-$('onlyPlants').addEventListener('change', e => { settings.onlyPlants = e.target.checked; store.set('settings', settings); meta.lastSync = null; $('syncStatus').textContent = 'Filter geändert. Bitte „Alles neu laden“.'; });
+const filterKey = () => [settings.onlyPlants, settings.noMoss, settings.onlyAT].map(Number).join('');
+for (const k of ['onlyPlants', 'noMoss', 'onlyAT']) $(k).addEventListener('change', e => { settings[k] = e.target.checked; store.set('settings', settings); $('syncStatus').textContent = 'Filter geändert. Beim nächsten Aktualisieren wird alles neu geladen.'; });
 $('token').addEventListener('change', e => { settings.token = e.target.value.trim(); store.set('settings', settings); });
 
 // CSV
@@ -557,6 +565,8 @@ $('csv').addEventListener('change', async e => {
   for (const r of rows) {
     if (r.length < h.length / 2) continue;
     if (settings.onlyPlants && col('iconic_taxon_name') >= 0 && v(r, 'iconic_taxon_name') !== 'Plantae') continue;
+    if (settings.noMoss && col('taxon_phylum_name') >= 0 && /^(Bryophyta|Marchantiophyta|Anthocerotophyta)$/.test(v(r, 'taxon_phylum_name'))) continue;
+    if (settings.onlyAT && col('place_country_name') >= 0 && v(r, 'place_country_name') && v(r, 'place_country_name') !== 'Austria') continue;
     const pla = parseFloat(v(r, 'private_latitude')), plo = parseFloat(v(r, 'private_longitude'));
     const la = parseFloat(v(r, 'latitude')), lo = parseFloat(v(r, 'longitude'));
     const usePriv = !isNaN(pla) && !isNaN(plo);
@@ -564,7 +574,7 @@ $('csv').addEventListener('change', async e => {
     if (!s) continue;
     out.push({ i: +v(r, 'id'), s, c: v(r, 'common_name'), d: v(r, 'observed_on'), la: usePriv ? pla : (isNaN(la) ? null : la), lo: usePriv ? plo : (isNaN(lo) ? null : lo), x: !usePriv && /true/i.test(v(r, 'coordinates_obscured')) ? 1 : 0, a: +v(r, 'positional_accuracy') || null });
   }
-  obs = out; meta = { lastSync: new Date().toISOString(), user: settings.user, src: 'csv' };
+  obs = out; meta = { lastSync: new Date().toISOString(), user: settings.user, src: 'csv', filter: filterKey() };
   saveAll();
   $('syncStatus').textContent = `${out.length} Funde aus der CSV übernommen. ` + $('syncStatus').textContent;
   e.target.value = '';
@@ -573,6 +583,8 @@ $('csv').addEventListener('change', async e => {
 // ---------- Start ----------
 $('user').value = settings.user;
 $('onlyPlants').checked = settings.onlyPlants;
+$('noMoss').checked = settings.noMoss;
+$('onlyAT').checked = settings.onlyAT;
 $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
