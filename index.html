@@ -320,7 +320,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 16</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 17</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -513,7 +513,7 @@ function renderSugg(local, online) {
   const extra = (online || []).filter(x => !seen.has(x.s)).slice(0, 6);
   const items = [...local, ...extra];
   if (!items.length) { ul.hidden = true; ul.innerHTML = ''; return; }
-  ul.innerHTML = items.map((x, i) => `<li><button class="pick" data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span>${chip(x.s)}</button>${here ? `<button class="add" data-add="${i}" aria-label="Auf die Tagesliste" ${onDayToday(x.s) ? 'disabled>✓' : '>+'}</button>` : ''}</li>`).join('');
+  ul.innerHTML = items.map((x, i) => `<li><button class="pick" data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span><span class="chips">${(x.r == null || x.r <= 10) && isLifer(x.s) ? '<span class="chip lifer">Lifer</span>' : ''}${chip(x.s)}</span></button>${here ? `<button class="add" data-add="${i}" aria-label="Auf die Tagesliste" ${onDayToday(x.s) ? 'disabled>✓' : '>+'}</button>` : ''}</li>`).join('');
   ul.hidden = false;
   ul.querySelectorAll('button.pick').forEach(b => b.onclick = () => pick(items[+b.dataset.i]));
   // „+“: direkt aus der Vorschlagsliste auf die Tagesliste, ohne die Art zu öffnen
@@ -529,7 +529,7 @@ async function onlineSearch(q, seq) {
     const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&iconic_taxa=Plantae' : ''}${settings.noMoss ? '&without_taxon_id=' + MOSS_IDS : ''}`);
     if (!r.ok || seq !== onlineSeq) return;
     const j = await r.json();
-    const res = j.results.map(t => ({ s: speciesName(t.name, t.rank_level), c: t.rank_level < 10 ? null : t.preferred_common_name, id: t.id }));
+    const res = j.results.map(t => ({ s: speciesName(t.name, t.rank_level), c: t.rank_level < 10 ? null : t.preferred_common_name, id: t.id, r: t.rank_level }));
     const uniq = []; const seen = new Set();
     for (const x of res) if (!seen.has(x.s)) { seen.add(x.s); uniq.push(x); }
     if (seq === onlineSeq) renderSugg(localMatches(q), uniq);
@@ -580,7 +580,7 @@ function showResult(cur) {
   const all = index.bySp.get(cur.s) || [];
   const inQ = all.filter(o => o.k === here.id);
   const exact = inQ.filter(o => !o.x), fuzzy = inQ.filter(o => o.x);
-  const taxon = `<div class="taxon"><i>${esc(cur.s)}</i>${cur.c ? ' · ' + esc(cur.c) : ''}</div>`;
+  const taxon = `<div class="taxon"><i>${esc(cur.s)}</i>${cur.c ? ' · ' + esc(cur.c) : ''}${!all.length && cur.s.includes(' ') ? ' <span class="chip lifer">Lifer</span>' : ''}</div>`;
   const b = quadBounds(here);
   if (exact.length) {
     const last = exact.map(o => o.d).sort().pop();
