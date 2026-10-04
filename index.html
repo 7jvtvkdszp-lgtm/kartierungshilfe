@@ -140,12 +140,14 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .daygroup { font-size: 13px; font-weight: 700; color: var(--muted); padding-top: 8px; letter-spacing: .04em; text-transform: uppercase }
 .list li .x { border: 0; background: transparent; color: var(--muted); font-size: 20px; min-width: 36px; min-height: 36px }
 .list li.done .sci { text-decoration: line-through; color: var(--muted) }
+.totop { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: 52px; height: 52px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-fg); font-size: 26px; font-weight: 700; box-shadow: 0 3px 10px rgb(0 0 0 / .25); z-index: 1000 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important } }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
+<button class="totop" id="toTop" hidden aria-label="Nach oben">↑</button>
 <div class="wrap">
   <section class="qhead" aria-live="polite">
     <div>
@@ -284,7 +286,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="expStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 10</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 11</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1122,13 +1124,14 @@ function quadCoverage(id) {
   return { mine: mine.size, total, pct: total ? Math.round(mine.size / total * 100) : 0 };
 }
 const covColor = pct => `hsl(${Math.round(8 + pct * 1.17)} ${pct > 60 ? 55 : 75}% ${pct > 60 ? 38 : 50}%)`;
-function drawGrid() {
+function drawGrid(noQueue) {
   if (!map || $('view-map').hidden) return;
   gridLayer.clearLayers(); posLayer.clearLayers();
   const b = map.getBounds(), z = map.getZoom();
   store.set('mapView', { c: [map.getCenter().lat, map.getCenter().lng], z });
   const quads = z >= 9 ? quadsInBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast(), 500) : null;
-  $('mapNote').textContent = quads ? '' : 'Zoom näher heran, um das Kartierungsraster zu sehen.';
+  if (!fillRunning) $('mapNote').textContent = quads ? '' : 'Zoom näher heran, um das Kartierungsraster zu sehen.';
+  if (quads && noQueue !== true) queueMapFill(quads);
   for (const Q of quads || []) {
     const qb = quadBounds(Q), c = quadCoverage(Q.id), isHere = here && here.id === Q.id;
     const style = c.pct != null
@@ -1141,6 +1144,31 @@ function drawGrid() {
     if (z >= 11.5) L.marker([(qb.n + qb.s) / 2, (qb.w + qb.e) / 2], { interactive: false, icon: L.divIcon({ className: 'qlabel-map', html: `${Q.id}<br>${c.total != null ? `${c.mine}/${c.total} · ${c.pct} %` : c.mine ? c.mine + ' Arten' : ''}`, iconSize: [90, 28] }) }).addTo(gridLayer);
   }
   if (here && here.lat != null) L.circleMarker([here.lat, here.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#1d4ed8', fillOpacity: 1 }).addTo(posLayer);
+}
+
+// Abdeckung für alle sichtbaren Quadranten nachladen, die Mitte zuerst
+let fillQueue = [], fillRunning = false;
+function queueMapFill(quads) {
+  if (!navigator.onLine) return;
+  const c = map.getCenter();
+  const mid = Q => { const b = quadBounds(Q); return (b.n + b.s - 2 * c.lat) ** 2 + ((b.w + b.e) / 2 - c.lng) ** 2 * 0.45; };
+  fillQueue = quads.filter(Q => !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE).sort((a, b) => mid(a) - mid(b)).slice(0, 80);
+  if (fillQueue.length && !fillRunning) runMapFill();
+}
+async function runMapFill() {
+  fillRunning = true;
+  try {
+    while (fillQueue.length && !$('view-map').hidden && navigator.onLine) {
+      if (areaBusy || packBusy) { await sleep(1500); continue; }
+      const Q = fillQueue.shift();
+      if (areaOk(Q.id) && Date.now() - new Date(area[Q.id].t) <= AREA_MAX_AGE) continue;
+      $('mapNote').textContent = `Lade Abdeckung für ${Q.id} … noch ${fillQueue.length} Quadranten`;
+      area[Q.id] = await fetchQuadSpecies(Q); kv.set('area', area);
+      drawGrid(true);
+      await sleep(1100);
+    }
+  } catch { $('mapNote').textContent = 'iNaturalist ist gerade nicht erreichbar.'; fillRunning = false; return; }
+  fillRunning = false; $('mapNote').textContent = '';
 }
 
 // ---------- Offline-Paket ----------
@@ -1191,6 +1219,14 @@ $('btnPack').onclick = async () => {
     packBusy = false; $('btnPack').disabled = false; $('pkProgWrap').hidden = true;
     renderList(); drawGrid();
   }
+};
+
+// ---------- Pfeil nach oben ----------
+window.addEventListener('scroll', () => { $('toTop').hidden = window.scrollY < 500; }, { passive: true });
+$('toTop').onclick = () => {
+  const anchor = !$('view-list').hidden ? $('listTitle') : null;
+  const y = anchor ? Math.max(0, anchor.getBoundingClientRect().top + window.scrollY - 12) : 0;
+  window.scrollTo({ top: window.scrollY - y < 40 ? 0 : y, behavior: 'smooth' });
 };
 
 // ---------- Mitlaufen: Hinweis beim Wechsel in einen neuen Quadranten ----------
