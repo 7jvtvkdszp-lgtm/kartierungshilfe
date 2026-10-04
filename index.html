@@ -136,6 +136,18 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
 .chip.lifer { background: #7c3aed; color: #fff }
+.edge.warn { background: var(--warn-bg); color: var(--warn); font-weight: 600 }
+.wishnote { grid-column: 1 / -1; font-size: 13px; background: #ede9fe; color: #5b21b6; border-radius: 8px; padding: 6px 10px }
+@media (prefers-color-scheme: dark) { .wishnote { background: #2e1065; color: #ddd6fe } }
+.taxphoto { margin: 8px 0 4px }
+.taxphoto img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 10px; display: block; background: var(--line) }
+.taxphoto figcaption { font-size: 11px; color: var(--muted); margin-top: 2px }
+.simlist { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 6px; -webkit-overflow-scrolling: touch }
+.sim { flex: 0 0 92px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; color: inherit; font: inherit; font-size: 11px; text-align: center; padding: 0; cursor: pointer }
+.sim img, .sim .noimg { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: var(--line); display: block }
+.sim .chip { font-size: 10px; padding: 1px 6px }
+button.plain { background: none; border: 0; color: inherit; font: inherit; text-align: left; padding: 0; cursor: pointer; flex: 1 }
+button.x { background: none; border: 0; color: var(--muted); font-size: 16px; padding: 0 4px; cursor: pointer }
 .chips { display: inline-flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end }
 .btn.on { background: var(--found-bg); color: var(--found); border-color: var(--found) }
 .qchange { grid-column: 1 / -1; background: var(--accent); color: var(--accent-fg); border-radius: 10px; padding: 10px 12px; font-weight: 600 }
@@ -167,6 +179,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
     <div class="qchange" id="qchange" hidden></div>
     <div class="qmeta" id="qmeta"><span>Noch keine Position. Tippe auf „Position“ oder gib einen Quadranten ein.</span></div>
     <div class="edge" id="edge" hidden></div>
+    <div class="wishnote" id="wishNote" hidden></div>
     <form class="manual" id="manualForm" hidden>
       <input class="field" id="manualInput" placeholder="8146/1 oder 47.85, 13.37" autocomplete="off" inputmode="text">
       <button class="btn primary" type="submit">Übernehmen</button>
@@ -191,6 +204,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
       <button class="back" id="back" hidden>‹ Zurück zur Auswahl</button>
       <div id="result"></div>
       <div id="dataHint"></div>
+      <div id="newNear"></div>
     </div>
   </section>
 
@@ -224,6 +238,10 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
   <section id="view-map" class="view" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div id="map" class="map"></div>
+      <div class="tabs seg" role="tablist">
+        <button role="tab" id="mm-cov" aria-selected="true">Abdeckung</button>
+        <button role="tab" id="mm-lif" aria-selected="false">Lifer</button>
+      </div>
       <div class="legend" id="mapLegend">
         <span>Deine Abdeckung je Quadrant:</span>
         <span><i style="background:hsl(8 75% 50%)"></i>0 %</span>
@@ -264,6 +282,11 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <a class="btn" href="https://www.inaturalist.org/observations/upload" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;color:inherit">iNaturalist-Upload öffnen</a>
         <button class="btn" id="dayClear">Erledigte entfernen</button>
       </div>
+    </div>
+    <div class="panel" style="margin-top:12px">
+      <h2>Wunschliste</h2>
+      <p class="small muted" style="margin:0">Zielarten, die du finden willst. Betrittst du einen Quadranten, in dem eine davon auf iNaturalist bekannt ist, zeigt die App das oben an (im Mitlaufen-Modus mit Ton).</p>
+      <ul class="list" id="wishList"></ul>
     </div>
   </section>
 
@@ -320,7 +343,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 18</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 19</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -426,14 +449,23 @@ function renderHead() {
   const edge = $('edge'); edge.hidden = true;
   if (here.lat != null) {
     const b = quadBounds(here), mLat = 111320, mLon = 111320 * Math.cos(here.lat * Math.PI / 180);
-    const d = [
+    const ds = [
       { d: (b.n - here.lat) * mLat, dr: -1, dc: 0 }, { d: (here.lat - b.s) * mLat, dr: 1, dc: 0 },
       { d: (here.lon - b.w) * mLon, dr: 0, dc: -1 }, { d: (b.e - here.lon) * mLon, dr: 0, dc: 1 },
-    ].sort((a, b) => a.d - b.d)[0];
-    const lim = Math.max(150, here.acc || 0);
+    ].sort((a, b) => a.d - b.d);
+    const d = ds[0], acc = here.acc || 0;
+    const lim = Math.max(150, acc);
+    edge.classList.remove('warn');
     if (d.d < lim) {
       edge.hidden = false;
-      edge.textContent = `Randlage: nur ${Math.round(d.d)} m bis ${neighbour(here, d.dr, d.dc).id}.`;
+      // GPS ungenauer als der Abstand zur Grenze: der Fund kann im Nachbarquadranten liegen
+      if (acc > d.d) {
+        const near = ds.filter(x => x.d < acc);
+        const ids = near.map(x => neighbour(here, x.dr, x.dc).id);
+        if (near.length > 1) ids.push(neighbour(here, near[0].dr + near[1].dr, near[0].dc + near[1].dc).id);
+        edge.classList.add('warn');
+        edge.textContent = `Achtung: GPS nur auf ± ${Math.round(acc)} m genau, die Grenze ist ${Math.round(d.d)} m entfernt. Der Fund könnte auch in ${[...new Set(ids)].join(' oder ')} liegen. Warte kurz auf besseren Empfang oder geh ein Stück vom Rand weg.`;
+      } else edge.textContent = `Randlage: nur ${Math.round(d.d)} m bis ${neighbour(here, d.dr, d.dc).id}.`;
     }
   }
 }
@@ -442,7 +474,7 @@ function setHere(h) {
   here = h; store.set('here', h);
   renderHead(); renderList(); if (current) showResult(current);
   drawGrid();
-  if (navigator.onLine) loadArea(false);
+  if (navigator.onLine) { loadArea(false); if (newNear) checkNewNear(); }
 }
 
 // ---------- GPS ----------
@@ -586,7 +618,7 @@ function showResult(cur) {
     const last = exact.map(o => o.d).sort().pop();
     const due = isDue(last);
     el.innerHTML = `<div class="result ${due ? 'new' : 'found'}"><div class="verdict">${due ? 'Wieder kartieren in ' : 'Schon kartiert in '}${here.id}</div>${taxon}
-      ${dayButton(cur, due ? 'due' : 'ok')}
+      <div class="row">${dayButton(cur, due ? 'due' : 'ok')}${wishButton(cur)}</div>
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
@@ -609,7 +641,7 @@ function showResult(cur) {
   }
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
-    ${dayButton(cur, 'new')}
+    <div class="row">${dayButton(cur, 'new')}${wishButton(cur)}</div>
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
     ${nbLine(cur.s)}
     ${extraLines(cur.s, false)}
@@ -770,6 +802,9 @@ function renderList() {
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
 }
 $('listFilter').addEventListener('input', renderList);
+// nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
+const _renderList = renderList;
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -793,7 +828,7 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
-  if (statsReady) { renderOpenIds(); renderYear(); }
+  if (statsReady) { renderOpenIds(); renderYear(); renderNewNear(); checkNewNear(); }
 }
 let statsReady = false;
 function fromApi(o) {
@@ -1000,15 +1035,20 @@ function extraLines(s, mapped) {
   if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
   const sea = seasonSet(here);
   if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
-  let html = out.map(l => `<div class="small">${l}</div>`).join('');
+  let html = out.map(l => `<div class="small">${l}</div>`).join('') + '<div id="taxBox"></div>';
   // Für noch nicht (oder nicht mehr) kartierte Arten: nächster Fund aller Nutzer mit Detailkarte
   if (!mapped) html += `<div class="nearbox" id="nearBox"><div class="small">${navigator.onLine ? 'Suche Funde aller iNaturalist-Nutzer …' : 'Nächster Fund aller Nutzer: nur mit Empfang.'}</div></div>`;
   return html;
 }
 // iNaturalist-Taxon-ID zu einem Artnamen (wird gemerkt)
 let taxIds = store.get('taxIds', {});
-async function taxonId(s) {
-  if (taxIds[s]) return taxIds[s];
+const taxIdPending = new Map(); // gleichzeitige Anfragen für dieselbe Art nur einmal schicken
+function taxonId(s) {
+  if (taxIds[s]) return Promise.resolve(taxIds[s]);
+  if (!taxIdPending.has(s)) taxIdPending.set(s, taxonIdFetch(s).finally(() => taxIdPending.delete(s)));
+  return taxIdPending.get(s);
+}
+async function taxonIdFetch(s) {
   const p = new URLSearchParams({ q: s, per_page: '10', locale: 'de' });
   if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
   const r = await fetch('https://api.inaturalist.org/v1/taxa/autocomplete?' + p);
@@ -1075,6 +1115,9 @@ function drawNearMap(el, Q, ref, res) {
 function afterResult(cur, mapped) {
   const btn = $('result').querySelector('.addday');
   if (btn) btn.onclick = () => { addDay(cur, btn.dataset.st); btn.textContent = '✓ Auf der Tagesliste'; btn.disabled = true; };
+  const wb = $('result').querySelector('.wishbtn');
+  if (wb) wb.onclick = () => { toggleWish(cur); wb.textContent = onWish(cur.s) ? '★ Auf der Wunschliste' : '☆ Auf die Wunschliste'; };
+  renderTaxBox(cur);
   if (mapped || !navigator.onLine || !here) return;
   const at = here, qb = quadBounds(at);
   const ref = at.lat != null ? { lat: at.lat, lon: at.lon } : { lat: (qb.n + qb.s) / 2, lon: (qb.w + qb.e) / 2 };
@@ -1188,16 +1231,16 @@ function drawGrid(noQueue) {
   if (!fillRunning) $('mapNote').textContent = quads ? '' : 'Zoom näher heran, um das Kartierungsraster zu sehen.';
   if (quads && noQueue !== true) queueMapFill(quads);
   for (const Q of quads || []) {
-    const qb = quadBounds(Q), c = quadCoverage(Q.id), isHere = here && here.id === Q.id;
+    const qb = quadBounds(Q), c = quadCoverage(Q.id), isHere = here && here.id === Q.id, lc = liferCount(Q.id), lif = mapMode === 'lif';
     const style = c.pct != null
-      ? { color: '#444', weight: 1, fillColor: covColor(c.pct), fillOpacity: 0.32 }
+      ? { color: '#444', weight: 1, fillColor: lif ? liferColor(lc) : covColor(c.pct), fillOpacity: lif ? 0.5 : 0.32 }
       : { color: '#666', weight: 1, dashArray: '4 4', fill: true, fillOpacity: 0 };
     const rect = L.rectangle([[qb.s, qb.w], [qb.n, qb.e]], style).addTo(gridLayer);
-    const info = c.total != null ? `Du hast ${c.mine} von ${c.total} bekannten Arten (${c.pct} %).` : `${c.mine} eigene Arten. Noch keine iNaturalist-Daten.`;
+    const info = c.total != null ? `Du hast ${c.mine} von ${c.total} bekannten Arten (${c.pct} %).<br>${lc} Lifer.` : `${c.mine} eigene Arten. Noch keine iNaturalist-Daten.`;
     // Eigenes Popup statt bindPopup: das Neuzeichnen des Rasters nach dem Verschieben schließt es sonst sofort wieder
     rect.on('click', e => L.popup().setLatLng(e.latlng).setContent(`<b>${Q.id}</b><br>${info}<br><button class="btn" data-go="${Q.id}">Als Quadrant wählen</button> <button class="btn" data-go="${Q.id}" data-list="1">Artenliste</button>`).openOn(map));
     // Beschriftung: Quadrantennummer ab Zoom 10, Abdeckung zusätzlich ab Zoom 11,5
-    if (z >= 10) L.marker([(qb.n + qb.s) / 2, (qb.w + qb.e) / 2], { interactive: false, icon: L.divIcon({ className: 'qlabel-map', html: `<span style="font-size:${z >= 11.5 ? 12 : 11}px">${Q.id}</span>${z >= 11.5 ? `<br>${c.total != null ? `${c.mine}/${c.total} · ${c.pct} %` : c.mine ? c.mine + ' Arten' : ''}` : ''}`, iconSize: [90, 28] }) }).addTo(gridLayer);
+    if (z >= 10) L.marker([(qb.n + qb.s) / 2, (qb.w + qb.e) / 2], { interactive: false, icon: L.divIcon({ className: 'qlabel-map', html: `<span style="font-size:${z >= 11.5 ? 12 : 11}px">${Q.id}</span>${z >= 11.5 ? `<br>${c.total != null ? (lif ? `${lc} Lifer` : `${c.mine}/${c.total} · ${c.pct} %`) : c.mine ? c.mine + ' Arten' : ''}` : ''}`, iconSize: [90, 28] }) }).addTo(gridLayer);
   }
   // Grundfelder (z. B. 8146) mit dicker Linie umranden
   for (const gf of new Set((quads || []).map(Q => Q.gf))) {
@@ -1308,7 +1351,8 @@ function beep() {
 function announceQuad(Q) {
   const c = quadCoverage(Q.id);
   const el = $('qchange');
-  el.textContent = `Neuer Quadrant ${Q.id}: ` + (c.total != null ? `du hast ${c.mine} von ${c.total} Arten (${c.pct} %).` : `${c.mine} eigene Arten.`);
+  const w = wishIn(Q.id);
+  el.textContent = `Neuer Quadrant ${Q.id}: ` + (c.total != null ? `du hast ${c.mine} von ${c.total} Arten (${c.pct} %).` : `${c.mine} eigene Arten.`) + (w.length ? ` Wunschart hier: ${w.map(x => x.s).join(', ')}.` : '');
   el.hidden = false; clearTimeout(qchangeTimer); qchangeTimer = setTimeout(() => { el.hidden = true; }, 30000);
   beep(); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
 }
@@ -1477,7 +1521,7 @@ async function offerFile(file, statusEl) {
 }
 $('btnBackup').onclick = async () => {
   const { token, ...safeSettings } = settings; // der Token wird nicht mitgesichert
-  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds };
+  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish };
   const file = new File([JSON.stringify(data)], `kartierungshilfe-sicherung-${todayIso()}.json`, { type: 'application/json' });
   if (await offerFile(file, $('backupStatus'))) $('backupStatus').textContent = `Gesichert: ${day.length} Einträge der Tagesliste und deine Einstellungen.`;
 };
@@ -1491,6 +1535,7 @@ $('restoreFile').addEventListener('change', async e => {
     const ids = new Set(day.map(x => x.id));
     day = [...day, ...(d.day || []).filter(x => !ids.has(x.id))]; store.set('day', day);
     if (d.export) { expMeta = d.export; store.set('export', expMeta); renderExpLabel(); }
+    if (d.wish) { const ws = new Set(wish.map(w => w.s)); wish = [...wish, ...d.wish.filter(w => !ws.has(w.s))]; store.set('wish', wish); renderWish(); updateWishNote(); }
     if (d.taxIds) { taxIds = Object.assign(taxIds, d.taxIds); store.set('taxIds', taxIds); }
     $('user').value = settings.user;
     renderDay();
@@ -1498,6 +1543,145 @@ $('restoreFile').addEventListener('change', async e => {
   } catch { $('backupStatus').textContent = 'Diese Datei ist keine Sicherung der Kartierungshilfe.'; }
   e.target.value = '';
 });
+
+// ---------- Foto und Verwechslungsarten im Prüfergebnis ----------
+var taxInfo = store.get('taxInfo', {}); // Art -> { p: Foto, a: Urheber, sim: [[Art, deutscher Name, Mini-Foto, Anzahl]], t }
+function saveTaxInfo() {
+  const ks = Object.keys(taxInfo);
+  if (ks.length > 300) ks.sort((a, b) => taxInfo[a].t - taxInfo[b].t).slice(0, ks.length - 300).forEach(k => delete taxInfo[k]);
+  store.set('taxInfo', taxInfo);
+}
+async function loadTaxInfo(s) {
+  const c = taxInfo[s];
+  if (c && Date.now() - c.t < 60 * 864e5) return c;
+  const id = await taxonId(s); if (!id) return null;
+  const tj = await (await fetch(`https://api.inaturalist.org/v1/taxa/${id}?locale=de`)).json();
+  const t = tj.results && tj.results[0], ph = t && t.default_photo;
+  const p = new URLSearchParams({ taxon_id: String(id), verifiable: 'true', locale: 'de' });
+  if (settings.onlyAT) p.set('place_id', PLACE_AT);
+  let sim = [];
+  try {
+    await sleep(600);
+    const sj = await (await fetch('https://api.inaturalist.org/v1/identifications/similar_species?' + p)).json();
+    sim = (sj.results || []).filter(r => r.taxon && r.taxon.rank_level <= 10).slice(0, 8)
+      .map(r => [speciesName(r.taxon.name, r.taxon.rank_level), r.taxon.preferred_common_name || '', r.taxon.default_photo ? r.taxon.default_photo.square_url : '', r.count]);
+  } catch { /* ohne Verwechslungsarten weiter */ }
+  taxInfo[s] = { p: ph ? (ph.medium_url || ph.url) : '', a: ph ? ph.attribution || '' : '', sim, t: Date.now() };
+  saveTaxInfo();
+  return taxInfo[s];
+}
+function renderTaxBox(cur) {
+  const box = $('taxBox'); if (!box) return;
+  if (!navigator.onLine && !taxInfo[cur.s]) { box.innerHTML = ''; return; }
+  const show = info => {
+    const b = $('taxBox'); if (!b || current !== cur) return;
+    if (!info) { b.innerHTML = ''; return; }
+    b.innerHTML = (info.p ? `<figure class="taxphoto"><img src="${esc(info.p)}" alt="${esc(cur.s)}" loading="lazy" onerror="this.parentNode.hidden=true"><figcaption>${esc(info.a)}</figcaption></figure>` : '')
+      + (info.sim.length ? `<div class="small"><b>Häufig verwechselt mit</b> <span class="muted">(Bestimmungen auf iNaturalist${settings.onlyAT ? ' in Österreich' : ''})</span></div>
+        <div class="simlist">${info.sim.map(([s, c, ph, n], i) => `<button class="sim" data-i="${i}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="noimg"></span>'}<i>${esc(s)}</i>${c ? `<span class="muted">${esc(c)}</span>` : ''}${isLifer(s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="muted">${n}×</span></button>`).join('')}</div>` : '');
+    b.querySelectorAll('button.sim').forEach(btn => btn.onclick = () => { const [s, c] = info.sim[+btn.dataset.i]; $('back').hidden = true; lastQuery = ''; pick({ s, c }); window.scrollTo(0, 0); });
+  };
+  if (taxInfo[cur.s]) show(taxInfo[cur.s]);
+  if (navigator.onLine && (!taxInfo[cur.s] || Date.now() - taxInfo[cur.s].t >= 60 * 864e5)) {
+    box.innerHTML = '<div class="small muted">Lade Foto und Verwechslungsarten …</div>';
+    loadTaxInfo(cur.s).then(show).catch(() => { const b = $('taxBox'); if (b) b.innerHTML = ''; });
+  }
+}
+
+// ---------- Wunschliste ----------
+var wish = store.get('wish', []); // { s, c }
+const onWish = s => wish.some(w => w.s === s);
+function toggleWish(cur) {
+  if (onWish(cur.s)) wish = wish.filter(w => w.s !== cur.s); else wish.push({ s: cur.s, c: cur.c || commonName(cur.s) });
+  store.set('wish', wish); renderWish(); updateWishNote();
+}
+function wishButton(cur) { return `<button class="btn wishbtn">${onWish(cur.s) ? '★ Auf der Wunschliste' : '☆ Auf die Wunschliste'}</button>`; }
+// Wunscharten, die im Quadranten auf iNaturalist bekannt sind und die du dort noch nicht hast
+function wishIn(id) {
+  if (!area[id]) return [];
+  const mine = mySpeciesIn(id);
+  return wish.filter(w => area[id].sp[w.s] && !mine.has(w.s));
+}
+function updateWishNote() {
+  const el = $('wishNote'); if (!el) return;
+  const w = here ? wishIn(here.id) : [];
+  el.hidden = !w.length;
+  el.innerHTML = w.length ? `★ Wunschart${w.length > 1 ? 'en' : ''} hier bekannt: ${w.map(x => `<i>${esc(x.s)}</i>`).join(', ')}` : '';
+}
+function renderWish() {
+  const ul = $('wishList'); if (!ul) return;
+  if (!wish.length) { ul.innerHTML = '<li class="muted">Noch leer. Unter „Prüfen“ kannst du Arten mit ☆ auf die Wunschliste setzen.</li>'; return; }
+  ul.innerHTML = [...wish].sort((a, b) => a.s.localeCompare(b.s)).map(w => {
+    const hereHit = here && area[here.id]?.sp[w.s];
+    const nb = here ? NB.filter(([dr, dc]) => area[neighbour(here, dr, dc).id]?.sp[w.s]).length : 0;
+    const mineHere = here && mySpeciesIn(here.id).has(w.s);
+    return `<li><button class="pick plain" data-s="${esc(w.s)}"><span class="sci">${esc(w.s)}</span>${w.c ? `<br><span class="cn">${esc(w.c)}</span>` : ''}</button>
+      <span class="chips">${isLifer(w.s) ? '<span class="chip lifer">Lifer</span>' : ''}${mineHere ? '<span class="chip ok">schon hier</span>' : hereHit ? '<span class="chip season">hier bekannt</span>' : nb ? `<span class="chip unsure">${nb} Nachbarn</span>` : ''}<button class="x" data-del="${esc(w.s)}" aria-label="Entfernen">✕</button></span></li>`;
+  }).join('');
+  ul.querySelectorAll('button.pick').forEach(b => b.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: b.dataset.s, c: commonName(b.dataset.s) }); });
+  ul.querySelectorAll('button.x').forEach(b => b.onclick = () => { wish = wish.filter(w => w.s !== b.dataset.del); store.set('wish', wish); renderWish(); updateWishNote(); });
+}
+
+// ---------- Neu in der Umgebung: Lifer, die andere seit deinem letzten Blick gemeldet haben ----------
+const NEAR_KM = 30;
+var newNear = store.get('newNear', { t: null, items: [] });
+async function checkNewNear(force) {
+  if (!navigator.onLine || !here || !obs.length) return;
+  if (!force && newNear.t && Date.now() - new Date(newNear.t) < 3 * 3600e3) return;
+  const b = quadBounds(here);
+  const ref = here.lat != null ? { lat: here.lat, lon: here.lon } : { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 };
+  const since = newNear.t ? newNear.t.slice(0, 10) : new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+  const p = new URLSearchParams({ lat: ref.lat.toFixed(4), lng: ref.lon.toFixed(4), radius: String(NEAR_KM), created_d1: since, verifiable: 'true', hrank: 'species', per_page: '200', order_by: 'created_at', locale: 'de' });
+  if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+  if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+  if (settings.onlyAT) p.set('place_id', PLACE_AT);
+  try {
+    const r = await fetch('https://api.inaturalist.org/v1/observations?' + p);
+    if (!r.ok) return;
+    const j = await r.json();
+    const have = new Set(newNear.items.map(x => x.id));
+    for (const o of j.results) {
+      if (!o.taxon || !o.location || have.has(o.id) || (o.user && o.user.login === settings.user)) continue;
+      const s = speciesName(o.taxon.name, o.taxon.rank_level);
+      if (!isLifer(s)) continue;
+      const [la, lo] = o.location.split(',').map(Number);
+      newNear.items.push({ id: o.id, s, c: o.taxon.preferred_common_name || '', d: o.observed_on || '', u: o.user ? o.user.login : '', la, lo, x: o.obscured ? 1 : 0 });
+    }
+    newNear.t = new Date().toISOString();
+    newNear.items = newNear.items.filter(x => isLifer(x.s)).slice(-100);
+    store.set('newNear', newNear); renderNewNear();
+  } catch { /* ohne Empfang später erneut */ }
+}
+function renderNewNear() {
+  const el = $('newNear'); if (!el) return;
+  const items = newNear.items.filter(x => isLifer(x.s));
+  if (!items.length) { el.innerHTML = ''; return; }
+  const ref = here && here.lat != null ? { lat: here.lat, lon: here.lon } : null;
+  const bySp = new Map();
+  for (const x of items) { const d = ref ? dist(ref, x) : null; const e = bySp.get(x.s); if (!e || (d != null && d < e.dd)) bySp.set(x.s, { ...x, dd: d, n: (e ? e.n : 0) + 1 }); else e.n++; }
+  const rows = [...bySp.values()].sort((a, b) => (a.dd ?? 0) - (b.dd ?? 0));
+  el.innerHTML = `<div class="panel newnear"><h2>Neu in der Umgebung <span class="muted small">${rows.length} Lifer im Umkreis von ${NEAR_KM} km gemeldet</span></h2>
+    <ul class="list">${rows.slice(0, 30).map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${r.c ? `<br><span class="cn">${esc(r.c)}</span>` : ''}<br><span class="cn">${fmtDate(r.d)} · ${esc(r.u)}${r.n > 1 ? ` · ${r.n} Meldungen` : ''}</span></span><span class="chance"><span class="chips"><span class="chip lifer">Lifer</span></span><span class="d">${r.dd != null ? km(r.dd) : ''} · ${toQuad(r.la, r.lo).id}${r.x ? ' ~' : ''}</span></span></li>`).join('')}</ul>
+    <div class="row"><button class="btn" id="newNearSeen">Gesehen, ausblenden</button></div></div>`;
+  el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) || (rows.find(r => r.s === li.dataset.s) || {}).c }); window.scrollTo(0, 0); });
+  $('newNearSeen').onclick = () => { newNear.items = []; store.set('newNear', newNear); renderNewNear(); };
+}
+
+// ---------- Kartenfärbung: Abdeckung oder Lifer ----------
+var mapMode = store.get('mapMode', 'cov');
+const liferCount = id => area[id] ? Object.keys(area[id].sp).filter(isLifer).length : null;
+const liferColor = n => n ? `hsl(270 ${60 + Math.min(n, 20)}% ${Math.round(78 - Math.min(1, Math.log(1 + n) / Math.log(21)) * 46)}%)` : '#cbd5e1';
+function setMapMode(m) {
+  mapMode = m; store.set('mapMode', m);
+  $('mm-cov').setAttribute('aria-selected', m === 'cov'); $('mm-lif').setAttribute('aria-selected', m === 'lif');
+  $('mapLegend').innerHTML = m === 'lif'
+    ? `<span>Lifer je Quadrant (Arten, die du in Österreich noch nie gefunden hast):</span><span><i style="background:${liferColor(0)}"></i>0</span><span><i style="background:${liferColor(2)}"></i>2</span><span><i style="background:${liferColor(8)}"></i>8</span><span><i style="background:${liferColor(20)}"></i>20+</span><span><i style="border:1px dashed var(--muted)"></i>noch keine iNaturalist-Daten</span>`
+    : `<span>Deine Abdeckung je Quadrant:</span><span><i style="background:hsl(8 75% 50%)"></i>0 %</span><span><i style="background:hsl(45 85% 48%)"></i>50 %</span><span><i style="background:hsl(125 55% 38%)"></i>100 %</span><span><i style="border:1px dashed var(--muted)"></i>noch keine iNaturalist-Daten</span>`;
+  drawGrid(true);
+}
+$('mm-cov').onclick = () => setMapMode('cov');
+$('mm-lif').onclick = () => setMapMode('lif');
+setMapMode(mapMode);
 
 // ---------- Start ----------
 $('user').value = settings.user;
@@ -1508,7 +1692,7 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
-statsReady = true; renderOpenIds(); renderYear();
+statsReady = true; renderOpenIds(); renderYear(); renderWish(); renderNewNear();
 // Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
 const ui = store.get('ui', null);
 if (ui && Date.now() - ui.t < 12 * 3600e3) {
@@ -1525,7 +1709,9 @@ kvInit().then(() => {
   renderList(); drawGrid(); if (current) showResult(current);
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here) locate(); else if (navigator.onLine) loadArea(false);
+  updateWishNote(); renderWish(); checkNewNear();
 });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkNewNear(); });
 // Funde beim Öffnen automatisch abgleichen (höchstens alle 5 Minuten, nur mit Empfang)
 function autoSync() {
   if (!navigator.onLine || syncBusy) return;
