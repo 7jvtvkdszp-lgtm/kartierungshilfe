@@ -70,6 +70,14 @@ button { cursor: pointer }
 .sugg li:first-child button { border-top: 0 }
 .sugg .sci { font-style: italic }
 .sugg .tag { font-size: 12px; color: var(--muted); white-space: nowrap }
+.chip { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; font-variant-numeric: tabular-nums }
+.chip.ok { background: var(--found-bg); color: var(--found) }
+.chip.due { background: var(--new-bg); color: var(--new) }
+.chip.new { border: 1px solid var(--new); color: var(--new) }
+.chip.unsure { border: 1px solid var(--line); color: var(--muted) }
+.back { align-self: flex-start; border: 0; background: transparent; color: var(--accent); font-weight: 600; padding: 8px 0; min-height: 40px }
+.list li.ok .sci, .list li.ok .d { color: var(--found) }
+.list li.due .sci, .list li.due .d { color: var(--new) }
 
 .result { border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line) }
 .result.found { background: var(--found-bg); border-color: transparent }
@@ -140,6 +148,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <input class="field" id="q" placeholder="z. B. Gentiana clusii oder Enzian" autocomplete="off" autocapitalize="off" spellcheck="false">
         <ul class="sugg" id="sugg" hidden></ul>
       </div>
+      <button class="back" id="back" hidden>‹ Zurück zur Auswahl</button>
       <div id="result"></div>
       <div id="dataHint"></div>
     </div>
@@ -350,12 +359,20 @@ for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
 
 // ---------- Suche ----------
 let current = null, debounce = null, onlineSeq = 0;
+// Kürzelsuche: jedes eingegebene Wortstück muss der Reihe nach ein Wort beginnen, z. B. „aju rep“ → Ajuga reptans
+function wordsPrefix(tokens, text) {
+  const words = text.split(/[\s\-]+/).filter(w => w && w !== '×');
+  let j = 0;
+  for (const t of tokens) { while (j < words.length && !words[j].startsWith(t)) j++; if (j++ >= words.length) return false; }
+  return true;
+}
 function localMatches(q) {
   const n = norm(q); if (!n) return [];
+  const tokens = n.split(' ');
   const out = [];
   for (const s of index.names) {
     const a = norm(s), b = norm(index.common.get(s));
-    const score = a.startsWith(n) ? 0 : b.startsWith(n) ? 1 : a.includes(n) ? 2 : b.includes(n) ? 3 : -1;
+    const score = a.startsWith(n) ? 0 : wordsPrefix(tokens, a) ? 1 : b.startsWith(n) ? 2 : wordsPrefix(tokens, b) ? 3 : a.includes(n) ? 4 : b.includes(n) ? 5 : -1;
     if (score >= 0) out.push({ s, c: index.common.get(s), score });
   }
   return out.sort((x, y) => x.score - y.score || x.s.localeCompare(y.s)).slice(0, 8);
@@ -364,9 +381,9 @@ function renderSugg(local, online) {
   const ul = $('sugg');
   const seen = new Set(local.map(x => x.s));
   const extra = (online || []).filter(x => !seen.has(x.s)).slice(0, 6);
-  const items = [...local.map(x => ({ ...x, tag: (index.bySp.get(x.s) || []).length + '× von dir' })), ...extra.map(x => ({ ...x, tag: 'iNat' }))];
+  const items = [...local, ...extra];
   if (!items.length) { ul.hidden = true; ul.innerHTML = ''; return; }
-  ul.innerHTML = items.map((x, i) => `<li><button data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span><span class="tag">${esc(x.tag)}</span></button></li>`).join('');
+  ul.innerHTML = items.map((x, i) => `<li><button data-i="${i}"><span><span class="sci">${esc(x.s)}</span>${x.c ? ' <span class="muted">· ' + esc(x.c) + '</span>' : ''}</span>${chip(x.s)}</button></li>`).join('');
   ul.hidden = false;
   ul.querySelectorAll('button').forEach(b => b.onclick = () => pick(items[+b.dataset.i]));
 }
@@ -384,6 +401,7 @@ async function onlineSearch(q, seq) {
 }
 $('q').addEventListener('input', e => {
   const q = e.target.value;
+  $('back').hidden = true;
   renderSugg(localMatches(q));
   clearTimeout(debounce); const seq = ++onlineSeq;
   debounce = setTimeout(() => onlineSearch(q, seq), 350);
@@ -391,11 +409,28 @@ $('q').addEventListener('input', e => {
 $('q').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); const f = $('sugg').querySelector('button'); if (f) f.click(); else if (e.target.value.trim()) pick({ s: speciesName(e.target.value.trim()) }); }
 });
+// Status der Art im aktuellen Quadranten: kartiert (grün), wieder fällig (orange), neu
+function quadStatus(s) {
+  if (!here) return null;
+  const os = index.byQuad.get(here.id)?.get(s) || [];
+  const exact = os.filter(o => !o.x);
+  if (!exact.length) return os.length ? { cls: 'unsure', text: 'unsicher' } : { cls: 'new', text: 'neu hier' };
+  const last = exact.map(o => o.d).sort().pop();
+  return isDue(last) ? { cls: 'due', text: 'fällig · ' + (last ? last.slice(0, 4) : '?') } : { cls: 'ok', text: '✓ ' + fmtDate(last) };
+}
+function chip(s) { const st = quadStatus(s); return st ? `<span class="chip ${st.cls}">${esc(st.text)}</span>` : ''; }
+let lastQuery = '';
 function pick(x) {
+  lastQuery = $('q').value;
   current = { s: x.s, c: x.c || index.common.get(x.s) || '' };
   $('sugg').hidden = true; $('q').value = x.s; $('q').blur();
+  $('back').hidden = !lastQuery || lastQuery === x.s;
   showResult(current);
 }
+$('back').onclick = () => {
+  $('back').hidden = true; $('result').innerHTML = ''; current = null;
+  $('q').value = lastQuery; $('q').dispatchEvent(new Event('input')); $('q').focus();
+};
 
 function inatLink(sp, b) {
   const p = new URLSearchParams({ user_id: settings.user, taxon_name: sp, verifiable: 'any' });
@@ -461,7 +496,8 @@ function renderList() {
   $('listTitle').textContent = `Schon gefundene Arten in ${here.id} (${m.size}${nDue ? ', davon ' + nDue + ' wieder fällig' : ''})`;
   $('speciesList').innerHTML = rows.length ? rows.map(([s, os]) => {
     const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
-    return `<li><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${isDue(last) ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+    const st = quadStatus(s);
+    return `<li class="${st ? st.cls : ''}"><span><span class="sci">${esc(s)}</span>${index.common.get(s) ? `<br><span class="cn">${esc(index.common.get(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
   }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
 }
 $('listFilter').addEventListener('input', renderList);
