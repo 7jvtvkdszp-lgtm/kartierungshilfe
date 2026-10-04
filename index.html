@@ -135,6 +135,8 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .btn.on { background: var(--found-bg); color: var(--found); border-color: var(--found) }
 .qchange { grid-column: 1 / -1; background: var(--accent); color: var(--accent-fg); border-radius: 10px; padding: 10px 12px; font-weight: 600 }
 .result .addday { align-self: flex-start }
+.nearbox { display: flex; flex-direction: column; gap: 6px }
+.nearmap { height: 300px; border-radius: 10px; border: 1px solid var(--line); overflow: hidden; margin-top: 2px }
 .daygroup { font-size: 13px; font-weight: 700; color: var(--muted); padding-top: 8px; letter-spacing: .04em; text-transform: uppercase }
 .list li .x { border: 0; background: transparent; color: var(--muted); font-size: 20px; min-width: 36px; min-height: 36px }
 .list li.done .sci { text-decoration: line-through; color: var(--muted) }
@@ -225,8 +227,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
       <div class="small muted" id="mapNote"></div>
       <div class="panel">
         <h2>Offline-Paket für eine Tour</h2>
-        <p class="small muted" style="margin:0">Zoom die Karte auf dein Tourgebiet. Die App lädt dann für alle sichtbaren Quadranten die iNaturalist-Arten und auf Wunsch die Kartenkacheln, damit im Funkloch alles da ist.</p>
-        <label class="row small"><input type="checkbox" id="pkTiles" checked> Karte mitladen (bis Zoomstufe 15)</label>
+        <p class="small muted" style="margin:0">Zoom die Karte auf dein Tourgebiet. Die App lädt dann für alle sichtbaren Quadranten die iNaturalist-Arten, damit im Funkloch alles da ist. Kartenausschnitte, die du dir mit Empfang angesehen hast, bleiben ebenfalls offline verfügbar.</p>
         <div class="row"><button class="btn primary" id="btnPack">Sichtbares Gebiet offline laden</button></div>
         <div class="progress" id="pkProgWrap" hidden><div id="pkProg"></div></div>
         <div class="small muted" id="pkStatus"></div>
@@ -283,7 +284,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="small muted" id="expStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 8</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 9</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -511,6 +512,7 @@ function quadStatus(s) {
 function chip(s) { const st = quadStatus(s); return st ? `<span class="chip ${st.cls}">${esc(st.text)}</span>` : ''; }
 let lastQuery = '';
 function pick(x) {
+  clearTimeout(debounce); onlineSeq++; // späte Online-Vorschläge sollen die Liste nicht wieder öffnen
   lastQuery = $('q').value;
   current = { s: x.s, c: x.c || index.common.get(x.s) || '' };
   $('sugg').hidden = true; $('q').value = x.s; $('q').blur();
@@ -542,10 +544,10 @@ function showResult(cur) {
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
-      ${extraLines(cur.s)}
+      ${extraLines(cur.s, !due)}
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a>
       ${dayButton(cur, due ? 'due' : 'ok')}</div>`;
-    afterResult(cur);
+    afterResult(cur, !due);
     return;
   }
   const lines = [];
@@ -564,10 +566,10 @@ function showResult(cur) {
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
-    ${extraLines(cur.s)}
+    ${extraLines(cur.s, false)}
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}
     ${dayButton(cur, 'new')}</div>`;
-  afterResult(cur);
+  afterResult(cur, false);
 }
 function dist(a, o) {
   const R = 6371000, toR = Math.PI / 180;
@@ -922,49 +924,101 @@ async function loadRedlist(force) {
 const isRed = s => redSet.has(s);
 
 // ---------- Zusatzzeilen im Prüfergebnis ----------
-function extraLines(s) {
+function extraLines(s, mapped) {
   const out = [];
   if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
   const sea = seasonSet(here);
   if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
-  out.push('<span id="nearAll">' + (navigator.onLine && here && here.lat != null ? 'Suche nächsten Fund aller Nutzer …' : here && here.lat == null ? 'Entfernung zum nächsten Fund gibt es nur mit GPS-Position.' : 'Nächster Fund aller Nutzer: nur mit Empfang.') + '</span>');
-  return out.map(l => `<div class="small">${l}</div>`).join('');
+  let html = out.map(l => `<div class="small">${l}</div>`).join('');
+  // Für noch nicht (oder nicht mehr) kartierte Arten: nächster Fund aller Nutzer mit Detailkarte
+  if (!mapped) html += `<div class="nearbox" id="nearBox"><div class="small">${navigator.onLine ? 'Suche Funde aller iNaturalist-Nutzer …' : 'Nächster Fund aller Nutzer: nur mit Empfang.'}</div></div>`;
+  return html;
+}
+// iNaturalist-Taxon-ID zu einem Artnamen (wird gemerkt)
+let taxIds = store.get('taxIds', {});
+async function taxonId(s) {
+  if (taxIds[s]) return taxIds[s];
+  const p = new URLSearchParams({ q: s, per_page: '10', locale: 'de' });
+  if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+  const r = await fetch('https://api.inaturalist.org/v1/taxa/autocomplete?' + p);
+  if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+  const j = await r.json();
+  const t = j.results.find(t => t.name === s) || j.results.find(t => speciesName(t.name, t.rank_level) === s);
+  if (!t) return null;
+  taxIds[s] = t.id; store.set('taxIds', taxIds);
+  return t.id;
+}
+function obsPoint(o, ref) {
+  if (!o.location) return null;
+  const [la, lo] = o.location.split(',').map(Number);
+  return { id: o.id, la, lo, date: o.observed_on, x: !!o.obscured, acc: o.positional_accuracy || null,
+    user: o.user ? o.user.login : '', own: o.user && o.user.login === settings.user, d: dist(ref, { la, lo }) };
 }
 const nearCache = new Map();
-async function nearestAll(s, lat, lon) {
-  const key = s + '|' + lat.toFixed(3) + '|' + lon.toFixed(3);
+// Liefert alle Funde im Quadranten und den nächsten Fund (genaue Koordinaten bevorzugt) im Umkreis bis 200 km
+async function nearestAll(s, Q, ref) {
+  const key = s + '|' + Q.id + '|' + ref.lat.toFixed(3) + '|' + ref.lon.toFixed(3);
   if (nearCache.has(key)) return nearCache.get(key);
-  let best = null;
-  for (const radius of [2, 10, 50, 200]) {
-    const p = new URLSearchParams({ taxon_name: s, lat, lng: lon, radius, verifiable: 'true', per_page: '200', locale: 'de' });
-    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-    const r = await fetch('https://api.inaturalist.org/v1/observations?' + p);
-    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
-    const j = await r.json();
-    for (const o of j.results) {
-      if (!o.location) continue;
-      const [la, lo] = o.location.split(',').map(Number);
-      const d = dist({ lat, lon }, { la, lo });
-      if (!best || d < best.d) best = { d, id: o.id, date: o.observed_on, x: !!o.obscured, own: o.user && o.user.login === settings.user };
+  const id = await taxonId(s);
+  if (!id) { const res = { none: true, pts: [] }; nearCache.set(key, res); return res; }
+  const base = { taxon_id: String(id), verifiable: 'true', per_page: '200', locale: 'de' };
+  const b = quadBounds(Q);
+  const inQ = await (await fetch('https://api.inaturalist.org/v1/observations?' + new URLSearchParams({ ...base, swlat: b.s, swlng: b.w, nelat: b.n, nelng: b.e }))).json();
+  const pts = new Map();
+  for (const o of inQ.results) { const p = obsPoint(o, ref); if (p) pts.set(p.id, { ...p, inQ: true }); }
+  const exact = () => [...pts.values()].filter(p => !p.x).sort((a, c) => a.d - c.d);
+  if (!exact().length) {
+    for (const radius of [5, 20, 50, 200]) {
+      await sleep(1100);
+      const j = await (await fetch('https://api.inaturalist.org/v1/observations?' + new URLSearchParams({ ...base, lat: ref.lat, lng: ref.lon, radius }))).json();
+      for (const o of j.results) { const p = obsPoint(o, ref); if (p && !pts.has(p.id)) pts.set(p.id, p); }
+      if (exact().length) break;
     }
-    if (best) break;
-    await sleep(1100);
   }
-  nearCache.set(key, best);
-  return best;
+  const all = [...pts.values()].sort((a, c) => a.d - c.d);
+  const res = { pts: all, best: exact()[0] || all[0] || null, inQ: all.filter(p => p.inQ).length };
+  nearCache.set(key, res);
+  return res;
 }
 const km = d => d < 1000 ? Math.round(d) + ' m' : (d / 1000).toFixed(1).replace('.', ',') + ' km';
-function afterResult(cur) {
+let nearMap = null;
+function drawNearMap(el, Q, ref, res) {
+  if (!window.L) return;
+  if (nearMap) { nearMap.remove(); nearMap = null; }
+  nearMap = L.map(el, { zoomSnap: 0.5 });
+  L.tileLayer(OSM_URL, { maxZoom: 19, attribution: OSM_ATTR }).addTo(nearMap);
+  const qb = quadBounds(Q);
+  L.rectangle([[qb.s, qb.w], [qb.n, qb.e]], { color: '#1d4ed8', weight: 2, fill: false, interactive: false }).addTo(nearMap);
+  const bounds = L.latLngBounds([[ref.lat, ref.lon]]);
+  for (const p of res.pts.slice(0, 200)) {
+    const isBest = res.best && p.id === res.best.id;
+    const m = L.circleMarker([p.la, p.lo], { radius: isBest ? 9 : 6, color: '#fff', weight: 2, fillColor: isBest ? '#c2410c' : p.x ? '#9ca3af' : '#f59e0b', fillOpacity: 1 }).addTo(nearMap);
+    m.bindPopup(`${fmtDate(p.date)} · ${esc(p.own ? 'du' : p.user)}<br>${km(p.d)} entfernt${p.x ? ', Koordinaten verschleiert' : p.acc ? `, ± ${Math.round(p.acc)} m` : ''}<br><a href="https://www.inaturalist.org/observations/${p.id}" target="_blank" rel="noopener">Beobachtung ansehen</a>`);
+    if (p.inQ || isBest) bounds.extend([p.la, p.lo]);
+  }
+  if (here && here.lat != null) L.circleMarker([here.lat, here.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#1d4ed8', fillOpacity: 1 }).bindPopup('Dein Standort').addTo(nearMap);
+  bounds.extend([qb.s, qb.w]); bounds.extend([qb.n, qb.e]);
+  nearMap.fitBounds(bounds, { padding: [20, 20], maxZoom: 16 });
+}
+function afterResult(cur, mapped) {
   const btn = $('result').querySelector('.addday');
   if (btn) btn.onclick = () => { addDay(cur, btn.dataset.st); btn.textContent = '✓ Auf der Tagesliste'; btn.disabled = true; };
-  if (!navigator.onLine || !here || here.lat == null) return;
-  const at = here;
-  nearestAll(cur.s, at.lat, at.lon).then(n => {
-    const el = $('nearAll'); if (!el || current !== cur || here !== at) return;
-    el.innerHTML = n
-      ? `Nächster Fund aller Nutzer: <b>${km(n.d)}</b> entfernt (${fmtDate(n.date)}${n.own ? ', von dir' : ''}${n.x ? ', Koordinaten verschleiert' : ''}). <a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Ansehen</a>`
-      : 'Im Umkreis von 200 km gibt es auf iNaturalist keinen Fund.';
-  }).catch(() => { const el = $('nearAll'); if (el) el.textContent = 'Nächster Fund aller Nutzer: iNaturalist gerade nicht erreichbar.'; });
+  if (mapped || !navigator.onLine || !here) return;
+  const at = here, qb = quadBounds(at);
+  const ref = at.lat != null ? { lat: at.lat, lon: at.lon } : { lat: (qb.n + qb.s) / 2, lon: (qb.w + qb.e) / 2 };
+  const fromWhere = at.lat != null ? 'von dir' : 'von der Quadrantenmitte';
+  nearestAll(cur.s, at, ref).then(res => {
+    const box = $('nearBox'); if (!box || current !== cur || here !== at) return;
+    if (res.none || !res.best) { box.innerHTML = '<div class="small">Im Umkreis von 200 km gibt es auf iNaturalist keinen Fund dieser Art.</div>'; return; }
+    const n = res.best;
+    const dir = `https://maps.apple.com/?daddr=${n.la},${n.lo}&dirflg=w`;
+    box.innerHTML = `<div class="small"><b>Nächster Fund: ${km(n.d)}</b> ${fromWhere} (${fmtDate(n.date)}, ${esc(n.own ? 'von dir' : n.user)}${n.x ? ', Koordinaten verschleiert' : ''}).
+      ${res.inQ ? `Im Quadranten ${at.id} gibt es ${res.inQ} Fund${res.inQ > 1 ? 'e' : ''} auf iNaturalist.` : `Im Quadranten ${at.id} selbst gibt es noch keinen Fund.`}</div>
+      <div class="row small"><a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Beobachtung ansehen</a> <a href="${dir}" target="_blank" rel="noopener">Weg dorthin (Apple Karten)</a></div>
+      <div class="nearmap" id="nearMap"></div>
+      <div class="small muted">Blau: dein Standort und der Quadrant. Rot: nächster Fund. Orange: weitere Funde, grau: verschleierte Koordinaten.</div>`;
+    drawNearMap($('nearMap'), at, ref, res);
+  }).catch(() => { const box = $('nearBox'); if (box) box.innerHTML = '<div class="small">Nächster Fund aller Nutzer: iNaturalist gerade nicht erreichbar.</div>'; });
 }
 
 // ---------- Tagesliste ----------
@@ -1015,22 +1069,14 @@ $('dayClear').onclick = () => {
 };
 
 // ---------- Karte ----------
-const TILES = {
-  'Karte': { url: 'https://maps1.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png', attr: '© <a href="https://basemap.at">basemap.at</a>' },
-  'Luftbild': { url: 'https://maps1.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg', attr: '© <a href="https://basemap.at">basemap.at</a>' },
-  'OpenStreetMap': { url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' },
-};
-let map = null, gridLayer = null, posLayer = null, activeBase = 'Karte';
+const OSM_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTR = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+let map = null, gridLayer = null, posLayer = null;
 function showMap() {
   if (!window.L) { $('mapNote').textContent = 'Die Karte lädt beim ersten Öffnen mit Empfang und ist danach offline verfügbar.'; return; }
   if (!map) {
     map = L.map('map', { zoomSnap: 0.5 });
-    const layers = {};
-    for (const [name, t] of Object.entries(TILES)) layers[name] = L.tileLayer(t.url, { maxZoom: 19, attribution: t.attr });
-    activeBase = store.get('mapBase', 'Karte');
-    (layers[activeBase] || layers['Karte']).addTo(map);
-    L.control.layers(layers, null, { position: 'topright' }).addTo(map);
-    map.on('baselayerchange', e => { activeBase = e.name; store.set('mapBase', e.name); });
+    L.tileLayer(OSM_URL, { maxZoom: 19, attribution: OSM_ATTR }).addTo(map);
     gridLayer = L.layerGroup().addTo(map);
     posLayer = L.layerGroup().addTo(map);
     map.on('moveend', drawGrid);
@@ -1074,7 +1120,8 @@ function drawGrid() {
       : { color: isHere ? '#1d4ed8' : '#666', weight: isHere ? 3 : 1, dashArray: '4 4', fill: true, fillOpacity: 0 };
     const rect = L.rectangle([[qb.s, qb.w], [qb.n, qb.e]], style).addTo(gridLayer);
     const info = c.total != null ? `Du hast ${c.mine} von ${c.total} bekannten Arten (${c.pct} %).` : `${c.mine} eigene Arten. Noch keine iNaturalist-Daten.`;
-    rect.bindPopup(`<b>${Q.id}</b><br>${info}<br><button class="btn" data-go="${Q.id}">Als Quadrant wählen</button> <button class="btn" data-go="${Q.id}" data-list="1">Artenliste</button>`);
+    // Eigenes Popup statt bindPopup: das Neuzeichnen des Rasters nach dem Verschieben schließt es sonst sofort wieder
+    rect.on('click', e => L.popup().setLatLng(e.latlng).setContent(`<b>${Q.id}</b><br>${info}<br><button class="btn" data-go="${Q.id}">Als Quadrant wählen</button> <button class="btn" data-go="${Q.id}" data-list="1">Artenliste</button>`).openOn(map));
     if (z >= 11.5) L.marker([(qb.n + qb.s) / 2, (qb.w + qb.e) / 2], { interactive: false, icon: L.divIcon({ className: 'qlabel-map', html: `${Q.id}<br>${c.total != null ? `${c.mine}/${c.total} · ${c.pct} %` : c.mine ? c.mine + ' Arten' : ''}`, iconSize: [90, 28] }) }).addTo(gridLayer);
   }
   if (here && here.lat != null) L.circleMarker([here.lat, here.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#1d4ed8', fillOpacity: 1 }).addTo(posLayer);
@@ -1092,16 +1139,7 @@ $('btnPack').onclick = async () => {
   const b = map.getBounds();
   const quads = quadsInBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast(), 80);
   if (!quads) { st.textContent = 'Das Gebiet ist zu groß (höchstens 80 Quadranten). Zoom näher heran.'; return; }
-  const tiles = [];
-  if ($('pkTiles').checked) {
-    const url = TILES[activeBase].url;
-    for (let z = Math.max(8, Math.floor(map.getZoom()) - 2); z <= 15; z++) {
-      for (let x = lon2x(b.getWest(), z); x <= lon2x(b.getEast(), z); x++)
-        for (let y = lat2y(b.getNorth(), z); y <= lat2y(b.getSouth(), z); y++)
-          tiles.push(url.replace('{z}', z).replace('{x}', x).replace('{y}', y));
-    }
-    if (tiles.length > 6000) { st.textContent = `Das wären ${tiles.length} Kartenkacheln. Zoom näher heran oder lade ohne Karte.`; return; }
-  }
+  const tiles = []; // OpenStreetMap erlaubt kein Massen-Herunterladen von Kacheln; angesehene Kacheln speichert die App selbst
   packBusy = true; $('btnPack').disabled = true; $('pkProgWrap').hidden = false;
   const todo = quads.filter(Q => !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE);
   const steps = todo.length + 2 + tiles.length; let done = 0;
