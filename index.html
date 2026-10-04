@@ -238,6 +238,18 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="progress" id="pkProgWrap" hidden><div id="pkProg"></div></div>
         <div class="small muted" id="pkStatus"></div>
       </div>
+      <div class="panel">
+        <h2>Lohnende Quadranten</h2>
+        <p class="small muted" style="margin:0">Welche Quadranten in der Nähe lohnen sich für den nächsten Ausflug? Gezählt werden Arten, die andere dort gefunden haben und du noch nicht, gewichtet nach Häufigkeit; Arten, die gerade in der Umgebung beobachtet werden, zählen mehr. Beim ersten Mal lädt die App die Daten aller Quadranten im Umkreis (bei 30 km etwa ein bis zwei Minuten).</p>
+        <div class="row">
+          <select class="field" id="tripRadius" style="flex:0 0 auto;width:auto">
+            <option value="5">5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="30" selected>30 km</option><option value="50">50 km</option>
+          </select>
+          <button class="btn primary" id="btnTrip">Quadranten bewerten</button>
+        </div>
+        <div class="small muted" id="tripStatus"></div>
+        <ul class="list" id="tripList"></ul>
+      </div>
     </div>
   </section>
 
@@ -289,8 +301,25 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
         <div class="row"><button class="btn primary" id="btnExport">CSV erstellen</button></div>
         <div class="small muted" id="expStatus"></div>
       </div>
+      <div class="panel">
+        <h2>Offene Bestimmungen</h2>
+        <p class="small muted" style="margin:0">Eigene Funde, die nur bis zur Gattung (oder gröber) bestimmt sind, und Funde ohne Bestätigung. Gattungsfunde zählen nicht als kartierte Art.</p>
+        <div id="openIds"></div>
+      </div>
+      <div class="panel">
+        <h2>Jahresbilanz</h2>
+        <div class="row"><select class="field" id="yearSel" style="flex:0 0 auto;width:auto"></select></div>
+        <div id="yearOut"></div>
+      </div>
+      <div class="panel">
+        <h2>Sichern</h2>
+        <p class="small muted" style="margin:0">Sichert Tagesliste, Einstellungen und Exportstand in eine Datei (z. B. in iCloud Drive). Die Funde selbst kommen ohnehin von iNaturalist. Beim Wiederherstellen wird die Tagesliste zusammengeführt.</p>
+        <div class="row"><button class="btn primary" id="btnBackup">Sicherung erstellen</button></div>
+        <label class="small">Sicherung wiederherstellen: <input type="file" id="restoreFile" accept=".json,application/json"></label>
+        <div class="small muted" id="backupStatus"></div>
+      </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 14</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 15</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -359,6 +388,7 @@ function buildIndex() {
   for (const o of obs) {
     if (o.la == null || !o.s) continue;
     const Q = toQuad(o.la, o.lo); o.k = Q.id;
+    if (o.r > 10) continue; // nur bis Gattung bestimmt: zählt nicht als kartierte Art
     if (!byQuad.has(Q.id)) byQuad.set(Q.id, new Map());
     const m = byQuad.get(Q.id);
     if (!m.has(o.s)) m.set(o.s, []);
@@ -760,17 +790,19 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
+  if (statsReady) { renderOpenIds(); renderYear(); }
 }
+let statsReady = false;
 function fromApi(o) {
   const t = o.taxon; if (!t) return null;
   let loc = o.private_location || o.location;
   const priv = !!o.private_location;
-  if (!loc) return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? t.preferred_common_name || '' : '', d: o.observed_on || '', la: null, lo: null, x: 0 };
+  if (!loc) return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? t.preferred_common_name || '' : '', d: o.observed_on || '', la: null, lo: null, x: 0, r: t.rank_level, g: o.quality_grade };
   const [la, lo] = loc.split(',').map(Number);
-  return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', ti: viennaTime(o.time_observed_at), la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null };
+  return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', ti: viennaTime(o.time_observed_at), la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null, r: t.rank_level, g: o.quality_grade };
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const DATA_V = 2; // bei Änderungen am gespeicherten Format erhöhen: erzwingt einmal komplettes Neuladen
+const DATA_V = 3; // bei Änderungen am gespeicherten Format erhöhen: erzwingt einmal komplettes Neuladen
 function viennaTime(iso) {
   if (!iso) return '';
   try { return new Date(iso).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' }); } catch { return ''; }
@@ -1325,6 +1357,128 @@ $('btnExport').onclick = async () => {
 };
 renderExpLabel();
 
+// ---------- Lohnende Quadranten für den nächsten Ausflug ----------
+$('btnTrip').onclick = async () => {
+  const st = $('tripStatus'), out = $('tripList');
+  if (!here) { st.textContent = 'Erst die Position bestimmen.'; return; }
+  const radius = +$('tripRadius').value;
+  const ref = here.lat != null ? { lat: here.lat, lon: here.lon } : (() => { const b = quadBounds(here); return { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 }; })();
+  const dLat = radius / 111.32, dLon = radius / (111.32 * Math.cos(ref.lat * Math.PI / 180));
+  const quads = (quadsInBounds(ref.lat - dLat, ref.lat + dLat, ref.lon - dLon, ref.lon + dLon, 400) || [])
+    .map(Q => { const b = quadBounds(Q); return { Q, d: dist(ref, { la: (b.n + b.s) / 2, lo: (b.w + b.e) / 2 }) }; })
+    .filter(x => x.d <= radius * 1000 + 3500).sort((a, b) => a.d - b.d);
+  const btn = $('btnTrip'); btn.disabled = true;
+  try {
+    const todo = quads.filter(x => !areaOk(x.Q.id) || Date.now() - new Date(area[x.Q.id].t) > AREA_MAX_AGE);
+    if (todo.length && !navigator.onLine) st.textContent = `Für ${todo.length} Quadranten fehlen Daten, sie werden ohne Empfang übersprungen.`;
+    else for (let i = 0; i < todo.length; i++) {
+      st.textContent = `Lade Arten für ${todo[i].Q.id} (${i + 1} von ${todo.length}) …`;
+      area[todo[i].Q.id] = await fetchQuadSpecies(todo[i].Q); kv.set('area', area);
+      await sleep(1100);
+    }
+    await loadSeason(here).catch(() => {});
+    const sea = seasonSet(here);
+    // Punkte je Quadrant: jede fehlende Art zählt nach Häufigkeit (wie die Fundchance), Arten in Saison zählen 1,5-fach
+    const rows = quads.filter(x => area[x.Q.id]).map(({ Q, d }) => {
+      const mine = mySpeciesIn(Q.id);
+      let score = 0, open = 0, now = 0;
+      for (const [s, [n]] of Object.entries(area[Q.id].sp)) {
+        if (mine.has(s)) continue;
+        open++; const inSea = sea && sea.has(s); if (inSea) now++;
+        score += Math.min(1, Math.log(1 + n) / Math.log(31)) * (inSea ? 1.5 : 1);
+      }
+      return { Q, d, score, open, now, cov: quadCoverage(Q.id) };
+    }).sort((a, b) => b.score - a.score).slice(0, 10);
+    st.textContent = rows.length ? `Die ${rows.length} lohnendsten Quadranten im Umkreis von ${radius} km:` : 'Keine Daten für diesen Umkreis.';
+    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.Q.id}"><span><b class="num">${r.Q.id}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.cov.pct ?? 0} %</span></span><span class="chip ok num">${Math.round(r.score)}</span></li>`).join('');
+    out.querySelectorAll('li.tap').forEach(li => li.onclick = () => {
+      setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' });
+      if (map) { const b = quadBounds(here); map.fitBounds([[b.s, b.w], [b.n, b.e]], { padding: [30, 30] }); }
+      setListMode('miss'); showTab('list');
+    });
+  } catch (e) {
+    st.textContent = e instanceof TypeError ? 'iNaturalist ist nicht erreichbar.' : e.message;
+  } finally { btn.disabled = false; }
+};
+
+// ---------- Offene Bestimmungen ----------
+function renderOpenIds() {
+  const coarse = obs.filter(o => o.r > 10), needs = obs.filter(o => o.g === 'needs_id' && !(o.r > 10));
+  const item = o => `<li><span><a class="sci" href="https://www.inaturalist.org/observations/${o.i}" target="_blank" rel="noopener" style="color:inherit">${esc(o.s)}</a>${o.c ? `<br><span class="cn">${esc(o.c)}</span>` : ''}</span><span class="d">${fmtDate(o.d)}${o.k ? '<br>' + o.k : ''}</span></li>`;
+  const block = (title, list, link) => list.length
+    ? `<details><summary>${title} (${list.length})</summary><ul class="list">${list.sort((a, b) => (b.d || '').localeCompare(a.d || '')).slice(0, 300).map(item).join('')}</ul><a class="small" href="${link}" target="_blank" rel="noopener">Alle auf iNaturalist</a></details>`
+    : `<div class="small muted">${title}: keine.</div>`;
+  const base = { user_id: settings.user, iconic_taxa: 'Plantae' };
+  if (settings.onlyAT) base.place_id = PLACE_AT;
+  $('openIds').innerHTML = meta.v === DATA_V
+    ? block('Nur bis Gattung oder höher bestimmt', coarse, 'https://www.inaturalist.org/observations?' + new URLSearchParams({ ...base, lrank: 'genus' }))
+      + block('Noch ohne Bestätigung („Needs ID“)', needs, 'https://www.inaturalist.org/observations?' + new URLSearchParams({ ...base, quality_grade: 'needs_id' }))
+    : '<div class="small muted">Erscheint nach dem nächsten Aktualisieren der Funde.</div>';
+}
+
+// ---------- Jahresbilanz ----------
+function renderYear() {
+  const sel = $('yearSel');
+  const years = [...new Set(obs.map(o => (o.d || '').slice(0, 4)).filter(Boolean))].sort().reverse();
+  if (!years.length) { $('yearOut').innerHTML = '<div class="small muted">Noch keine Funde.</div>'; return; }
+  if (!sel.options.length || sel.options.length !== years.length) sel.innerHTML = years.map(y => `<option>${y}</option>`).join('');
+  const y = sel.value || years[0];
+  // erster eigener Fund je Art und Quadrant
+  const first = new Map(), lastVisit = new Map();
+  for (const o of obs) {
+    if (!o.k || o.x || !o.d || o.r > 10) continue;
+    const key = o.k + '|' + o.s;
+    if (!first.has(key) || o.d < first.get(key)) first.set(key, o.d);
+    if (!lastVisit.has(o.k) || o.d > lastVisit.get(o.k)) lastVisit.set(o.k, o.d);
+  }
+  const inYear = obs.filter(o => (o.d || '').startsWith(y) && o.k && !o.x && !(o.r > 10));
+  const quads = new Set(inYear.map(o => o.k));
+  const newPerQ = new Map();
+  for (const [key, d] of first) if (d.startsWith(y)) { const q = key.split('|')[0]; newPerQ.set(q, (newPerQ.get(q) || 0) + 1); }
+  const newTotal = [...newPerQ.values()].reduce((a, b) => a + b, 0);
+  const top = [...newPerQ].sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const stale = [...lastVisit].sort((a, b) => a[1].localeCompare(b[1])).slice(0, 10);
+  $('yearOut').innerHTML = `
+    <div class="cover"><div><b class="num">${inYear.length}</b> ${inYear.length === 1 ? 'Fund' : 'Funde'} in <b class="num">${quads.size}</b> ${quads.size === 1 ? 'Quadrant' : 'Quadranten'}, davon <b class="num">${newTotal}</b> ${newTotal === 1 ? 'Erstnachweis' : 'Erstnachweise'} (Art neu im Quadranten).</div></div>
+    ${top.length ? `<div class="small"><b>Meiste Erstnachweise ${y}</b></div><ul class="list">${top.map(([q, n]) => `<li class="tap" data-q="${q}"><span class="num">${q}</span><span class="d">${n} ${n === 1 ? 'neue Art' : 'neue Arten'}</span></li>`).join('')}</ul>` : ''}
+    <div class="small"><b>Am längsten nicht besucht</b></div>
+    <ul class="list">${stale.map(([q, d]) => `<li class="tap" data-q="${q}"><span class="num">${q}</span><span class="d">zuletzt ${fmtDate(d)}</span></li>`).join('')}</ul>`;
+  $('yearOut').querySelectorAll('li.tap').forEach(li => li.onclick = () => { setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
+}
+$('yearSel').addEventListener('change', renderYear);
+
+// ---------- Sichern und Wiederherstellen ----------
+async function offerFile(file, statusEl) {
+  try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: file.name }); return true; } }
+  catch (e) { if (e && e.name === 'AbortError') { statusEl.textContent = 'Abgebrochen.'; return false; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  return true;
+}
+$('btnBackup').onclick = async () => {
+  const { token, ...safeSettings } = settings; // der Token wird nicht mitgesichert
+  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds };
+  const file = new File([JSON.stringify(data)], `kartierungshilfe-sicherung-${todayIso()}.json`, { type: 'application/json' });
+  if (await offerFile(file, $('backupStatus'))) $('backupStatus').textContent = `Gesichert: ${day.length} Einträge der Tagesliste und deine Einstellungen.`;
+};
+$('restoreFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (d.app !== 'kartierungshilfe') throw new Error();
+    settings = Object.assign(settings, d.settings || {}); store.set('settings', settings);
+    // Tagesliste zusammenführen statt überschreiben
+    const ids = new Set(day.map(x => x.id));
+    day = [...day, ...(d.day || []).filter(x => !ids.has(x.id))]; store.set('day', day);
+    if (d.export) { expMeta = d.export; store.set('export', expMeta); renderExpLabel(); }
+    if (d.taxIds) { taxIds = Object.assign(taxIds, d.taxIds); store.set('taxIds', taxIds); }
+    $('user').value = settings.user;
+    renderDay();
+    $('backupStatus').textContent = `Wiederhergestellt: Sicherung vom ${new Date(d.t).toLocaleDateString('de-AT')}. Tagesliste hat jetzt ${day.length} Einträge.`;
+  } catch { $('backupStatus').textContent = 'Diese Datei ist keine Sicherung der Kartierungshilfe.'; }
+  e.target.value = '';
+});
+
 // ---------- Start ----------
 $('user').value = settings.user;
 $('onlyPlants').checked = settings.onlyPlants;
@@ -1334,6 +1488,7 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
+statsReady = true; renderOpenIds(); renderYear();
 kvInit().then(() => {
   renderList(); drawGrid(); if (current) showResult(current);
   if (!here) locate(); else if (navigator.onLine) loadArea(false);
