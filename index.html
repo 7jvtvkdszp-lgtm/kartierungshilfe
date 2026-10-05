@@ -142,6 +142,10 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .mbars .b { height: 14px; background: #7c3aed; border-radius: 3px; min-width: 1px }
 .mbars .best { font-weight: 700 }
 details.ly summary { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); cursor: pointer; font-variant-numeric: tabular-nums }
+.list li.tally .tick { display: inline-block; width: 22px; height: 22px; border: 2px solid var(--line); border-radius: 6px; margin-right: 8px; vertical-align: -5px; text-align: center; line-height: 18px; font-weight: 700 }
+.list li.tally.on .tick { background: var(--found); border-color: var(--found); color: #fff }
+.list li.tally.on .sci { color: var(--found) }
+.comp { color: var(--accent); cursor: pointer; text-decoration: underline dotted }
 .clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
@@ -303,6 +307,16 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
   </section>
 
   <section id="view-day" class="view" hidden>
+    <div class="panel" style="margin-bottom:12px">
+      <h2 id="tallyTitle">Strichliste</h2>
+      <p class="small muted" style="margin:0">Antippen heißt gesehen: Die Art kommt auf die Tagesliste unten, nochmal antippen nimmt sie wieder weg. Oben stehen Arten, die gerade beobachtbar sind und hier fehlen oder wieder fällig sind. Tippst du mindestens drei Buchstaben, findest du jede Art aus Österreich.</p>
+      <div class="small" id="tallySum"></div>
+      <div class="row"><input class="field" id="tallyFilter" placeholder="Art suchen oder Liste filtern" autocomplete="off"></div>
+      <label class="row small"><input type="checkbox" id="tallyAll"> Auch Arten zeigen, die du hier schon aktuell kartiert hast</label>
+      <div id="tallyComp"></div>
+      <div class="small muted" id="tallyHead" style="padding-top:8px"></div>
+      <ul class="list" id="tallyList"></ul>
+    </div>
     <div class="panel">
       <h2>Tagesliste</h2>
       <p class="small muted" style="margin:0">Arten, die du im Feld unter „Prüfen“ notierst. Sobald die Art im selben Quadranten auf iNaturalist auftaucht, wird sie automatisch abgehakt.</p>
@@ -384,7 +398,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 26</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 27</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -879,7 +893,7 @@ function renderList() {
 $('listFilter').addEventListener('input', renderList);
 // nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
 const _renderList = renderList;
-renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); };
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -1146,6 +1160,7 @@ function extraLines(s, mapped) {
   const sea = seasonSet(here);
   if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
   if (isEnding(s)) { const e = endingMap(here).get(s); out.push(`<span class="chip ending">bald vorbei</span> Jetzt oder nie: in der Umgebung diesen Monat ${e.n}× gemeldet, im ${MONTHS_LONG[monthNext() - 1]} nur ${e.m}×.`); }
+  const cl = compLine(s); if (cl) out.push(cl);
   let html = out.map(l => `<div class="small">${l}</div>`).join('') + '<div id="taxBox"></div>';
   // Für noch nicht (oder nicht mehr) kartierte Arten: nächster Fund aller Nutzer mit Detailkarte
   if (!mapped) html += `<div class="nearbox" id="nearBox"><div class="small">${navigator.onLine ? 'Suche Funde aller iNaturalist-Nutzer …' : 'Nächster Fund aller Nutzer: nur mit Empfang.'}</div></div>`;
@@ -1228,6 +1243,7 @@ function afterResult(cur, mapped) {
   if (btn) btn.onclick = () => { addDay(cur, btn.dataset.st); btn.textContent = '✓ Auf der Tagesliste'; btn.disabled = true; };
   const wb = $('result').querySelector('.wishbtn');
   if (wb) wb.onclick = () => { toggleWish(cur); wb.textContent = onWish(cur.s) ? '★ Auf der Wunschliste' : '☆ Auf die Wunschliste'; };
+  $('result').querySelectorAll('.comp').forEach(a => a.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: a.dataset.s, c: commonName(a.dataset.s) }); window.scrollTo(0, 0); });
   renderTaxBox(cur);
   const db = $('btnDistr'); if (db) db.onclick = () => { db.disabled = true; showDistr(cur.s); };
   renderTips();
@@ -1269,6 +1285,7 @@ function renderDay() {
   const open = day.filter(e => !e.done && !dayOnInat(e)).length;
   $('tab-day').textContent = open ? `Heute (${open})` : 'Heute';
   if ($('view-day').hidden) return;
+  renderTally();
   const ST = { new: ['new', 'neu'], due: ['due', 'fällig'], ok: ['ok', 'schon kartiert'] };
   const sorted = [...day].sort((a, b) => b.t.localeCompare(a.t));
   const html = []; let lastDate = '', lastQ = '';
@@ -1999,8 +2016,90 @@ $('lsYear').onclick = () => { liferSort = 'year'; store.set('liferSort', liferSo
 $('lsCount').onclick = () => { liferSort = 'count'; store.set('liferSort', liferSort); renderLiferStats(); };
 $('liferMonthSel').addEventListener('change', renderLiferStats);
 
+// ---------- Digitale Strichliste mit Begleitarten ----------
+const TALLY_MAX = 120;
+function tallyStatus(s, Q) {
+  const ds = (index.byQuad.get(Q.id)?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d);
+  return !ds.length ? 'new' : isDue(ds.sort().pop()) ? 'due' : 'ok';
+}
+const tallyToday = () => here ? day.filter(e => e.q === here.id && e.t.slice(0, 10) === todayIso()) : [];
+function tallyToggle(s) {
+  const e = tallyToday().find(x => x.s === s);
+  if (e) { day = day.filter(x => x !== e); store.set('day', day); renderDay(); }
+  else addDay({ s, c: commonName(s) }, tallyStatus(s, here));
+}
+// Begleitarten aus dem Österreich-Atlas: Arten, die in den Quadranten mit Art T deutlich öfter vorkommen als im Schnitt
+var compCache = new Map();
+function companions(T) {
+  if (!atlas) return [];
+  const key = T + '|' + atlas.t;
+  if (compCache.has(key)) return compCache.get(key);
+  const e = atlas.sp.get(T); let res = [];
+  if (e && e.k >= 5) {
+    const cnt = new Map(), N = atlas.q.length;
+    for (let i = 0; i < e.occ.length; i += 2) for (const [s] of atlas.byQuad.get(atlas.q[e.occ[i]]) || []) if (s !== T) cnt.set(s, (cnt.get(s) || 0) + 1);
+    res = [...cnt].map(([s, n]) => { const p = n / e.k; return { s, p, lift: p / (atlas.sp.get(s).k / N) }; })
+      .filter(r => r.p >= 0.3 && r.lift >= 1.5)
+      .map(r => ({ ...r, sc: r.p * Math.log(r.lift) })).sort((a, b) => b.sc - a.sc).slice(0, 40);
+  }
+  compCache.set(key, res);
+  if (compCache.size > 300) compCache.delete(compCache.keys().next().value);
+  return res;
+}
+function compLine(s) {
+  const c = companions(s); if (!c.length || !here) return '';
+  const sea = seasonSet(here), mine = mySpeciesIn(here.id);
+  const top = [...c].sort((a, b) => (sea ? sea.has(b.s) - sea.has(a.s) : 0) || b.sc - a.sc).slice(0, 5);
+  return 'Oft zusammen mit: ' + top.map(r => `<span class="comp" data-s="${esc(r.s)}"><i>${esc(r.s)}</i></span>${mine.has(r.s) ? '' : ' <span class="chip new">neu hier</span>'}`).join(', ') + '.';
+}
+function renderTally() {
+  const ul = $('tallyList'); if (!ul || $('view-day').hidden) return;
+  if (!here) { $('tallyTitle').textContent = 'Strichliste'; $('tallySum').textContent = ''; $('tallyComp').innerHTML = ''; ul.innerHTML = '<li class="muted">Erst die Position bestimmen.</li>'; return; }
+  $('tallyTitle').textContent = `Strichliste ${here.id}`;
+  const f = $('tallyFilter').value.trim().toLowerCase(), showAll = $('tallyAll').checked;
+  const sea = seasonSet(here), mine = mySpeciesIn(here.id);
+  const today = tallyToday(), on = new Set(today.map(e => e.s));
+  const cand = new Set([...Object.keys(spOf(here.id) || {}), ...mine, ...on]);
+  for (const [dr, dc] of NB) for (const s in spOf(neighbour(here, dr, dc).id) || {}) cand.add(s);
+  if (f.length >= 3) {
+    if (atlas) for (const s of atlas.sp.keys()) if (s.toLowerCase().includes(f) || (atlas.sp.get(s).c || '').toLowerCase().includes(f)) cand.add(s);
+    for (const s of index.bySp.keys()) if (s.includes(' ') && s.toLowerCase().includes(f)) cand.add(s);
+  }
+  const match = s => !f || s.toLowerCase().includes(f) || commonName(s).toLowerCase().includes(f);
+  const rows = [];
+  for (const s of cand) {
+    if (!match(s)) continue;
+    const st = tallyStatus(s, here), c = chance(s, here), isOn = on.has(s);
+    if (!isOn && !f && !showAll && st === 'ok') continue;
+    if (!isOn && !f && st === 'new' && !c.inQ && c.nb < 2) continue; // nur ein Nachbar: zu unsicher für die Liste
+    rows.push({ s, st, ...c, on: isOn, now: sea ? (sea.has(s) ? 1 : 0) : 1 });
+  }
+  rows.sort((a, b) => b.now - a.now || b.pct - a.pct || a.s.localeCompare(b.s));
+  const ST = { new: '<span class="chip new">neu</span>', due: '<span class="chip due">fällig</span>', ok: '<span class="chip ok">kartiert</span>' };
+  const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '';
+  const li = r => `<li class="tap tally${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span><span class="tick">${r.on ? '✓' : ''}</span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${seaChip(r.s)}${freqChip(r.s)}</span><span class="d">${r.pct ? r.pct + ' %' : ''}</span></span></li>`;
+  ul.innerHTML = rows.length ? rows.slice(0, TALLY_MAX).map(li).join('') + (rows.length > TALLY_MAX ? `<li class="muted small">… und ${rows.length - TALLY_MAX} weitere. Tippe oben einen Namen, um sie zu finden.</li>` : '')
+    : `<li class="muted">${f ? 'Keine passende Art.' : 'Keine Arten für diesen Quadranten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.'}</li>`;
+  $('tallyHead').innerHTML = rows.length ? `<b>${f ? 'Treffer' : 'Arten für ' + here.id}</b> (${rows.length}), gerade beobachtbare zuerst` : '';
+  const cnt = k => today.filter(e => e.st === k).length;
+  $('tallySum').textContent = today.length ? `Heute in ${here.id}: ${today.length} ${today.length === 1 ? 'Art' : 'Arten'} gestrichen, davon ${cnt('new')} neu und ${cnt('due')} wieder fällig.` : '';
+  // Begleitarten: was zu den heute gestrichenen Arten oft dazugehört und noch fehlt
+  const score = new Map(), hits = new Map();
+  for (const e of today) for (const r of companions(e.s)) {
+    if (on.has(r.s) || tallyStatus(r.s, here) === 'ok') continue;
+    score.set(r.s, (score.get(r.s) || 0) + r.sc); hits.set(r.s, (hits.get(r.s) || 0) + 1);
+  }
+  const comp = [...score].map(([s, sc]) => ({ s, sc, h: hits.get(s), now: sea ? (sea.has(s) ? 1 : 0) : 1 }))
+    .sort((a, b) => b.now - a.now || b.h - a.h || b.sc - a.sc).slice(0, 8);
+  $('tallyComp').innerHTML = comp.length ? `<div class="small muted" style="padding-top:8px"><b>Begleitarten</b>: in Österreich oft zusammen mit deinen heutigen Strichen, hier noch offen. Antippen streicht sie.</div><ul class="list">${comp.map(r => li({ s: r.s, st: tallyStatus(r.s, here), on: false, pct: 0 }).replace('<span class="d"></span>', `<span class="d">bei ${r.h} von ${today.length}</span>`)).join('')}</ul>` : '';
+  $('view-day').querySelectorAll('li.tally').forEach(x => x.onclick = () => tallyToggle(x.dataset.s));
+}
+$('tallyFilter').addEventListener('input', renderTally);
+$('tallyAll').checked = !!store.get('tallyAll', false);
+$('tallyAll').onchange = () => { store.set('tallyAll', $('tallyAll').checked); renderTally(); };
+
 // ---------- Löschknopf in Suchfeldern ----------
-for (const id of ['q', 'listFilter', 'manualInput']) {
+for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter']) {
   const inp = $(id), wrap = document.createElement('div');
   wrap.className = 'clearwrap'; inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
   const x = document.createElement('button'); x.type = 'button'; x.className = 'clearx'; x.setAttribute('aria-label', 'Eingabe löschen'); x.textContent = '×';
