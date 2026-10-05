@@ -153,6 +153,9 @@ details.fold > summary::-webkit-details-marker { display: none }
 details.fold > summary h2 { margin: 0 }
 details.fold > summary h2::before { content: '▾ '; color: var(--muted) }
 details.fold:not([open]) > summary h2::before { content: '▸ ' }
+.chip.blnew { background: #0e7490; color: #fff }
+.chip.blre { background: #0e7490; color: #fff; outline: 2px dashed #f59e0b }
+.chip.endem { border: 1px solid #0e7490; color: #0e7490 }
 .clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
@@ -405,7 +408,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 28</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 29</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -879,7 +882,7 @@ function renderList() {
     ul.innerHTML = rows.length ? rows.map(([s, os]) => {
       const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
       const st = quadStatus(s);
-      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${isRed(s) ? ' <span class="chip rl">RL</span>' : ''} ${freqChip(s)}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${rlChip(s)} ${freqChip(s)}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
     }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else if (listMode === 'exp') {
     renderExpected(ul);
@@ -892,7 +895,7 @@ function renderList() {
       .sort((x, y) => (y.lif - x.lif) || (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
@@ -1158,12 +1161,14 @@ async function loadRedlist(force) {
   redSet = new Set(sp);
   kv.set('redlist', redlist);
 }
-const isRed = s => redSet.has(s);
+// Echte Rote Liste Österreichs (rl.json), sonst die iNaturalist-Angabe
+const RL_THREAT = new Set(['RE', 'RE?', 'CR', 'EN', 'VU', 'G']);
+const isRed = s => { const r = rlOf(s); return r ? RL_THREAT.has(r.c) : !rl && redSet.has(s); };
 
 // ---------- Zusatzzeilen im Prüfergebnis ----------
 function extraLines(s, mapped) {
   const out = [];
-  if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
+  if (rl) out.push(...rlLines(s)); else if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
   const sea = seasonSet(here);
   if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
   if (isEnding(s)) { const e = endingMap(here).get(s); out.push(`<span class="chip ending">bald vorbei</span> Jetzt oder nie: in der Umgebung diesen Monat ${e.n}× gemeldet, im ${MONTHS_LONG[monthNext() - 1]} nur ${e.m}×.`); }
@@ -1846,7 +1851,7 @@ function renderExpected(ul) {
   $('listTitle').textContent = `Erwartet in ${here.id} (${rows.length})`;
   if (known < 4) { ul.innerHTML = '<li class="muted">Zu wenige Nachbarquadranten mit Daten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.</li>'; return; }
   ul.innerHTML = `<li class="muted small">Arten, die in mindestens ${need} von ${known} Nachbarquadranten bekannt sind, hier aber noch nie gemeldet wurden. Gute Kandidaten für eine Kartierlücke.</li>`
-    + (rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${isRed(r.s) ? '<span class="chip rl">RL</span>' : ''}${freqChip(r.s)}<span class="chip ok num">${r.n}/${known}</span></span><span class="d">Nachbarn mit der Art</span></span></li>`).join('')
+    + (rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}<span class="chip ok num">${r.n}/${known}</span></span><span class="d">Nachbarn mit der Art</span></span></li>`).join('')
       : '<li class="muted">Keine auffälligen Lücken.</li>');
 }
 
@@ -2085,7 +2090,7 @@ function renderTally() {
   rows.sort((a, b) => b.on - a.on || b.now - a.now || b.pct - a.pct || a.s.localeCompare(b.s)); // Gestrichenes oben, damit der Überblick bleibt
   const ST = { new: '<span class="chip new">neu</span>', due: '<span class="chip due">fällig</span>', ok: '<span class="chip ok">kartiert</span>' };
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '';
-  const li = r => `<li class="tap tally${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span><span class="tick">${r.on ? '✓' : ''}</span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${seaChip(r.s)}${freqChip(r.s)}</span><span class="d">${r.pct ? r.pct + ' %' : ''}</span></span></li>`;
+  const li = r => `<li class="tap tally${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span><span class="tick">${r.on ? '✓' : ''}</span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${blChip(r.s)}${rlChip(r.s)}${seaChip(r.s)}${freqChip(r.s)}</span><span class="d">${r.pct ? r.pct + ' %' : ''}</span></span></li>`;
   ul.innerHTML = rows.length ? rows.slice(0, TALLY_MAX).map(li).join('') + (rows.length > TALLY_MAX ? `<li class="muted small">… und ${rows.length - TALLY_MAX} weitere. Tippe oben einen Namen, um sie zu finden.</li>` : '')
     : `<li class="muted">${f ? 'Keine passende Art.' : 'Keine Arten für diesen Quadranten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.'}</li>`;
   $('tallyHead').innerHTML = rows.length ? `<b>${f ? 'Treffer' : 'Arten für ' + here.id}</b> (${rows.length}), gerade beobachtbare zuerst` : '';
@@ -2112,6 +2117,84 @@ for (const id of ['foldTally', 'foldDay']) {
 }
 $('tallyAll').checked = !!store.get('tallyAll', false);
 $('tallyAll').onchange = () => { store.set('tallyAll', $('tallyAll').checked); renderTally(); };
+
+// ---------- Rote Liste Österreichs (Stapfia 114, 2022): Kategorie, Bundesländer, Endemiten ----------
+// rl.json kommt aus der GitHub Action (scripts/build_rl.py): Namen auf iNaturalist abgeglichen, je Quadrant die Bundesländer
+var rl = null; // { t, by: Map(Art -> { c, nat: [5], bl: { Code: Eintrag }, va, ar, ld, de, rn, sub }), q: { Quadrant: [Codes] } }
+const RL_TEXT = { RE: 'ausgestorben oder verschollen', 'RE?': 'vielleicht ausgestorben', CR: 'vom Aussterben bedroht', EN: 'stark gefährdet', VU: 'gefährdet', NT: 'Vorwarnstufe', LC: 'ungefährdet', G: 'Gefährdung unbekannten Ausmaßes', DD: 'Datenlage unzureichend', n: 'eingebürgerter Neophyt', '?': 'Vorkommen in Österreich fraglich' };
+const BL_NAME = { V: 'Vorarlberg', nT: 'Nordtirol', oT: 'Osttirol', S: 'Salzburg', K: 'Kärnten', St: 'der Steiermark', O: 'Oberösterreich', N: 'Niederösterreich', W: 'Wien', B: 'dem Burgenland' };
+const BL_SHORT = { V: 'Vbg', nT: 'NTirol', oT: 'OTirol', S: 'Sbg', K: 'Ktn', St: 'Stmk', O: 'OÖ', N: 'NÖ', W: 'Wien', B: 'Bgld' };
+const NAT_NAME = { AL: 'Alpengebiet', BM: 'Böhmische Masse', NV: 'Nördliches Vorland', SV: 'Südöstliches Vorland', PA: 'Pannonisches Gebiet' };
+function prepRl(raw) {
+  if (!raw || !raw.s) return null;
+  const by = new Map();
+  for (const [s, rn, de, c, nat, bl, va, ar, ld, sub] of raw.s) {
+    const b = {}; bl.split('|').forEach((v, i) => { b[raw.bl[i]] = v; });
+    by.set(s, { c, nat: nat.split('|'), bl: b, va, ar, ld, de, rn, sub });
+  }
+  const q = {}; for (const k in raw.q) q[k] = raw.q[k].split(',');
+  return { t: raw.t, by, q, natCodes: raw.nat, quelle: raw.quelle };
+}
+const rlOf = s => rl ? rl.by.get(s) : null;
+const blOf = Q => rl && Q ? rl.q[Q.id] || [] : [];
+// Status der Art in den Bundesländern des Quadranten: 'new' (nicht angegeben, fraglich oder irrig), 'lost' (verschollen), sonst null
+function blStatus(s, Q) {
+  const r = rlOf(s), codes = blOf(Q);
+  if (!r || !codes.length) return null;
+  const vals = codes.map(c => (r.bl[c] || '').replace(/\*/g, ''));
+  if (vals.some(v => /^(●|e|le|u)/.test(v))) return null;
+  if (vals.some(v => v.startsWith('†'))) return { k: 'lost', codes };
+  return { k: 'new', codes, v: vals };
+}
+function blChip(s) {
+  if (!here) return '';
+  const st = blStatus(s, here); if (!st) return '';
+  const where = st.codes.map(c => BL_SHORT[c]).join('/');
+  return st.k === 'lost' ? `<span class="chip blre">Wiederfund ${where}</span>` : `<span class="chip blnew">neu für ${where}</span>`;
+}
+function rlChip(s) {
+  const r = rlOf(s);
+  if (!r) return !rl && redSet.has(s) ? '<span class="chip rl">RL</span>' : '';
+  const va = r.va === 'E' ? '<span class="chip endem">Endemit</span>' : r.va === 'S' ? '<span class="chip endem">Subendemit</span>' : '';
+  return (RL_THREAT.has(r.c) || r.c === 'NT' ? `<span class="chip rl">RL ${esc(r.c)}</span>` : '') + va;
+}
+function rlLines(s) {
+  const r = rlOf(s), out = [];
+  if (!r) {
+    if (s.includes(' ')) out.push('Nicht in der Roten Liste Österreichs gefunden. Entweder führt sie die Art unter einem anderen Namen, oder sie wäre neu für Österreich.');
+    return out;
+  }
+  const name = r.rn !== s ? ` (dort als <i>${esc(r.rn)}</i>${r.sub ? ', nach Unterarten' : ''})` : r.sub ? ' (dort nach Unterarten eingestuft, hier die stärkste Stufe)' : '';
+  out.push(`<span class="chip rl">RL ${esc(r.c || '–')}</span> Rote Liste Österreich: ${RL_TEXT[r.c] || 'nicht eingestuft'}${name}.`);
+  const reg = r.nat.map((v, i) => [rl.natCodes[i], v.replace('*', '')]).filter(([, v]) => RL_THREAT.has(v) || v === 'NT');
+  if (reg.length) out.push('Regional stärker gefährdet: ' + reg.map(([k, v]) => `${NAT_NAME[k]} ${v}`).join(', ') + '.');
+  if (r.va === 'E') out.push('<span class="chip endem">Endemit</span> Kommt weltweit nur in Österreich vor.');
+  else if (r.va === 'S') out.push('<span class="chip endem">Subendemit</span> Hauptvorkommen in Österreich, knapp darüber hinaus.');
+  const st = here && blStatus(s, here);
+  if (st) {
+    const where = st.codes.map(c => BL_NAME[c]).join(' bzw. ');
+    if (st.k === 'lost') out.push(`<span class="chip blre">Wiederfund</span> In ${where} laut Roter Liste ausgestorben oder verschollen. Ein Fund wäre ein Wiederfund, gut belegen!`);
+    else out.push(`<span class="chip blnew">Erstnachweis?</span> In ${where} laut Roter Liste ${st.v.every(v => v === '–') ? 'nur mit irrigen Angaben' : st.v.some(v => v === '?') ? 'nur fraglich' : 'nicht'} nachgewiesen. Ein Fund hier wäre möglicherweise neu für das Bundesland, gut belegen!`);
+  } else if (here && blOf(here).length) {
+    const v = blOf(here).map(c => r.bl[c] || '').find(x => /^(e|le|u)/.test(x));
+    if (v) out.push(`Im Bundesland ${v.startsWith('u') ? 'nur unbeständig' : v.startsWith('le') ? 'nur lokal eingebürgert' : 'eingebürgert'}.`);
+  }
+  return out;
+}
+async function loadRl() {
+  try { const raw = await kv.get('rl'); if (raw) { rl = prepRl(raw); renderList(); if (current) showResult(current); } } catch {}
+  const age = rl ? Date.now() - new Date(store.get('rlChecked', 0)) : Infinity;
+  if (!navigator.onLine || age < 7 * 864e5) return;
+  try {
+    const r = await fetch('rl.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const raw = await r.json();
+    store.set('rlChecked', new Date().toISOString());
+    if (rl && raw.t === rl.t) return;
+    await kv.set('rl', raw); rl = prepRl(raw);
+    renderList(); if (current) showResult(current);
+  } catch { /* noch keine rl.json oder kein Empfang */ }
+}
 
 // ---------- Löschknopf in Suchfeldern ----------
 for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter']) {
@@ -2153,7 +2236,7 @@ function renderTips() {
     if (!old || now > old.now || (now === old.now && last < old.last)) old = { s, last, now };
   }
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '<span class="chip unsure">nicht in Saison</span>';
-  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${seaChip(s)}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
+  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${blChip(s)}${rlChip(s)}${seaChip(s)}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
@@ -2277,7 +2360,7 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas();
+  loadAtlas(); loadRl();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }
