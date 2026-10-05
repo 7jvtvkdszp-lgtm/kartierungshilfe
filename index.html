@@ -352,7 +352,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 20</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 21</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -659,14 +659,14 @@ function showResult(cur) {
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
   afterResult(cur, false);
 }
-// Funde der Art in den acht Nachbarquadranten: alle iNaturalist-Nutzer und eigene
+// Funde der Art in den acht Nachbarquadranten: alle iNaturalist-Nutzer (und GBIF aus dem Atlas) und eigene
 function nbLine(s) {
   if (!here) return '';
   const parts = []; let known = 0;
   for (const [dr, dc] of NB) {
     const Q = neighbour(here, dr, dc);
-    if (area[Q.id]) known++;
-    const n = area[Q.id]?.sp[s]?.[0] || 0;
+    if (spOf(Q.id)) known++;
+    const n = spOf(Q.id)?.[s]?.[0] || 0;
     const own = (index.byQuad.get(Q.id)?.get(s) || []).filter(o => !o.x);
     if (!n && !own.length) continue;
     const last = own.map(o => o.d).sort().pop();
@@ -739,18 +739,30 @@ async function loadArea(force) {
 }
 $('btnArea').onclick = () => loadArea(true);
 function chance(s, Q) {
-  const inQ = area[Q.id]?.sp[s]?.[0] || 0;
+  const inQ = spOf(Q.id)?.[s]?.[0] || 0;
   let nb = 0;
-  for (const [dr, dc] of NB) if (area[neighbour(Q, dr, dc).id]?.sp[s]) nb++;
+  for (const [dr, dc] of NB) if (spOf(neighbour(Q, dr, dc).id)?.[s]) nb++;
   const pct = Math.round(100 * (0.6 * Math.min(1, Math.log(1 + inQ) / Math.log(31)) + 0.4 * nb / 8));
   return { inQ, nb, pct };
 }
-const commonName = s => index.common.get(s) || Object.values(area).map(a => a.sp[s]?.[1]).find(Boolean) || '';
+const commonName = s => index.common.get(s) || (atlas && atlas.sp.get(s)?.c) || Object.values(area).map(a => a.sp[s]?.[1]).find(Boolean) || '';
+// Bekannte Arten eines Quadranten: iNaturalist live (area) vereinigt mit dem Österreich-Atlas (iNat + GBIF); { Art: [Anzahl, deutscher Name] }
+const spCache = new Map();
+function spOf(id) {
+  const a = area[id], at = atlas && atlas.byQuad.get(id);
+  if (!at) return a ? a.sp : null;
+  const key = (a ? a.t : '') + '|' + atlas.t;
+  const c = spCache.get(id); if (c && c.key === key) return c.sp;
+  const sp = a ? { ...a.sp } : {};
+  for (const [s, n] of at) { const e = sp[s]; if (!e) sp[s] = [n, atlas.sp.get(s).c || '']; else if (n > e[0]) sp[s] = [n, e[1] || atlas.sp.get(s).c || '']; }
+  spCache.set(id, { key, sp });
+  return sp;
+}
 const mySpeciesIn = id => new Set([...(index.byQuad.get(id) || new Map())].filter(([, os]) => os.some(o => !o.x)).map(([sp]) => sp));
 function areaLine(s) {
-  if (!here || !area[here.id]) return '';
+  if (!here || !spOf(here.id)) return '';
   const c = chance(s, here);
-  return `Auf iNaturalist hier ${c.inQ ? c.inQ + ' Beobachtung' + (c.inQ > 1 ? 'en' : '') : 'noch nicht gemeldet'}. Fundchance ${c.pct} %.`;
+  return `${atlasSrc()} hier ${c.inQ ? c.inQ + ' Beobachtung' + (c.inQ > 1 ? 'en' : '') : 'noch nicht gemeldet'}. Fundchance ${c.pct} %.`;
 }
 
 let listMode = store.get('listMode', 'mine');
@@ -765,7 +777,7 @@ function renderList() {
   for (const dr of [-1, 0, 1]) for (const dc of [-1, 0, 1]) {
     const Q = dr || dc ? neighbour(here, dr, dc) : here;
     const n = index.byQuad.get(Q.id)?.size || 0;
-    const tot = area[Q.id] ? new Set([...Object.keys(area[Q.id].sp), ...mySpeciesIn(Q.id)]).size : null;
+    const tot = spOf(Q.id) ? new Set([...Object.keys(spOf(Q.id)), ...mySpeciesIn(Q.id)]).size : null;
     g.push(`<button class="${dr || dc ? '' : 'here'}" data-q="${Q.id}"><span><b class="num">${n}</b><span class="tot num">${tot != null ? ' / ' + tot : ''}</span></span>${Q.id}</button>`);
   }
   $('grid3').innerHTML = g.join('');
@@ -774,7 +786,7 @@ function renderList() {
 
   const m = index.byQuad.get(here.id) || new Map();
   const mine = mySpeciesIn(here.id);
-  const a = area[here.id];
+  const a = spOf(here.id) ? { sp: spOf(here.id) } : null;
   // Abdeckung: alle im Quadranten bekannten Arten (iNaturalist plus eigene Funde)
   if (a) {
     const total = new Set([...Object.keys(a.sp), ...mine]).size;
@@ -800,7 +812,7 @@ function renderList() {
     }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []);
-    if ($('withNb').checked) for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(x => cand.add(x));
+    if ($('withNb').checked) for (const [dr, dc] of NB) Object.keys(spOf(neighbour(here, dr, dc).id) || {}).forEach(x => cand.add(x));
     const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked;
     const rows = [...cand].filter(s => !mine.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)))
       .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s) }))
@@ -1229,7 +1241,7 @@ function quadsInBounds(s, n, w, e, max) {
   return out;
 }
 function quadCoverage(id) {
-  const mine = mySpeciesIn(id), a = area[id];
+  const mine = mySpeciesIn(id), a = spOf(id) ? { sp: spOf(id) } : null;
   if (!a) return { mine: mine.size, total: null, pct: null };
   const total = new Set([...Object.keys(a.sp), ...mine]).size;
   return { mine: mine.size, total, pct: total ? Math.round(mine.size / total * 100) : 0 };
@@ -1270,7 +1282,8 @@ function queueMapFill(quads) {
   if (!navigator.onLine) return;
   const c = map.getCenter();
   const mid = Q => { const b = quadBounds(Q); return (b.n + b.s - 2 * c.lat) ** 2 + ((b.w + b.e) / 2 - c.lng) ** 2 * 0.45; };
-  fillQueue = quads.filter(Q => !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE).sort((a, b) => mid(a) - mid(b)).slice(0, 80);
+  // mit Österreich-Atlas ist die Abdeckung schon bekannt, live nachgeladen wird nur außerhalb
+  fillQueue = quads.filter(Q => !(atlas && atlas.byQuad.has(Q.id)) && (!areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE)).sort((a, b) => mid(a) - mid(b)).slice(0, 80);
   if (fillQueue.length && !fillRunning) runMapFill();
 }
 async function runMapFill() {
@@ -1430,7 +1443,7 @@ $('btnTrip').onclick = async () => {
     .filter(x => x.d <= radius * 1000 + 3500).sort((a, b) => a.d - b.d);
   const btn = $('btnTrip'); btn.disabled = true;
   try {
-    const todo = quads.filter(x => !areaOk(x.Q.id) || Date.now() - new Date(area[x.Q.id].t) > AREA_MAX_AGE);
+    const todo = quads.filter(x => !(atlas && atlas.byQuad.has(x.Q.id)) && (!areaOk(x.Q.id) || Date.now() - new Date(area[x.Q.id].t) > AREA_MAX_AGE));
     if (todo.length && !navigator.onLine) st.textContent = `Für ${todo.length} Quadranten fehlen Daten, sie werden ohne Empfang übersprungen.`;
     else for (let i = 0; i < todo.length; i++) {
       st.textContent = `Lade Arten für ${todo[i].Q.id} (${i + 1} von ${todo.length}) …`;
@@ -1441,10 +1454,10 @@ $('btnTrip').onclick = async () => {
     const sea = seasonSet(here);
     // Punkte je Quadrant: jede fehlende Art zählt nach Häufigkeit (wie die Fundchance), Arten in Saison zählen 1,5-fach.
     // Lifer (in Österreich noch nie gefunden) haben absoluten Vorrang: zuerst nach Lifer-Punkten sortiert, dann nach den übrigen.
-    const rows = quads.filter(x => area[x.Q.id]).map(({ Q, d }) => {
+    const rows = quads.filter(x => spOf(x.Q.id)).map(({ Q, d }) => {
       const mine = mySpeciesIn(Q.id);
       let score = 0, lscore = 0, open = 0, now = 0; const lifers = [];
-      for (const [s, [n]] of Object.entries(area[Q.id].sp)) {
+      for (const [s, [n]] of Object.entries(spOf(Q.id))) {
         if (mine.has(s)) continue;
         open++; const inSea = sea && sea.has(s); if (inSea) now++;
         const w = Math.min(1, Math.log(1 + n) / Math.log(31)) * (inSea ? 1.5 : 1);
@@ -1611,9 +1624,9 @@ function toggleWish(cur) {
 function wishButton(cur) { return `<button class="btn wishbtn">${onWish(cur.s) ? '★ Auf der Wunschliste' : '☆ Auf die Wunschliste'}</button>`; }
 // Wunscharten, die im Quadranten auf iNaturalist bekannt sind und die du dort noch nicht hast
 function wishIn(id) {
-  if (!area[id]) return [];
+  const sp = spOf(id); if (!sp) return [];
   const mine = mySpeciesIn(id);
-  return wish.filter(w => area[id].sp[w.s] && !mine.has(w.s));
+  return wish.filter(w => sp[w.s] && !mine.has(w.s));
 }
 function updateWishNote() {
   const el = $('wishNote'); if (!el) return;
@@ -1625,8 +1638,8 @@ function renderWish() {
   const ul = $('wishList'); if (!ul) return;
   if (!wish.length) { ul.innerHTML = '<li class="muted">Noch leer. Unter „Prüfen“ kannst du Arten mit ☆ auf die Wunschliste setzen.</li>'; return; }
   ul.innerHTML = [...wish].sort((a, b) => a.s.localeCompare(b.s)).map(w => {
-    const hereHit = here && area[here.id]?.sp[w.s];
-    const nb = here ? NB.filter(([dr, dc]) => area[neighbour(here, dr, dc).id]?.sp[w.s]).length : 0;
+    const hereHit = here && spOf(here.id)?.[w.s];
+    const nb = here ? NB.filter(([dr, dc]) => spOf(neighbour(here, dr, dc).id)?.[w.s]).length : 0;
     const mineHere = here && mySpeciesIn(here.id).has(w.s);
     return `<li><button class="pick plain" data-s="${esc(w.s)}"><span class="sci">${esc(w.s)}</span>${w.c ? `<br><span class="cn">${esc(w.c)}</span>` : ''}</button>
       <span class="chips">${isLifer(w.s) ? '<span class="chip lifer">Lifer</span>' : ''}${mineHere ? '<span class="chip ok">schon hier</span>' : hereHit ? '<span class="chip season">hier bekannt</span>' : nb ? `<span class="chip unsure">${nb} Nachbarn</span>` : ''}<button class="x" data-del="${esc(w.s)}" aria-label="Entfernen">✕</button></span></li>`;
@@ -1682,7 +1695,7 @@ function renderNewNear() {
 
 // ---------- Kartenfärbung: Abdeckung oder Lifer ----------
 var mapMode = store.get('mapMode', 'cov');
-const liferCount = id => area[id] ? Object.keys(area[id].sp).filter(isLifer).length : null;
+const liferCount = id => spOf(id) ? Object.keys(spOf(id)).filter(isLifer).length : null;
 const liferColor = n => n ? `hsl(270 ${60 + Math.min(n, 20)}% ${Math.round(78 - Math.min(1, Math.log(1 + n) / Math.log(21)) * 46)}%)` : '#cbd5e1';
 function setMapMode(m) {
   mapMode = m; store.set('mapMode', m);
@@ -1715,10 +1728,10 @@ for (const id of ['q', 'listFilter', 'manualInput']) {
 // ---------- Drei Tipps zum aktuellen Quadranten ----------
 function renderTips() {
   const el = $('tips'); if (!el) return;
-  if (!here || !area[here.id] || current) { el.innerHTML = ''; return; }
+  if (!here || !spOf(here.id) || current) { el.innerHTML = ''; return; }
   const mine = mySpeciesIn(here.id);
-  const cand = new Set(Object.keys(area[here.id].sp));
-  for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(s => cand.add(s));
+  const cand = new Set(Object.keys(spOf(here.id)));
+  for (const [dr, dc] of NB) Object.keys(spOf(neighbour(here, dr, dc).id) || {}).forEach(s => cand.add(s));
   let lifer = null, open = null;
   for (const s of cand) {
     if (mine.has(s)) continue;
@@ -1753,10 +1766,12 @@ function prepAtlas(raw) {
   sorted.forEach((e, i) => { const f = e.k === prevK ? prevF : Math.min(10, Math.floor(i / sorted.length * 10) + 1); e.f = f; prevK = e.k; prevF = f; });
   const rc = raw.q.map(id => { const m = id.match(/^(\d{2})(\d{2})\/([1-4])$/); const q = +m[3]; return [+m[1] * 2 + (q > 2 ? 1 : 0), +m[2] * 2 + ((q - 1) % 2)]; });
   const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
-  return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, sp, total: sp.size };
+  const byQuad = new Map();
+  for (const [s, , occ] of raw.s) for (let i = 0; i < occ.length; i += 2) { const id = raw.q[occ[i]]; if (!byQuad.has(id)) byQuad.set(id, []); byQuad.get(id).push([s, occ[i + 1]]); }
+  return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, byQuad, sp, total: sp.size, src: raw.src || ['iNaturalist'] };
 }
 async function loadAtlas() {
-  try { const raw = await kv.get('atlas'); if (raw) atlas = prepAtlas(raw); } catch {}
+  try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); } } catch {}
   const age = atlas ? Date.now() - new Date(store.get('atlasChecked', 0)) : Infinity;
   if (!navigator.onLine || age < 7 * 864e5) return;
   try {
@@ -1766,15 +1781,16 @@ async function loadAtlas() {
     store.set('atlasChecked', new Date().toISOString());
     if (atlas && raw.t === atlas.t) return;
     await kv.set('atlas', raw); atlas = prepAtlas(raw);
-    renderList(); renderTips(); if (current) showResult(current);
+    renderList(); renderTips(); drawGrid(true); if (current) showResult(current);
   } catch { /* noch keine Atlasdatei oder kein Empfang */ }
 }
+const atlasSrc = () => atlas && atlas.src.length > 1 ? 'Auf iNaturalist und GBIF' : 'Auf iNaturalist';
 const freqOf = s => atlas ? atlas.sp.get(s) : null;
 function freqChip(s) { const e = freqOf(s); return e ? `<span class="chip freq f${e.f}" title="Häufigkeitsklasse">H${e.f}</span>` : ''; }
 function freqLine(s) {
   if (!atlas) return '';
   const e = freqOf(s);
-  if (!e) return `<div class="small"><span class="chip freq f10">H–</span> In Österreich auf iNaturalist noch in keinem Quadranten gemeldet.</div>`;
+  if (!e) return `<div class="small"><span class="chip freq f10">H–</span> In Österreich ${atlas.src.length > 1 ? 'auf iNaturalist und GBIF' : 'auf iNaturalist'} noch in keinem Quadranten gemeldet.</div>`;
   return `<div class="small">${freqChip(s)} Häufigkeitsklasse ${e.f} von 10: in ${e.k} von ${atlas.n} Quadranten Österreichs (${(e.k / atlas.n * 100).toFixed(e.k / atlas.n < 0.01 ? 1 : 0).replace('.', ',')} %). <button class="linkbtn" id="btnDistr">Verbreitungskarte</button></div><div id="distrBox"></div>`;
 }
 // Wahrscheinlichkeit je Quadrant: Anteil der Quadranten im Umkreis von 30 km, in denen die Art gemeldet ist
@@ -1805,7 +1821,7 @@ function showDistr(s) {
   const good = top.filter(i => score[i] >= best * 0.6);
   const nearGood = ref ? good.slice().sort((a, b) => dTo(a) - dTo(b))[0] : null;
   box.innerHTML = `<div class="nearmap" id="distrMap"></div>
-    <div class="small muted">Dunkel umrandet: Quadranten mit Beobachtungen. Farbe: Anteil der Quadranten im Umkreis von 30 km mit der Art, von gelb (wenig) bis rot (am meisten). Quelle: iNaturalist, Stand ${fmtDate(atlas.t.slice(0, 10))}.</div>
+    <div class="small muted">Dunkel umrandet: Quadranten mit Beobachtungen. Farbe: Anteil der Quadranten im Umkreis von 30 km mit der Art, von gelb (wenig) bis rot (am meisten). Quelle: ${esc(atlas.src.join(' und '))}, Stand ${fmtDate(atlas.t.slice(0, 10))}.</div>
     <div class="small"><b>Am wahrscheinlichsten:</b> ${top.slice(0, 5).map(i => `${atlas.q[i]} (${Math.round(score[i] * 100)} %${ref ? ', ' + km(dTo(i)) : ''})`).join(' · ') || '–'}${nearGood !== undefined && nearGood !== null && ref ? `<br><b>Nächste gute Gegend:</b> ${atlas.q[nearGood]}, ${km(dTo(nearGood))} entfernt (${Math.round(score[nearGood] * 100)} %).` : ''}</div>`;
   if (distrMap) { distrMap.remove(); distrMap = null; }
   distrMap = L.map('distrMap', { zoomSnap: 0.5, preferCanvas: true });
