@@ -156,6 +156,10 @@ details.fold:not([open]) > summary h2::before { content: '▸ ' }
 .chip.blnew { background: #0e7490; color: #fff }
 .chip.blre { background: #0e7490; color: #fff; outline: 2px dashed #f59e0b }
 .chip.endem { border: 1px solid #0e7490; color: #0e7490 }
+details.lz { width: 100% }
+details.lz > summary { list-style: none; display: flex; justify-content: space-between; gap: 10px; cursor: pointer }
+details.lz > summary::-webkit-details-marker { display: none }
+details.lz .lzbody { padding: 6px 0 2px; display: flex; flex-direction: column; gap: 6px }
 .clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
@@ -314,6 +318,16 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div id="tourMapWrap" hidden><div class="nearmap" id="tourMap"></div></div>
         <ul class="list" id="tourList"></ul>
       </div>
+      <div class="panel">
+        <h2>Lifer-Ziele</h2>
+        <p class="small muted" style="margin:0">Deine Lifer, sortiert danach, wie oft sie in Österreich auf iNaturalist gemeldet wurden. Dazu das beste Zeitfenster (der Halbmonat mit den meisten Meldungen), der nächstgelegene Quadrant mit Funden und die Lifer, die dort zur selben Zeit mitgehen.</p>
+        <div class="row tabs seg" role="tablist" style="margin:0">
+          <button role="tab" id="lzSortN" aria-selected="true">Häufigste zuerst</button>
+          <button role="tab" id="lzSortT" aria-selected="false">Nächstes Zeitfenster zuerst</button>
+        </div>
+        <div class="small muted" id="lzStatus"></div>
+        <ul class="list" id="lzList"></ul>
+      </div>
     </div>
   </section>
 
@@ -425,7 +439,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 31</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 32</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -602,7 +616,7 @@ function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
   if (t === 'list') renderList();
-  if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); }, 60); }
+  if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); if (typeof renderLifeTargets === 'function') renderLifeTargets(); }, 60); }
   if (t === 'day') renderDay();
   if (t === 'off') renderOff();
 }
@@ -2328,6 +2342,89 @@ async function prepareOffline(force) {
 }
 $('offGo').onclick = () => prepareOffline(false);
 
+// ---------- Lifer-Ziele: häufigste Lifer Österreichs mit bestem Zeitfenster, nächstem Quadranten und Mitnahme-Lifern ----------
+var pheno = null; // { t, s: { Art: [24 Halbmonate] } } aus pheno.json (GitHub Action, monatlich)
+let lzSort = store.get('lzSort', 'n');
+const HALF = i => { const m = Math.floor(i / 2), last = new Date(2001, m + 1, 0).getDate(); return i % 2 ? `16.–${last}. ${MONTHS_LONG[m]}` : `1.–15. ${MONTHS_LONG[m]}`; };
+const HALF_SHORT = i => `${i % 2 ? 'Ende' : 'Anfang'} ${MONTHS_LONG[Math.floor(i / 2)]}`;
+function phenoOf(s) {
+  const h = pheno && pheno.s[s]; if (!h) return null;
+  let peak = 0; h.forEach((v, i) => { if (v > h[peak]) peak = i; });
+  const max = h[peak], tot = h.reduce((a, b) => a + b, 0);
+  // Saison: zusammenhängende Halbmonate um den Höhepunkt mit mindestens 30 % der Spitze
+  let a = peak, b = peak;
+  while (h[(a + 23) % 24] >= max * 0.3 && (a + 23) % 24 !== peak && b - a < 23) a--;
+  while (h[(b + 1) % 24] >= max * 0.3 && (b + 1) % 24 !== peak && b - a < 23) b++;
+  return { h, peak, max, tot, from: (a + 24) % 24, to: b % 24 };
+}
+const halfNow = () => { const d = new Date(); return d.getMonth() * 2 + (d.getDate() > 15 ? 1 : 0); };
+function nearestQuad(s, ref) {
+  const e = atlas && atlas.sp.get(s); if (!e || !ref) return null;
+  let best = null;
+  for (let i = 0; i < e.occ.length; i += 2) {
+    const Q = parseQuad(atlas.q[e.occ[i]]), b = quadBounds(Q);
+    const d = dist(ref, { la: (b.n + b.s) / 2, lo: (b.w + b.e) / 2 });
+    if (!best || d < best.d) best = { Q, d };
+  }
+  return best;
+}
+function companionsAt(target, Q, ph) {
+  if (!atlas) return [];
+  const ids = new Set([Q.id, ...NB.map(([dr, dc]) => neighbour(Q, dr, dc).id)]), seen = new Set();
+  for (const id of ids) for (const [s] of atlas.byQuad.get(id) || []) seen.add(s);
+  return [...seen].filter(s => s !== target && isLifer(s) && s.includes(' ')).map(s => ({ s, p: phenoOf(s) }))
+    .filter(r => r.p && r.p.h[ph.peak] >= r.p.max * 0.3).sort((a, b) => b.p.tot - a.p.tot);
+}
+function renderLifeTargets() {
+  const ul = $('lzList'); if (!ul) return;
+  if (!pheno) { $('lzStatus').textContent = 'Die Beobachtungszeiten werden gerade auf GitHub berechnet. Sobald sie fertig sind, erscheint hier die Liste.'; ul.innerHTML = ''; return; }
+  const ref = here ? (here.lat != null ? { lat: here.lat, lon: here.lon } : (() => { const b = quadBounds(here); return { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 }; })()) : null;
+  const now = halfNow();
+  let rows = Object.keys(pheno.s).filter(s => s.includes(' ') && isLifer(s)).map(s => ({ s, p: phenoOf(s) })).filter(r => r.p.tot >= 3);
+  if (lzSort === 't') rows.sort((a, b) => ((a.p.peak - now + 24) % 24) - ((b.p.peak - now + 24) % 24) || b.p.tot - a.p.tot);
+  else rows.sort((a, b) => b.p.tot - a.p.tot);
+  rows = rows.slice(0, 25);
+  $('lzStatus').textContent = `${Object.keys(pheno.s).filter(s => s.includes(' ') && isLifer(s)).length} Lifer mit Meldungen in Österreich. Stand der Daten: ${fmtDate(pheno.t.slice(0, 10))}.${ref ? '' : ' Für Entfernungen erst die Position bestimmen.'}`;
+  ul.innerHTML = rows.map((r, i) => {
+    const nq = nearestQuad(r.s, ref), comp = nq ? companionsAt(r.s, nq.Q, r.p) : [];
+    const soon = (r.p.peak - now + 24) % 24;
+    return `<li><details class="lz" data-i="${i}"><summary><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${rlChip(r.s)}<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span></span><span class="d">${r.p.tot} Meldungen${nq ? ` · ${km(nq.d)}` : ''}</span></span></summary>
+      <div class="lzbody small">
+        <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}. Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
+        ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : '<div>Kein Quadrant in den Österreich-Daten bekannt.</div>'}
+        ${nq ? `<div class="lzpt"><button class="linkbtn" data-pt="${esc(r.s)}" data-q="${nq.Q.id}">Genauen Fundpunkt suchen</button></div>` : ''}
+        ${comp.length ? `<div><b>Mitnahme-Lifer</b> (rund um ${nq.Q.id}, in diesem Zeitfenster gemeldet): ${comp.slice(0, 8).map(c => `<i>${esc(c.s)}</i>`).join(', ')}${comp.length > 8 ? ` und ${comp.length - 8} weitere` : ''}.</div>` : nq ? '<div>Keine weiteren Lifer rund um diesen Quadranten zur selben Zeit.</div>' : ''}
+      </div></details></li>`;
+  }).join('') || '<li class="muted">Keine Lifer mit Meldungen gefunden.</li>';
+  ul.querySelectorAll('[data-pt]').forEach(b => b.onclick = async () => {
+    const box = b.parentNode;
+    if (!navigator.onLine || !ref) { box.textContent = !ref ? 'Erst die Position bestimmen.' : 'Dafür braucht es Empfang.'; return; }
+    box.textContent = 'Suche Fundpunkte …';
+    try {
+      const res = await nearestAll(b.dataset.pt, parseQuad(b.dataset.q), ref);
+      const n = res.best;
+      box.innerHTML = !n ? 'Keine Fundpunkte mit Koordinaten gefunden.' : `Nächster Fundpunkt: ${km(n.d)} entfernt (${fmtDate(n.date)}, ${esc(n.own ? 'du' : n.user)}${n.x ? ', Koordinaten verschleiert' : ''}). <a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Beobachtung</a> · <a href="https://maps.apple.com/?daddr=${n.la},${n.lo}" target="_blank" rel="noopener">Weg dorthin</a>`;
+    } catch { box.textContent = 'iNaturalist gerade nicht erreichbar.'; }
+  });
+}
+function setLzSort(v) { lzSort = v; store.set('lzSort', v); $('lzSortN').setAttribute('aria-selected', v === 'n'); $('lzSortT').setAttribute('aria-selected', v === 't'); renderLifeTargets(); }
+$('lzSortN').onclick = () => setLzSort('n');
+$('lzSortT').onclick = () => setLzSort('t');
+setLzSort(lzSort);
+async function loadPheno() {
+  try { const raw = await kv.get('pheno'); if (raw) { pheno = raw; renderLifeTargets(); } } catch {}
+  const age = pheno ? Date.now() - new Date(store.get('phenoChecked', 0)) : Infinity;
+  if (!navigator.onLine || age < 7 * 864e5) return;
+  try {
+    const r = await fetch('pheno.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const raw = await r.json();
+    store.set('phenoChecked', new Date().toISOString());
+    if (pheno && raw.t === pheno.t) return;
+    await kv.set('pheno', raw); pheno = raw; renderLifeTargets();
+  } catch { /* noch keine pheno.json oder kein Empfang */ }
+}
+
 // ---------- Löschknopf in Suchfeldern ----------
 for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter', 'offCenter']) {
   const inp = $(id), wrap = document.createElement('div');
@@ -2492,7 +2589,7 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas(); loadRl();
+  loadAtlas(); loadRl(); loadPheno();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }
