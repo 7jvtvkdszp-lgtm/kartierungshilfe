@@ -14,6 +14,7 @@ Web-App fürs iPhone: bestimmt per GPS den Quadranten der Floristischen Kartieru
 - **Heute:** Tagesliste, wird automatisch abgehakt, sobald der Fund auf iNaturalist ist.
 - **Mitlaufen:** verfolgt die Position und meldet mit Ton und Hinweis den Wechsel in einen neuen Quadranten (nur bei geöffneter App; iPhone erlaubt Web-Apps keine Vibration).
 - **Feldhilfen (v19):** Grenzwarnung, wenn die GPS-Genauigkeit größer ist als der Abstand zur Quadrantengrenze; Vergleichsfoto und häufige Verwechslungsarten (iNat similar_species, Österreich) im Prüfergebnis; Wunschliste (Tab Heute) mit Hinweis, wenn eine Wunschart im Quadranten bekannt ist; „Neu in der Umgebung“: Lifer, die andere im Umkreis von 30 km neu hochgeladen haben; Karte wahlweise nach Lifern eingefärbt.
+- **v20:** Löschknopf (×) in Suchfeldern; „Tipps für den Quadranten“ (wahrscheinlichster Lifer, wahrscheinlichste noch nicht kartierte Art, am längsten nicht kartierte Art); Häufigkeitsklasse H1–H10 (Dezile nach Zahl der österreichischen Quadranten mit iNat-Beobachtungen) und Verbreitungskarte (Anteil der Quadranten im Umkreis 30 km). Datengrundlage `atlas.json`, monatlich erstellt von `.github/workflows/atlas.yml` mit `scripts/build_atlas.py`.
 - **Daten:** offene Bestimmungen (nur Gattung / Needs ID; Gattungsfunde zählen nicht als kartiert), Jahresbilanz (Funde, Erstnachweise je Quadrant, am längsten nicht besuchte Quadranten), Sicherung/Wiederherstellung als JSON (ohne Token).
 - **Export für observation.org:** CSV (Semikolon, UTF-8): species;date;time;lat;lng;accuracy;abundance;remarks.
 

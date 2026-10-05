@@ -136,6 +136,14 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
 .chip.lifer { background: #7c3aed; color: #fff }
+.clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
+.clearwrap .field { padding-right: 46px }
+.clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
+.clearwrap .field:placeholder-shown + .clearx { display: none }
+.chip.freq { border: 1px solid var(--line); color: var(--ink, inherit); background: var(--surface) }
+.chip.freq.f1, .chip.freq.f2, .chip.freq.f3 { background: var(--found-bg); color: var(--found); border-color: transparent }
+.chip.freq.f8, .chip.freq.f9, .chip.freq.f10 { background: var(--warn-bg); color: var(--warn); border-color: transparent }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; font: inherit; cursor: pointer }
 .edge.warn { background: var(--warn-bg); color: var(--warn); font-weight: 600 }
 .wishnote { grid-column: 1 / -1; font-size: 13px; background: #ede9fe; color: #5b21b6; border-radius: 8px; padding: 6px 10px }
 @media (prefers-color-scheme: dark) { .wishnote { background: #2e1065; color: #ddd6fe } }
@@ -203,6 +211,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
       </div>
       <button class="back" id="back" hidden>‹ Zurück zur Auswahl</button>
       <div id="result"></div>
+      <div id="tips"></div>
       <div id="dataHint"></div>
       <div id="newNear"></div>
     </div>
@@ -343,7 +352,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 19</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 20</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -597,7 +606,7 @@ function pick(x) {
   showResult(current);
 }
 $('back').onclick = () => {
-  $('back').hidden = true; $('result').innerHTML = ''; current = null;
+  $('back').hidden = true; $('result').innerHTML = ''; current = null; renderTips();
   $('q').value = lastQuery; $('q').dispatchEvent(new Event('input')); $('q').focus();
 };
 
@@ -622,6 +631,7 @@ function showResult(cur) {
       <div>Letzte Kartierung am <b>${fmtDate(last)}</b>${due ? ', das ist mehr als ' + REPEAT_YEARS + ' Jahre her.' : '. Wieder fällig ab ' + fmtDate(dueDate(last)) + '.'}</div>
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
+      ${freqLine(cur.s)}
       ${nbLine(cur.s)}
       ${extraLines(cur.s, !due)}
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
@@ -643,6 +653,7 @@ function showResult(cur) {
   el.innerHTML = `<div class="result new"><div class="verdict">Neu für ${here.id}</div>${taxon}
     <div class="row">${dayButton(cur, 'new')}${wishButton(cur)}</div>
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+    ${freqLine(cur.s)}
     ${nbLine(cur.s)}
     ${extraLines(cur.s, false)}
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
@@ -785,7 +796,7 @@ function renderList() {
     ul.innerHTML = rows.length ? rows.map(([s, os]) => {
       const last = os.map(o => o.d).sort().pop(); const onlyX = os.every(o => o.x);
       const st = quadStatus(s);
-      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${isRed(s) ? ' <span class="chip rl">RL</span>' : ''}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${isRed(s) ? ' <span class="chip rl">RL</span>' : ''} ${freqChip(s)}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
     }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []);
@@ -796,7 +807,7 @@ function renderList() {
       .sort((x, y) => (y.lif - x.lif) || (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
@@ -804,7 +815,7 @@ function renderList() {
 $('listFilter').addEventListener('input', renderList);
 // nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
 const _renderList = renderList;
-renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } };
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -1118,6 +1129,8 @@ function afterResult(cur, mapped) {
   const wb = $('result').querySelector('.wishbtn');
   if (wb) wb.onclick = () => { toggleWish(cur); wb.textContent = onWish(cur.s) ? '★ Auf der Wunschliste' : '☆ Auf die Wunschliste'; };
   renderTaxBox(cur);
+  const db = $('btnDistr'); if (db) db.onclick = () => { db.disabled = true; showDistr(cur.s); };
+  renderTips();
   if (mapped || !navigator.onLine || !here) return;
   const at = here, qb = quadBounds(at);
   const ref = at.lat != null ? { lat: at.lat, lon: at.lon } : { lat: (qb.n + qb.s) / 2, lon: (qb.w + qb.e) / 2 };
@@ -1683,6 +1696,131 @@ $('mm-cov').onclick = () => setMapMode('cov');
 $('mm-lif').onclick = () => setMapMode('lif');
 setMapMode(mapMode);
 
+// ---------- Löschknopf in Suchfeldern ----------
+for (const id of ['q', 'listFilter', 'manualInput']) {
+  const inp = $(id), wrap = document.createElement('div');
+  wrap.className = 'clearwrap'; inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+  const x = document.createElement('button'); x.type = 'button'; x.className = 'clearx'; x.setAttribute('aria-label', 'Eingabe löschen'); x.textContent = '×';
+  wrap.appendChild(x);
+  x.onclick = () => {
+    inp.value = '';
+    if (id === 'q') { current = null; lastQuery = ''; $('result').innerHTML = ''; $('sugg').hidden = true; $('back').hidden = true; renderTips(); }
+    inp.dispatchEvent(new Event('input'));
+    inp.focus();
+  };
+  // Antippen markiert den alten Text, neues Tippen ersetzt ihn
+  inp.addEventListener('focus', () => { if (inp.value) setTimeout(() => inp.select(), 0); });
+}
+
+// ---------- Drei Tipps zum aktuellen Quadranten ----------
+function renderTips() {
+  const el = $('tips'); if (!el) return;
+  if (!here || !area[here.id] || current) { el.innerHTML = ''; return; }
+  const mine = mySpeciesIn(here.id);
+  const cand = new Set(Object.keys(area[here.id].sp));
+  for (const [dr, dc] of NB) Object.keys(area[neighbour(here, dr, dc).id]?.sp || {}).forEach(s => cand.add(s));
+  let lifer = null, open = null;
+  for (const s of cand) {
+    if (mine.has(s)) continue;
+    const c = chance(s, here);
+    if (isLifer(s)) { if (!lifer || c.pct > lifer.pct || (c.pct === lifer.pct && c.inQ > lifer.inQ)) lifer = { s, ...c }; }
+    else if (!open || c.pct > open.pct || (c.pct === open.pct && c.inQ > open.inQ)) open = { s, ...c };
+  }
+  let old = null;
+  for (const [s, os] of index.byQuad.get(here.id) || []) {
+    const ex = os.filter(o => !o.x && o.d); if (!ex.length) continue;
+    const last = ex.map(o => o.d).sort().pop();
+    if (!old || last < old.last) old = { s, last };
+  }
+  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
+  const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
+    + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
+    + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
+  el.innerHTML = html ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}</ul></div>` : '';
+  el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); window.scrollTo(0, 0); });
+}
+
+// ---------- Österreich-Atlas: Häufigkeitsklassen und Verbreitung ----------
+// atlas.json wird monatlich per GitHub Action aus iNaturalist erstellt: je Art die Quadranten Österreichs mit Beobachtungen
+var atlas = null; // { t, n, q: [Quadrant-IDs], sp: Map(Art -> { c, occ: [i, n, i, n …], k: Anzahl Quadranten, f: Klasse 1–10 }), byRC }
+function prepAtlas(raw) {
+  if (!raw || !raw.q) return null;
+  const sp = new Map();
+  for (const [s, c, occ] of raw.s) sp.set(s, { c, occ, k: occ.length / 2 });
+  // Klassen: 1 = die 10 % der Arten in den meisten Quadranten … 10 = die 10 % in den wenigsten; gleiche Anzahl → gleiche Klasse
+  const sorted = [...sp.values()].sort((a, b) => b.k - a.k);
+  let prevK = -1, prevF = 1;
+  sorted.forEach((e, i) => { const f = e.k === prevK ? prevF : Math.min(10, Math.floor(i / sorted.length * 10) + 1); e.f = f; prevK = e.k; prevF = f; });
+  const rc = raw.q.map(id => { const m = id.match(/^(\d{2})(\d{2})\/([1-4])$/); const q = +m[3]; return [+m[1] * 2 + (q > 2 ? 1 : 0), +m[2] * 2 + ((q - 1) % 2)]; });
+  const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
+  return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, sp, total: sp.size };
+}
+async function loadAtlas() {
+  try { const raw = await kv.get('atlas'); if (raw) atlas = prepAtlas(raw); } catch {}
+  const age = atlas ? Date.now() - new Date(store.get('atlasChecked', 0)) : Infinity;
+  if (!navigator.onLine || age < 7 * 864e5) return;
+  try {
+    const r = await fetch('atlas.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const raw = await r.json();
+    store.set('atlasChecked', new Date().toISOString());
+    if (atlas && raw.t === atlas.t) return;
+    await kv.set('atlas', raw); atlas = prepAtlas(raw);
+    renderList(); renderTips(); if (current) showResult(current);
+  } catch { /* noch keine Atlasdatei oder kein Empfang */ }
+}
+const freqOf = s => atlas ? atlas.sp.get(s) : null;
+function freqChip(s) { const e = freqOf(s); return e ? `<span class="chip freq f${e.f}" title="Häufigkeitsklasse">H${e.f}</span>` : ''; }
+function freqLine(s) {
+  if (!atlas) return '';
+  const e = freqOf(s);
+  if (!e) return `<div class="small"><span class="chip freq f10">H–</span> In Österreich auf iNaturalist noch in keinem Quadranten gemeldet.</div>`;
+  return `<div class="small">${freqChip(s)} Häufigkeitsklasse ${e.f} von 10: in ${e.k} von ${atlas.n} Quadranten Österreichs (${(e.k / atlas.n * 100).toFixed(e.k / atlas.n < 0.01 ? 1 : 0).replace('.', ',')} %). <button class="linkbtn" id="btnDistr">Verbreitungskarte</button></div><div id="distrBox"></div>`;
+}
+// Wahrscheinlichkeit je Quadrant: Anteil der Quadranten im Umkreis von 30 km, in denen die Art gemeldet ist
+function distrScores(e) {
+  const has = new Uint8Array(atlas.q.length), cnt = new Uint32Array(atlas.q.length);
+  for (let i = 0; i < e.occ.length; i += 2) { has[e.occ[i]] = 1; cnt[e.occ[i]] = e.occ[i + 1]; }
+  const R = 30, dy = 5.56, dx = 6.2, win = [];
+  for (let a = -6; a <= 6; a++) for (let b = -5; b <= 5; b++) if ((a * dy) ** 2 + (b * dx) ** 2 <= R * R) win.push([a, b]);
+  const score = new Float32Array(atlas.q.length);
+  atlas.rc.forEach(([r, c], i) => {
+    let tot = 0, hit = 0;
+    for (const [a, b] of win) { const j = atlas.byRC.get((r + a) * 1000 + c + b); if (j === undefined) continue; tot++; hit += has[j]; }
+    score[i] = tot ? hit / tot : 0;
+  });
+  return { has, cnt, score };
+}
+let distrMap = null;
+function showDistr(s) {
+  const e = freqOf(s), box = $('distrBox'); if (!e || !box) return;
+  if (!window.L) { box.innerHTML = '<div class="small muted">Die Karte braucht beim ersten Mal Empfang.</div>'; return; }
+  const { has, cnt, score } = distrScores(e);
+  const top = [...score.keys()].filter(i => score[i] > 0).sort((a, b) => score[b] - score[a] || cnt[b] - cnt[a]);
+  const ref = here ? (here.lat != null ? { lat: here.lat, lon: here.lon } : (() => { const b = quadBounds(here); return { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 }; })()) : null;
+  const bnd = i => quadBounds(parseQuad(atlas.q[i]));
+  const dTo = i => { if (!ref) return null; const b = bnd(i); return dist(ref, { la: (b.n + b.s) / 2, lo: (b.w + b.e) / 2 }); };
+  // nächstgelegene gute Gegend: Quadrant mit mindestens 60 % des Höchstwerts, der dir am nächsten ist
+  const best = top.length ? score[top[0]] : 0;
+  const good = top.filter(i => score[i] >= best * 0.6);
+  const nearGood = ref ? good.slice().sort((a, b) => dTo(a) - dTo(b))[0] : null;
+  box.innerHTML = `<div class="nearmap" id="distrMap"></div>
+    <div class="small muted">Dunkel umrandet: Quadranten mit Beobachtungen. Farbe: Anteil der Quadranten im Umkreis von 30 km mit der Art, von gelb (wenig) bis rot (am meisten). Quelle: iNaturalist, Stand ${fmtDate(atlas.t.slice(0, 10))}.</div>
+    <div class="small"><b>Am wahrscheinlichsten:</b> ${top.slice(0, 5).map(i => `${atlas.q[i]} (${Math.round(score[i] * 100)} %${ref ? ', ' + km(dTo(i)) : ''})`).join(' · ') || '–'}${nearGood !== undefined && nearGood !== null && ref ? `<br><b>Nächste gute Gegend:</b> ${atlas.q[nearGood]}, ${km(dTo(nearGood))} entfernt (${Math.round(score[nearGood] * 100)} %).` : ''}</div>`;
+  if (distrMap) { distrMap.remove(); distrMap = null; }
+  distrMap = L.map('distrMap', { zoomSnap: 0.5, preferCanvas: true });
+  L.tileLayer(OSM_URL, { maxZoom: 19, attribution: OSM_ATTR }).addTo(distrMap);
+  const rend = L.canvas();
+  for (let i = 0; i < atlas.q.length; i++) {
+    if (!score[i] && !has[i]) continue;
+    const b = bnd(i), v = score[i], vn = best ? v / best : 0; // Farbe relativ zum Höchstwert
+    L.rectangle([[b.s, b.w], [b.n, b.e]], { renderer: rend, weight: has[i] ? 1.5 : 0, color: '#111827', fillColor: `hsl(${Math.round(55 - vn * 55)} 90% ${Math.round(60 - vn * 22)}%)`, fillOpacity: 0.3 + vn * 0.5 })
+      .bindPopup(`<b>${atlas.q[i]}</b><br>${has[i] ? cnt[i] + ' Beobachtung' + (cnt[i] > 1 ? 'en' : '') : 'keine Beobachtung'}<br>Umkreis 30 km: ${Math.round(v * 100)} %`).addTo(distrMap);
+  }
+  if (ref) L.circleMarker([ref.lat, ref.lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#1d4ed8', fillOpacity: 1 }).bindPopup('Dein Standort').addTo(distrMap);
+  distrMap.fitBounds([[46.37, 9.53], [49.02, 17.17]]);
+}
+
 // ---------- Start ----------
 $('user').value = settings.user;
 $('onlyPlants').checked = settings.onlyPlants;
@@ -1696,7 +1834,7 @@ statsReady = true; renderOpenIds(); renderYear(); renderWish(); renderNewNear();
 // Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
 const ui = store.get('ui', null);
 if (ui && Date.now() - ui.t < 12 * 3600e3) {
-  if (ui.cur) { current = ui.cur; $('q').value = ui.cur.s; lastQuery = ui.lastQuery || ''; $('back').hidden = !lastQuery || lastQuery === ui.cur.s; showResult(current); }
+  if (ui.cur && Date.now() - ui.t < 30 * 60e3) { current = ui.cur; $('q').value = ui.cur.s; lastQuery = ui.lastQuery || ''; $('back').hidden = !lastQuery || lastQuery === ui.cur.s; showResult(current); }
   else if (ui.q) $('q').value = ui.q;
   if (ui.filter) { $('listFilter').value = ui.filter; renderList(); }
   setTimeout(() => window.scrollTo(0, ui.y || 0), 50);
@@ -1708,9 +1846,13 @@ document.addEventListener('click', e => { if (e.target.closest('a[target="_blank
 kvInit().then(() => {
   renderList(); drawGrid(); if (current) showResult(current);
   if (ui && ui.y) window.scrollTo(0, ui.y);
-  if (!here) locate(); else if (navigator.onLine) loadArea(false);
-  updateWishNote(); renderWish(); checkNewNear();
+  if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
+  updateWishNote(); renderWish(); checkNewNear(); renderTips();
+  loadAtlas();
 });
+// Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
+function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && staleGps()) locate(); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkNewNear(); });
 // Funde beim Öffnen automatisch abgleichen (höchstens alle 5 Minuten, nur mit Empfang)
 function autoSync() {
