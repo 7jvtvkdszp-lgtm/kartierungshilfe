@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 INAT = 'https://api.inaturalist.org/v1'
 GBIF = 'https://api.gbif.org/v1'
 PLACE_AT = 8057
-MOSS_IDS = '311249,64615,56327'
+INAT_TRACHEOPHYTA = 211194  # Gefäßpflanzen: ohne Moose, Algen (z. B. Chara, Trentepohlia)
 GBIF_TRACHEOPHYTA = 7707728  # Gefäßpflanzen, damit ohne Moose
 YEARS = 20
 LAT0, LON0 = 56.0, 5 + 40 / 60
@@ -94,7 +94,7 @@ def run_inat():
         found, page = {}, 1
         while True:
             j = inat('observations/species_counts', {'place_id': PLACE_AT, 'swlat': s, 'swlng': w, 'nelat': n, 'nelng': e,
-                     'verifiable': 'true', 'iconic_taxa': 'Plantae', 'without_taxon_id': MOSS_IDS,
+                     'verifiable': 'true', 'taxon_id': INAT_TRACHEOPHYTA,
                      'per_page': 500, 'page': page, 'locale': 'de'})
             for res in j['results']:
                 t = res.get('taxon') or {}
@@ -110,7 +110,7 @@ def run_inat():
 
 def inat_name(canonical, names_cache_misc):
     """GBIF-Name auf den iNaturalist-Namen abbilden (iNat findet auch Synonyme)."""
-    j = inat('taxa', {'q': canonical, 'iconic_taxa': 'Plantae', 'per_page': 10, 'locale': 'de'})
+    j = inat('taxa', {'q': canonical, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 10, 'locale': 'de'})
     for t in (j or {}).get('results', []):
         if t.get('rank_level', 99) > 10: continue
         terms = {t['name'], t.get('matched_term', '')}
