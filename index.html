@@ -137,6 +137,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
 .chip.lifer { background: #7c3aed; color: #fff }
+.chip.ending { background: #c2410c; color: #fff }
 .mbars { display: grid; grid-template-columns: 34px 1fr 64px; gap: 3px 8px; align-items: center; font-size: 13px }
 .mbars .b { height: 14px; background: #7c3aed; border-radius: 3px; min-width: 1px }
 .mbars .best { font-weight: 700 }
@@ -383,7 +384,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 23</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 24</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -765,6 +766,7 @@ async function loadArea(force) {
     }
     st.textContent = '';
     await loadSeason(center).catch(() => {});
+    await loadEnding(center).catch(() => {});
     await loadRedlist().catch(() => {});
   } catch (e) {
     st.textContent = e instanceof TypeError ? 'iNaturalist ist gerade nicht erreichbar. Gespeicherte Daten bleiben nutzbar.' : e.message;
@@ -859,7 +861,7 @@ function renderList() {
       .sort((x, y) => (y.lif - x.lif) || (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? '<span class="chip season">jetzt</span>' : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${r.red ? '<span class="chip rl">RL</span>' : ''}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.inQ ? r.inQ + ' Beob. hier' : 'nur Nachbarn'} · ${r.nb}/8</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; current = { s: li.dataset.s, c: commonName(li.dataset.s) }; $('q').value = current.s; showResult(current); });
@@ -1073,6 +1075,43 @@ async function loadSeason(Q, force) {
   seasonCache = {};
   kv.set('season', season);
 }
+// ---------- Jetzt oder nie: Arten, die diesen Monat noch gemeldet werden, im nächsten Monat kaum noch ----------
+async function speciesCountsMap(extra) {
+  const m = {};
+  for (let page = 1; ; page++) {
+    const p = speciesCountsParams({ ...extra, page: String(page) });
+    const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + p);
+    if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
+    const j = await r.json();
+    for (const { count, taxon: t } of j.results) if (t && t.rank_level <= 10) { const s = speciesName(t.name, t.rank_level); m[s] = (m[s] || 0) + count; }
+    if (page * 500 >= j.total_results || page >= 6) break;
+    await sleep(1100);
+  }
+  return m;
+}
+const monthNext = () => monthNow() % 12 + 1;
+async function loadEnding(Q, force) {
+  const key = 'E|' + Q.id + '|' + monthNow();
+  if (!force && season[key] && season[key].f === filterKey() && Date.now() - new Date(season[key].t) < AREA_MAX_AGE) return;
+  const nw = quadBounds(neighbour(Q, -2, -2)), se = quadBounds(neighbour(Q, 2, 2));
+  const box = { swlat: se.s, swlng: nw.w, nelat: nw.n, nelng: se.e };
+  const now = await speciesCountsMap({ ...box, month: String(monthNow()) });
+  await sleep(1100);
+  const next = await speciesCountsMap({ ...box, month: String(monthNext()) });
+  // endet bald: diesen Monat mindestens 2 Meldungen, im nächsten Monat höchstens ein Fünftel davon
+  const sp = Object.entries(now).filter(([s, n]) => n >= 2 && (next[s] || 0) <= n * 0.2).map(([s, n]) => [s, n, next[s] || 0]);
+  season[key] = { t: new Date().toISOString(), f: filterKey(), sp };
+  endingCache = {};
+  kv.set('season', season);
+}
+let endingCache = {};
+function endingMap(Q) {
+  if (!Q) return null;
+  const key = 'E|' + Q.id + '|' + monthNow();
+  if (!season[key]) return null;
+  return endingCache[key] || (endingCache[key] = new Map(season[key].sp.map(([s, n, m]) => [s, { n, m }])));
+}
+const isEnding = s => { const e = endingMap(here); return !!(e && e.has(s)); };
 let seasonCache = {};
 function seasonSet(Q) {
   if (!Q) return null;
@@ -1096,6 +1135,7 @@ function extraLines(s, mapped) {
   if (isRed(s)) out.push('<span class="chip rl">RL</span> Auf iNaturalist für Österreich als gefährdet geführt.');
   const sea = seasonSet(here);
   if (sea) out.push(sea.has(s) ? 'In diesem Monat in der Umgebung beobachtet.' : 'In diesem Monat in der Umgebung bisher nicht beobachtet.');
+  if (isEnding(s)) { const e = endingMap(here).get(s); out.push(`<span class="chip ending">bald vorbei</span> Jetzt oder nie: in der Umgebung diesen Monat ${e.n}× gemeldet, im ${MONTHS_LONG[monthNext() - 1]} nur ${e.m}×.`); }
   let html = out.map(l => `<div class="small">${l}</div>`).join('') + '<div id="taxBox"></div>';
   // Für noch nicht (oder nicht mehr) kartierte Arten: nächster Fund aller Nutzer mit Detailkarte
   if (!mapped) html += `<div class="nearbox" id="nearBox"><div class="small">${navigator.onLine ? 'Suche Funde aller iNaturalist-Nutzer …' : 'Nächster Fund aller Nutzer: nur mit Empfang.'}</div></div>`;
@@ -1906,8 +1946,8 @@ function renderTour() {
 
 // ---------- Lifer-Statistik: erste eigene Funde je Art, pro Jahr und pro Monat ----------
 var liferSort = store.get('liferSort', 'year');
-const MONTHS = ['Jän', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-const MONTHS_LONG = ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+var MONTHS = ['Jän', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+var MONTHS_LONG = ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 function liferFirsts() {
   const out = [];
   for (const [s, os] of index.bySp) {
@@ -1989,7 +2029,12 @@ function renderTips() {
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
-  el.innerHTML = html ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}</ul></div>` : '';
+  // Jetzt oder nie: hier oder in den Nachbarn bekannt, von dir hier noch nicht (oder nicht mehr) kartiert, Saison endet bald
+  const end = endingMap(here);
+  const last = s => (index.byQuad.get(here.id)?.get(s) || []).filter(o => !o.x).map(o => o.d).sort().pop();
+  const enders = end ? [...cand].filter(s => end.has(s) && (!mine.has(s) || isDue(last(s)))).map(s => ({ s, ...chance(s, here) })).sort((a, b) => isLifer(b.s) - isLifer(a.s) || b.pct - a.pct).slice(0, 5) : [];
+  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px"><b>Jetzt oder nie</b>: im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}</span><span class="d">Fundchance ${r.pct} %</span></span></li>`).join('') : '';
+  el.innerHTML = html || endHtml ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}${endHtml}</ul></div>` : '';
   el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); window.scrollTo(0, 0); });
 }
 
