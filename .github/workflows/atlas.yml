@@ -1,0 +1,25 @@
+name: Österreich-Atlas aktualisieren
+on:
+  schedule:
+    - cron: '0 2 1 * *'   # am 1. jedes Monats
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/build_atlas.py
+      - name: atlas.json einspielen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add atlas.json
+          git commit -m "Österreich-Atlas aktualisiert" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
