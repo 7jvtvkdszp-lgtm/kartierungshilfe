@@ -2,7 +2,11 @@
 """Österreich-Atlas für die Kartierungshilfe: je Quadrant die Pflanzenarten (ohne Moose).
   python build_atlas.py inat   -> part_inat.json  (iNaturalist, alle Jahre)
   python build_atlas.py gbif   -> part_gbif.json  (GBIF, Gefäßpflanzen der letzten 20 Jahre, Namen auf iNat abgeglichen)
+  python build_atlas.py rg     -> scripts/inat_rg.json (Arten mit iNat-Funden in Österreich, gesamt und mit Forschungsqualität)
   python build_atlas.py merge  -> atlas.json      (Vereinigung: Art kommt im Quadranten vor, wenn eine Quelle sie meldet)
+  python build_atlas.py rgfilter -> atlas.json    (nur den Einzelmeldungs-Filter auf ein vorhandenes atlas.json anwenden)
+Einzelmeldungen: eine Art mit nur einer Meldung in ganz Österreich, die nur von iNaturalist kommt und dort keine
+Forschungsqualität hat, wird weggelassen (Wunsch von Thomas).
 Läuft monatlich als GitHub Action, braucht nur die Python-Standardbibliothek."""
 import json, math, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone
@@ -17,6 +21,7 @@ LAT0, LON0 = 56.0, 5 + 40 / 60
 UA = 'Kartierungshilfe-Atlas/1.0 (github.com/7jvtvkdszp-lgtm/kartierungshilfe)'
 S, N, W, E = 46.35, 49.05, 9.5, 17.2  # Österreich grob
 NAMES = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gbif_names.json')
+RG = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'inat_rg.json')
 
 last = {}
 def get(base, path, params, gap):
@@ -166,6 +171,39 @@ def run_gbif():
         data[qid] = found
     return {'border': border, 'years': [y0, y1], 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common}
 
+def run_rg():
+    out = {}
+    for key, extra in (('all', {'verifiable': 'true'}), ('rg', {'quality_grade': 'research'})):
+        found, page = {}, 1
+        while True:
+            j = inat('observations/species_counts', {'place_id': PLACE_AT, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 500, 'page': page, **extra})
+            for res in j['results']:
+                t = res.get('taxon') or {}
+                if not t or t.get('rank_level', 99) > 10: continue
+                n = sp_name(t['name'], t['rank_level']); found[n] = found.get(n, 0) + res['count']
+            if page * 500 >= j['total_results']: break
+            page += 1
+        out[key] = found
+        print(f'iNat Österreich {key}: {len(found)} Arten', file=sys.stderr)
+    json.dump(out, open(RG, 'w', encoding='utf-8'), ensure_ascii=False, indent=0, sort_keys=True)
+
+def drop_single(species, other=None):
+    """Einzelmeldungen ohne Forschungsqualität entfernen. species: Name -> {Quadrant: Anzahl};
+    other: Namen, die auch eine andere Quelle (GBIF) meldet – die bleiben. Gibt die entfernten Namen zurück."""
+    try: rg = json.load(open(RG, encoding='utf-8'))
+    except Exception as e: print(f'inat_rg.json fehlt, kein Einzelmeldungs-Filter: {e}', file=sys.stderr); return []
+    gone = [n for n, d in species.items() if sum(d.values()) == 1 and rg['all'].get(n, 0) == 1 and n not in rg['rg'] and not (other and n in other)]
+    for n in gone: del species[n]
+    print(f'{len(gone)} Einzelmeldungen ohne Forschungsqualität entfernt', file=sys.stderr)
+    return sorted(gone)
+
+def rg_filter():
+    a = json.load(open('atlas.json', encoding='utf-8'))
+    species = {n: {occ[i]: occ[i + 1] for i in range(0, len(occ), 2)} for n, c, occ in a['s']}
+    gone = set(drop_single(species))
+    a['s'] = [r for r in a['s'] if r[0] not in gone]; a['drop'] = sorted(gone)
+    json.dump(a, open('atlas.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+
 def merge():
     parts = {}
     for src in ('inat', 'gbif'):
@@ -195,6 +233,8 @@ def merge():
                 d = species.setdefault(name, {})
                 # pro Quelle eigene Zahl; GBIF enthält bestätigte iNat-Funde, darum Höchstwert statt Summe
                 d[qi[qid]] = max(d.get(qi[qid], 0), cnt)
+    gbif_seen = {n for found in parts['gbif']['d'].values() for n in found} if 'gbif' in parts else set()
+    gone = drop_single(species, gbif_seen)
     if not parts['inat']['border']:  # ohne Grenze: nur Quadranten mit Funden
         used = sorted({i for d in species.values() for i in d})
         remap = {o: n for n, o in enumerate(used)}
@@ -203,13 +243,16 @@ def merge():
     out = {'v': 2, 't': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
            'src': ['iNaturalist'] + ([f'GBIF {parts["gbif"]["years"][0]}–{parts["gbif"]["years"][1]}'] if 'gbif' in parts else []),
            'n': len(q), 'q': q,
-           's': [[name, common.get(name, ''), [x for i in sorted(d) for x in (i, d[i])]] for name, d in sorted(species.items())]}
+           's': [[name, common.get(name, ''), [x for i in sorted(d) for x in (i, d[i])]] for name, d in sorted(species.items())],
+           'drop': gone}
     json.dump(out, open('atlas.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(f'atlas.json: {len(q)} Quadranten, {len(species)} Arten, Quellen {out["src"]}', file=sys.stderr)
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'inat'
     if mode == 'merge': merge()
+    elif mode == 'rg': run_rg()
+    elif mode == 'rgfilter': rg_filter()
     else:
         res = run_inat() if mode == 'inat' else run_gbif()
         json.dump(res, open(f'part_{mode}.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))

@@ -1,0 +1,26 @@
+name: Einzelmeldungen ohne Forschungsqualität aus dem Atlas entfernen
+# Einmalig auf das vorhandene atlas.json anwenden; die monatliche Atlas-Erstellung filtert danach selbst.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/atlas-rg.yml']
+permissions:
+  contents: write
+jobs:
+  rg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python scripts/build_atlas.py rg
+      - run: python scripts/build_atlas.py rgfilter
+      - name: atlas.json einspielen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add atlas.json scripts/inat_rg.json
+          git commit -m "Atlas: Einzelmeldungen ohne Forschungsqualität entfernt" || exit 0
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && break; sleep 10; done
