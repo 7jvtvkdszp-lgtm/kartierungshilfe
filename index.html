@@ -60,7 +60,7 @@ button { cursor: pointer }
 .manual { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap }
 .manual input { flex: 1 1 180px; min-width: 0 }
 
-.tabs { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
+.tabs { display: grid; grid-template-columns: repeat(6, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
 .tabs button { border: 0; background: transparent; border-radius: 9px; min-height: 40px; font-weight: 600; color: var(--muted); font-size: 14px; padding: 0 2px }
 .tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg) }
 
@@ -220,6 +220,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
     <button role="tab" id="tab-map" aria-selected="false">Karte</button>
     <button role="tab" id="tab-day" aria-selected="false">Heute</button>
     <button role="tab" id="tab-data" aria-selected="false">Daten</button>
+    <button role="tab" id="tab-off" aria-selected="false">Offline</button>
   </nav>
 
   <section id="view-check" class="view">
@@ -344,6 +345,22 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
     </div>
   </section>
 
+  <section id="view-off" class="view" hidden>
+    <div class="panel">
+      <h2>Offline vorbereiten</h2>
+      <p class="small muted" style="margin:0">Vor einer Exkursion in ein Gebiet ohne Empfang: Die App lädt für alle Quadranten im Umkreis vorab, was sonst Empfang braucht. Das sind die Arten aller Nutzer, was gerade in der Umgebung beobachtet wird („jetzt“) und was bald vorbei ist. Österreich-Daten, Rote Liste und deine eigenen Funde sind ohnehin immer offline da.</p>
+      <div id="offHere" class="small"></div>
+      <input class="field" id="offCenter" placeholder="Mitte, z. B. 8146/1 (leer: aktueller Quadrant)" autocomplete="off">
+      <label class="row small">Umkreis
+        <select class="field" id="offRadius" style="flex:0 0 auto;width:auto"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="20">20 km</option><option value="30">30 km</option></select>
+      </label>
+      <div class="row"><button class="btn primary" id="offGo">Jetzt vorbereiten</button></div>
+      <div class="small" id="offStatus"></div>
+      <ul class="list" id="offList"></ul>
+      <p class="small muted" style="margin:0">Die Karte zeigt offline nur Kartenausschnitte, die du schon einmal angesehen hast. OpenStreetMap erlaubt kein Massen-Herunterladen. Schieb die Karte also vorher mit Empfang einmal über das Gebiet. Der nächste Fund aller Nutzer zu einer bestimmten Art braucht weiterhin Empfang.</p>
+    </div>
+  </section>
+
   <section id="view-data" class="view" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="panel">
@@ -408,7 +425,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 30</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 31</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -580,13 +597,14 @@ $('manualForm').onsubmit = e => {
 };
 
 // ---------- Tabs ----------
-const tabs = ['check', 'list', 'map', 'day', 'data'];
+const tabs = ['check', 'list', 'map', 'day', 'data', 'off'];
 function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
   if (t === 'list') renderList();
   if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); }, 60); }
   if (t === 'day') renderDay();
+  if (t === 'off') renderOff();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
 
@@ -903,7 +921,7 @@ function renderList() {
 $('listFilter').addEventListener('input', renderList);
 // nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
 const _renderList = renderList;
-renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); };
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); if (typeof renderOff === 'function') renderOff(); };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -1105,7 +1123,7 @@ async function loadSeason(Q, force) {
   const sp = await speciesCountsNames({ swlat: se.s, swlng: nw.w, nelat: nw.n, nelng: se.e, month: String(monthNow()) });
   season[key] = { t: new Date().toISOString(), f: filterKey(), sp };
   const keys = Object.keys(season);
-  if (keys.length > 200) keys.sort((a, b) => season[a].t.localeCompare(season[b].t)).slice(0, keys.length - 200).forEach(k => delete season[k]);
+  if (keys.length > 3000) keys.sort((a, b) => season[a].t.localeCompare(season[b].t)).slice(0, keys.length - 200).forEach(k => delete season[k]);
   seasonCache = {};
   kv.set('season', season);
 }
@@ -2223,8 +2241,95 @@ async function loadRl() {
   } catch { /* noch keine rl.json oder kein Empfang */ }
 }
 
+// ---------- Offline vorbereiten: Saison, „bald vorbei“ und Umgebung für ein Gebiet vorab laden ----------
+var offRegions = store.get('offRegions', []); // { c: Mitte, r: km, t, m: Monat, n: Quadranten }
+let offAbort = null;
+function quadsAround(C, km) {
+  const b = quadBounds(C), lat = (b.n + b.s) / 2, lon = (b.w + b.e) / 2, out = [];
+  const nr = Math.ceil(km / 5.5) + 1, nc = Math.ceil(km / (111.3 * Math.cos(lat * Math.PI / 180) / 12)) + 1;
+  for (let dr = -nr; dr <= nr; dr++) for (let dc = -nc; dc <= nc; dc++) {
+    const Q = neighbour(C, dr, dc), qb = quadBounds(Q);
+    if (dist({ lat, lon }, { la: (qb.n + qb.s) / 2, lo: (qb.w + qb.e) / 2 }) <= km * 1000 + 3000) out.push({ Q, dr, dc });
+  }
+  return out;
+}
+function offReady(Q) {
+  return { sea: !!seasonSet(Q), end: !!endingMap(Q), sp: !!spOf(Q.id) };
+}
+function renderOff() {
+  if ($('view-off').hidden) return;
+  if (here) {
+    const r = offReady(here), ok = v => v ? '✓' : '✗';
+    $('offHere').innerHTML = `Aktueller Quadrant ${here.id}: ${ok(r.sp)} Arten · ${ok(r.sea)} „jetzt“ (${MONTHS_LONG[monthNow() - 1]}) · ${ok(r.end)} „bald vorbei“`;
+  } else $('offHere').textContent = '';
+  $('offList').innerHTML = offRegions.length ? offRegions.map((g, i) => {
+    const fresh = g.m === monthNow() && Date.now() - new Date(g.t) < AREA_MAX_AGE;
+    return `<li><span><b>${esc(g.c)}</b> · ${g.r} km · ${g.n} Quadranten<br><span class="cn">vorbereitet am ${fmtDate(g.t.slice(0, 10))}${fresh ? `, gilt für ${MONTHS_LONG[g.m - 1]}` : ''}</span></span><span class="row" style="flex-wrap:nowrap">${fresh ? '<span class="chip ok">bereit</span>' : '<span class="chip due">veraltet</span>'}<button class="btn" data-redo="${i}">${fresh ? 'Neu laden' : 'Aktualisieren'}</button><button class="x" data-del="${i}" aria-label="Entfernen">×</button></span></li>`;
+  }).join('') : '<li class="muted">Noch kein Gebiet vorbereitet.</li>';
+  $('offList').querySelectorAll('[data-redo]').forEach(b => b.onclick = () => { const g = offRegions[+b.dataset.redo]; $('offCenter').value = g.c; $('offRadius').value = String(g.r); prepareOffline(true); });
+  $('offList').querySelectorAll('[data-del]').forEach(b => b.onclick = () => { offRegions.splice(+b.dataset.del, 1); store.set('offRegions', offRegions); renderOff(); });
+}
+async function prepareOffline(force) {
+  const st = $('offStatus');
+  if (offAbort) { offAbort.stop = true; return; }
+  const txt = $('offCenter').value.trim(), C = txt ? parseQuad(txt) : here;
+  if (!C) { st.textContent = txt ? 'Diesen Quadranten kenne ich nicht. Beispiel: 8146/1' : 'Erst die Position bestimmen oder eine Mitte eingeben.'; return; }
+  if (!navigator.onLine) { st.textContent = 'Gerade kein Empfang. Vorbereiten geht nur online.'; return; }
+  const km = +$('offRadius').value, cells = quadsAround(C, km);
+  // Saison und „bald vorbei“ je Block von 5 × 5 Quadranten: die Abfrage für die Blockmitte gilt für den ganzen Block
+  const blocks = new Map();
+  for (const c of cells) {
+    const br = Math.floor((c.dr + 2) / 5), bc = Math.floor((c.dc + 2) / 5), k = br + '|' + bc;
+    if (!blocks.has(k)) blocks.set(k, { mid: neighbour(C, br * 5, bc * 5), quads: [] });
+    blocks.get(k).quads.push(c.Q);
+  }
+  // Arten aller Nutzer nur dort, wo die Österreich-Daten nicht hinreichen (z. B. jenseits der Grenze)
+  const inAtlas = new Set(atlas ? atlas.q : []);
+  const areaTodo = cells.map(c => c.Q).filter(Q => !inAtlas.has(Q.id) && (force || !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE));
+  const steps = blocks.size + areaTodo.length;
+  const ctl = offAbort = { stop: false };
+  $('offGo').textContent = 'Abbrechen';
+  let i = 0, failed = 0;
+  try {
+    for (const b of blocks.values()) {
+      if (ctl.stop) break;
+      st.textContent = `Lade „jetzt“ und „bald vorbei“ um ${b.mid.id} (${++i} von ${steps}) …`;
+      const all = b.quads.every(Q => seasonSet(Q) && endingMap(Q));
+      if (!force && all) continue;
+      try {
+        await loadSeason(b.mid, force); await sleep(1100);
+        await loadEnding(b.mid, force);
+        const sk = b.mid.id + '|' + monthNow(), ek = 'E|' + sk;
+        for (const Q of b.quads) {
+          const qs = Q.id + '|' + monthNow();
+          if (Q.id === b.mid.id) continue;
+          if (force || !season[qs]) season[qs] = season[sk];
+          if (force || !season['E|' + qs]) season['E|' + qs] = season[ek];
+        }
+        seasonCache = {}; endingCache = {};
+        await kv.set('season', season);
+      } catch { failed++; }
+      await sleep(1100);
+    }
+    for (const Q of areaTodo) {
+      if (ctl.stop) break;
+      st.textContent = `Lade Arten für ${Q.id} (${++i} von ${steps}) …`;
+      try { area[Q.id] = await fetchQuadSpecies(Q); await kv.set('area', area); } catch { failed++; }
+      await sleep(1100);
+    }
+  } finally {
+    offAbort = null; $('offGo').textContent = 'Jetzt vorbereiten';
+  }
+  if (ctl.stop) { st.textContent = 'Abgebrochen. Was schon geladen war, bleibt gespeichert.'; renderOff(); return; }
+  offRegions = [{ c: C.id, r: km, t: new Date().toISOString(), m: monthNow(), n: cells.length }, ...offRegions.filter(g => !(g.c === C.id && g.r === km))].slice(0, 10);
+  store.set('offRegions', offRegions);
+  st.textContent = failed ? `Fertig, aber ${failed} Abfragen sind fehlgeschlagen. Tipp nochmal auf „Neu laden“, wenn du wieder guten Empfang hast.` : `Fertig: ${cells.length} Quadranten rund um ${C.id} sind offline bereit.`;
+  renderOff(); renderList(); if (current) showResult(current);
+}
+$('offGo').onclick = () => prepareOffline(false);
+
 // ---------- Löschknopf in Suchfeldern ----------
-for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter']) {
+for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter', 'offCenter']) {
   const inp = $(id), wrap = document.createElement('div');
   wrap.className = 'clearwrap'; inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
   const x = document.createElement('button'); x.type = 'button'; x.className = 'clearx'; x.setAttribute('aria-label', 'Eingabe löschen'); x.textContent = '×';
