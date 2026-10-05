@@ -437,7 +437,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 36</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 37</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2568,9 +2568,14 @@ function prepAtlas(raw) {
   raw = { ...raw, s: cleanAtlasNames(raw.s) };
   const sp = new Map();
   for (const [s, c, occ] of raw.s) { let n = 0; for (let i = 1; i < occ.length; i += 2) n += occ[i]; sp.set(s, { c, occ, k: occ.length / 2, n }); }
-  // Klassen nach Anteil der Quadranten Österreichs: H1 = in 90–100 % der Quadranten, H2 = 80–90 % … H10 = 0–10 %.
-  // Hybriden bekommen keine Klasse.
-  for (const [s, e] of sp) e.f = isHybrid(s) ? null : Math.min(10, Math.max(1, 10 - Math.floor(e.k / raw.n * 10)));
+  // Klassen als Glockenkurve (Wunsch von Thomas): Arten mit nur einer Meldung in Österreich = H10.
+  // Die übrigen nach Quadranten (bei Gleichstand Beobachtungen) sortiert und auf H1–H9 verteilt wie eine Normalverteilung
+  // mit Klassenbreite 0,5 σ: H1 und H9 je 4 %, H2/H8 6,6 %, H3/H7 12,1 %, H4/H6 17,5 %, H5 19,7 %. Hybriden ohne Klasse.
+  const BELL = [0.04006, 0.10565, 0.22663, 0.40129, 0.59871, 0.77337, 0.89435, 0.95994];
+  const ranked = [];
+  for (const [s, e] of sp) { e.f = null; if (isHybrid(s)) continue; if (e.n <= 1) e.f = 10; else ranked.push(e); }
+  ranked.sort((a, b) => b.k - a.k || b.n - a.n);
+  ranked.forEach((e, i) => { const p = (i + 0.5) / ranked.length; e.f = 1 + BELL.filter(c => p >= c).length; });
   const rc = raw.q.map(id => { const m = id.match(/^(\d{2})(\d{2})\/([1-4])$/); const q = +m[3]; return [+m[1] * 2 + (q > 2 ? 1 : 0), +m[2] * 2 + ((q - 1) % 2)]; });
   const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
   const byQuad = new Map();
