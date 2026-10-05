@@ -257,6 +257,11 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button role="tab" id="mode-mine" aria-selected="true">Meine Arten</button>
           <button role="tab" id="mode-miss" aria-selected="false">Noch nicht gefunden</button>
           <button role="tab" id="mode-exp" aria-selected="false">Erwartet</button>
+          <button role="tab" id="mode-freq" aria-selected="false">Häufigkeit</button>
+        </div>
+        <div id="freqOpts" hidden class="row small">
+          <select class="field" id="freqSel" style="flex:0 0 auto;width:auto"><option value="10">H10 (am seltensten)</option><option value="9">H9</option><option value="8">H8</option><option value="7">H7</option><option value="6">H6</option><option value="5">H5</option><option value="4">H4</option><option value="3">H3</option><option value="2">H2</option><option value="1">H1 (am häufigsten)</option></select>
+          <label class="row small" style="gap:6px"><input type="checkbox" id="freqLifer"> Nur Lifer</label>
         </div>
         <div id="missOpts" hidden style="display:flex;flex-direction:column;gap:8px">
           <label class="row small"><input type="checkbox" id="withNb"> Auch Arten, die nur in Nachbarquadranten gemeldet sind</label>
@@ -432,7 +437,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 33</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 34</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -867,6 +872,11 @@ function setListMode(m) { listMode = m; store.set('listMode', m); renderList(); 
 $('mode-mine').onclick = () => setListMode('mine');
 $('mode-miss').onclick = () => setListMode('miss');
 $('mode-exp').onclick = () => setListMode('exp');
+$('mode-freq').onclick = () => setListMode('freq');
+$('freqSel').value = String(store.get('freqSel', 10));
+$('freqSel').onchange = () => { store.set('freqSel', +$('freqSel').value); renderList(); };
+$('freqLifer').checked = !!store.get('freqLifer', false);
+$('freqLifer').onchange = () => { store.set('freqLifer', $('freqLifer').checked); renderList(); };
 for (const id of ['withNb', 'onlySeason', 'onlyRed']) $(id).addEventListener('change', renderList);
 
 function renderList() {
@@ -896,6 +906,8 @@ function renderList() {
   $('mode-miss').setAttribute('aria-selected', listMode === 'miss');
   $('mode-exp').setAttribute('aria-selected', listMode === 'exp');
   $('missOpts').hidden = listMode !== 'miss';
+  $('mode-freq').setAttribute('aria-selected', listMode === 'freq');
+  $('freqOpts').hidden = listMode !== 'freq';
   const f = norm($('listFilter').value);
   const match = s => !f || norm(s).includes(f) || norm(commonName(s)).includes(f);
   const ul = $('speciesList');
@@ -909,7 +921,9 @@ function renderList() {
       const st = quadStatus(s);
       return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${rlChip(s)} ${freqChip(s)}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
     }).join('') : `<li class="muted">${m.size ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
-  } else if (listMode === 'exp') {
+  } else if (listMode === 'freq') {
+    renderFreqClass(ul, match);
+} else if (listMode === 'exp') {
     renderExpected(ul);
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []);
@@ -2386,10 +2400,14 @@ function renderLifeTargets() {
       <div class="lzbody small">
         <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}, mit ${Math.round(100 * r.p.max / r.p.tot)} % aller Meldungen des Jahres (${r.p.max} von ${r.p.tot}). Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
         ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : `<div>${atlas ? 'In den Österreich-Daten kein Quadrant mit Funden.' : 'Die Österreich-Daten sind noch nicht geladen, darum fehlt der nächste Quadrant hier.'}</div>`}
+        <div><button class="linkbtn" data-check="${esc(r.s)}">${esc(r.s)} unter „Prüfen“ öffnen</button></div>
         ${here ? `<div class="lzpt"><button class="linkbtn" data-pt="${esc(r.s)}" data-q="${(nq ? nq.Q : here).id}">${nq ? 'Genauen Fundpunkt suchen' : 'Nächsten Fundpunkt suchen (iNaturalist, bis 200 km)'}</button></div>` : ''}
-        ${comp.length ? `<div><b>Mitnahme-Lifer</b> (rund um ${nq.Q.id}, in diesem Zeitfenster gemeldet): ${comp.slice(0, 8).map(c => `<i>${esc(c.s)}</i>`).join(', ')}${comp.length > 8 ? ` und ${comp.length - 8} weitere` : ''}.</div>` : nq ? '<div>Keine weiteren Lifer rund um diesen Quadranten zur selben Zeit.</div>' : ''}
+        ${comp.length ? `<div><b>Mitnahme-Lifer</b> (rund um ${nq.Q.id}, in diesem Zeitfenster gemeldet): ${comp.slice(0, 8).map(c => `<span class="comp" data-s="${esc(c.s)}"><i>${esc(c.s)}</i></span>`).join(', ')}${comp.length > 8 ? ` und ${comp.length - 8} weitere` : ''}.</div>` : nq ? '<div>Keine weiteren Lifer rund um diesen Quadranten zur selben Zeit.</div>' : ''}
       </div></details></li>`;
   }).join('') || '<li class="muted">Keine Lifer mit Meldungen gefunden.</li>';
+  const open = sp => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: sp, c: commonName(sp) }); window.scrollTo(0, 0); };
+  ul.querySelectorAll('.comp').forEach(a => a.onclick = () => open(a.dataset.s));
+  ul.querySelectorAll('[data-check]').forEach(b => b.onclick = () => open(b.dataset.check));
   ul.querySelectorAll('[data-pt]').forEach(b => b.onclick = async () => {
     const box = b.parentNode;
     if (!navigator.onLine || !ref) { box.textContent = !ref ? 'Erst die Position bestimmen.' : 'Dafür braucht es Empfang.'; return; }
@@ -2417,6 +2435,27 @@ async function loadPheno() {
     if (pheno && raw.t === pheno.t) return;
     await kv.set('pheno', raw); pheno = raw; renderLifeTargets();
   } catch { /* noch keine pheno.json oder kein Empfang */ }
+}
+
+// ---------- Arten einer Häufigkeitsklasse (H1–H10), nächstgelegene zuerst ----------
+function renderFreqClass(ul, match) {
+  const k = +$('freqSel').value, onlyLif = $('freqLifer').checked;
+  if (!atlas) { $('listTitle').textContent = `Häufigkeitsklasse H${k}`; ul.innerHTML = '<li class="muted">Dafür braucht es die Österreich-Daten. Sie werden beim nächsten Öffnen mit Empfang geladen.</li>'; return; }
+  const b = quadBounds(here), ref = here.lat != null ? { lat: here.lat, lon: here.lon } : { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 };
+  const ctr = new Map(); // Quadrantenmitten nur einmal berechnen
+  const centre = i => { if (!ctr.has(i)) { const qb = quadBounds(parseQuad(atlas.q[i])); ctr.set(i, { la: (qb.n + qb.s) / 2, lo: (qb.w + qb.e) / 2 }); } return ctr.get(i); };
+  const rows = [];
+  for (const [s, e] of atlas.sp) {
+    if (e.f !== k || !s.includes(' ') || !match(s) || (onlyLif && !isLifer(s))) continue;
+    let best = Infinity, bq = -1;
+    for (let i = 0; i < e.occ.length; i += 2) { const d = dist(ref, centre(e.occ[i])); if (d < best) { best = d; bq = e.occ[i]; } }
+    rows.push({ s, d: best, q: atlas.q[bq], k: e.k });
+  }
+  rows.sort((a, c) => a.d - c.d || a.s.localeCompare(c.s));
+  $('listTitle').textContent = `H${k}: ${rows.length} Arten${onlyLif ? ' (nur Lifer)' : ''}, nächstgelegene zuerst`;
+  ul.innerHTML = (rows.length ? rows.slice(0, 300).map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${rlChip(r.s)}<span class="chip ok num">${r.q === here.id ? 'hier' : km(r.d)}</span></span><span class="d">nächster: ${r.q} · in ${r.k} Quadr.</span></span></li>`).join('')
+    + (rows.length > 300 ? `<li class="muted small">… und ${rows.length - 300} weitere. Filtere oben nach dem Namen.</li>` : '')
+    : '<li class="muted">Keine Arten in dieser Klasse für den Filter.</li>');
 }
 
 // ---------- Löschknopf in Suchfeldern ----------
@@ -2478,11 +2517,12 @@ var atlas = null; // { t, n, q: [Quadrant-IDs], sp: Map(Art -> { c, occ: [i, n, 
 function prepAtlas(raw) {
   if (!raw || !raw.q) return null;
   const sp = new Map();
-  for (const [s, c, occ] of raw.s) sp.set(s, { c, occ, k: occ.length / 2 });
-  // Klassen: 1 = die 10 % der Arten in den meisten Quadranten … 10 = die 10 % in den wenigsten; gleiche Anzahl → gleiche Klasse
-  const sorted = [...sp.values()].sort((a, b) => b.k - a.k);
-  let prevK = -1, prevF = 1;
-  sorted.forEach((e, i) => { const f = e.k === prevK ? prevF : Math.min(10, Math.floor(i / sorted.length * 10) + 1); e.f = f; prevK = e.k; prevF = f; });
+  for (const [s, c, occ] of raw.s) { let n = 0; for (let i = 1; i < occ.length; i += 2) n += occ[i]; sp.set(s, { c, occ, k: occ.length / 2, n }); }
+  // Klassen: 1 = die 10 % der Arten in den meisten Quadranten … 10 = die 10 % in den wenigsten.
+  // Bei gleicher Quadrantenzahl entscheidet die Zahl der Beobachtungen; sonst landen alle Arten aus nur einem Quadranten
+  // (rund ein Fünftel) in einer Klasse und H9/H10 blieben leer. Echte Gleichstände an einer Klassengrenze werden einfach aufgeteilt.
+  const sorted = [...sp.values()].sort((a, b) => b.k - a.k || b.n - a.n);
+  sorted.forEach((e, i) => { e.f = Math.min(10, Math.floor(i / sorted.length * 10) + 1); });
   const rc = raw.q.map(id => { const m = id.match(/^(\d{2})(\d{2})\/([1-4])$/); const q = +m[3]; return [+m[1] * 2 + (q > 2 ? 1 : 0), +m[2] * 2 + ((q - 1) % 2)]; });
   const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
   const byQuad = new Map();
