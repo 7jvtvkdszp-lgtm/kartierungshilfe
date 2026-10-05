@@ -408,7 +408,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 29</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 30</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1163,6 +1163,7 @@ async function loadRedlist(force) {
 }
 // Echte Rote Liste Österreichs (rl.json), sonst die iNaturalist-Angabe
 const RL_THREAT = new Set(['RE', 'RE?', 'CR', 'EN', 'VU', 'G']);
+const RL_ORDER = ['RE', 'RE?', 'CR', 'EN', 'VU', 'G', 'NT'];
 const isRed = s => { const r = rlOf(s); return r ? RL_THREAT.has(r.c) : !rl && redSet.has(s); };
 
 // ---------- Zusatzzeilen im Prüfergebnis ----------
@@ -2137,25 +2138,40 @@ function prepRl(raw) {
 }
 const rlOf = s => rl ? rl.by.get(s) : null;
 const blOf = Q => rl && Q ? rl.q[Q.id] || [] : [];
-// Status der Art in den Bundesländern des Quadranten: 'new' (nicht angegeben, fraglich oder irrig), 'lost' (verschollen), sonst null
+var natQ = null; // Naturräume je Quadrant (naturraum.json, aus der Karte in der Roten Liste)
+const natOf = Q => natQ && Q && natQ[Q.id] ? natQ[Q.id].split(',') : [];
+// Eintrag der Art in den Naturräumen des Quadranten; 'new': dort nicht angegeben, obwohl die Art anderswo in Österreich heimisch ist
+function natStatus(s, Q) {
+  const r = rlOf(s), codes = natOf(Q);
+  if (!r || !codes.length || r.c === 'n') return null;
+  const vals = codes.map(c => (r.nat[rl.natCodes.indexOf(c)] || '').replace(/\*/g, ''));
+  const cats = codes.map((c, i) => [c, vals[i]]).filter(([, v]) => RL_THREAT.has(v) || v === 'NT');
+  const native = r.nat.some(v => v && v !== '?' && v !== 'n' && v !== 'f');
+  return { codes, vals, cats, newCodes: native ? codes.filter((c, i) => !vals[i] || vals[i] === '?') : [] };
+}
+// Status der Art je Bundesland des Quadranten: dort nicht angegeben (fehlt, fraglich, irrig) oder verschollen
 function blStatus(s, Q) {
   const r = rlOf(s), codes = blOf(Q);
   if (!r || !codes.length) return null;
-  const vals = codes.map(c => (r.bl[c] || '').replace(/\*/g, ''));
-  if (vals.some(v => /^(●|e|le|u)/.test(v))) return null;
-  if (vals.some(v => v.startsWith('†'))) return { k: 'lost', codes };
-  return { k: 'new', codes, v: vals };
+  const val = c => (r.bl[c] || '').replace(/\*/g, '');
+  const missing = codes.filter(c => /^(\?|–|)$/.test(val(c))), lost = codes.filter(c => val(c).startsWith('†') && !/(u|e)/.test(val(c)));
+  return missing.length || lost.length ? { missing, lost, val } : null;
 }
 function blChip(s) {
   if (!here) return '';
-  const st = blStatus(s, here); if (!st) return '';
-  const where = st.codes.map(c => BL_SHORT[c]).join('/');
-  return st.k === 'lost' ? `<span class="chip blre">Wiederfund ${where}</span>` : `<span class="chip blnew">neu für ${where}</span>`;
+  const st = blStatus(s, here), ns = natStatus(s, here), out = [];
+  if (st && st.missing.length) out.push(`<span class="chip blnew">neu für ${st.missing.map(c => BL_SHORT[c]).join('/')}</span>`);
+  if (st && st.lost.length) out.push(`<span class="chip blre">Wiederfund ${st.lost.map(c => BL_SHORT[c]).join('/')}</span>`);
+  if (ns && ns.newCodes.length) out.push(`<span class="chip blnew">neu für ${ns.newCodes.join('/')}</span>`);
+  return out.join('');
 }
 function rlChip(s) {
   const r = rlOf(s);
   if (!r) return !rl && redSet.has(s) ? '<span class="chip rl">RL</span>' : '';
   const va = r.va === 'E' ? '<span class="chip endem">Endemit</span>' : r.va === 'S' ? '<span class="chip endem">Subendemit</span>' : '';
+  // im Naturraum des Quadranten stärker gefährdet: diese Stufe zeigen
+  const ns = here && natStatus(s, here), reg = ns && ns.cats.length ? ns.cats.reduce((a, b) => RL_ORDER.indexOf(b[1]) < RL_ORDER.indexOf(a[1]) ? b : a) : null;
+  if (reg) return `<span class="chip rl">RL ${esc(reg[1])} ${reg[0]}</span>` + va;
   return (RL_THREAT.has(r.c) || r.c === 'NT' ? `<span class="chip rl">RL ${esc(r.c)}</span>` : '') + va;
 }
 function rlLines(s) {
@@ -2166,22 +2182,33 @@ function rlLines(s) {
   }
   const name = r.rn !== s ? ` (dort als <i>${esc(r.rn)}</i>${r.sub ? ', nach Unterarten' : ''})` : r.sub ? ' (dort nach Unterarten eingestuft, hier die stärkste Stufe)' : '';
   out.push(`<span class="chip rl">RL ${esc(r.c || '–')}</span> Rote Liste Österreich: ${RL_TEXT[r.c] || 'nicht eingestuft'}${name}.`);
-  const reg = r.nat.map((v, i) => [rl.natCodes[i], v.replace('*', '')]).filter(([, v]) => RL_THREAT.has(v) || v === 'NT');
-  if (reg.length) out.push('Regional stärker gefährdet: ' + reg.map(([k, v]) => `${NAT_NAME[k]} ${v}`).join(', ') + '.');
+  const ns = here && natStatus(s, here);
+  if (ns) {
+    const where = ns.codes.map(c => NAT_NAME[c]).join(' bzw. ');
+    if (ns.cats.length) out.push(`Im Naturraum stärker gefährdet: ${ns.cats.map(([k, v]) => `${NAT_NAME[k]} ${v} (${RL_TEXT[v]})`).join(', ')}.`);
+    if (ns.newCodes.length) out.push(`<span class="chip blnew">neu für ${ns.newCodes.join('/')}</span> Im Naturraum ${ns.newCodes.map(c => NAT_NAME[c]).join(' bzw. ')} laut Roter Liste nicht oder nur fraglich angegeben. Ein Fund dort wäre möglicherweise neu, gut belegen!`);
+    else if (!ns.cats.length && ns.vals.every(v => v === 'n' || v === 'f' || !v)) out.push(`Im Naturraum ${where} ${ns.vals.includes('f') ? 'nur unbeständig' : 'nur als Neophyt'}.`);
+  } else {
+    const reg = r.nat.map((v, i) => [rl.natCodes[i], v.replace('*', '')]).filter(([, v]) => RL_THREAT.has(v) || v === 'NT');
+    if (reg.length) out.push('Regional stärker gefährdet: ' + reg.map(([k, v]) => `${NAT_NAME[k]} ${v}`).join(', ') + '.');
+  }
   if (r.va === 'E') out.push('<span class="chip endem">Endemit</span> Kommt weltweit nur in Österreich vor.');
   else if (r.va === 'S') out.push('<span class="chip endem">Subendemit</span> Hauptvorkommen in Österreich, knapp darüber hinaus.');
   const st = here && blStatus(s, here);
-  if (st) {
-    const where = st.codes.map(c => BL_NAME[c]).join(' bzw. ');
-    if (st.k === 'lost') out.push(`<span class="chip blre">Wiederfund</span> In ${where} laut Roter Liste ausgestorben oder verschollen. Ein Fund wäre ein Wiederfund, gut belegen!`);
-    else out.push(`<span class="chip blnew">Erstnachweis?</span> In ${where} laut Roter Liste ${st.v.every(v => v === '–') ? 'nur mit irrigen Angaben' : st.v.some(v => v === '?') ? 'nur fraglich' : 'nicht'} nachgewiesen. Ein Fund hier wäre möglicherweise neu für das Bundesland, gut belegen!`);
-  } else if (here && blOf(here).length) {
-    const v = blOf(here).map(c => r.bl[c] || '').find(x => /^(e|le|u)/.test(x));
+  const say = (codes, f) => codes.map(c => `${BL_NAME[c]}${f(c)}`).join(' bzw. ');
+  if (st && st.missing.length) out.push(`<span class="chip blnew">Erstnachweis?</span> In ${say(st.missing, c => st.val(c) === '?' ? ' (nur fraglich)' : st.val(c) === '–' ? ' (nur irrige Angaben)' : '')} laut Roter Liste nicht nachgewiesen.${blOf(here).length > 1 ? ' Der Quadrant berührt mehrere Bundesländer: Es gilt nur, wenn du dort stehst.' : ''} Ein Fund wäre möglicherweise neu für das Bundesland, gut belegen!`);
+  if (st && st.lost.length) out.push(`<span class="chip blre">Wiederfund</span> In ${say(st.lost, () => '')} laut Roter Liste ausgestorben oder verschollen. Ein Fund wäre ein Wiederfund, gut belegen!`);
+  if (!st && here && blOf(here).length) {
+    const v = blOf(here).map(c => (r.bl[c] || '').replace(/\*/g, '')).find(x => /^(e|le|u)/.test(x));
     if (v) out.push(`Im Bundesland ${v.startsWith('u') ? 'nur unbeständig' : v.startsWith('le') ? 'nur lokal eingebürgert' : 'eingebürgert'}.`);
   }
   return out;
 }
 async function loadRl() {
+  try { const nr = await kv.get('naturraum'); if (nr) natQ = nr.q; } catch {}
+  if (navigator.onLine && (!natQ || Date.now() - new Date(store.get('nrChecked', 0)) > 30 * 864e5)) {
+    try { const r = await fetch('naturraum.json', { cache: 'no-cache' }); if (r.ok) { const nr = await r.json(); natQ = nr.q; kv.set('naturraum', nr); store.set('nrChecked', new Date().toISOString()); } } catch {}
+  }
   try { const raw = await kv.get('rl'); if (raw) { rl = prepRl(raw); renderList(); if (current) showResult(current); } } catch {}
   const age = rl ? Date.now() - new Date(store.get('rlChecked', 0)) : Infinity;
   if (!navigator.onLine || age < 7 * 864e5) return;
