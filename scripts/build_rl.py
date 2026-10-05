@@ -42,13 +42,16 @@ def species_rows(src):
     return out
 
 def inat_species(name, cache):
-    if name in cache: return cache[name]
-    j = inat('taxa', {'q': name, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 10})
+    """iNaturalist-Artname zu einem Namen der Roten Liste. Exakter Treffer vor Synonym-Treffer
+    (sonst landet z. B. Gentiana pumila bei Centaurium maritimum, das dieses Synonym ebenfalls trägt)."""
+    if cache.get(name) == name: return name
     res = None
-    for t in (j or {}).get('results', []):
-        if t.get('rank_level', 99) > 10: continue
-        if name in (t['name'], t.get('matched_term', '')) or sp_name(t['name'], t['rank_level']) == name:
-            res = sp_name(t['name'], t['rank_level']); break
+    for path in ('taxa', 'taxa/autocomplete'):
+        j = inat(path, {'q': name, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 30})
+        ts = [t for t in (j or {}).get('results', []) if t.get('rank_level', 99) <= 10]
+        hit = next((t for t in ts if t['name'] == name or sp_name(t['name'], t['rank_level']) == name), None) \
+            or next((t for t in ts if (t.get('matched_term') or '').lower() == name.lower()), None)
+        if hit: res = sp_name(hit['name'], hit['rank_level']); break
     cache[name] = res
     return res
 
@@ -107,7 +110,7 @@ def main():
         for o in r[9] + syn_new.get(k, []):  # Synonyme, falls iNat einen anderen Namen führt
             if name: break
             if o != k: name = inat_species(o, cache)
-        if not name: miss.append(k); continue
+        if not name: miss.append(k); name = k  # unter dem Namen der Roten Liste behalten
         prev = rows.get(name)
         if prev and ORDER.index(prev[3]) <= ORDER.index(r[2] if r[2] in ORDER else ''): continue  # zwei RL-Taxa auf eine iNat-Art: stärkere Gefährdung gewinnt
         rows[name] = [name, r[0], r[1], r[2], '|'.join(r[3]), '|'.join(r[4]), r[5], r[6], r[7], r[8]]
