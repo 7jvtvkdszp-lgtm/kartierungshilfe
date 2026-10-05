@@ -384,7 +384,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 25</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 26</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2022,20 +2022,24 @@ function renderTips() {
   const mine = mySpeciesIn(here.id);
   const cand = new Set(Object.keys(spOf(here.id)));
   for (const [dr, dc] of NB) Object.keys(spOf(neighbour(here, dr, dc).id) || {}).forEach(s => cand.add(s));
+  // Vorrang hat, was gerade beobachtbar ist (diesen Monat in der Umgebung gemeldet)
+  const sea = seasonSet(here), inS = s => sea ? (sea.has(s) ? 1 : 0) : 1;
+  const better = (a, b) => !b || a.now > b.now || (a.now === b.now && (a.pct > b.pct || (a.pct === b.pct && a.inQ > b.inQ)));
   let lifer = null, open = null;
   for (const s of cand) {
     if (mine.has(s)) continue;
-    const c = chance(s, here);
-    if (isLifer(s)) { if (!lifer || c.pct > lifer.pct || (c.pct === lifer.pct && c.inQ > lifer.inQ)) lifer = { s, ...c }; }
-    else if (!open || c.pct > open.pct || (c.pct === open.pct && c.inQ > open.inQ)) open = { s, ...c };
+    const c = { s, ...chance(s, here), now: inS(s) };
+    if (isLifer(s)) { if (better(c, lifer)) lifer = c; }
+    else if (better(c, open)) open = c;
   }
   let old = null;
   for (const [s, os] of index.byQuad.get(here.id) || []) {
     const ex = os.filter(o => !o.x && o.d); if (!ex.length) continue;
-    const last = ex.map(o => o.d).sort().pop();
-    if (!old || last < old.last) old = { s, last };
+    const last = ex.map(o => o.d).sort().pop(), now = inS(s);
+    if (!old || now > old.now || (now === old.now && last < old.last)) old = { s, last, now };
   }
-  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
+  const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '<span class="chip unsure">nicht in Saison</span>';
+  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${seaChip(s)}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
