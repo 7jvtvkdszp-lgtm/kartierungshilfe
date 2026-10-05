@@ -4,7 +4,7 @@
   python build_atlas.py gbif   -> part_gbif.json  (GBIF, Gefäßpflanzen der letzten 20 Jahre, Namen auf iNat abgeglichen)
   python build_atlas.py merge  -> atlas.json      (Vereinigung: Art kommt im Quadranten vor, wenn eine Quelle sie meldet)
 Läuft monatlich als GitHub Action, braucht nur die Python-Standardbibliothek."""
-import json, math, os, sys, time, urllib.parse, urllib.request
+import json, math, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone
 
 INAT = 'https://api.inaturalist.org/v1'
@@ -108,14 +108,22 @@ def run_inat():
         if k % 100 == 0: print(f'iNat {k + 1}/{len(cl)}', file=sys.stderr)
     return {'border': border, 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common}
 
+def name_key(n):
+    return re.sub(r'×|-|\s+x\s+|\s+', '', n.lower())
+
+def junk_name(n):
+    """Gattungsangaben (\"Alchemilla spec\") und Hybridformeln (\"A b x c\") sind keine Arten."""
+    return bool(re.search(r'\s(spec|sp|spp)\.?$', n, re.I) or re.match(r'^\S+ \S+ x \S+', n))
+
 def inat_name(canonical, names_cache_misc):
     """GBIF-Name auf den iNaturalist-Namen abbilden (iNat findet auch Synonyme)."""
-    j = inat('taxa', {'q': canonical, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 10, 'locale': 'de'})
-    for t in (j or {}).get('results', []):
-        if t.get('rank_level', 99) > 10: continue
-        terms = {t['name'], t.get('matched_term', '')}
-        if canonical in terms or sp_name(t['name'], t['rank_level']) == canonical:
-            return sp_name(t['name'], t['rank_level']), (t.get('preferred_common_name') or '') if t['rank_level'] == 10 else ''
+    # exakter Name vor Synonym-Treffer, Schreibvarianten (bella-donna/belladonna, fehlendes ×) gelten als gleich
+    for path in ('taxa', 'taxa/autocomplete'):
+        j = inat(path, {'q': canonical, 'taxon_id': INAT_TRACHEOPHYTA, 'per_page': 30, 'locale': 'de'})
+        ts = [t for t in (j or {}).get('results', []) if t.get('rank_level', 99) <= 10]
+        hit = next((t for t in ts if canonical in (t['name'], sp_name(t['name'], t['rank_level'])) or name_key(t['name']) == name_key(canonical)), None) \
+            or next((t for t in ts if name_key(t.get('matched_term') or '') == name_key(canonical)), None)
+        if hit: return sp_name(hit['name'], hit['rank_level']), (hit.get('preferred_common_name') or '') if hit['rank_level'] == 10 else ''
     return canonical, ''
 
 def run_gbif():
@@ -166,6 +174,19 @@ def merge():
     if 'inat' not in parts: raise SystemExit('iNat-Teil fehlt')
     q = parts['inat']['q']; qi = {x: i for i, x in enumerate(q)}
     species, common = {}, {}
+    # GBIF-Namen, die iNat nur anders schreibt, auf den iNat-Namen legen
+    inat_names = {n for found in parts['inat']['d'].values() for n in found}
+    by_key = {name_key(n): n for n in inat_names}
+    if 'gbif' in parts:
+        p = parts['gbif']
+        fix = lambda n: n if n in inat_names else by_key.get(name_key(n), n)
+        def fixed(found):
+            out = {}
+            for n, c in found.items():
+                if not junk_name(n): out[fix(n)] = max(out.get(fix(n), 0), c)
+            return out
+        p['d'] = {qid: fixed(found) for qid, found in p['d'].items()}
+        p['c'] = {fix(n): c for n, c in p['c'].items()}
     for src, p in parts.items():
         common.update({k: v for k, v in p['c'].items() if k not in common or src == 'inat'})
         for qid, found in p['d'].items():

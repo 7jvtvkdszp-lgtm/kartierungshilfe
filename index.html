@@ -437,7 +437,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 34</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 35</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2514,8 +2514,28 @@ function renderTips() {
 // ---------- Österreich-Atlas: Häufigkeitsklassen und Verbreitung ----------
 // atlas.json wird monatlich per GitHub Action aus iNaturalist erstellt: je Art die Quadranten Österreichs mit Beobachtungen
 var atlas = null; // { t, n, q: [Quadrant-IDs], sp: Map(Art -> { c, occ: [i, n, i, n …], k: Anzahl Quadranten, f: Klasse 1–10 }), byRC }
+// GBIF-Namen, die iNaturalist anders schreibt, auf einen Namen zusammenführen (z. B. Atropa bella-donna → Atropa belladonna,
+// Aconitum cammarum → Aconitum × cammarum); Gattungsangaben („spec“) und Hybridformeln („A x B“) weglassen
+const atlasKey = s => s.toLowerCase().replace(/×|-|\s+x\s+|\s+/g, '');
+function cleanAtlasNames(rows) {
+  const keep = rows.filter(([s]) => !/\s(spec|sp|spp)\.?$/i.test(s) && !/^\S+ \S+ x \S+/.test(s));
+  const groups = new Map();
+  for (const r of keep) { const k = atlasKey(r[0]); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); }
+  const known = s => index.bySp.has(s) || !!(pheno && pheno.s[s]);
+  const out = [];
+  for (const g of groups.values()) {
+    if (g.length === 1) { out.push(g[0]); continue; }
+    // iNaturalist-Name bevorzugen: eigene Funde oder Beobachtungszeiten kennen ihn; sonst die Schreibung mit ×, ohne Bindestrich
+    const best = g.find(r => known(r[0])) || g.find(r => r[0].includes('×')) || g.find(r => !r[0].includes('-')) || g[0];
+    const occ = new Map();
+    for (const r of g) for (let i = 0; i < r[2].length; i += 2) occ.set(r[2][i], Math.max(occ.get(r[2][i]) || 0, r[2][i + 1]));
+    out.push([best[0], g.map(r => r[1]).find(Boolean) || '', [...occ].sort((a, b) => a[0] - b[0]).flat()]);
+  }
+  return out;
+}
 function prepAtlas(raw) {
   if (!raw || !raw.q) return null;
+  raw = { ...raw, s: cleanAtlasNames(raw.s) };
   const sp = new Map();
   for (const [s, c, occ] of raw.s) { let n = 0; for (let i = 1; i < occ.length; i += 2) n += occ[i]; sp.set(s, { c, occ, k: occ.length / 2, n }); }
   // Klassen: 1 = die 10 % der Arten in den meisten Quadranten … 10 = die 10 % in den wenigsten.
