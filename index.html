@@ -384,7 +384,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 24</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 25</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -747,12 +747,22 @@ async function fetchQuadSpecies(Q) {
   }
   return { t: new Date().toISOString(), f: filterKey(), sp };
 }
+// Saison und „Jetzt oder nie“ auch nachladen, wenn die Umgebung schon gespeichert ist (z. B. neuer Monat)
+let seasonBusy = false;
+async function refreshSeasonal(Q) {
+  if (seasonBusy) return;
+  const had = !!seasonSet(Q) && !!endingMap(Q);
+  seasonBusy = true;
+  try { await loadSeason(Q); await sleep(1100); await loadEnding(Q); } catch { /* ohne Empfang später */ }
+  finally { seasonBusy = false; }
+  if (!had && here === Q) { renderList(); if (current) showResult(current); }
+}
 async function loadArea(force) {
   if (!here || areaBusy) return;
   const center = here;
   const quads = [center, ...NB.map(([dr, dc]) => neighbour(center, dr, dc))];
   const todo = quads.filter(Q => force || !areaOk(Q.id) || Date.now() - new Date(area[Q.id].t) > AREA_MAX_AGE);
-  if (!todo.length) return;
+  if (!todo.length) { if (navigator.onLine) refreshSeasonal(center); return; }
   areaBusy = true; $('btnArea').disabled = true;
   const st = $('areaStatus');
   try {
