@@ -286,15 +286,8 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <span><i style="border:1px dashed var(--muted)"></i>noch keine iNaturalist-Daten</span>
       </div>
       <div class="small muted" id="mapNote"></div>
-      <div class="panel">
-        <h2>Offline-Paket für eine Tour</h2>
-        <p class="small muted" style="margin:0">Zoom die Karte auf dein Tourgebiet. Die App lädt dann für alle sichtbaren Quadranten die iNaturalist-Arten, damit im Funkloch alles da ist. Kartenausschnitte, die du dir mit Empfang angesehen hast, bleiben ebenfalls offline verfügbar.</p>
-        <div class="row"><button class="btn primary" id="btnPack">Sichtbares Gebiet offline laden</button></div>
-        <div class="progress" id="pkProgWrap" hidden><div id="pkProg"></div></div>
-        <div class="small muted" id="pkStatus"></div>
-      </div>
-      <div class="panel">
-        <h2>Lohnende Quadranten</h2>
+      <details class="panel fold" id="fold-map-lohnende-quadranten">
+        <summary><h2>Lohnende Quadranten</h2></summary>
         <p class="small muted" style="margin:0">Welche Quadranten in der Nähe lohnen sich für den nächsten Ausflug? Gezählt werden Arten, die andere dort gefunden haben und du noch nicht, gewichtet nach Häufigkeit; Arten, die gerade in der Umgebung beobachtet werden, zählen mehr. Beim ersten Mal lädt die App die Daten aller Quadranten im Umkreis (bei 30 km etwa ein bis zwei Minuten).</p>
         <div class="row">
           <select class="field" id="tripRadius" style="flex:0 0 auto;width:auto">
@@ -304,9 +297,9 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         </div>
         <div class="small muted" id="tripStatus"></div>
         <ul class="list" id="tripList"></ul>
-      </div>
-      <div class="panel">
-        <h2>Lifer-Tour</h2>
+      </details>
+      <details class="panel fold" id="fold-map-lifer-tour">
+        <summary><h2>Lifer-Tour</h2></summary>
         <p class="small muted" style="margin:0">Fundpunkte anderer iNaturalist-User für deine Lifer. Es zählen nur Funde zwei Wochen vor bis zwei Wochen nach dem heutigen Datum (aus allen Jahren), damit die Art jetzt auch zu sehen ist. Die Reihenfolge führt immer zum nächstgelegenen offenen Punkt.</p>
         <div class="row">
           <select class="field" id="tourRadius" style="flex:0 0 auto;width:auto">
@@ -317,9 +310,9 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="tourStatus"></div>
         <div id="tourMapWrap" hidden><div class="nearmap" id="tourMap"></div></div>
         <ul class="list" id="tourList"></ul>
-      </div>
-      <div class="panel">
-        <h2>Lifer-Ziele</h2>
+      </details>
+      <details class="panel fold" id="fold-map-lifer-ziele">
+        <summary><h2>Lifer-Ziele</h2></summary>
         <p class="small muted" style="margin:0">Deine Lifer, sortiert danach, wie oft sie in Österreich auf iNaturalist gemeldet wurden. Dazu das beste Zeitfenster (der Halbmonat mit den meisten Meldungen), der nächstgelegene Quadrant mit Funden und die Lifer, die dort zur selben Zeit mitgehen.</p>
         <div class="row tabs seg" role="tablist" style="margin:0">
           <button role="tab" id="lzSortN" aria-selected="true">Häufigste zuerst</button>
@@ -327,7 +320,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         </div>
         <div class="small muted" id="lzStatus"></div>
         <ul class="list" id="lzList"></ul>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -377,8 +370,8 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
   <section id="view-data" class="view" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="panel">
-        <h2>iNaturalist</h2>
+      <details class="panel fold" id="fold-data-inaturalist">
+        <summary><h2>iNaturalist</h2></summary>
         <div class="row">
           <input class="field" id="user" placeholder="Benutzername" autocomplete="off" autocapitalize="off">
         </div>
@@ -391,37 +384,37 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         </div>
         <div class="progress" id="progWrap" hidden><div id="prog"></div></div>
         <div class="small muted" id="syncStatus"></div>
-      </div>
-      <div class="panel">
-        <h2>Verschleierte Koordinaten</h2>
+      </details>
+      <details class="panel fold" id="fold-data-verschleierte-koordinaten">
+        <summary><h2>Verschleierte Koordinaten</h2></summary>
         <p class="small muted" style="margin:0">Bei Beobachtungen mit Geoprivacy liefert iNaturalist öffentlich nur ungenaue Koordinaten. Mit einem API-Token (gilt 24 Stunden, abrufbar unter <a href="https://www.inaturalist.org/users/api_token" target="_blank" rel="noopener">inaturalist.org/users/api_token</a>) lädt die App deine genauen Koordinaten. Der Token bleibt nur auf diesem Gerät.</p>
         <input class="field" id="token" placeholder="API-Token einfügen (optional)" autocomplete="off">
         <div class="small" id="obscStat"></div>
-      </div>
-      <div class="panel">
-        <h2>CSV-Export importieren</h2>
+      </details>
+      <details class="panel fold" id="fold-data-csv-export-importieren">
+        <summary><h2>CSV-Export importieren</h2></summary>
         <p class="small muted" style="margin:0">Alternative ohne Internet in der App: Export unter <a href="https://www.inaturalist.org/observations/export" target="_blank" rel="noopener">inaturalist.org/observations/export</a> mit den Spalten id, observed_on, latitude, longitude, private_latitude, private_longitude, scientific_name, common_name, taxon_species_name, iconic_taxon_name, taxon_phylum_name, place_country_name. Ersetzt die gespeicherten Funde.</p>
         <input type="file" id="csv" accept=".csv,text/csv">
-      </div>
-      <div class="panel">
-        <h2>Export für observation.org</h2>
+      </details>
+      <details class="panel fold" id="fold-data-export-fuer-observation-org">
+        <summary><h2>Export für observation.org</h2></summary>
         <p class="small muted" style="margin:0">CSV-Datei mit allen geladenen Funden (Semikolon-getrennt, UTF-8) mit den Spalten species, date, time, lat, lng, accuracy, abundance, remarks. In „remarks“ stehen iNaturalist-Nummer und Quadrant. Funde mit verschleierten Koordinaten werden ausgelassen.</p>
         <label class="row small"><input type="checkbox" id="expNew"> <span id="expNewLabel">Nur Funde seit dem letzten Export</span></label>
         <div class="row"><button class="btn primary" id="btnExport">CSV erstellen</button></div>
         <div class="small muted" id="expStatus"></div>
-      </div>
-      <div class="panel">
-        <h2>Offene Bestimmungen</h2>
+      </details>
+      <details class="panel fold" id="fold-data-offene-bestimmungen">
+        <summary><h2>Offene Bestimmungen</h2></summary>
         <p class="small muted" style="margin:0">Eigene Funde, die nur bis zur Gattung (oder gröber) bestimmt sind, und Funde ohne Bestätigung. Gattungsfunde zählen nicht als kartierte Art.</p>
         <div id="openIds"></div>
-      </div>
-      <div class="panel">
-        <h2>Jahresbilanz</h2>
+      </details>
+      <details class="panel fold" id="fold-data-jahresbilanz">
+        <summary><h2>Jahresbilanz</h2></summary>
         <div class="row"><select class="field" id="yearSel" style="flex:0 0 auto;width:auto"></select></div>
         <div id="yearOut"></div>
-      </div>
-      <div class="panel">
-        <h2>Lifer-Statistik</h2>
+      </details>
+      <details class="panel fold" id="fold-data-lifer-statistik">
+        <summary><h2>Lifer-Statistik</h2></summary>
         <p class="small muted" style="margin:0">Lifer = erster eigener Fund einer Art (in Österreich). Tippe ein Jahr an, um seine Lifer zu sehen.</p>
         <div class="tabs seg" role="tablist">
           <button role="tab" id="lsYear" aria-selected="true">nach Jahr</button>
@@ -430,16 +423,16 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div id="liferYears"></div>
         <div class="row"><select class="field" id="liferMonthSel" style="flex:0 0 auto;width:auto"></select></div>
         <div id="liferMonths"></div>
-      </div>
-      <div class="panel">
-        <h2>Sichern</h2>
+      </details>
+      <details class="panel fold" id="fold-data-sichern">
+        <summary><h2>Sichern</h2></summary>
         <p class="small muted" style="margin:0">Sichert Tagesliste, Einstellungen und Exportstand in eine Datei (z. B. in iCloud Drive). Die Funde selbst kommen ohnehin von iNaturalist. Beim Wiederherstellen wird die Tagesliste zusammengeführt.</p>
         <div class="row"><button class="btn primary" id="btnBackup">Sicherung erstellen</button></div>
         <label class="small">Sicherung wiederherstellen: <input type="file" id="restoreFile" accept=".json,application/json"></label>
         <div class="small muted" id="backupStatus"></div>
-      </div>
+      </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 32</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 33</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1460,7 +1453,7 @@ async function runMapFill() {
 const lon2x = (lon, z) => Math.floor((lon + 180) / 360 * 2 ** z);
 const lat2y = (lat, z) => { const r = lat * Math.PI / 180; return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z); };
 let packBusy = false;
-$('btnPack').onclick = async () => {
+if ($('btnPack')) $('btnPack').onclick = async () => {
   if (packBusy) return;
   if (!map) return;
   const st = $('pkStatus');
@@ -2143,9 +2136,10 @@ function renderTally() {
 }
 $('tallyFilter').addEventListener('input', renderTally);
 // Ein- und Ausklappen merken
-for (const id of ['foldTally', 'foldDay']) {
+$('fold-map-lifer-tour').addEventListener('toggle', e => { if (e.target.open && tourMap) setTimeout(() => tourMap.invalidateSize(), 50); });
+for (const id of ['foldTally', 'foldDay', ...[...document.querySelectorAll('#view-map details.fold, #view-data details.fold')].map(d => d.id)]) {
   const el = $(id), k = 'fold-' + id;
-  try { if (localStorage.getItem(k) === '0') el.open = false; } catch {}
+  try { const v = localStorage.getItem(k); if (v === '0') el.open = false; else if (v === '1') el.open = true; } catch {}
   el.addEventListener('toggle', () => { try { localStorage.setItem(k, el.open ? '1' : '0'); } catch {} });
 }
 $('tallyAll').checked = !!store.get('tallyAll', false);
@@ -2390,9 +2384,9 @@ function renderLifeTargets() {
     const soon = (r.p.peak - now + 24) % 24;
     return `<li><details class="lz" data-i="${i}"><summary><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${rlChip(r.s)}<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span></span><span class="d">${r.p.tot} Meldungen${nq ? ` · ${km(nq.d)}` : ''}</span></span></summary>
       <div class="lzbody small">
-        <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}. Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
-        ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : '<div>Kein Quadrant in den Österreich-Daten bekannt.</div>'}
-        ${nq ? `<div class="lzpt"><button class="linkbtn" data-pt="${esc(r.s)}" data-q="${nq.Q.id}">Genauen Fundpunkt suchen</button></div>` : ''}
+        <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}, mit ${Math.round(100 * r.p.max / r.p.tot)} % aller Meldungen des Jahres (${r.p.max} von ${r.p.tot}). Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
+        ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : `<div>${atlas ? 'In den Österreich-Daten kein Quadrant mit Funden.' : 'Die Österreich-Daten sind noch nicht geladen, darum fehlt der nächste Quadrant hier.'}</div>`}
+        ${here ? `<div class="lzpt"><button class="linkbtn" data-pt="${esc(r.s)}" data-q="${(nq ? nq.Q : here).id}">${nq ? 'Genauen Fundpunkt suchen' : 'Nächsten Fundpunkt suchen (iNaturalist, bis 200 km)'}</button></div>` : ''}
         ${comp.length ? `<div><b>Mitnahme-Lifer</b> (rund um ${nq.Q.id}, in diesem Zeitfenster gemeldet): ${comp.slice(0, 8).map(c => `<i>${esc(c.s)}</i>`).join(', ')}${comp.length > 8 ? ` und ${comp.length - 8} weitere` : ''}.</div>` : nq ? '<div>Keine weiteren Lifer rund um diesen Quadranten zur selben Zeit.</div>' : ''}
       </div></details></li>`;
   }).join('') || '<li class="muted">Keine Lifer mit Meldungen gefunden.</li>';
@@ -2403,7 +2397,7 @@ function renderLifeTargets() {
     try {
       const res = await nearestAll(b.dataset.pt, parseQuad(b.dataset.q), ref);
       const n = res.best;
-      box.innerHTML = !n ? 'Keine Fundpunkte mit Koordinaten gefunden.' : `Nächster Fundpunkt: ${km(n.d)} entfernt (${fmtDate(n.date)}, ${esc(n.own ? 'du' : n.user)}${n.x ? ', Koordinaten verschleiert' : ''}). <a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Beobachtung</a> · <a href="https://maps.apple.com/?daddr=${n.la},${n.lo}" target="_blank" rel="noopener">Weg dorthin</a>`;
+      box.innerHTML = !n ? 'Keine Fundpunkte mit Koordinaten gefunden.' : `Nächster Fundpunkt im Quadranten <b>${toQuad(n.la, n.lo).id}</b>, ${km(n.d)} entfernt (${fmtDate(n.date)}, ${esc(n.own ? 'du' : n.user)}${n.x ? ', Koordinaten verschleiert' : ''}). <a href="https://www.inaturalist.org/observations/${n.id}" target="_blank" rel="noopener">Beobachtung</a> · <a href="https://maps.apple.com/?daddr=${n.la},${n.lo}" target="_blank" rel="noopener">Weg dorthin</a>`;
     } catch { box.textContent = 'iNaturalist gerade nicht erreichbar.'; }
   });
 }
