@@ -437,7 +437,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 35</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 36</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -498,7 +498,11 @@ let here = store.get('here', null); // {R,C,q,gf,id,lat,lon,acc,t,src}
 let index = null;
 
 // Artname auf Artebene: Unterarten/Varietäten werden zur Art zusammengefasst
-function speciesName(name, rankLevel) {
+// Taxonomische Festlegungen von Thomas: diese Namen gelten in Österreich immer als die rechte Art
+const TAX_FIX = { 'Dactylorhiza maculata': 'Dactylorhiza fuchsii' };
+const canonTax = s => TAX_FIX[s] || s;
+function speciesName(name, rankLevel) { return canonTax(speciesNameRaw(name, rankLevel)); }
+function speciesNameRaw(name, rankLevel) {
   if (!name) return '';
   if (rankLevel != null && rankLevel >= 10) return name;
   const t = name.split(/\s+/);
@@ -513,6 +517,7 @@ function buildIndex() {
   const byQuad = new Map(), bySp = new Map(), common = new Map();
   for (const o of obs) {
     if (o.la == null || !o.s) continue;
+    o.s = canonTax(o.s);
     const Q = toQuad(o.la, o.lo); o.k = Q.id;
     if (o.r > 10) continue; // nur bis Gattung bestimmt: zählt nicht als kartierte Art
     if (!byQuad.has(Q.id)) byQuad.set(Q.id, new Map());
@@ -794,7 +799,7 @@ async function fetchQuadSpecies(Q) {
       const n = speciesName(t.name, t.rank_level);
       const e = sp[n] || (sp[n] = [0, '']);
       e[0] += count;
-      if (t.rank_level === 10 && t.preferred_common_name) e[1] = t.preferred_common_name;
+      if (t.rank_level === 10 && t.preferred_common_name && (t.name === n || !e[1])) e[1] = t.preferred_common_name;
     }
     if (page * 500 >= j.total_results) break;
     await sleep(1100);
@@ -1114,6 +1119,26 @@ async function kvInit() {
   season = (await kv.get('season')) || {};
   redlist = (await kv.get('redlist')) || null;
   redSet = new Set(redlist ? redlist.sp : []);
+  fixStoredTax();
+}
+// Gespeicherte Gebiets- und Saisondaten auf die Festlegungen in TAX_FIX umschreiben (Daten von vor dieser Regel)
+function fixStoredTax() {
+  const bad = Object.keys(TAX_FIX);
+  let ch = false;
+  for (const a of Object.values(area)) {
+    if (!a || !a.sp) continue;
+    for (const b of bad) if (a.sp[b]) {
+      const g = TAX_FIX[b], e = a.sp[g], o = a.sp[b];
+      a.sp[g] = e ? [e[0] + o[0], e[1]] : [o[0], '']; delete a.sp[b]; ch = true;
+    }
+  }
+  for (const v of Object.values(season)) {
+    if (!v || !Array.isArray(v.sp) || !v.sp.some(x => bad.includes(Array.isArray(x) ? x[0] : x))) continue;
+    v.sp = v.sp.map(x => Array.isArray(x) ? [canonTax(x[0]), ...x.slice(1)] : canonTax(x));
+    if (v.sp.length && !Array.isArray(v.sp[0])) v.sp = [...new Set(v.sp)];
+    ch = true;
+  }
+  if (ch) { kv.set('area', area); kv.set('season', season); }
 }
 
 // ---------- Saison: Arten, die in diesem Monat im Umkreis beobachtet wurden ----------
@@ -2423,8 +2448,13 @@ function setLzSort(v) { lzSort = v; store.set('lzSort', v); $('lzSortN').setAttr
 $('lzSortN').onclick = () => setLzSort('n');
 $('lzSortT').onclick = () => setLzSort('t');
 setLzSort(lzSort);
+function fixPheno(raw) {
+  const s = {};
+  for (const [k, v] of Object.entries(raw.s)) { const c = canonTax(k); s[c] = s[c] ? s[c].map((x, i) => x + v[i]) : v; }
+  return { ...raw, s };
+}
 async function loadPheno() {
-  try { const raw = await kv.get('pheno'); if (raw) { pheno = raw; renderLifeTargets(); } } catch {}
+  try { const raw = await kv.get('pheno'); if (raw) { pheno = fixPheno(raw); renderLifeTargets(); } } catch {}
   const age = pheno ? Date.now() - new Date(store.get('phenoChecked', 0)) : Infinity;
   if (!navigator.onLine || age < 7 * 864e5) return;
   try {
@@ -2433,7 +2463,7 @@ async function loadPheno() {
     const raw = await r.json();
     store.set('phenoChecked', new Date().toISOString());
     if (pheno && raw.t === pheno.t) return;
-    await kv.set('pheno', raw); pheno = raw; renderLifeTargets();
+    await kv.set('pheno', raw); pheno = fixPheno(raw); renderLifeTargets();
   } catch { /* noch keine pheno.json oder kein Empfang */ }
 }
 
@@ -2518,7 +2548,7 @@ var atlas = null; // { t, n, q: [Quadrant-IDs], sp: Map(Art -> { c, occ: [i, n, 
 // Aconitum cammarum → Aconitum × cammarum); Gattungsangaben („spec“) und Hybridformeln („A x B“) weglassen
 const atlasKey = s => s.toLowerCase().replace(/×|-|\s+x\s+|\s+/g, '');
 function cleanAtlasNames(rows) {
-  const keep = rows.filter(([s]) => !/\s(spec|sp|spp)\.?$/i.test(s) && !/^\S+ \S+ x \S+/.test(s));
+  const keep = rows.filter(([s]) => !/\s(spec|sp|spp)\.?$/i.test(s) && !/^\S+ \S+ x \S+/.test(s)).map(r => [canonTax(r[0]), r[1], r[2]]);
   const groups = new Map();
   for (const r of keep) { const k = atlasKey(r[0]); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); }
   const known = s => index.bySp.has(s) || !!(pheno && pheno.s[s]);
@@ -2538,11 +2568,9 @@ function prepAtlas(raw) {
   raw = { ...raw, s: cleanAtlasNames(raw.s) };
   const sp = new Map();
   for (const [s, c, occ] of raw.s) { let n = 0; for (let i = 1; i < occ.length; i += 2) n += occ[i]; sp.set(s, { c, occ, k: occ.length / 2, n }); }
-  // Klassen: 1 = die 10 % der Arten in den meisten Quadranten … 10 = die 10 % in den wenigsten.
-  // Bei gleicher Quadrantenzahl entscheidet die Zahl der Beobachtungen; sonst landen alle Arten aus nur einem Quadranten
-  // (rund ein Fünftel) in einer Klasse und H9/H10 blieben leer. Echte Gleichstände an einer Klassengrenze werden einfach aufgeteilt.
-  const sorted = [...sp.values()].sort((a, b) => b.k - a.k || b.n - a.n);
-  sorted.forEach((e, i) => { e.f = Math.min(10, Math.floor(i / sorted.length * 10) + 1); });
+  // Klassen nach Anteil der Quadranten Österreichs: H1 = in 90–100 % der Quadranten, H2 = 80–90 % … H10 = 0–10 %.
+  // Hybriden bekommen keine Klasse.
+  for (const [s, e] of sp) e.f = isHybrid(s) ? null : Math.min(10, Math.max(1, 10 - Math.floor(e.k / raw.n * 10)));
   const rc = raw.q.map(id => { const m = id.match(/^(\d{2})(\d{2})\/([1-4])$/); const q = +m[3]; return [+m[1] * 2 + (q > 2 ? 1 : 0), +m[2] * 2 + ((q - 1) % 2)]; });
   const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
   const byQuad = new Map();
@@ -2564,13 +2592,14 @@ async function loadAtlas() {
   } catch { /* noch keine Atlasdatei oder kein Empfang */ }
 }
 const atlasSrc = () => atlas && atlas.src.length > 1 ? 'Auf iNaturalist und GBIF' : 'Auf iNaturalist';
+const isHybrid = s => /\s(×|x)\s|^×|\s×/.test(s);
 const freqOf = s => atlas ? atlas.sp.get(s) : null;
-function freqChip(s) { const e = freqOf(s); return e ? `<span class="chip freq f${e.f}" title="Häufigkeitsklasse">H${e.f}</span>` : ''; }
+function freqChip(s) { const e = freqOf(s); return e && e.f ? `<span class="chip freq f${e.f}" title="Häufigkeitsklasse">H${e.f}</span>` : ''; }
 function freqLine(s) {
   if (!atlas) return '';
   const e = freqOf(s);
   if (!e) return `<div class="small"><span class="chip freq f10">H–</span> In Österreich ${atlas.src.length > 1 ? 'auf iNaturalist und GBIF' : 'auf iNaturalist'} noch in keinem Quadranten gemeldet.</div>`;
-  return `<div class="small">${freqChip(s)} Häufigkeitsklasse ${e.f} von 10: in ${e.k} von ${atlas.n} Quadranten Österreichs (${(e.k / atlas.n * 100).toFixed(e.k / atlas.n < 0.01 ? 1 : 0).replace('.', ',')} %). <button class="linkbtn" id="btnDistr">Verbreitungskarte</button></div><div id="distrBox"></div>`;
+  return `<div class="small">${freqChip(s)} ${e.f ? `Häufigkeitsklasse ${e.f} von 10` : 'Hybride, ohne Häufigkeitsklasse'}: in ${e.k} von ${atlas.n} Quadranten Österreichs (${(e.k / atlas.n * 100).toFixed(e.k / atlas.n < 0.01 ? 1 : 0).replace('.', ',')} %). <button class="linkbtn" id="btnDistr">Verbreitungskarte</button></div><div id="distrBox"></div>`;
 }
 // Wahrscheinlichkeit je Quadrant: Anteil der Quadranten im Umkreis von 30 km, in denen die Art gemeldet ist
 function distrScores(e) {
