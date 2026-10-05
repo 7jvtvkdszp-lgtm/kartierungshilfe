@@ -1,0 +1,26 @@
+name: Beobachtungszeiten aktualisieren
+on:
+  schedule:
+    - cron: '0 3 2 * *'   # am 2. jedes Monats
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/build_pheno.py']
+permissions:
+  contents: write
+jobs:
+  pheno:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python scripts/build_pheno.py
+      - name: pheno.json einspielen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pheno.json
+          git commit -m "Beobachtungszeiten aktualisiert" || exit 0
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && break; sleep 10; done
