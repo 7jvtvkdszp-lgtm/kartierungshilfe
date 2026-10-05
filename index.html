@@ -137,6 +137,10 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
 .chip.lifer { background: #7c3aed; color: #fff }
+.mbars { display: grid; grid-template-columns: 34px 1fr 64px; gap: 3px 8px; align-items: center; font-size: 13px }
+.mbars .b { height: 14px; background: #7c3aed; border-radius: 3px; min-width: 1px }
+.mbars .best { font-weight: 700 }
+details.ly summary { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); cursor: pointer; font-variant-numeric: tabular-nums }
 .clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
@@ -322,8 +326,8 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="row">
           <input class="field" id="user" placeholder="Benutzername" autocomplete="off" autocapitalize="off">
         </div>
-        <label class="row small"><input type="checkbox" id="onlyPlants" checked> Nur Pflanzen (Plantae)</label>
-        <label class="row small"><input type="checkbox" id="noMoss" checked> Ohne Moose (Laub-, Leber- und Hornmoose)</label>
+        <label class="row small"><input type="checkbox" id="onlyPlants" checked> Nur Gefäßpflanzen (Farne und Verwandte, Nacktsamer, Blütenpflanzen; ohne Moose und Algen)</label>
+        <input type="checkbox" id="noMoss" checked hidden>
         <label class="row small"><input type="checkbox" id="onlyAT" checked> Nur Funde in Österreich</label>
         <div class="row">
           <button class="btn primary" id="btnSync">Funde aktualisieren</button>
@@ -361,6 +365,17 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div id="yearOut"></div>
       </div>
       <div class="panel">
+        <h2>Lifer-Statistik</h2>
+        <p class="small muted" style="margin:0">Lifer = erster eigener Fund einer Art (in Österreich). Tippe ein Jahr an, um seine Lifer zu sehen.</p>
+        <div class="tabs seg" role="tablist">
+          <button role="tab" id="lsYear" aria-selected="true">nach Jahr</button>
+          <button role="tab" id="lsCount" aria-selected="false">nach Anzahl</button>
+        </div>
+        <div id="liferYears"></div>
+        <div class="row"><select class="field" id="liferMonthSel" style="flex:0 0 auto;width:auto"></select></div>
+        <div id="liferMonths"></div>
+      </div>
+      <div class="panel">
         <h2>Sichern</h2>
         <p class="small muted" style="margin:0">Sichert Tagesliste, Einstellungen und Exportstand in eine Datei (z. B. in iCloud Drive). Die Funde selbst kommen ohnehin von iNaturalist. Beim Wiederherstellen wird die Tagesliste zusammengeführt.</p>
         <div class="row"><button class="btn primary" id="btnBackup">Sicherung erstellen</button></div>
@@ -368,7 +383,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 22</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 23</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -415,6 +430,12 @@ const store = {
   set(k, v) { try { localStorage.setItem('kh.' + k, JSON.stringify(v)); return true; } catch { return false; } },
 };
 const MOSS_IDS = '311249,64615,56327'; // iNat: Bryophyta, Marchantiophyta, Anthocerotophyta
+const TRACHEO = '211194'; // iNat: Tracheophyta = Gefäßpflanzen (Farne und Verwandte, Nacktsamer, Blütenpflanzen), ohne Algen und Moose
+// Taxonfilter für iNaturalist-Abfragen: nur Gefäßpflanzen (Wunsch Thomas), sonst alles
+function taxFilter(p) {
+  if (settings.onlyPlants && !p.has('taxon_id')) p.set('taxon_id', TRACHEO);
+  else if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
+}
 const PLACE_AT = '8057'; // iNat: Österreich
 let settings = Object.assign({ user: 'mondseeirrsee', onlyPlants: true, noMoss: true, onlyAT: true, token: '' }, store.get('settings', {}));
 let meta = store.get('meta', { lastSync: null, maxId: 0 });
@@ -583,7 +604,7 @@ function renderSugg(local, online) {
 async function onlineSearch(q, seq) {
   if (!navigator.onLine || q.length < 3) return;
   try {
-    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&iconic_taxa=Plantae' : ''}${settings.noMoss ? '&without_taxon_id=' + MOSS_IDS : ''}`);
+    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(q)}&locale=de&per_page=10${settings.onlyPlants ? '&taxon_id=' + TRACHEO : ''}`);
     if (!r.ok || seq !== onlineSeq) return;
     const j = await r.json();
     const res = j.results.map(t => ({ s: speciesName(t.name, t.rank_level), c: t.rank_level < 10 ? null : t.preferred_common_name, id: t.id, r: t.rank_level }));
@@ -709,8 +730,7 @@ async function fetchQuadSpecies(Q) {
   const b = quadBounds(Q), sp = {};
   for (let page = 1; ; page++) {
     const p = new URLSearchParams({ swlat: b.s, swlng: b.w, nelat: b.n, nelng: b.e, verifiable: 'true', per_page: '500', page: String(page), locale: 'de' });
-    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-    if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+    taxFilter(p);
     const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + p);
     if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
     const j = await r.json();
@@ -871,7 +891,7 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
-  if (statsReady) { renderOpenIds(); renderYear(); renderNewNear(); checkNewNear(); }
+  if (statsReady) { renderOpenIds(); renderYear(); renderLiferStats(); renderNewNear(); checkNewNear(); }
 }
 let statsReady = false;
 function fromApi(o) {
@@ -883,7 +903,7 @@ function fromApi(o) {
   return { i: o.id, s: speciesName(t.name, t.rank_level), c: t.rank_level >= 10 ? (t.preferred_common_name || '') : '', d: o.observed_on || '', ti: viennaTime(o.time_observed_at), la, lo, x: o.obscured && !priv ? 1 : 0, a: o.positional_accuracy || null, r: t.rank_level, g: o.quality_grade };
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const DATA_V = 3; // bei Änderungen am gespeicherten Format erhöhen: erzwingt einmal komplettes Neuladen
+const DATA_V = 4; // bei Änderungen am gespeicherten Format erhöhen: erzwingt einmal komplettes Neuladen
 function viennaTime(iso) {
   if (!iso) return '';
   try { return new Date(iso).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' }); } catch { return ''; }
@@ -892,8 +912,7 @@ async function fetchAll(extra, onPage) {
   let idAbove = 0, got = 0, total = null;
   for (;;) {
     const p = new URLSearchParams({ user_login: settings.user, per_page: '200', order_by: 'id', order: 'asc', id_above: String(idAbove), locale: 'de', ...extra });
-    if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-    if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+    taxFilter(p);
     if (settings.onlyAT) p.set('place_id', PLACE_AT);
     const headers = settings.token ? { Authorization: settings.token } : {};
     const r = await fetch('https://api.inaturalist.org/v1/observations?' + p, { headers });
@@ -947,7 +966,7 @@ $('user').addEventListener('change', e => {
   const u = e.target.value.trim();
   if (u && u !== settings.user) { settings.user = u; store.set('settings', settings); obs = []; meta = { lastSync: null }; saveAll(); }
 });
-const filterKey = () => [settings.onlyPlants, settings.noMoss, settings.onlyAT].map(Number).join('');
+const filterKey = () => 'T' + [settings.onlyPlants, settings.noMoss, settings.onlyAT].map(Number).join(''); // T: Gefäßpflanzen-Filter
 for (const k of ['onlyPlants', 'noMoss', 'onlyAT']) $(k).addEventListener('change', e => { settings[k] = e.target.checked; store.set('settings', settings); $('syncStatus').textContent = 'Filter geändert. Beim nächsten Aktualisieren wird alles neu geladen.'; });
 $('token').addEventListener('change', e => { settings.token = e.target.value.trim(); store.set('settings', settings); });
 
@@ -978,7 +997,7 @@ $('csv').addEventListener('change', async e => {
   for (const r of rows) {
     if (r.length < h.length / 2) continue;
     if (settings.onlyPlants && col('iconic_taxon_name') >= 0 && v(r, 'iconic_taxon_name') !== 'Plantae') continue;
-    if (settings.noMoss && col('taxon_phylum_name') >= 0 && /^(Bryophyta|Marchantiophyta|Anthocerotophyta)$/.test(v(r, 'taxon_phylum_name'))) continue;
+    if (settings.onlyPlants && col('taxon_phylum_name') >= 0 && v(r, 'taxon_phylum_name') !== 'Tracheophyta') continue;
     if (settings.onlyAT && col('place_country_name') >= 0 && v(r, 'place_country_name') && v(r, 'place_country_name') !== 'Austria') continue;
     const pla = parseFloat(v(r, 'private_latitude')), plo = parseFloat(v(r, 'private_longitude'));
     const la = parseFloat(v(r, 'latitude')), lo = parseFloat(v(r, 'longitude'));
@@ -1026,8 +1045,7 @@ async function kvInit() {
 const monthNow = () => new Date().getMonth() + 1;
 function speciesCountsParams(extra) {
   const p = new URLSearchParams({ verifiable: 'true', per_page: '500', locale: 'de', ...extra });
-  if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-  if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+  taxFilter(p);
   return p;
 }
 async function speciesCountsNames(extra) {
@@ -1521,7 +1539,7 @@ function renderOpenIds() {
   const block = (title, list, link) => list.length
     ? `<details><summary>${title} (${list.length})</summary><ul class="list">${list.sort((a, b) => (b.d || '').localeCompare(a.d || '')).slice(0, 300).map(item).join('')}</ul><a class="small" href="${link}" target="_blank" rel="noopener">Alle auf iNaturalist</a></details>`
     : `<div class="small muted">${title}: keine.</div>`;
-  const base = { user_id: settings.user, iconic_taxa: 'Plantae' };
+  const base = { user_id: settings.user, taxon_id: TRACHEO };
   if (settings.onlyAT) base.place_id = PLACE_AT;
   $('openIds').innerHTML = meta.v === DATA_V
     ? block('Nur bis Gattung oder höher bestimmt', coarse, 'https://www.inaturalist.org/observations?' + new URLSearchParams({ ...base, lrank: 'genus' }))
@@ -1682,8 +1700,7 @@ async function checkNewNear(force) {
   const ref = here.lat != null ? { lat: here.lat, lon: here.lon } : { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 };
   const since = newNear.t ? newNear.t.slice(0, 10) : new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
   const p = new URLSearchParams({ lat: ref.lat.toFixed(4), lng: ref.lon.toFixed(4), radius: String(NEAR_KM), created_d1: since, verifiable: 'true', hrank: 'species', per_page: '200', order_by: 'created_at', locale: 'de' });
-  if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-  if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+  taxFilter(p);
   if (settings.onlyAT) p.set('place_id', PLACE_AT);
   try {
     const r = await fetch('https://api.inaturalist.org/v1/observations?' + p);
@@ -1817,8 +1834,7 @@ $('btnTour').onclick = async () => {
     const lifers = new Map();
     for (let page = 1; page <= 4; page++) {
       const p = new URLSearchParams({ ...geo, month: months, verifiable: 'true', per_page: '500', page: String(page), locale: 'de' });
-      if (settings.onlyPlants) p.set('iconic_taxa', 'Plantae');
-      if (settings.noMoss) p.set('without_taxon_id', MOSS_IDS);
+      taxFilter(p);
       const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + p);
       if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
       const j = await r.json();
@@ -1886,6 +1902,52 @@ function renderTour() {
     .bindPopup(`<b>${i + 1}. ${esc(p.s)}</b><br>${fmtDate(p.date)} · ${esc(p.u)}<br><a href="https://maps.apple.com/?daddr=${p.la},${p.lo}" target="_blank" rel="noopener">Weg dorthin</a>`).addTo(tourMap));
   tourMap.fitBounds(L.latLngBounds(line), { padding: [24, 24], maxZoom: 15 });
 }
+
+
+// ---------- Lifer-Statistik: erste eigene Funde je Art, pro Jahr und pro Monat ----------
+var liferSort = store.get('liferSort', 'year');
+const MONTHS = ['Jän', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+const MONTHS_LONG = ['Jänner', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+function liferFirsts() {
+  const out = [];
+  for (const [s, os] of index.bySp) {
+    const d = os.map(o => o.d).filter(Boolean).sort()[0];
+    if (d) out.push({ s, d });
+  }
+  return out;
+}
+function renderLiferStats() {
+  const el = $('liferYears'); if (!el) return;
+  const firsts = liferFirsts();
+  if (!firsts.length) { el.innerHTML = '<div class="small muted">Noch keine Funde.</div>'; $('liferMonths').innerHTML = ''; return; }
+  $('lsYear').setAttribute('aria-selected', liferSort === 'year'); $('lsCount').setAttribute('aria-selected', liferSort === 'count');
+  const byYear = new Map(), finds = new Map();
+  for (const f of firsts) { const y = f.d.slice(0, 4); if (!byYear.has(y)) byYear.set(y, []); byYear.get(y).push(f); }
+  for (const o of obs) if (o.d && !(o.r > 10)) finds.set(o.d.slice(0, 4), (finds.get(o.d.slice(0, 4)) || 0) + 1);
+  const years = [...byYear].sort((a, b) => liferSort === 'count' ? b[1].length - a[1].length || b[0].localeCompare(a[0]) : b[0].localeCompare(a[0]));
+  const max = Math.max(...years.map(([, l]) => l.length));
+  el.innerHTML = `<div class="small" style="margin:6px 0"><b class="num">${firsts.length}</b> Arten insgesamt.</div>` + years.map(([y, l]) => `<details class="ly"><summary><span><b>${y}</b>${l.length === max ? ' 🏆' : ''}</span><span><b class="num">${l.length}</b> Lifer · <span class="muted num">${finds.get(y) || 0} Funde</span></span></summary>
+    <ul class="list">${l.sort((a, b) => a.d.localeCompare(b.d)).map(f => `<li class="tap" data-s="${esc(f.s)}"><span class="sci">${esc(f.s)}</span><span class="d">${fmtDate(f.d)}</span></li>`).join('')}</ul></details>`).join('');
+  el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); });
+  // Monate: für ein Jahr oder über alle Jahre zusammen
+  const sel = $('liferMonthSel'), ys = [...byYear.keys()].sort().reverse();
+  const opts = ['alle', ...ys];
+  if (sel.options.length !== opts.length) { const keep = sel.value; sel.innerHTML = opts.map(y => `<option value="${y}">${y === 'alle' ? 'Alle Jahre' : y}</option>`).join(''); if (opts.includes(keep)) sel.value = keep; }
+  const y = sel.value || 'alle';
+  const m = Array(12).fill(0), mf = Array(12).fill(0);
+  for (const f of firsts) if (y === 'alle' || f.d.startsWith(y)) m[+f.d.slice(5, 7) - 1]++;
+  for (const o of obs) if (o.d && !(o.r > 10) && (y === 'alle' || o.d.startsWith(y))) mf[+o.d.slice(5, 7) - 1]++;
+  const mx = Math.max(1, ...m), bestM = m.indexOf(Math.max(...m));
+  // erfolgreichster einzelner Monat über alle Jahre
+  const ym = new Map(); for (const f of firsts) { const k = f.d.slice(0, 7); ym.set(k, (ym.get(k) || 0) + 1); }
+  const [bk, bn] = [...ym].sort((a, b) => b[1] - a[1])[0];
+  $('liferMonths').innerHTML = `<div class="small" style="margin:4px 0 8px">🏆 Erfolgreichster Monat: <b>${MONTHS_LONG[+bk.slice(5, 7) - 1]} ${bk.slice(0, 4)}</b> mit <b class="num">${bn}</b> Lifern.${m[bestM] ? ` ${y === 'alle' ? 'Über alle Jahre' : 'Im Jahr ' + y} ist der <b>${MONTHS_LONG[bestM]}</b> am stärksten.` : ''}</div>
+    <div class="mbars">${m.map((n, i) => `<span class="${i === bestM && n ? 'best' : ''}">${MONTHS[i]}</span><span><span class="b" style="display:block;width:${n / mx * 100}%"></span></span><span class="num ${i === bestM && n ? 'best' : ''}">${n} <span class="muted">/ ${mf[i]}</span></span>`).join('')}</div>
+    <div class="small muted">Lifer / alle Funde im Monat.</div>`;
+}
+$('lsYear').onclick = () => { liferSort = 'year'; store.set('liferSort', liferSort); renderLiferStats(); };
+$('lsCount').onclick = () => { liferSort = 'count'; store.set('liferSort', liferSort); renderLiferStats(); };
+$('liferMonthSel').addEventListener('change', renderLiferStats);
 
 // ---------- Löschknopf in Suchfeldern ----------
 for (const id of ['q', 'listFilter', 'manualInput']) {
@@ -2024,7 +2086,7 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
-statsReady = true; renderOpenIds(); renderYear(); renderWish(); renderNewNear(); renderTour();
+statsReady = true; renderOpenIds(); renderYear(); renderLiferStats(); renderWish(); renderNewNear(); renderTour();
 // Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
 const ui = store.get('ui', null);
 if (ui && Date.now() - ui.t < 12 * 3600e3) {

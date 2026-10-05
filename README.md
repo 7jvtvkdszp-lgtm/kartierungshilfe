@@ -16,6 +16,7 @@ Web-App fürs iPhone: bestimmt per GPS den Quadranten der Floristischen Kartieru
 - **Feldhilfen (v19):** Grenzwarnung, wenn die GPS-Genauigkeit größer ist als der Abstand zur Quadrantengrenze; Vergleichsfoto und häufige Verwechslungsarten (iNat similar_species, Österreich) im Prüfergebnis; Wunschliste (Tab Heute) mit Hinweis, wenn eine Wunschart im Quadranten bekannt ist; „Neu in der Umgebung“: Lifer, die andere im Umkreis von 30 km neu hochgeladen haben; Karte wahlweise nach Lifern eingefärbt.
 - **v20:** Löschknopf (×) in Suchfeldern; „Tipps für den Quadranten“ (wahrscheinlichster Lifer, wahrscheinlichste noch nicht kartierte Art, am längsten nicht kartierte Art); Häufigkeitsklasse H1–H10 (Dezile nach Zahl der österreichischen Quadranten mit iNat-Beobachtungen) und Verbreitungskarte (Anteil der Quadranten im Umkreis 30 km). Datengrundlage `atlas.json` (iNaturalist + GBIF der letzten 20 Jahre, nur Gefäßpflanzen, GBIF-Namen auf iNat-Taxonomie abgeglichen; ergänzt auch Artenlisten, Fundchance, Karte und lohnende Quadranten), monatlich erstellt von `.github/workflows/atlas.yml` mit `scripts/build_atlas.py`.
 - **v22:** Artenliste „Erwartet“ (in ≥60 % der Nachbarquadranten bekannt, hier nie gemeldet), Kartenmodus „Lücken“ (bekannte Arten im Verhältnis zum Median der zwei Ringe ringsum), Lifer-Tour (iNat-Fundpunkte anderer, nur ±14 Tage um das heutige Datum, Nächster-Nachbar-Reihenfolge, Google-Maps-Gesamtroute), Wunschliste gilt je Quadrant.
+- **v23:** nur Gefäßpflanzen (iNat taxon_id 211194 Tracheophyta: ohne Moose und Algen wie Chara oder Trentepohlia); Lifer-Statistik unter Daten (Lifer je Jahr, sortierbar, je Monat, erfolgreichster Monat).
 - **Daten:** offene Bestimmungen (nur Gattung / Needs ID; Gattungsfunde zählen nicht als kartiert), Jahresbilanz (Funde, Erstnachweise je Quadrant, am längsten nicht besuchte Quadranten), Sicherung/Wiederherstellung als JSON (ohne Token).
 - **Export für observation.org:** CSV (Semikolon, UTF-8): species;date;time;lat;lng;accuracy;abundance;remarks.
 
@@ -25,7 +26,7 @@ Viertel 1 NW, 2 NO, 3 SW, 4 SO. Geprüft gegen 13 Quadranten-Mittelpunkte aus de
 „Floristische Kartierung Österreichs“ (alle korrekt).
 
 ## Daten
-- Live von der iNaturalist-API (v1/observations, nur Plantae, Unterarten werden zur Art zusammengefasst), gespeichert im Browser (localStorage), danach offline nutzbar.
+- Live von der iNaturalist-API (v1/observations, nur Gefäßpflanzen, Unterarten werden zur Art zusammengefasst), gespeichert im Browser (localStorage), danach offline nutzbar.
 - „Funde aktualisieren“ lädt nur Änderungen seit dem letzten Abgleich, „Alles neu laden“ auch Löschungen.
 - Verschleierte Koordinaten: mit API-Token (inaturalist.org/users/api_token, 24 h gültig) kommen die genauen eigenen Koordinaten; alternativ CSV-Export importieren.
 
