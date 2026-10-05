@@ -146,6 +146,13 @@ details.ly summary { display: flex; justify-content: space-between; padding: 6px
 .list li.tally.on .tick { background: var(--found); border-color: var(--found); color: #fff }
 .list li.tally.on .sci { color: var(--found) }
 .comp { color: var(--accent); cursor: pointer; text-decoration: underline dotted }
+details.fold { display: block }
+details.fold > * + * { margin-top: 10px }
+details.fold > summary { list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; cursor: pointer }
+details.fold > summary::-webkit-details-marker { display: none }
+details.fold > summary h2 { margin: 0 }
+details.fold > summary h2::before { content: '▾ '; color: var(--muted) }
+details.fold:not([open]) > summary h2::before { content: '▸ ' }
 .clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
@@ -307,18 +314,18 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
   </section>
 
   <section id="view-day" class="view" hidden>
-    <div class="panel" style="margin-bottom:12px">
-      <h2 id="tallyTitle">Strichliste</h2>
-      <p class="small muted" style="margin:0">Antippen heißt gesehen: Die Art kommt auf die Tagesliste unten, nochmal antippen nimmt sie wieder weg. Oben stehen Arten, die gerade beobachtbar sind und hier fehlen oder wieder fällig sind. Tippst du mindestens drei Buchstaben, findest du jede Art aus Österreich.</p>
+    <details class="panel fold" id="foldTally" open style="margin-bottom:12px">
+      <summary><h2 id="tallyTitle">Strichliste</h2><span class="small muted" id="tallyFoldInfo"></span></summary>
+      <p class="small muted" style="margin:0">Antippen heißt gesehen: Die Art kommt auf die Tagesliste unten, nochmal antippen nimmt sie wieder weg. Gestrichene Arten stehen ganz oben, danach Arten, die gerade beobachtbar sind und hier fehlen oder wieder fällig sind. Tippst du mindestens drei Buchstaben, findest du jede Art aus Österreich.</p>
       <div class="small" id="tallySum"></div>
       <div class="row"><input class="field" id="tallyFilter" placeholder="Art suchen oder Liste filtern" autocomplete="off"></div>
       <label class="row small"><input type="checkbox" id="tallyAll"> Auch Arten zeigen, die du hier schon aktuell kartiert hast</label>
       <div id="tallyComp"></div>
       <div class="small muted" id="tallyHead" style="padding-top:8px"></div>
       <ul class="list" id="tallyList"></ul>
-    </div>
-    <div class="panel">
-      <h2>Tagesliste</h2>
+    </details>
+    <details class="panel fold" id="foldDay" open>
+      <summary><h2>Tagesliste</h2><span class="small muted" id="dayFoldInfo"></span></summary>
       <p class="small muted" style="margin:0">Arten, die du im Feld unter „Prüfen“ notierst. Sobald die Art im selben Quadranten auf iNaturalist auftaucht, wird sie automatisch abgehakt.</p>
       <div class="small" id="daySum"></div>
       <ul class="list" id="dayList"></ul>
@@ -326,7 +333,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <a class="btn" href="https://www.inaturalist.org/observations/upload" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;color:inherit">iNaturalist-Upload öffnen</a>
         <button class="btn" id="dayClear">Erledigte entfernen</button>
       </div>
-    </div>
+    </details>
     <div class="panel" style="margin-top:12px">
       <h2 id="wishTitle">Wunschliste</h2>
       <p class="small muted" style="margin:0">Zielarten für einen bestimmten Quadranten. Sie gelten nur dort, wo du sie eingetragen hast. Bist du in diesem Quadranten, zeigt die App sie oben an, im Mitlaufen-Modus beim Betreten mit Ton.</p>
@@ -398,7 +405,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </div>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 27</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 28</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1297,6 +1304,7 @@ function renderDay() {
       <span class="row" style="flex-wrap:nowrap">${inat ? '' : `<label class="small" style="display:flex;gap:4px;align-items:center"><input type="checkbox" data-done ${e.done ? 'checked' : ''}> erledigt</label>`}<button class="x" data-del aria-label="Entfernen">×</button></span></li>`);
   }
   $('dayList').innerHTML = html.join('') || '<li class="muted">Noch nichts notiert. Unter „Prüfen“ fügst du eine Art mit „+ Auf die Tagesliste“ hinzu.</li>';
+  $('dayFoldInfo').textContent = day.length ? `${day.length} ${day.length === 1 ? 'Eintrag' : 'Einträge'}, ${open} offen` : '';
   const cnt = k => day.filter(e => e.st === k).length;
   $('daySum').textContent = day.length ? `${day.length} ${day.length === 1 ? 'Eintrag' : 'Einträge'}: ${cnt('new')} neu, ${cnt('due')} fällig, ${cnt('ok')} schon kartiert. ${open} noch nicht auf iNaturalist.` : '';
   $('dayList').querySelectorAll('li[data-id]').forEach(li => {
@@ -2074,7 +2082,7 @@ function renderTally() {
     if (!isOn && !f && st === 'new' && !c.inQ && c.nb < 2) continue; // nur ein Nachbar: zu unsicher für die Liste
     rows.push({ s, st, ...c, on: isOn, now: sea ? (sea.has(s) ? 1 : 0) : 1 });
   }
-  rows.sort((a, b) => b.now - a.now || b.pct - a.pct || a.s.localeCompare(b.s));
+  rows.sort((a, b) => b.on - a.on || b.now - a.now || b.pct - a.pct || a.s.localeCompare(b.s)); // Gestrichenes oben, damit der Überblick bleibt
   const ST = { new: '<span class="chip new">neu</span>', due: '<span class="chip due">fällig</span>', ok: '<span class="chip ok">kartiert</span>' };
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '';
   const li = r => `<li class="tap tally${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span><span class="tick">${r.on ? '✓' : ''}</span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${seaChip(r.s)}${freqChip(r.s)}</span><span class="d">${r.pct ? r.pct + ' %' : ''}</span></span></li>`;
@@ -2082,6 +2090,7 @@ function renderTally() {
     : `<li class="muted">${f ? 'Keine passende Art.' : 'Keine Arten für diesen Quadranten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.'}</li>`;
   $('tallyHead').innerHTML = rows.length ? `<b>${f ? 'Treffer' : 'Arten für ' + here.id}</b> (${rows.length}), gerade beobachtbare zuerst` : '';
   const cnt = k => today.filter(e => e.st === k).length;
+  $('tallyFoldInfo').textContent = today.length ? `${today.length} gestrichen` : '';
   $('tallySum').textContent = today.length ? `Heute in ${here.id}: ${today.length} ${today.length === 1 ? 'Art' : 'Arten'} gestrichen, davon ${cnt('new')} neu und ${cnt('due')} wieder fällig.` : '';
   // Begleitarten: was zu den heute gestrichenen Arten oft dazugehört und noch fehlt
   const score = new Map(), hits = new Map();
@@ -2095,6 +2104,12 @@ function renderTally() {
   $('view-day').querySelectorAll('li.tally').forEach(x => x.onclick = () => tallyToggle(x.dataset.s));
 }
 $('tallyFilter').addEventListener('input', renderTally);
+// Ein- und Ausklappen merken
+for (const id of ['foldTally', 'foldDay']) {
+  const el = $(id), k = 'fold-' + id;
+  try { if (localStorage.getItem(k) === '0') el.open = false; } catch {}
+  el.addEventListener('toggle', () => { try { localStorage.setItem(k, el.open ? '1' : '0'); } catch {} });
+}
 $('tallyAll').checked = !!store.get('tallyAll', false);
 $('tallyAll').onchange = () => { store.set('tallyAll', $('tallyAll').checked); renderTally(); };
 
