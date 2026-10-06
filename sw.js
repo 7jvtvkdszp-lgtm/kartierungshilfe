@@ -1,5 +1,5 @@
 // Offline-Cache für die App-Dateien. Bei jeder Änderung an der App VERSION erhöhen.
-const VERSION = 'kh-43';
+const VERSION = 'kh-44';
 const TILES = 'kh-tiles'; // Kartenkacheln, bleibt über Versionen hinweg erhalten
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 const LIBS = [

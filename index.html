@@ -247,6 +247,17 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
   <section id="view-list" class="view" hidden>
     <div style="display:flex;flex-direction:column;gap:12px">
+      <details class="panel fold" id="fold-list-freq">
+        <summary><h2>Häufigkeit in Österreich</h2></summary>
+        <p class="small muted" style="margin:0">Alle Arten einer Häufigkeitsklasse, unabhängig vom Quadranten. Entfernung von deinem Standort zum nächsten Quadranten mit Funden.</p>
+        <div class="row small">
+          <select class="field" id="freqSel" style="flex:0 0 auto;width:auto"><option value="10">H10 (am seltensten)</option><option value="9">H9</option><option value="8">H8</option><option value="7">H7</option><option value="6">H6</option><option value="5">H5</option><option value="4">H4</option><option value="3">H3</option><option value="2">H2</option><option value="1">H1 (am häufigsten)</option></select>
+          <label class="row small" style="gap:6px"><input type="checkbox" id="freqLifer"> Nur Lifer</label>
+        </div>
+        <div class="small" id="freqTitle"></div>
+        <input class="field" id="freqFilter" placeholder="Liste filtern" autocomplete="off">
+        <ul class="list" id="freqList"></ul>
+      </details>
       <div class="panel">
         <h2>Umgebung <span class="muted small">deine Arten / alle auf iNaturalist, tippen zum Wechseln</span></h2>
         <div class="grid3" id="grid3"></div>
@@ -270,17 +281,6 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <input class="field" id="listFilter" placeholder="Liste filtern" autocomplete="off">
         <ul class="list" id="speciesList"></ul>
       </div>
-      <details class="panel fold" id="fold-list-freq">
-        <summary><h2>Häufigkeit in Österreich</h2></summary>
-        <p class="small muted" style="margin:0">Alle Arten einer Häufigkeitsklasse, unabhängig vom Quadranten. Entfernung von deinem Standort zum nächsten Quadranten mit Funden.</p>
-        <div class="row small">
-          <select class="field" id="freqSel" style="flex:0 0 auto;width:auto"><option value="10">H10 (am seltensten)</option><option value="9">H9</option><option value="8">H8</option><option value="7">H7</option><option value="6">H6</option><option value="5">H5</option><option value="4">H4</option><option value="3">H3</option><option value="2">H2</option><option value="1">H1 (am häufigsten)</option></select>
-          <label class="row small" style="gap:6px"><input type="checkbox" id="freqLifer"> Nur Lifer</label>
-        </div>
-        <div class="small" id="freqTitle"></div>
-        <input class="field" id="freqFilter" placeholder="Liste filtern" autocomplete="off">
-        <ul class="list" id="freqList"></ul>
-      </details>
     </div>
   </section>
 
@@ -446,7 +446,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 43</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 44</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
