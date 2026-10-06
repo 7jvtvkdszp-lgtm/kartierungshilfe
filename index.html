@@ -444,7 +444,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 39</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 40</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2377,7 +2377,7 @@ async function loadRl() {
   }
   try { const raw = await kv.get('rl'); if (raw) { rl = prepRl(raw); if (atlas) assignFreq(atlas.sp); renderList(); if (current) showResult(current); } } catch {}
   const age = rl ? Date.now() - new Date(store.get('rlChecked', 0)) : Infinity;
-  if (!navigator.onLine || age < 7 * 864e5) return;
+  if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
   try {
     const r = await fetch('rl.json', { cache: 'no-cache' });
     if (!r.ok) return;
@@ -2557,7 +2557,7 @@ function fixPheno(raw) {
 async function loadPheno() {
   try { const raw = await kv.get('pheno'); if (raw) { pheno = fixPheno(raw); renderLifeTargets(); } } catch {}
   const age = pheno ? Date.now() - new Date(store.get('phenoChecked', 0)) : Infinity;
-  if (!navigator.onLine || age < 7 * 864e5) return;
+  if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
   try {
     const r = await fetch('pheno.json', { cache: 'no-cache' });
     if (!r.ok) return;
@@ -2692,7 +2692,7 @@ function prepAtlas(raw) {
 async function loadAtlas() {
   try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); } } catch {}
   const age = atlas ? Date.now() - new Date(store.get('atlasChecked', 0)) : Infinity;
-  if (!navigator.onLine || age < 7 * 864e5) return;
+  if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
   try {
     const r = await fetch('atlas.json', { cache: 'no-cache' });
     if (!r.ok) return;
