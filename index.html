@@ -260,9 +260,9 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button role="tab" id="mode-exp" aria-selected="false">Erwartet</button>
         </div>
         <div id="missOpts" hidden style="display:flex;flex-direction:column;gap:8px">
-          <label class="row small"><input type="checkbox" id="onlySeason"> Nur Arten, die in der Umgebung in diesem Monat beobachtet wurden</label>
-          <label class="row small"><input type="checkbox" id="onlyLif"> Nur Lifer</label>
-          <label class="row small"><input type="checkbox" id="onlyRed"> Nur gefährdete Arten</label>
+          <label class="row small"><input type="checkbox" id="onlySeason"> Nur Arten, die in der Umgebung in diesem Monat beobachtet wurden <span class="muted num" id="cntSeason"></span></label>
+          <label class="row small"><input type="checkbox" id="onlyLif"> Nur Lifer <span class="muted num" id="cntLif"></span></label>
+          <label class="row small"><input type="checkbox" id="onlyRed"> Nur gefährdete Arten <span class="muted num" id="cntRed"></span></label>
           <p class="small muted" style="margin:0" id="missHelp"></p>
         </div>
         <input class="field" id="listFilter" placeholder="Liste filtern" autocomplete="off">
@@ -444,7 +444,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 38</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 39</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -794,7 +794,7 @@ function dist(a, o) {
 const NB = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 const AREA_MAX = 1500, AREA_MAX_AGE = 30 * 864e5;
 // Fundpunkte aller Nutzer im gewählten Quadranten (iNaturalist, ohne verschleierte), für „nächster Fundpunkt in km“
-let pts = {}; // { Quadrant: { t, sp: { Art: [[lat, lon], …] } } }
+let ptsV1 = false, pts = {}; // { Quadrant: { t, sp: { Art: [[lat, lon], …] } } }
 async function loadPts(Q, force) {
   const old = pts[Q.id];
   if (!force && old && Date.now() - new Date(old.t) < AREA_MAX_AGE) return;
@@ -803,7 +803,8 @@ async function loadPts(Q, force) {
   for (let page = 0; page < 20; page++) {
     const p = new URLSearchParams({ swlat: b.s, swlng: b.w, nelat: b.n, nelng: b.e, verifiable: 'true', per_page: '200', order_by: 'id', order: 'asc', id_above: String(idAbove), fields: 'id,location,obscured,taxon.name,taxon.rank_level' });
     taxFilter(p);
-    const r = await fetch('https://api.inaturalist.org/v2/observations?' + p);
+    let r = ptsV1 ? null : await fetch('https://api.inaturalist.org/v2/observations?' + p).catch(() => null);
+    if (!r || !r.ok) { ptsV1 = true; p.delete('fields'); r = await fetch('https://api.inaturalist.org/v1/observations?' + p); } // Ersatz, falls v2 die Feldauswahl ablehnt
     if (!r.ok) throw new Error('iNaturalist antwortet mit Fehler ' + r.status + '.');
     const j = await r.json();
     for (const o of j.results) {
@@ -855,9 +856,11 @@ async function refreshSeasonal(Q) {
   if (seasonBusy) return;
   const had = !!seasonSet(Q) && !!endingMap(Q);
   seasonBusy = true;
+  const hadPts = !!pts[Q.id];
   try { await loadSeason(Q); await sleep(1100); await loadEnding(Q); } catch { /* ohne Empfang später */ }
+  try { await loadPts(Q); } catch { /* ohne Empfang später */ }
   finally { seasonBusy = false; }
-  if (!had && here === Q) { renderList(); if (current) showResult(current); }
+  if ((!had || !hadPts) && here === Q) { renderList(); if (current) showResult(current); }
 }
 async function loadArea(force) {
   if (!here || areaBusy) return;
@@ -978,13 +981,14 @@ function renderList() {
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []); // nur der gewählte Quadrant
     const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked, onlyLif = $('onlyLif').checked;
-    const ref = refPos(), nq = nearestFinder();
+    const ref = refPos();
+    filterCounts([...cand].filter(s => !mine.has(s) && match(s)), sea);
     const rows = [...cand].filter(s => !mine.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)) && (!onlyLif || isLifer(s)))
-      .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s), pt: nearestPt(s, here, ref), near: nq(s, ref) }))
-      .sort((x, y) => (y.lif - x.lif) || (y.now - x.now) || y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+      .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s), pt: nearestPt(s, here, ref) }))
+      .sort((x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : nearTxt(r.near)}</span></span></li>`).join('')
+      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : navigator.onLine ? 'Fundpunkte werden geladen …' : 'Fundpunkte mit Empfang laden'}</span></span></li>`).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => openFromList(li.dataset.s));
@@ -1999,9 +2003,15 @@ function expectedIn(Q, all) {
     .sort((a, b) => b.n - a.n || a.f - b.f || a.s.localeCompare(b.s));
   return { known: nbs.length, need, rows };
 }
+function filterCounts(names, sea) {
+  let a = 0, b = 0, c = 0;
+  for (const s of names) { if (sea && sea.has(s)) a++; if (isLifer(s)) b++; if (isRed(s)) c++; }
+  $('cntSeason').textContent = sea ? `(${a})` : '(noch keine Saisondaten)'; $('cntLif').textContent = `(${b})`; $('cntRed').textContent = `(${c})`;
+}
 function renderExpected(ul, match) {
   const { known, rows: all } = expectedIn(here, true);
   const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked, onlyLif = $('onlyLif').checked;
+  filterCounts(all.filter(r => match(r.s)).map(r => r.s), sea);
   const rows = all.filter(r => match(r.s) && (!onlySea || sea.has(r.s)) && (!onlyRed || isRed(r.s)) && (!onlyLif || r.lif));
   $('listTitle').textContent = `Erwartet in ${here.id} (${rows.length})`;
   if (known < 4) { ul.innerHTML = '<li class="muted">Zu wenige Nachbarquadranten mit Daten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.</li>'; return; }

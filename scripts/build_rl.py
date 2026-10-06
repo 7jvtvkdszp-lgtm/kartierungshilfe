@@ -21,8 +21,23 @@ def key(name):
     p = n.split()
     return ' '.join(p[:3]) if len(p) > 2 and p[1] == '×' else ' '.join(p[:2])
 
+LEAST = ['LC', 'NT', 'G', 'DD', 'VU', 'EN', 'CR', 'RE?', 'RE', 'n', '?', '']  # geringste Gefährdung zuerst
+NAT = ['●', 'LC', 'NT', 'G', 'DD', 'VU', 'EN', 'CR', 'RE?', 'RE', 'n', 'f', '?', '0', '']  # Naturraum: vorhanden/ungefährdet zuerst
 def worst(vals): return min(vals, key=lambda v: ORDER.index(v) if v in ORDER else len(ORDER))
 def best(vals): return min(vals, key=lambda v: PRES.index(v) if v in PRES else 8)
+def least(vals):  # Gefährdung einer Art aus mehreren Taxa: die am wenigsten gefährdete Sippe zählt
+    return min(vals, key=lambda v: LEAST.index(v) if v in LEAST else len(LEAST) - 1)
+def nat_best(vals):  # Naturraum: vorhanden schlägt gefährdet schlägt fehlend
+    def rank(v):
+        k = v.replace('*', '').split(',')[0].strip()
+        return NAT.index(k) if k in NAT else len(NAT) - 2
+    return min(vals, key=rank)
+def combine(rows):
+    """Mehrere Taxa der Roten Liste zu einer Art: Vorkommen je Region vereinigt, Gefährdung der am wenigsten gefährdeten Sippe.
+    Früher galt hier die stärkste Gefährdung und "" (fehlt) als Kategorie, darum standen etwa bei Bromus hordeaceus die
+    Naturräume leer ("neu für AL") und die Art galt als gefährdet."""
+    cats = [r[2] for r in rows if r[2]]
+    return (least(cats) if cats else '', [nat_best([r[3][i] for r in rows]) for i in range(5)], [best([r[4][i] for r in rows]) for i in range(10)])
 
 def species_rows(src):
     groups = {}
@@ -35,10 +50,8 @@ def species_rows(src):
         if exact:
             r = exact[0]; out[k] = [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], 0, [key(x) for x in r[8]]]
         else:  # nur Unterarten oder Varietäten
-            cats = [r[2] for r in rs if r[2]]
-            out[k] = [k, '', worst(cats) if cats else '',
-                      [worst([r[3][i] for r in rs if r[3][i] in ORDER] or [best([r[3][i] for r in rs])]) for i in range(5)],
-                      [best([r[4][i] for r in rs]) for i in range(10)], next((r[5] for r in rs if r[5]), ''), next((r[6] for r in rs if r[6]), ''), rs[0][7], 1, []]
+            c, nat, bl = combine(rs)
+            out[k] = [k, '', c, nat, bl, next((r[5] for r in rs if r[5]), ''), next((r[6] for r in rs if r[6]), ''), rs[0][7], 1, []]
     return out
 
 def inat_species(name, cache):
@@ -111,13 +124,19 @@ def main():
             if name: break
             if o != k: name = inat_species(o, cache)
         if not name: miss.append(k); name = k  # unter dem Namen der Roten Liste behalten
+        # mehrere RL-Taxa auf eine iNat-Art (iNat fasst z. B. Dactylorhiza cruenta zu D. incarnata, Empetrum hermaphroditum
+        # zu E. nigrum): Vorkommen vereinigt, Gefährdung der am wenigsten gefährdeten Sippe; Name des genau passenden Taxons
+        exact = key(r[0]) == name
         prev = rows.get(name)
-        if prev and ORDER.index(prev[3]) <= ORDER.index(r[2] if r[2] in ORDER else ''): continue  # zwei RL-Taxa auf eine iNat-Art: stärkere Gefährdung gewinnt
-        rows[name] = [name, r[0], r[1], r[2], '|'.join(r[3]), '|'.join(r[4]), r[5], r[6], r[7], r[8]]
+        if prev:
+            c, nat, bl = combine([prev[0], r]); base = r if exact and not prev[1] else prev[0]
+            r = [base[0], base[1], c, nat, bl] + base[5:]; exact = exact or prev[1]
+        rows[name] = (r, exact)
         if n % 200 == 0:
             print(f'Namen {n + 1}/{len(sp)}', file=sys.stderr)
             json.dump(cache, open(CACHE, 'w'), ensure_ascii=False, indent=0, sort_keys=True)
     json.dump(cache, open(CACHE, 'w'), ensure_ascii=False, indent=0, sort_keys=True)
+    rows = {name: [name, r[0], r[1], r[2], '|'.join(r[3]), '|'.join(r[4]), r[5], r[6], r[7], r[8]] for name, (r, _) in rows.items()}
     print(f'{len(rows)} Arten zugeordnet, {len(miss)} ohne iNat-Treffer: {", ".join(miss[:40])}', file=sys.stderr)
     out = {'v': 1, 't': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%MZ'), 'quelle': src['quelle'],
            'nat': src['nat'], 'bl': src['bl'], 'q': quad_states(), 's': sorted(rows.values()), 'miss': miss}
