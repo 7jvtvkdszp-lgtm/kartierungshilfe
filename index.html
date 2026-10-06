@@ -444,7 +444,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 41</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 42</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2307,20 +2307,23 @@ const blOf = Q => rl && Q ? rl.q[Q.id] || [] : [];
 var natQ = null; // Naturräume je Quadrant (naturraum.json, aus der Karte in der Roten Liste)
 const natOf = Q => natQ && Q && natQ[Q.id] ? natQ[Q.id].split(',') : [];
 // Eintrag der Art in den Naturräumen des Quadranten; 'new': dort nicht angegeben, obwohl die Art anderswo in Österreich heimisch ist
+const strict = r => /s\.\s?str\./.test(r.rn || '');
 function natStatus(s, Q) {
   const r = rlOf(s), codes = natOf(Q);
   if (!r || !codes.length || r.c === 'n') return null;
   const vals = codes.map(c => (r.nat[rl.natCodes.indexOf(c)] || '').replace(/\*/g, ''));
   const cats = codes.map((c, i) => [c, vals[i]]).filter(([, v]) => RL_THREAT.has(v) || v === 'NT');
   const native = r.nat.some(v => v && v !== '?' && v !== 'n' && v !== 'f');
-  return { codes, vals, cats, newCodes: native ? codes.filter((c, i) => !vals[i] || vals[i] === '?') : [] };
+  // „neu“ nur, wo die Rote Liste die Art gar nicht angibt; „?“ (fraglich) zählt nicht. Bei Taxa „s. str.“ meint der iNat-Name
+  // meist das ganze Aggregat (z. B. Festuca ovina, Utricularia vulgaris), dann ist „neu“ nicht aussagekräftig.
+  return { codes, vals, cats, newCodes: native && !strict(r) ? codes.filter((c, i) => !vals[i]) : [] };
 }
 // Status der Art je Bundesland des Quadranten: dort nicht angegeben (fehlt, fraglich, irrig) oder verschollen
 function blStatus(s, Q) {
   const r = rlOf(s), codes = blOf(Q);
   if (!r || !codes.length) return null;
   const val = c => (r.bl[c] || '').replace(/\*/g, '');
-  const missing = codes.filter(c => /^(\?|–|)$/.test(val(c))), lost = codes.filter(c => val(c).startsWith('†') && !/(u|e)/.test(val(c)));
+  const missing = strict(r) ? [] : codes.filter(c => /^(–|)$/.test(val(c))), lost = codes.filter(c => val(c).startsWith('†') && !/(u|e)/.test(val(c)));
   return missing.length || lost.length ? { missing, lost, val } : null;
 }
 function blChip(s) {
