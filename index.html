@@ -154,6 +154,8 @@ details.fold > summary h2 { margin: 0 }
 details.fold > summary h2::before { content: '▾ '; color: var(--muted) }
 details.fold:not([open]) > summary h2::before { content: '▸ ' }
 .chip.blnew { background: #0e7490; color: #fff }
+.chip.neo { background: #78350f; color: #fff }
+.chip.norl { background: transparent; color: var(--muted); border: 1px dashed var(--muted) }
 .chip.blre { background: #0e7490; color: #fff; outline: 2px dashed #f59e0b }
 .chip.endem { border: 1px solid #0e7490; color: #0e7490 }
 details.lz { width: 100% }
@@ -444,7 +446,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 42</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 43</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -728,7 +730,7 @@ function showResult(cur) {
   const all = index.bySp.get(cur.s) || [];
   const inQ = all.filter(o => o.k === here.id);
   const exact = inQ.filter(o => !o.x), fuzzy = inQ.filter(o => o.x);
-  const taxon = `<div class="taxon"><i>${esc(cur.s)}</i>${cur.c ? ' · ' + esc(cur.c) : ''}${!all.length && cur.s.includes(' ') ? ' <span class="chip lifer">Lifer</span>' : ''}</div>`;
+  const taxon = `<div class="taxon"><i>${esc(cur.s)}</i>${cur.c ? ' · ' + esc(cur.c) : ''}${!all.length && cur.s.includes(' ') ? ' <span class="chip lifer">Lifer</span>' : ''}${isNeo(cur.s) ? ' <span class="chip neo">Neophyt</span>' : rl && !rlOf(cur.s) && cur.s.includes(' ') ? ' <span class="chip norl">nicht RL</span>' : ''}</div>`;
   const b = quadBounds(here);
   if (exact.length) {
     const last = exact.map(o => o.d).sort().pop();
@@ -2334,9 +2336,12 @@ function blChip(s) {
   if (ns && ns.newCodes.length) out.push(`<span class="chip blnew">neu für ${ns.newCodes.join('/')}</span>`);
   return out.join('');
 }
+// Kennzeichen für alle Arten (Wunsch von Thomas): Neophyt laut Roter Liste (Kategorie n) und nicht in der Roten Liste geführt
+const isNeo = s => { const r = rlOf(s); return !!r && /(^|,)\s*n$/.test(r.c); };
 function rlChip(s) {
   const r = rlOf(s);
-  if (!r) return !rl && redSet.has(s) ? '<span class="chip rl">RL</span>' : '';
+  if (!r) return rl ? (s.includes(' ') ? '<span class="chip norl" title="nicht in der Roten Liste Österreichs geführt">nicht RL</span>' : '') : redSet.has(s) ? '<span class="chip rl">RL</span>' : '';
+  if (isNeo(s)) return '<span class="chip neo" title="eingebürgerter Neophyt laut Roter Liste">Neophyt</span>';
   const va = r.va === 'E' ? '<span class="chip endem">Endemit</span>' : r.va === 'S' ? '<span class="chip endem">Subendemit</span>' : '';
   // im Naturraum des Quadranten stärker gefährdet: diese Stufe zeigen
   const ns = here && natStatus(s, here), reg = ns && ns.cats.length ? ns.cats.reduce((a, b) => RL_ORDER.indexOf(b[1]) < RL_ORDER.indexOf(a[1]) ? b : a) : null;
@@ -2346,11 +2351,11 @@ function rlChip(s) {
 function rlLines(s) {
   const r = rlOf(s), out = [];
   if (!r) {
-    if (s.includes(' ')) out.push('Nicht in der Roten Liste Österreichs gefunden. Entweder führt sie die Art unter einem anderen Namen, oder sie wäre neu für Österreich.');
+    if (s.includes(' ')) out.push('<span class="chip norl">nicht RL</span> Nicht in der Roten Liste Österreichs gefunden. Entweder führt sie die Art unter einem anderen Namen, oder sie wäre neu für Österreich.');
     return out;
   }
-  const name = r.rn !== s ? ` (dort als <i>${esc(r.rn)}</i>${r.sub ? ', nach Unterarten' : ''})` : r.sub ? ' (dort nach Unterarten eingestuft, hier die stärkste Stufe)' : '';
-  out.push(`<span class="chip rl">RL ${esc(r.c || '–')}</span> Rote Liste Österreich: ${RL_TEXT[r.c] || 'nicht eingestuft'}${name}.`);
+  const name = r.rn !== s ? ` (dort als <i>${esc(r.rn)}</i>${r.sub ? ', nach Unterarten' : ''})` : r.sub ? ' (dort nach Unterarten eingestuft, hier die am wenigsten gefährdete)' : '';
+  out.push(`${isNeo(s) ? '<span class="chip neo">Neophyt</span>' : `<span class="chip rl">RL ${esc(r.c || '–')}</span>`} Rote Liste Österreich: ${RL_TEXT[r.c] || 'nicht eingestuft'}${name}.`);
   const ns = here && natStatus(s, here);
   if (ns) {
     const where = ns.codes.map(c => NAT_NAME[c]).join(' bzw. ');
