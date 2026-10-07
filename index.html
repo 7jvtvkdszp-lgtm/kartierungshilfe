@@ -159,6 +159,14 @@ details.fold:not([open]) > summary h2::before { content: '▸ ' }
 .chip.neo { background: #78350f; color: #fff }
 .list li .thumb { flex: 0 0 40px; width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: var(--line); align-self: center; border: 0; padding: 0 }
 .list li .thumb.none { visibility: hidden }
+.list li.sp, .list li > details > summary.sp { display: flex; gap: 10px; align-items: flex-start; justify-content: flex-start }
+.list .spb { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0 }
+.list .spb .sci, .list .spb .cn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.list .spb .meta { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums }
+.list .spb .chips { justify-content: flex-start; margin-top: 2px }
+.list li.sp .thumb, .list summary.sp .thumb { align-self: flex-start; margin-top: 2px }
+.list summary.sp { font-weight: 400; cursor: pointer }
+.list summary.sp .sci { font-style: italic }
 #photoBig { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 16px }
 #photoBig img { max-width: 100%; max-height: 80vh; border-radius: 10px }
 #photoBig div { color: #fff; text-align: center; margin-top: 10px }
@@ -169,7 +177,8 @@ details.lz { width: 100% }
 details.lz > summary { list-style: none; display: flex; justify-content: space-between; gap: 10px; cursor: pointer }
 details.lz > summary::-webkit-details-marker { display: none }
 details.lz .lzbody { padding: 6px 0 2px; display: flex; flex-direction: column; gap: 6px }
-.clearwrap { position: relative; flex: 1 1 200px; min-width: 0 }
+.clearwrap { position: relative; min-width: 0 }
+.row > .clearwrap { flex: 1 1 200px }
 .clearwrap .field { padding-right: 46px }
 .clearx { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer }
 .clearwrap .field:placeholder-shown + .clearx { display: none }
@@ -454,7 +463,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 45</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 46</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -803,6 +812,13 @@ function dist(a, o) {
 // ---------- iNaturalist-Daten aller Nutzer je Quadrant ----------
 const NB = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 const AREA_MAX = 1500, AREA_MAX_AGE = 30 * 864e5;
+// Einheitliche Artenzeile (Wunsch von Thomas): links Foto, daneben untereinander wissenschaftlicher Name, deutscher Name
+// (beide ohne Umbruch), eine Zeile Angaben, darunter die Chips
+function spBody(s, meta, chips) {
+  const cn = commonName(s);
+  return `<img class="thumb" alt="" data-s="${esc(s)}"><span class="spb"><span class="sci">${esc(s)}</span>${cn ? `<span class="cn">${esc(cn)}</span>` : ''}${meta ? `<span class="meta">${meta}</span>` : ''}${chips ? `<span class="chips">${chips}</span>` : ''}</span>`;
+}
+const spRow = (s, meta, chips, cls = '') => `<li class="tap sp ${cls}" data-s="${esc(s)}">${spBody(s, meta, chips)}</li>`;
 // ---------- Kleine Artfotos (iNaturalist-Standardfoto) in allen Artenlisten, beim Scrollen nachgeladen, antippen = groß ----------
 let photos = {}; // { Art: Adresse des quadratischen Fotos | '' (keins) }
 const photoQueue = new Set(); let photoBusy = false, photoSaveT = null;
@@ -830,9 +846,10 @@ const thumbObs = 'IntersectionObserver' in window ? new IntersectionObserver(es 
   for (const e of es) if (e.isIntersecting) { thumbObs.unobserve(e.target); const sp = e.target.dataset.s; if (!(sp in photos)) { photoQueue.add(sp); photoWorker(); } }
 }, { rootMargin: '300px' }) : null;
 function addThumbs(root) {
+  root.querySelectorAll('img.thumb:not([data-seen])').forEach(img => { img.dataset.seen = 1; setThumb(img); if (!photos[img.dataset.s] && thumbObs) thumbObs.observe(img); });
   root.querySelectorAll('li.tap[data-s]').forEach(li => {
-    if (li.querySelector(':scope > img.thumb') || !li.dataset.s.includes(' ')) return;
-    const img = document.createElement('img'); img.className = 'thumb'; img.alt = ''; img.loading = 'lazy'; img.dataset.s = li.dataset.s;
+    if (li.querySelector('img.thumb') || !li.dataset.s.includes(' ')) return;
+    const img = document.createElement('img'); img.className = 'thumb'; img.alt = ''; img.loading = 'lazy'; img.dataset.s = li.dataset.s; img.dataset.seen = 1;
     li.prepend(img); setThumb(img);
     if (!photos[li.dataset.s] && thumbObs) thumbObs.observe(img);
   });
@@ -1034,7 +1051,7 @@ function renderList() {
     ul.innerHTML = rows.length ? rows.map(([s, os]) => {
       const last = os.map(o => o.d).sort().pop(); const onlyX = false;
       const st = quadStatus(s);
-      return `<li class="tap ${st ? st.cls : ''}" data-s="${esc(s)}"><span><span class="sci">${esc(s)}</span>${rlChip(s)} ${freqChip(s)}${commonName(s) ? `<br><span class="cn">${esc(commonName(s))}</span>` : ''}${onlyX ? '<br><span class="cn">nur verschleierte Koordinaten</span>' : ''}</span><span class="d">${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? '<br><span class="due">wieder fällig</span>' : ''}</span></li>`;
+      return spRow(s, `${os.length}× · ${fmtDate(last)}${st && st.cls === 'due' ? ' · <span class="due">wieder fällig</span>' : ''}${onlyX ? ' · nur verschleierte Koordinaten' : ''}`, rlChip(s) + freqChip(s), st ? st.cls : '');
     }).join('') : `<li class="muted">${own.length ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else if (listMode === 'exp') {
     renderExpected(ul, match);
@@ -1049,7 +1066,8 @@ function renderList() {
         : (x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
     $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span></span><span class="d">${r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : navigator.onLine ? 'Fundpunkte werden geladen …' : 'Fundpunkte mit Empfang laden'}</span></span></li>`).join('')
+      : rows.length ? rows.map(r => spRow(r.s, r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : navigator.onLine ? 'Fundpunkte werden geladen …' : 'Fundpunkte mit Empfang laden',
+          `${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span>`)).join('')
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts gemeldet.'}</li>`;
   }
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => openFromList(li.dataset.s));
@@ -2078,7 +2096,8 @@ function renderExpected(ul, match) {
   const rows = all.filter(r => match(r.s) && (!onlySea || sea.has(r.s)) && (!onlyRed || isRed(r.s)) && (!onlyLif || r.lif));
   $('listTitle').textContent = `Erwartet in ${here.id} (${rows.length})`;
   if (known < 4) { ul.innerHTML = '<li class="muted">Zu wenige Nachbarquadranten mit Daten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.</li>'; return; }
-  ul.innerHTML = rows.length ? rows.slice(0, 400).map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${sea && sea.has(r.s) ? '<span class="chip season">jetzt</span>' : ''}${freqChip(r.s)}<span class="chip ${r.n >= 5 ? 'ok' : r.n >= 3 ? 'due' : 'unsure'} num">${r.n}/8</span></span></span></li>`).join('')
+  ul.innerHTML = rows.length ? rows.slice(0, 400).map(r => spRow(r.s, `in <b>${r.n}/8</b> Nachbarquadranten bekannt`,
+      `${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${sea && sea.has(r.s) ? '<span class="chip season">jetzt</span>' : ''}${freqChip(r.s)}`)).join('')
     + (rows.length > 400 ? `<li class="muted small">… und ${rows.length - 400} weitere. Filtere oben nach dem Namen.</li>` : '')
     : '<li class="muted">Keine Arten für diesen Filter.</li>';
 }
@@ -2593,14 +2612,19 @@ function renderLifeTargets() {
   const ref = here ? (here.lat != null ? { lat: here.lat, lon: here.lon } : (() => { const b = quadBounds(here); return { lat: (b.n + b.s) / 2, lon: (b.w + b.e) / 2 }; })()) : null;
   const now = halfNow();
   let rows = Object.keys(pheno.s).filter(s => s.includes(' ') && isLifer(s)).map(s => ({ s, p: phenoOf(s) })).filter(r => r.p.tot >= 3);
-  if (lzSort === 't') rows.sort((a, b) => ((a.p.peak - now + 24) % 24) - ((b.p.peak - now + 24) % 24) || b.p.tot - a.p.tot);
-  else rows.sort((a, b) => b.p.tot - a.p.tot);
+  if (lzSort === 't') {
+    // nach Zeitfenster, innerhalb desselben Halbmonats die nächstgelegene Art zuerst
+    rows.sort((a, b) => ((a.p.peak - now + 24) % 24) - ((b.p.peak - now + 24) % 24) || b.p.tot - a.p.tot);
+    rows = rows.slice(0, 60);
+    for (const r of rows) r.nq = nearestQuad(r.s, ref);
+    rows.sort((a, b) => ((a.p.peak - now + 24) % 24) - ((b.p.peak - now + 24) % 24) || (a.nq ? a.nq.d : 1e12) - (b.nq ? b.nq.d : 1e12));
+  } else rows.sort((a, b) => b.p.tot - a.p.tot);
   rows = rows.slice(0, 25);
   $('lzStatus').textContent = `${Object.keys(pheno.s).filter(s => s.includes(' ') && isLifer(s)).length} Lifer mit Meldungen in Österreich. Stand der Daten: ${fmtDate(pheno.t.slice(0, 10))}.${ref ? '' : ' Für Entfernungen erst die Position bestimmen.'}`;
   ul.innerHTML = rows.map((r, i) => {
-    const nq = nearestQuad(r.s, ref), comp = nq ? companionsAt(r.s, nq.Q, r.p) : [];
+    const nq = r.nq !== undefined ? r.nq : nearestQuad(r.s, ref), comp = nq ? companionsAt(r.s, nq.Q, r.p) : [];
     const soon = (r.p.peak - now + 24) % 24;
-    return `<li><details class="lz" data-i="${i}"><summary><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${rlChip(r.s)}<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span></span><span class="d">${r.p.tot} Meldungen${nq ? ` · ${km(nq.d)}` : ''}</span></span></summary>
+    return `<li><details class="lz" data-i="${i}"><summary class="sp">${spBody(r.s, `${r.p.tot} Meldungen${nq ? ` · nächster Fund ${km(nq.d)}` : ''}`, `<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span>${rlChip(r.s)}`)}</summary>
       <div class="lzbody small">
         <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}, mit ${Math.round(100 * r.p.max / r.p.tot)} % aller Meldungen des Jahres (${r.p.max} von ${r.p.tot}). Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
         ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : `<div>${atlas ? 'In den Österreich-Daten kein Quadrant mit Funden.' : 'Die Österreich-Daten sind noch nicht geladen, darum fehlt der nächste Quadrant hier.'}</div>`}
@@ -2659,7 +2683,8 @@ function renderFreq() {
   }
   rows.sort((a, c) => (a.near ? a.near.d : 1e12) - (c.near ? c.near.d : 1e12) || a.s.localeCompare(c.s));
   $('freqTitle').textContent = `H${k}: ${rows.length} Arten${onlyLif ? ' (nur Lifer)' : ''}${ref ? ', nächstgelegene zuerst' : ''}`;
-  ul.innerHTML = (rows.length ? rows.slice(0, 300).map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? `<br><span class="cn">${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${rlChip(r.s)}${r.near ? `<span class="chip ok num">${r.near.d === 0 ? 'hier' : km(r.near.d)}</span>` : ''}</span><span class="d">${r.near ? 'nächster: ' + r.near.id + ' · ' : ''}in ${r.k} Quadr.</span></span></li>`).join('')
+  ul.innerHTML = (rows.length ? rows.slice(0, 300).map(r => spRow(r.s, `${r.near ? `${r.near.d === 0 ? 'hier' : km(r.near.d)} · nächster: ${r.near.id} · ` : ''}in ${r.k} Quadr.`,
+      `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${rlChip(r.s)}`)).join('')
     + (rows.length > 300 ? `<li class="muted small">… und ${rows.length - 300} weitere. Filtere oben nach dem Namen.</li>` : '')
     : '<li class="muted">Keine Arten in dieser Klasse für den Filter.</li>');
   ul.querySelectorAll('li.tap').forEach(li => li.onclick = () => openFromList(li.dataset.s));
