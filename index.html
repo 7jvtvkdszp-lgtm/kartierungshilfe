@@ -145,6 +145,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .mbars .best { font-weight: 700 }
 details.ly summary { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); cursor: pointer; font-variant-numeric: tabular-nums }
 .list li.tally .tick { display: inline-block; width: 22px; height: 22px; border: 2px solid var(--line); border-radius: 6px; margin-right: 8px; vertical-align: -5px; text-align: center; line-height: 18px; font-weight: 700 }
+.list li.tally.sp .tick { flex: 0 0 22px; margin: 11px 0 0; align-self: flex-start }
 .list li.tally.on .tick { background: var(--found); border-color: var(--found); color: #fff }
 .list li.tally.on .sci { color: var(--found) }
 .comp { color: var(--accent); cursor: pointer; text-decoration: underline dotted }
@@ -463,7 +464,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 46</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 48</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -814,11 +815,11 @@ const NB = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]
 const AREA_MAX = 1500, AREA_MAX_AGE = 30 * 864e5;
 // Einheitliche Artenzeile (Wunsch von Thomas): links Foto, daneben untereinander wissenschaftlicher Name, deutscher Name
 // (beide ohne Umbruch), eine Zeile Angaben, darunter die Chips
-function spBody(s, meta, chips) {
+function spBody(s, meta, chips, pre) {
   const cn = commonName(s);
-  return `<img class="thumb" alt="" data-s="${esc(s)}"><span class="spb"><span class="sci">${esc(s)}</span>${cn ? `<span class="cn">${esc(cn)}</span>` : ''}${meta ? `<span class="meta">${meta}</span>` : ''}${chips ? `<span class="chips">${chips}</span>` : ''}</span>`;
+  return `<img class="thumb" alt="" data-s="${esc(s)}"><span class="spb">${pre ? `<span class="small muted">${pre}</span>` : ''}<span class="sci">${esc(s)}</span>${cn ? `<span class="cn">${esc(cn)}</span>` : ''}${meta ? `<span class="meta">${meta}</span>` : ''}${chips ? `<span class="chips">${chips}</span>` : ''}</span>`;
 }
-const spRow = (s, meta, chips, cls = '') => `<li class="tap sp ${cls}" data-s="${esc(s)}">${spBody(s, meta, chips)}</li>`;
+const spRow = (s, meta, chips, cls = '', pre = '') => `<li class="tap sp ${cls}" data-s="${esc(s)}">${spBody(s, meta, chips, pre)}</li>`;
 // ---------- Kleine Artfotos (iNaturalist-Standardfoto) in allen Artenlisten, beim Scrollen nachgeladen, antippen = groß ----------
 let photos = {}; // { Art: Adresse des quadratischen Fotos | '' (keins) }
 const photoQueue = new Set(); let photoBusy = false, photoSaveT = null;
@@ -2337,8 +2338,9 @@ function renderTally() {
   rows.sort((a, b) => b.on - a.on || b.now - a.now || b.pct - a.pct || a.s.localeCompare(b.s)); // Gestrichenes oben, damit der Überblick bleibt
   const ST = { new: '<span class="chip new">neu</span>', due: '<span class="chip due">fällig</span>', ok: '<span class="chip ok">kartiert</span>' };
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '';
-  const li = r => `<li class="tap tally${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span><span class="tick">${r.on ? '✓' : ''}</span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${blChip(r.s)}${rlChip(r.s)}${seaChip(r.s)}${freqChip(r.s)}</span><span class="d">${r.pct ? r.pct + ' %' : ''}</span></span></li>`;
-  ul.innerHTML = rows.length ? rows.slice(0, TALLY_MAX).map(li).join('') + (rows.length > TALLY_MAX ? `<li class="muted small">… und ${rows.length - TALLY_MAX} weitere. Tippe oben einen Namen, um sie zu finden.</li>` : '')
+  const li = (r, meta) => `<li class="tap tally sp${r.on ? ' on' : ''}" data-s="${esc(r.s)}"><span class="tick">${r.on ? '✓' : ''}</span>${spBody(r.s, meta != null ? meta : r.pct ? `Fundchance ${r.pct} %` : '',
+    `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${ST[r.st]}${blChip(r.s)}${rlChip(r.s)}${seaChip(r.s)}${freqChip(r.s)}`)}</li>`;
+  ul.innerHTML = rows.length ? rows.slice(0, TALLY_MAX).map(r => li(r)).join('') + (rows.length > TALLY_MAX ? `<li class="muted small">… und ${rows.length - TALLY_MAX} weitere. Tippe oben einen Namen, um sie zu finden.</li>` : '')
     : `<li class="muted">${f ? 'Keine passende Art.' : 'Keine Arten für diesen Quadranten. Mit den Österreich-Daten oder nach dem Laden der Umgebung erscheint die Liste.'}</li>`;
   $('tallyHead').innerHTML = rows.length ? `<b>${f ? 'Treffer' : 'Arten für ' + here.id}</b> (${rows.length}), gerade beobachtbare zuerst` : '';
   const cnt = k => today.filter(e => e.st === k).length;
@@ -2352,7 +2354,7 @@ function renderTally() {
   }
   const comp = [...score].map(([s, sc]) => ({ s, sc, h: hits.get(s), now: sea ? (sea.has(s) ? 1 : 0) : 1 }))
     .sort((a, b) => b.now - a.now || b.h - a.h || b.sc - a.sc).slice(0, 8);
-  $('tallyComp').innerHTML = comp.length ? `<div class="small muted" style="padding-top:8px"><b>Begleitarten</b>: in Österreich oft zusammen mit deinen heutigen Strichen, hier noch offen. Antippen streicht sie.</div><ul class="list">${comp.map(r => li({ s: r.s, st: tallyStatus(r.s, here), on: false, pct: 0 }).replace('<span class="d"></span>', `<span class="d">bei ${r.h} von ${today.length}</span>`)).join('')}</ul>` : '';
+  $('tallyComp').innerHTML = comp.length ? `<div class="small muted" style="padding-top:8px"><b>Begleitarten</b>: in Österreich oft zusammen mit deinen heutigen Strichen, hier noch offen. Antippen streicht sie.</div><ul class="list">${comp.map(r => li({ s: r.s, st: tallyStatus(r.s, here), on: false, pct: 0 }, `bei ${r.h} von ${today.length}`)).join('')}</ul>` : '';
   $('view-day').querySelectorAll('li.tally').forEach(x => x.onclick = () => tallyToggle(x.dataset.s));
 }
 $('tallyFilter').addEventListener('input', renderTally);
@@ -2730,7 +2732,7 @@ function renderTips() {
     if (!old || now > old.now || (now === old.now && last < old.last)) old = { s, last, now };
   }
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '<span class="chip unsure">nicht in Saison</span>';
-  const row = (label, cls, s, detail) => s ? `<li class="tap" data-s="${esc(s)}"><span><span class="small muted">${label}</span><br><span class="sci">${esc(s)}</span>${commonName(s) ? ` <span class="cn">· ${esc(commonName(s))}</span>` : ''}</span><span class="chance"><span class="chips">${cls}${blChip(s)}${rlChip(s)}${seaChip(s)}${freqChip(s)}</span><span class="d">${detail}</span></span></li>` : '';
+  const row = (label, cls, s, detail) => s ? spRow(s, detail, `${cls}${blChip(s)}${rlChip(s)}${seaChip(s)}${freqChip(s)}`, '', label) : '';
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
@@ -2738,7 +2740,7 @@ function renderTips() {
   const end = endingMap(here);
   const last = s => (index.byQuad.get(here.id)?.get(s) || []).filter(o => !o.x).map(o => o.d).sort().pop();
   const enders = end ? [...cand].filter(s => end.has(s) && (!mine.has(s) || isDue(last(s)))).map(s => ({ s, ...chance(s, here) })).sort((a, b) => isLifer(b.s) - isLifer(a.s) || b.pct - a.pct).slice(0, 5) : [];
-  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px"><b>Jetzt oder nie</b>: im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => `<li class="tap" data-s="${esc(r.s)}"><span><span class="sci">${esc(r.s)}</span>${commonName(r.s) ? ` <span class="cn">· ${esc(commonName(r.s))}</span>` : ''}</span><span class="chance"><span class="chips">${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}</span><span class="d">Fundchance ${r.pct} %</span></span></li>`).join('') : '';
+  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px;display:block"><b>Jetzt oder nie</b>: im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => spRow(r.s, `Fundchance ${r.pct} %`, `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}`)).join('') : '';
   el.innerHTML = html || endHtml ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}${endHtml}</ul></div>` : '';
   el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); window.scrollTo(0, 0); });
 }
