@@ -1,6 +1,8 @@
 // Offline-Cache für die App-Dateien. Bei jeder Änderung an der App VERSION erhöhen.
-const VERSION = 'kh-44';
+const VERSION = 'kh-45';
 const TILES = 'kh-tiles'; // Kartenkacheln, bleibt über Versionen hinweg erhalten
+const PHOTOS = 'kh-photos'; // kleine Artfotos von iNaturalist für die Listen, ebenfalls dauerhaft
+const PHOTO_HOSTS = ['inaturalist-open-data.s3.amazonaws.com', 'static.inaturalist.org'];
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 const LIBS = [
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
@@ -14,7 +16,7 @@ self.addEventListener('install', e => {
   }).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== TILES).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== TILES && k !== PHOTOS).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
@@ -22,6 +24,17 @@ self.addEventListener('fetch', e => {
   // Kartenkacheln: zuerst aus dem Cache, sonst laden und merken
   if (TILE_HOSTS.includes(url.hostname)) {
     e.respondWith(caches.open(TILES).then(async c => {
+      const hit = await c.match(e.request.url);
+      if (hit) return hit;
+      const r = await fetch(e.request);
+      c.put(e.request.url, r.clone()).catch(() => {});
+      return r;
+    }));
+    return;
+  }
+  // Artfotos: Cache zuerst, damit die Listen offline ihre Bilder behalten
+  if (PHOTO_HOSTS.includes(url.hostname)) {
+    e.respondWith(caches.open(PHOTOS).then(async c => {
       const hit = await c.match(e.request.url);
       if (hit) return hit;
       const r = await fetch(e.request);
