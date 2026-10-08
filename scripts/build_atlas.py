@@ -4,6 +4,8 @@
   python build_atlas.py gbif   -> part_gbif.json  (GBIF, Gefäßpflanzen der letzten 20 Jahre, Namen auf iNat abgeglichen)
   python build_atlas.py rg     -> scripts/inat_rg.json (Arten mit iNat-Funden in Österreich, gesamt und mit Forschungsqualität)
   python build_atlas.py merge  -> atlas.json      (Vereinigung: Art kommt im Quadranten vor, wenn eine Quelle sie meldet)
+Beide Teile holen je Quadrant zusätzlich die Arten der letzten RECENT Jahre; was im Quadranten nur davor gemeldet
+wurde, steht im atlas.json als vierter Eintrag der Artzeile (Liste der Quadranten-Indizes) = verschollen.
   python build_atlas.py rgfilter -> atlas.json    (nur den Einzelmeldungs-Filter auf ein vorhandenes atlas.json anwenden)
 Einzelmeldungen: eine Art mit nur einer Meldung in ganz Österreich, die nur von iNaturalist kommt und dort keine
 Forschungsqualität hat, wird weggelassen (Wunsch von Thomas).
@@ -17,6 +19,7 @@ PLACE_AT = 8057
 INAT_TRACHEOPHYTA = 211194  # Gefäßpflanzen: ohne Moose, Algen (z. B. Chara, Trentepohlia)
 GBIF_TRACHEOPHYTA = 7707728  # Gefäßpflanzen, damit ohne Moose
 YEARS = 20
+RECENT = 10  # „verschollen“: im Quadranten nur vor (Jahr − RECENT) gemeldet (Wunsch von Thomas: Wiederfund-Ziele)
 LAT0, LON0 = 56.0, 5 + 40 / 60
 UA = 'Kartierungshilfe-Atlas/1.0 (github.com/7jvtvkdszp-lgtm/kartierungshilfe)'
 S, N, W, E = 46.35, 49.05, 9.5, 17.2  # Österreich grob
@@ -91,27 +94,33 @@ def cells():
 def sp_name(name, rank):
     return name if rank == 10 else ' '.join(name.split()[:2])
 
+def inat_quad(s, n, w, e, common, extra=None):
+    found, page = {}, 1
+    while True:
+        j = inat('observations/species_counts', {'place_id': PLACE_AT, 'swlat': s, 'swlng': w, 'nelat': n, 'nelng': e,
+                 'verifiable': 'true', 'taxon_id': INAT_TRACHEOPHYTA,
+                 'per_page': 500, 'page': page, 'locale': 'de', **(extra or {})})
+        for res in j['results']:
+            t = res.get('taxon') or {}
+            if not t or t.get('rank_level', 99) > 10: continue
+            name = sp_name(t['name'], t['rank_level'])
+            found[name] = found.get(name, 0) + res['count']
+            if t['rank_level'] == 10 and t.get('preferred_common_name'): common[name] = t['preferred_common_name']
+        if page * 500 >= j['total_results']: break
+        page += 1
+    return found
+
 def run_inat():
     cl, border = cells()
-    data, common = {}, {}
+    data, common, recent = {}, {}, {}
+    y0 = datetime.now(timezone.utc).year - RECENT
     for k, (r2, c2) in enumerate(cl):
         s, n, w, e = bounds(r2, c2)
-        found, page = {}, 1
-        while True:
-            j = inat('observations/species_counts', {'place_id': PLACE_AT, 'swlat': s, 'swlng': w, 'nelat': n, 'nelng': e,
-                     'verifiable': 'true', 'taxon_id': INAT_TRACHEOPHYTA,
-                     'per_page': 500, 'page': page, 'locale': 'de'})
-            for res in j['results']:
-                t = res.get('taxon') or {}
-                if not t or t.get('rank_level', 99) > 10: continue
-                name = sp_name(t['name'], t['rank_level'])
-                found[name] = found.get(name, 0) + res['count']
-                if t['rank_level'] == 10 and t.get('preferred_common_name'): common[name] = t['preferred_common_name']
-            if page * 500 >= j['total_results']: break
-            page += 1
-        data[quad_id(r2, c2)] = found
+        found = data[quad_id(r2, c2)] = inat_quad(s, n, w, e, common)
+        # nur wenn es überhaupt Funde gibt: Arten seit y0
+        if found: recent[quad_id(r2, c2)] = sorted(inat_quad(s, n, w, e, common, {'d1': f'{y0}-01-01'}))
         if k % 100 == 0: print(f'iNat {k + 1}/{len(cl)}', file=sys.stderr)
-    return {'border': border, 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common}
+    return {'border': border, 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common, 'r': recent, 'ry': y0}
 
 def name_key(n):
     return re.sub(r'×|-|\s+x\s+|\s+', '', n.lower())
@@ -133,9 +142,9 @@ def inat_name(canonical, names_cache_misc):
 
 def run_gbif():
     cl, border = cells()
-    y1 = datetime.now(timezone.utc).year; y0 = y1 - YEARS
+    y1 = datetime.now(timezone.utc).year; y0 = y1 - YEARS; yr = y1 - RECENT
     names = json.load(open(NAMES, encoding='utf-8')) if os.path.exists(NAMES) else {}
-    raw = {}
+    raw, raw_r = {}, {}
     for k, (r2, c2) in enumerate(cl):
         s, n, w, e = bounds(r2, c2)
         j = gbif('occurrence/search', {'country': 'AT', 'taxonKey': GBIF_TRACHEOPHYTA, 'year': f'{y0},{y1}',
@@ -146,6 +155,12 @@ def run_gbif():
         for f in (j or {}).get('facets', []):
             for c in f['counts']: counts[c['name']] = c['count']
         raw[quad_id(r2, c2)] = counts
+        if counts:
+            j = gbif('occurrence/search', {'country': 'AT', 'taxonKey': GBIF_TRACHEOPHYTA, 'year': f'{yr},{y1}',
+                     'hasCoordinate': 'true', 'hasGeospatialIssue': 'false', 'occurrenceStatus': 'PRESENT',
+                     'decimalLatitude': f'{s:.5f},{n:.5f}', 'decimalLongitude': f'{w:.5f},{e:.5f}',
+                     'facet': 'speciesKey', 'facetLimit': 3000, 'limit': 0})
+            raw_r[quad_id(r2, c2)] = [c['name'] for f in (j or {}).get('facets', []) for c in f['counts']]
         if k % 100 == 0: print(f'GBIF {k + 1}/{len(cl)}: {len(counts)} Arten', file=sys.stderr)
     keys = {key for c in raw.values() for key in c}
     todo = [key for key in keys if key not in names]
@@ -169,7 +184,8 @@ def run_gbif():
             found[name] = found.get(name, 0) + cnt
             if cn: common[name] = cn
         data[qid] = found
-    return {'border': border, 'years': [y0, y1], 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common}
+    recent = {qid: sorted({names.get(key, [''])[0] for key in keys} - {''}) for qid, keys in raw_r.items()}
+    return {'border': border, 'years': [y0, y1], 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common, 'r': recent, 'ry': yr}
 
 def run_rg():
     out = {}
@@ -199,7 +215,7 @@ def drop_single(species, other=None):
 
 def rg_filter():
     a = json.load(open('atlas.json', encoding='utf-8'))
-    species = {n: {occ[i]: occ[i + 1] for i in range(0, len(occ), 2)} for n, c, occ in a['s']}
+    species = {n: {occ[i]: occ[i + 1] for i in range(0, len(occ), 2)} for n, c, occ, *_ in a['s']}
     gone = set(drop_single(species))
     a['s'] = [r for r in a['s'] if r[0] not in gone]; a['drop'] = sorted(gone)
     json.dump(a, open('atlas.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
@@ -225,6 +241,10 @@ def merge():
             return out
         p['d'] = {qid: fixed(found) for qid, found in p['d'].items()}
         p['c'] = {fix(n): c for n, c in p['c'].items()}
+        if 'r' in p: p['r'] = {qid: [fix(n) for n in ns if not junk_name(n)] for qid, ns in p['r'].items()}
+    # aktuell (letzte RECENT Jahre) gemeldet: (Art, Quadrant-Index); nur wenn beide Teile die Angabe haben
+    has_recent = all('r' in p for p in parts.values())
+    recent = {(n, qi[qid]) for p in parts.values() for qid, ns in p.get('r', {}).items() if qid in qi for n in ns}
     for src, p in parts.items():
         common.update({k: v for k, v in p['c'].items() if k not in common or src == 'inat'})
         for qid, found in p['d'].items():
@@ -240,11 +260,18 @@ def merge():
         remap = {o: n for n, o in enumerate(used)}
         q = [q[i] for i in used]
         species = {s: {remap[i]: c for i, c in d.items()} for s, d in species.items()}
+        recent = {(n, remap[i]) for n, i in recent if i in remap}
+    def row(name, d):
+        r = [name, common.get(name, ''), [x for i in sorted(d) for x in (i, d[i])]]
+        old = [i for i in sorted(d) if (name, i) not in recent] if has_recent else []
+        if old: r.append(old)
+        return r
+    ry = max((p.get('ry', 0) for p in parts.values()), default=0)
     out = {'v': 2, 't': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
            'src': ['iNaturalist'] + ([f'GBIF {parts["gbif"]["years"][0]}–{parts["gbif"]["years"][1]}'] if 'gbif' in parts else []),
            'n': len(q), 'q': q,
-           's': [[name, common.get(name, ''), [x for i in sorted(d) for x in (i, d[i])]] for name, d in sorted(species.items())],
-           'drop': gone}
+           's': [row(name, d) for name, d in sorted(species.items())],
+           'drop': gone, **({'ry': ry} if has_recent else {})}
     json.dump(out, open('atlas.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(f'atlas.json: {len(q)} Quadranten, {len(species)} Arten, Quellen {out["src"]}', file=sys.stderr)
 

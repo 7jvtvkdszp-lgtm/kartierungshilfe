@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: '0 2 1 * *'   # am 1. jedes Monats
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/build_atlas.py']   # neuer Atlas, wenn sich das Skript ändert
 permissions:
   contents: write
 jobs:

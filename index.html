@@ -464,7 +464,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 48</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 49</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2731,11 +2731,27 @@ function renderTips() {
     const last = ex.map(o => o.d).sort().pop(), now = inS(s);
     if (!old || now > old.now || (now === old.now && last < old.last)) old = { s, last, now };
   }
+  // Verschollen (Wunsch von Thomas): im Quadranten bekannt, aber seit atlas.ry von niemandem mehr gemeldet. Vorrang: in Saison,
+  // dann in möglichst vielen Nachbarquadranten noch aktuell gemeldet (also plausibel noch da), dann mehr alte Meldungen
+  let lost = null, lostN = 0;
+  const oldHere = atlas && atlas.ry && atlas.oldByQuad.get(here.id);
+  if (oldHere) {
+    const ry = String(atlas.ry), spHere = spOf(here.id) || {};
+    const nbFresh = s => NB.reduce((n, [dr, dc]) => { const id = neighbour(here, dr, dc).id, sp = spOf(id); return n + (sp && sp[s] && !atlas.oldByQuad.get(id)?.has(s) ? 1 : 0); }, 0);
+    for (const s of oldHere) {
+      if ((index.byQuad.get(here.id)?.get(s) || []).some(o => o.d && o.d >= ry)) continue; // selbst wiedergefunden
+      lostN++;
+      const c = { s, now: inS(s), nb: nbFresh(s), n: (spHere[s] || [0])[0] };
+      if (!lost || c.now > lost.now || (c.now === lost.now && (c.nb > lost.nb || (c.nb === lost.nb && c.n > lost.n)))) lost = c;
+    }
+  }
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '<span class="chip unsure">nicht in Saison</span>';
   const row = (label, cls, s, detail) => s ? spRow(s, detail, `${cls}${blChip(s)}${rlChip(s)}${seaChip(s)}${freqChip(s)}`, '', label) : '';
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
-    + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '');
+    + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '')
+    + row('Verschollen: hier seit Jahren nicht gemeldet', `${lost && isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas && atlas.ry}</span>`, lost && lost.s,
+      lost ? `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}` : '');
   // Jetzt oder nie: hier oder in den Nachbarn bekannt, von dir hier noch nicht (oder nicht mehr) kartiert, Saison endet bald
   const end = endingMap(here);
   const last = s => (index.byQuad.get(here.id)?.get(s) || []).filter(o => !o.x).map(o => o.d).sort().pop();
@@ -2752,7 +2768,7 @@ var atlas = null; // { t, n, q: [Quadrant-IDs], sp: Map(Art -> { c, occ: [i, n, 
 // Aconitum cammarum → Aconitum × cammarum); Gattungsangaben („spec“) und Hybridformeln („A x B“) weglassen
 const atlasKey = s => s.toLowerCase().replace(/×|-|\s+x\s+|\s+/g, '');
 function cleanAtlasNames(rows) {
-  const keep = rows.filter(([s]) => !/\s(spec|sp|spp)\.?$/i.test(s) && !/^\S+ \S+ x \S+/.test(s)).map(r => [canonTax(r[0]), r[1], r[2]]);
+  const keep = rows.filter(([s]) => !/\s(spec|sp|spp)\.?$/i.test(s) && !/^\S+ \S+ x \S+/.test(s)).map(r => [canonTax(r[0]), r[1], r[2], r[3] || []]);
   const groups = new Map();
   for (const r of keep) { const k = atlasKey(r[0]); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); }
   const known = s => index.bySp.has(s) || !!(pheno && pheno.s[s]);
@@ -2761,9 +2777,12 @@ function cleanAtlasNames(rows) {
     if (g.length === 1) { out.push(g[0]); continue; }
     // iNaturalist-Name bevorzugen: eigene Funde oder Beobachtungszeiten kennen ihn; sonst die Schreibung mit ×, ohne Bindestrich
     const best = g.find(r => known(r[0])) || g.find(r => r[0].includes('×')) || g.find(r => !r[0].includes('-')) || g[0];
-    const occ = new Map();
-    for (const r of g) for (let i = 0; i < r[2].length; i += 2) occ.set(r[2][i], Math.max(occ.get(r[2][i]) || 0, r[2][i + 1]));
-    out.push([best[0], g.map(r => r[1]).find(Boolean) || '', [...occ].sort((a, b) => a[0] - b[0]).flat()]);
+    const occ = new Map(), fresh = new Set();
+    for (const r of g) {
+      const old = new Set(r[3]);
+      for (let i = 0; i < r[2].length; i += 2) { occ.set(r[2][i], Math.max(occ.get(r[2][i]) || 0, r[2][i + 1])); if (!old.has(r[2][i])) fresh.add(r[2][i]); }
+    }
+    out.push([best[0], g.map(r => r[1]).find(Boolean) || '', [...occ].sort((a, b) => a[0] - b[0]).flat(), [...occ.keys()].filter(i => !fresh.has(i)).sort((a, b) => a - b)]);
   }
   return out;
 }
@@ -2792,7 +2811,10 @@ function prepAtlas(raw) {
   const byRC = new Map(rc.map(([r, c], i) => [r * 1000 + c, i]));
   const byQuad = new Map();
   for (const [s, , occ] of raw.s) for (let i = 0; i < occ.length; i += 2) { const id = raw.q[occ[i]]; if (!byQuad.has(id)) byQuad.set(id, []); byQuad.get(id).push([s, occ[i + 1]]); }
-  return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, byQuad, sp, total: sp.size, src: raw.src || ['iNaturalist'] };
+  // verschollen: Art im Quadranten nur vor dem Jahr ry gemeldet (ab dem Atlas vom Oktober 2026)
+  const oldByQuad = new Map();
+  for (const [s, , , old] of raw.s) for (const i of old) { const id = raw.q[i]; if (!oldByQuad.has(id)) oldByQuad.set(id, new Set()); oldByQuad.get(id).add(s); }
+  return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, byQuad, oldByQuad, ry: raw.ry || null, sp, total: sp.size, src: raw.src || ['iNaturalist'] };
 }
 async function loadAtlas() {
   try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); } } catch {}
