@@ -513,7 +513,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 52</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 53</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2933,6 +2933,7 @@ for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter', 'offCenter'])
 }
 
 // ---------- Drei Tipps zum aktuellen Quadranten ----------
+let homeEndTried = false;
 function renderTips() {
   const el = $('tips'); if (!el) return;
   if (!here || !spOf(here.id) || current) { el.innerHTML = ''; return; }
@@ -2976,11 +2977,24 @@ function renderTips() {
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '')
     + row('Verschollen: hier seit Jahren nicht gemeldet', `${lost && isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas && atlas.ry}</span>`, lost && lost.s,
       lost ? `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}` : '');
-  // Jetzt oder nie: hier oder in den Nachbarn bekannt, von dir hier noch nicht (oder nicht mehr) kartiert, Saison endet bald
-  const end = endingMap(here);
-  const last = s => (index.byQuad.get(here.id)?.get(s) || []).filter(o => !o.x).map(o => o.d).sort().pop();
-  const enders = end ? [...cand].filter(s => end.has(s) && (!mine.has(s) || isDue(last(s)))).map(s => ({ s, ...chance(s, here) })).sort((a, b) => isLifer(b.s) - isLifer(a.s) || b.pct - a.pct).slice(0, 5) : [];
-  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px;display:block"><b>Jetzt oder nie</b>: im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => spRow(r.s, `Fundchance ${r.pct} %`, `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}`)).join('') : '';
+  // Jetzt oder nie (Wunsch von Thomas): nur Arten, die in einem der 11 Mondsee-Irrsee-Quadranten bekannt und dort von dir noch nicht
+  // (oder nicht mehr) kartiert sind, Saison endet bald. Dazu der Quadrant mit der besten Fundchance.
+  const ends = [here, ...HOME.map(parseQuad)].map(endingMap).filter(Boolean);
+  if (!ends.length && navigator.onLine && !homeEndTried) { homeEndTried = true; loadEnding(parseQuad('8146/1')).then(() => renderTips()).catch(() => {}); }
+  const best = new Map();
+  if (ends.length) for (const id of HOME) {
+    const Q = parseQuad(id), sp = spOf(id); if (!sp) continue;
+    const mineQ = index.byQuad.get(id);
+    for (const s of Object.keys(sp)) {
+      if (!s.includes(' ') || !ends.some(e => e.has(s))) continue;
+      const ds = (mineQ?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d);
+      if (ds.length && !isDue(ds.sort().pop())) continue;
+      const c = chance(s, Q), b = best.get(s);
+      if (!b) best.set(s, { s, pct: c.pct, q: id, more: 0 }); else { b.more++; if (c.pct > b.pct) { b.pct = c.pct; b.q = id; } }
+    }
+  }
+  const enders = [...best.values()].sort((a, b) => isLifer(b.s) - isLifer(a.s) || b.pct - a.pct).slice(0, 5);
+  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px;display:block"><b>Jetzt oder nie</b> (${HOME_NAME}): im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => spRow(r.s, `Fundchance ${r.pct} % in ${r.q}${r.more ? ` · noch in ${r.more} weiteren` : ''}`, `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}`)).join('') : '';
   el.innerHTML = html || endHtml ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}${endHtml}</ul></div>` : '';
   el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); window.scrollTo(0, 0); });
 }
