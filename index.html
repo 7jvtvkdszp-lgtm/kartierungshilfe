@@ -9,6 +9,19 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 </head><body>
+<div id="jsErr" hidden style="position:sticky;top:0;z-index:3000;background:#b91c1c;color:#fff;font:13px/1.4 system-ui,sans-serif;padding:8px 12px"></div>
+<script>
+(function () {
+  var shown = 0;
+  function show(msg) {
+    var el = document.getElementById('jsErr'); if (!el || shown > 2) return; shown++;
+    el.hidden = false;
+    el.textContent = (el.textContent ? el.textContent + ' | ' : 'Programmfehler (bitte Screenshot an Claude): ') + msg;
+  }
+  window.addEventListener('error', function (e) { if (e.message) show(e.message + (e.lineno ? ' (Zeile ' + e.lineno + ')' : '')); });
+  window.addEventListener('unhandledrejection', function (e) { var r = e.reason; show('async: ' + (r && r.message ? r.message : String(r))); });
+})();
+</script>
 <title>Kartierungshilfe</title>
 <style>
 /* Layout: one-column field tool, quadrant header on top, three tabs below; large touch targets, high contrast for sunlight */
@@ -455,6 +468,17 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="row"><button class="btn primary" id="btnExport">CSV erstellen</button></div>
         <div class="small muted" id="expStatus"></div>
       </details>
+      <details class="panel fold" id="fold-data-ungenaue-funde">
+        <summary><h2>Ungenaue Funde</h2></summary>
+        <p class="small muted" style="margin:0">Eigene Funde mit GPS-Ungenauigkeit über 50 m, ohne verschleierte Koordinaten. Reicht der Genauigkeitskreis über die Quadrantengrenze, kann der Fund im falschen Quadranten stehen. Diese Funde stehen oben. Antippen öffnet die Beobachtung auf iNaturalist zum Nachbearbeiten.</p>
+        <div class="tabs seg" role="tablist">
+          <button role="tab" id="accEdge" aria-selected="true">Über eine Grenze</button>
+          <button role="tab" id="accAll" aria-selected="false">Alle über 50 m</button>
+        </div>
+        <label class="row small"><input type="checkbox" id="accHome"> Nur Mondsee-Irrsee</label>
+        <div class="small muted" id="accSum"></div>
+        <ul class="list" id="accList"></ul>
+      </details>
       <details class="panel fold" id="fold-data-offene-bestimmungen">
         <summary><h2>Offene Bestimmungen</h2></summary>
         <p class="small muted" style="margin:0">Eigene Funde, die nur bis zur Gattung (oder gröber) bestimmt sind, und Funde ohne Bestätigung. Gattungsfunde zählen nicht als kartierte Art.</p>
@@ -489,7 +513,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 50</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 51</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1168,7 +1192,7 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
-  if (statsReady) { renderOpenIds(); renderYear(); renderHome(); renderLiferStats(); renderNewNear(); checkNewNear(); }
+  if (statsReady) { renderOpenIds(); renderYear(); renderHome(); renderAcc(); renderLiferStats(); renderNewNear(); checkNewNear(); }
 }
 let statsReady = false;
 function fromApi(o) {
@@ -2027,6 +2051,37 @@ function renderHome() {
     </table></div>`;
   out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = () => { setHere({ ...parseQuad(tr.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
 }
+
+// ---------- Ungenaue Funde (Wunsch von Thomas): Genauigkeit über 50 m, ohne verschleierte ----------
+let accMode = store.get('accMode', 'edge');
+function borderInfo(o) {
+  const Q = toQuad(o.la, o.lo), b = quadBounds(Q), mLat = 111320, mLon = 111320 * Math.cos(o.la * Math.PI / 180);
+  const sides = [['n', (b.n - o.la) * mLat, [b.n + 0.0001, o.lo]], ['s', (o.la - b.s) * mLat, [b.s - 0.0001, o.lo]],
+    ['w', (o.lo - b.w) * mLon, [o.la, b.w - 0.0001]], ['e', (b.e - o.lo) * mLon, [o.la, b.e + 0.0001]]];
+  const d = Math.min(...sides.map(x => x[1]));
+  const other = [...new Set(sides.filter(x => x[1] < o.a).map(x => toQuad(x[2][0], x[2][1]).id))];
+  return { id: Q.id, d, other };
+}
+function renderAcc() {
+  const ul = $('accList'); if (!ul) return;
+  const home = $('accHome').checked;
+  const all = obs.filter(o => o.la != null && !o.x && o.a > 50 && (!home || HOME_SET.has(o.k)));
+  const rows = all.map(o => ({ o, ...borderInfo(o) }));
+  const edge = rows.filter(r => r.other.length);
+  const show = (accMode === 'edge' ? edge : rows).sort((a, b) => (b.other.length > 0) - (a.other.length > 0) || (b.o.a - b.d) - (a.o.a - a.d) || (b.o.d || '').localeCompare(a.o.d || ''));
+  const noAcc = obs.filter(o => o.la != null && !o.x && !o.a && (!home || HOME_SET.has(o.k))).length;
+  $('accEdge').setAttribute('aria-selected', accMode === 'edge'); $('accAll').setAttribute('aria-selected', accMode !== 'edge');
+  $('accSum').textContent = `${rows.length} Funde über 50 m, davon ${edge.length} über eine Quadrantengrenze.` + (noAcc ? ` ${noAcc} Funde haben gar keine Genauigkeitsangabe.` : '');
+  ul.innerHTML = show.slice(0, 300).map(r => `<li class="sp"><a href="https://www.inaturalist.org/observations/${r.o.i}/edit" target="_blank" rel="noopener" style="display:flex;gap:10px;color:inherit;text-decoration:none;flex:1 1 auto;min-width:0">${spBody(r.o.s,
+      `${fmtDate(r.o.d)} · ${r.id} · ± ${Math.round(r.o.a)} m · Grenze ${km(r.d)}`,
+      `${r.other.length ? `<span class="chip due">evtl. ${r.other.join(', ')}</span>` : '<span class="chip ok">sicher im Quadranten</span>'}${homeChip(r.id)}`)}</a></li>`).join('')
+    + (show.length > 300 ? `<li class="muted">… und ${show.length - 300} weitere</li>` : '')
+    || '<li class="muted">Keine Funde in dieser Auswahl.</li>';
+}
+$('accEdge').onclick = () => { accMode = 'edge'; store.set('accMode', accMode); renderAcc(); };
+$('accAll').onclick = () => { accMode = 'all'; store.set('accMode', accMode); renderAcc(); };
+$('accHome').onchange = () => { store.set('accHome', $('accHome').checked); renderAcc(); };
+$('accHome').checked = store.get('accHome', false);
 
 // ---------- Jahresbilanz ----------
 function renderYear() {
@@ -3062,7 +3117,7 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
-statsReady = true; renderOpenIds(); renderYear(); renderHome(); renderLiferStats(); renderWish(); renderNewNear(); renderTour();
+statsReady = true; renderOpenIds(); renderYear(); renderHome(); renderAcc(); renderLiferStats(); renderWish(); renderNewNear(); renderTour();
 // Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
 const ui = store.get('ui', null);
 if (ui && Date.now() - ui.t < 12 * 3600e3) {
