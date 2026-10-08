@@ -86,6 +86,13 @@ button { cursor: pointer }
 .tourpin { background: #7c3aed; color: #fff; border: 2px solid #fff; border-radius: 50%; font: 700 12px/20px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.4) }
 .grid3 button .tot { font-size: 12px; opacity: .75 }
 .cover { display: flex; flex-direction: column; gap: 6px; font-size: 14px }
+.stat { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums }
+.stat th, .stat td { padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap }
+.stat th:first-child, .stat td:first-child { text-align: left }
+.stat th { font-weight: 600; color: var(--muted); font-size: 12px }
+.stat tr.tap td:first-child { color: var(--accent, inherit); font-weight: 600 }
+.statwrap { overflow-x: auto }
+.chip.home { background: #0f766e; color: #fff }
 .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden }
 .bar div { height: 100%; background: var(--found) }
 .chance { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex: 0 1 auto; min-width: 0; max-width: 55% }
@@ -330,6 +337,19 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="tripStatus"></div>
         <ul class="list" id="tripList"></ul>
       </details>
+      <details class="panel fold" id="fold-map-begehungen">
+        <summary><h2>Begehungen</h2></summary>
+        <p class="small muted" style="margin:0">Mit „Mitlaufen“ zeichnet die App deinen Weg auf und speichert ihn mit Datum. Das iPhone liefert die Position nur, solange die App offen ist (Mitlaufen hält den Bildschirm an). Antippen zeigt den Weg auf der Karte, „GPX“ gibt ihn als Datei weiter.</p>
+        <div class="row">
+          <select class="field" id="trkYear" style="flex:0 0 auto;width:auto"></select>
+          <select class="field" id="trkMonth" style="flex:0 0 auto;width:auto"></select>
+          <button class="btn" id="trkShowAll">Alle zeigen</button>
+          <button class="btn" id="trkGpxAll">GPX</button>
+          <button class="btn" id="trkHide">Ausblenden</button>
+        </div>
+        <div class="small muted" id="trkStatus"></div>
+        <ul class="list" id="trkList"></ul>
+      </details>
       <details class="panel fold" id="fold-map-lifer-tour">
         <summary><h2>Lifer-Tour</h2></summary>
         <p class="small muted" style="margin:0">Fundpunkte anderer iNaturalist-User für deine Lifer. Es zählen nur Funde zwei Wochen vor bis zwei Wochen nach dem heutigen Datum (aus allen Jahren), damit die Art jetzt auch zu sehen ist. Die Reihenfolge führt immer zum nächstgelegenen offenen Punkt.</p>
@@ -440,6 +460,11 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <p class="small muted" style="margin:0">Eigene Funde, die nur bis zur Gattung (oder gröber) bestimmt sind, und Funde ohne Bestätigung. Gattungsfunde zählen nicht als kartierte Art.</p>
         <div id="openIds"></div>
       </details>
+      <details class="panel fold" id="fold-data-mondsee-irrsee">
+        <summary><h2>Mondsee-Irrsee</h2></summary>
+        <p class="small muted" style="margin:0">Dein Kartierungsgebiet: 8045/2, 8045/4, 8046/3, 8145/2, 8145/4, 8146/1–4, 8246/1, 8246/2. Zeile antippen, um den Quadranten zu wählen.</p>
+        <div id="homeOut"></div>
+      </details>
       <details class="panel fold" id="fold-data-jahresbilanz">
         <summary><h2>Jahresbilanz</h2></summary>
         <div class="row"><select class="field" id="yearSel" style="flex:0 0 auto;width:auto"></select></div>
@@ -464,7 +489,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 49</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 50</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -650,6 +675,7 @@ function showTab(t) {
   if (t === 'list') renderList();
   if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); if (typeof renderLifeTargets === 'function') renderLifeTargets(); }, 60); }
   if (t === 'day') renderDay();
+  if (t === 'data' && typeof renderHome === 'function') renderHome();
   if (t === 'off') renderOff();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
@@ -1142,7 +1168,7 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
-  if (statsReady) { renderOpenIds(); renderYear(); renderLiferStats(); renderNewNear(); checkNewNear(); }
+  if (statsReady) { renderOpenIds(); renderYear(); renderHome(); renderLiferStats(); renderNewNear(); checkNewNear(); }
 }
 let statsReady = false;
 function fromApi(o) {
@@ -1290,6 +1316,8 @@ async function kvInit() {
   season = (await kv.get('season')) || {};
   pts = (await kv.get('pts')) || {};
   photos = (await kv.get('photos')) || {};
+  tracks = (await kv.get('tracks')) || {};
+  if (tracks[todayIso()]) trkShown = [todayIso()];
   redlist = (await kv.get('redlist')) || null;
   redSet = new Set(redlist ? redlist.sp : []);
   fixStoredTax();
@@ -1585,7 +1613,7 @@ function showMap() {
     if (here) { const b = quadBounds(here); map.setView(here.lat != null ? [here.lat, here.lon] : [(b.n + b.s) / 2, (b.w + b.e) / 2], 11); }
     else if (v) map.setView(v.c, v.z); else map.setView([47.6, 13.5], 8);
   }
-  setTimeout(() => { map.invalidateSize(); drawGrid(); }, 0);
+  setTimeout(() => { map.invalidateSize(); drawGrid(); drawTracks(); renderTracks(); }, 0);
 }
 function quadsInBounds(s, n, w, e, max) {
   const r2a = Math.floor((LAT0 - n) * 20), r2b = Math.floor((LAT0 - s) * 20 - 1e-9);
@@ -1755,6 +1783,7 @@ function setFollow(on) {
       if (changed && here) announceQuad(Q);
       // Bei gleichem Quadranten nur gelegentlich neu zeichnen, das schont den Akku
       if (changed || Date.now() - lastFollowRender > 15000) { lastFollowRender = Date.now(); setHere({ ...Q, lat, lon, acc, t: Date.now(), src: 'gps' }); }
+      trackPoint(lat, lon, acc);
     }, () => {}, { enableHighAccuracy: true, maximumAge: 5000 });
     btn.classList.add('on'); btn.setAttribute('aria-pressed', 'true'); btn.textContent = 'Mitlaufen an';
   } else {
@@ -1764,6 +1793,82 @@ function setFollow(on) {
   }
 }
 $('btnFollow').onclick = () => setFollow(watchId == null);
+
+// ---------- Begehungsspur (Wunsch von Thomas): GPS-Weg beim Mitlaufen, je Tag gespeichert, als GPX weitergeben ----------
+let tracks = {}; // { 'JJJJ-MM-TT': [[lat, lon, Sekunden seit 1970, Genauigkeit], …] }
+let trkSaveT = null, trkShown = null; // trkShown: Liste der gezeigten Tage
+const saveTracks = () => { clearTimeout(trkSaveT); trkSaveT = setTimeout(() => kv.set('tracks', tracks), 20000); };
+function trackPoint(lat, lon, acc) {
+  if (acc != null && acc > 50) return; // ungenaue Punkte machen Zacken
+  const d = todayIso(), t = Math.round(Date.now() / 1000), a = tracks[d] || (tracks[d] = []), l = a[a.length - 1];
+  if (l && dist({ lat, lon }, { la: l[0], lo: l[1] }) < 10) return;
+  a.push([+lat.toFixed(6), +lon.toFixed(6), t, acc == null ? null : Math.round(acc)]);
+  saveTracks();
+  if (map && !$('view-map').hidden && trkShown && trkShown.includes(d)) drawTracks();
+  if (!$('view-map').hidden) renderTracks();
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && trkSaveT) { clearTimeout(trkSaveT); trkSaveT = null; kv.set('tracks', tracks); } });
+// Teilstücke: Lücke über 10 Minuten = neues Stück (App war zu)
+function segments(a) { const out = []; let cur = []; for (const p of a) { if (cur.length && p[2] - cur[cur.length - 1][2] > 600) { out.push(cur); cur = []; } cur.push(p); } if (cur.length) out.push(cur); return out; }
+function trackInfo(d) {
+  const a = tracks[d] || []; let m = 0, sec = 0; const qs = new Set();
+  for (const seg of segments(a)) { for (let i = 1; i < seg.length; i++) m += dist({ lat: seg[i - 1][0], lon: seg[i - 1][1] }, { la: seg[i][0], lo: seg[i][1] }); sec += seg[seg.length - 1][2] - seg[0][2]; }
+  for (const p of a) qs.add(toQuad(p[0], p[1]).id);
+  return { m, sec, qs: [...qs].sort(), n: a.length };
+}
+const dur = s => s < 3600 ? Math.round(s / 60) + ' min' : Math.floor(s / 3600) + ' h ' + pad(Math.round(s % 3600 / 60)) + ' min';
+const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+function trkDays() {
+  const y = $('trkYear').value, m = $('trkMonth').value;
+  return Object.keys(tracks).filter(d => tracks[d].length > 1 && (!y || d.startsWith(y)) && (!m || d.slice(5, 7) === m)).sort().reverse();
+}
+function renderTracks() {
+  const ys = [...new Set(Object.keys(tracks).filter(d => tracks[d].length > 1).map(d => d.slice(0, 4)))].sort().reverse();
+  const ySel = $('trkYear'), mSel = $('trkMonth'), yv = ySel.value, mv = mSel.value;
+  ySel.innerHTML = '<option value="">alle Jahre</option>' + ys.map(y => `<option>${y}</option>`).join(''); ySel.value = ys.includes(yv) ? yv : (ys[0] || '');
+  mSel.innerHTML = '<option value="">alle Monate</option>' + MONTHS_LONG.map((n, i) => `<option value="${pad(i + 1)}">${n}</option>`).join(''); mSel.value = mv;
+  const days = trkDays();
+  $('trkStatus').textContent = watchId != null ? 'Aufzeichnung läuft (Mitlaufen ist an).' : 'Aufzeichnung startet mit „Mitlaufen“ unter Prüfen.';
+  $('trkList').innerHTML = days.length ? days.map(d => { const i = trackInfo(d), wd = WD[new Date(d + 'T12:00').getDay()];
+    return `<li class="tap" data-d="${d}"><span><b>${wd} ${fmtDate(d)}</b>${trkShown && trkShown.includes(d) ? ' <span class="chip ok">auf der Karte</span>' : ''}<br><span class="cn">${km(i.m)} · ${dur(i.sec)} · ${i.qs.map(q => HOME_SET.has(q) ? `<b>${q}</b>` : q).join(', ')}</span></span>
+      <span class="row" style="flex-wrap:nowrap"><button class="btn" data-gpx="${d}">GPX</button><button class="x" data-del="${d}" aria-label="Löschen">×</button></span></li>`; }).join('')
+    : '<li class="muted">Noch keine Begehung gespeichert.</li>';
+  $('trkList').querySelectorAll('li[data-d]').forEach(li => li.onclick = e => {
+    if (e.target.closest('button')) return;
+    trkShown = [li.dataset.d]; drawTracks(true); renderTracks(); window.scrollTo(0, 0);
+  });
+  $('trkList').querySelectorAll('[data-gpx]').forEach(b => b.onclick = () => shareGpx([b.dataset.gpx]));
+  $('trkList').querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+    if (!b.dataset.arm) { b.dataset.arm = 1; b.textContent = 'Löschen?'; setTimeout(() => { delete b.dataset.arm; b.textContent = '×'; }, 4000); return; }
+    delete tracks[b.dataset.del]; kv.set('tracks', tracks); if (trkShown) trkShown = trkShown.filter(d => d !== b.dataset.del); drawTracks(); renderTracks();
+  });
+}
+let trackLayer = null;
+const TRK_COLORS = ['#c026d3', '#0891b2', '#ea580c', '#4f46e5', '#16a34a', '#db2777'];
+function drawTracks(fit) {
+  if (!map || !window.L) return;
+  if (!trackLayer) trackLayer = L.layerGroup().addTo(map);
+  trackLayer.clearLayers();
+  if (!trkShown || !trkShown.length) return;
+  const all = [];
+  trkShown.forEach((d, k) => { for (const seg of segments(tracks[d] || [])) { const ll = seg.map(p => [p[0], p[1]]); all.push(...ll); L.polyline(ll, { color: TRK_COLORS[k % TRK_COLORS.length], weight: 4, opacity: 0.85 }).bindTooltip(fmtDate(d)).addTo(trackLayer); } });
+  if (fit && all.length) map.fitBounds(L.latLngBounds(all).pad(0.15));
+}
+function gpxOf(days) {
+  const x = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const trk = days.map(d => `  <trk><name>Begehung ${fmtDate(d)}</name>\n${segments(tracks[d] || []).map(seg => `    <trkseg>\n${seg.map(p => `      <trkpt lat="${p[0]}" lon="${p[1]}"><time>${new Date(p[2] * 1000).toISOString()}</time></trkpt>`).join('\n')}\n    </trkseg>`).join('\n')}\n  </trk>`).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Kartierungshilfe" xmlns="http://www.topografix.com/GPX/1/1">\n  <metadata><name>${x(days.length === 1 ? 'Begehung ' + fmtDate(days[0]) : 'Begehungen ' + fmtDate(days[days.length - 1]) + ' bis ' + fmtDate(days[0]))}</name></metadata>\n${trk}\n</gpx>\n`;
+}
+async function shareGpx(days) {
+  if (!days.length) { $('trkStatus').textContent = 'Keine Begehung in der Auswahl.'; return; }
+  const name = days.length === 1 ? `begehung-${days[0]}.gpx` : `begehungen-${days[days.length - 1]}-bis-${days[0]}.gpx`;
+  const ok = await offerFile(new File([gpxOf(days)], name, { type: 'application/gpx+xml' }), $('trkStatus'));
+  if (ok) $('trkStatus').textContent = `${name} erstellt.`;
+}
+$('trkYear').addEventListener('change', renderTracks); $('trkMonth').addEventListener('change', renderTracks);
+$('trkShowAll').onclick = () => { trkShown = trkDays(); drawTracks(true); renderTracks(); window.scrollTo(0, 0); };
+$('trkHide').onclick = () => { trkShown = null; drawTracks(); renderTracks(); };
+$('trkGpxAll').onclick = () => shareGpx(trkDays());
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && watchId != null) requestWake(); });
 
 // ---------- Export für observation.org ----------
@@ -1840,7 +1945,7 @@ function renderTrip() {
   $('tripRadius').value = String(radius);
   st.textContent = rows.length ? `Die ${rows.length} lohnendsten Quadranten im Umkreis von ${radius} km (Stand ${new Date(tripState.t).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}):` : 'Keine Daten für diesen Umkreis.';
   {
-    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.q}"><span><b class="num">${r.q}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.lifers.length ? `<b>${r.lifers.length} Lifer</b>: ${esc(r.lifers.slice(0, 3).join(', '))}${r.lifers.length > 3 ? ' …' : ''}<br>` : ''}${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.pct} %</span></span><span class="chips">${r.lifers.length ? `<span class="chip lifer num">${r.lifers.length}</span>` : ''}<span class="chip ok num">${Math.round(r.score + r.lscore)}</span></span></li>`).join('');
+    out.innerHTML = rows.map(r => `<li class="tap" data-q="${r.q}"><span><b class="num">${r.q}</b> <span class="cn">${km(r.d)}</span><br><span class="cn">${r.lifers.length ? `<b>${r.lifers.length} Lifer</b>: ${esc(r.lifers.slice(0, 3).join(', '))}${r.lifers.length > 3 ? ' …' : ''}<br>` : ''}${r.open} offene Arten${sea ? `, ${r.now} jetzt in Saison` : ''} · Abdeckung ${r.pct} %</span></span><span class="chips">${homeChip(r.q)}${r.lifers.length ? `<span class="chip lifer num">${r.lifers.length}</span>` : ''}<span class="chip ok num">${Math.round(r.score + r.lscore)}</span></span></li>`).join('');
     out.querySelectorAll('li.tap').forEach(li => li.onclick = () => {
       setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' });
       if (map) { const b = quadBounds(here); map.fitBounds([[b.s, b.w], [b.n, b.e]], { padding: [30, 30] }); }
@@ -1865,6 +1970,64 @@ function renderOpenIds() {
     : '<div class="small muted">Erscheint nach dem nächsten Aktualisieren der Funde.</div>';
 }
 
+// ---------- Mondsee-Irrsee: Thomas' Kartierungsgebiet, hat überall Vorrang ----------
+const HOME_NAME = 'Mondsee-Irrsee';
+const HOME = ['8045/2', '8045/4', '8046/3', '8145/2', '8145/4', '8146/1', '8146/2', '8146/3', '8146/4', '8246/1', '8246/2'];
+const HOME_SET = new Set(HOME);
+const homeChip = id => HOME_SET.has(id) ? `<span class="chip home">${HOME_NAME}</span>` : '';
+function renderHome() {
+  const out = $('homeOut'); if (!out) return;
+  const ok = o => o.k && HOME_SET.has(o.k) && !o.x && o.d && !(o.r > 10);
+  const hobs = obs.filter(ok);
+  const y = String(new Date().getFullYear());
+  // je Quadrant: Arten, letzte Meldung je Art, Besuchstage
+  const per = new Map(HOME.map(q => [q, { last: new Map(), days: new Set(), n: 0 }]));
+  const first = new Map(); // Art|Quadrant -> erstes Datum
+  for (const o of hobs) {
+    const e = per.get(o.k); e.n++; e.days.add(o.d);
+    if (!e.last.has(o.s) || o.d > e.last.get(o.s)) e.last.set(o.s, o.d);
+    const key = o.s + '|' + o.k; if (!first.has(key) || o.d < first.get(key)) first.set(key, o.d);
+  }
+  const known = new Set(), mine = new Set(), lost = new Set();
+  const rows = HOME.map(q => {
+    const e = per.get(q), sp = spOf(q), c = quadCoverage(q);
+    if (sp) Object.keys(sp).forEach(x => known.add(x));
+    e.last.forEach((d, x) => { mine.add(x); known.add(x); });
+    const due = [...e.last.values()].filter(isDue).length;
+    const lastDay = [...e.days].sort().pop() || '';
+    let lo = null;
+    if (atlas && atlas.ry && atlas.oldByQuad.get(q)) { lo = 0; for (const x of atlas.oldByQuad.get(q)) if (!(e.last.get(x) >= String(atlas.ry))) { lo++; lost.add(x); } }
+    return { q, mine: e.last.size, total: c.total, pct: c.pct, due, lastDay, days: e.days.size, lo, yr: [...e.days].filter(d => d.startsWith(y)).length };
+  });
+  // je Jahr im Gebiet
+  const years = new Map();
+  for (const o of hobs) {
+    const yy = o.d.slice(0, 4); if (!years.has(yy)) years.set(yy, { n: 0, days: new Set(), sp: new Set(), neu: 0 });
+    const e = years.get(yy); e.n++; e.days.add(o.d); e.sp.add(o.s);
+  }
+  for (const d of first.values()) years.get(d.slice(0, 4)).neu++;
+  const red = [...mine].filter(isRed).length, lif = [...known].filter(x => x.includes(' ') && isLifer(x)).length;
+  const dueAll = rows.reduce((a, r) => a + r.due, 0);
+  const todo = rows.filter(r => r.lastDay).sort((a, b) => a.lastDay.localeCompare(b.lastDay))[0], never = rows.filter(r => !r.lastDay);
+  out.innerHTML = `
+    <div class="cover">
+      <div>Bekannt im Gebiet: <b class="num">${known.size}</b> Arten, davon von dir kartiert <b class="num">${mine.size}</b> (${known.size ? Math.round(mine.size / known.size * 100) : 0} %).</div>
+      <div>Deine Funde: <b class="num">${hobs.length}</b> an <b class="num">${new Set(hobs.map(o => o.d)).size}</b> Tagen; ${red} gefährdete Arten (Rote Liste), ${lif} Lifer im Gebiet noch offen.</div>
+      <div><b class="num">${dueAll}</b> Einträge wieder fällig (älter als ${REPEAT_YEARS} Jahre)${lost.size ? `, <b class="num">${lost.size}</b> Arten verschollen (nur vor ${atlas.ry} gemeldet)` : ''}.</div>
+      ${never.length ? `<div>Noch nie besucht: ${never.map(r => r.q).join(', ')}.</div>` : todo ? `<div>Am längsten nicht besucht: <b>${todo.q}</b> (zuletzt ${fmtDate(todo.lastDay)}).</div>` : ''}
+    </div>
+    <div class="statwrap"><table class="stat">
+      <thead><tr><th>Quadrant</th><th>deine / bekannt</th><th>%</th><th>fällig</th><th>versch.</th><th>Tage ${y}</th><th>zuletzt</th></tr></thead>
+      <tbody>${rows.map(r => `<tr class="tap" data-q="${r.q}"><td>${r.q}</td><td>${r.mine} / ${r.total ?? '–'}</td><td>${r.pct ?? '–'}</td><td>${r.due}</td><td>${r.lo ?? '–'}</td><td>${r.yr}</td><td>${r.lastDay ? fmtDate(r.lastDay) : 'nie'}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <div class="small"><b>Je Jahr im Gebiet</b> <span class="muted">(Erstnachweis = Art zum ersten Mal von dir im Quadranten)</span></div>
+    <div class="statwrap"><table class="stat">
+      <thead><tr><th>Jahr</th><th>Funde</th><th>Tage</th><th>Arten</th><th>Erstnachweise</th></tr></thead>
+      <tbody>${[...years].sort((a, b) => b[0].localeCompare(a[0])).map(([yy, e]) => `<tr><td>${yy}</td><td>${e.n}</td><td>${e.days.size}</td><td>${e.sp.size}</td><td>${e.neu}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Noch keine Funde im Gebiet.</td></tr>'}</tbody>
+    </table></div>`;
+  out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = () => { setHere({ ...parseQuad(tr.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
+}
+
 // ---------- Jahresbilanz ----------
 function renderYear() {
   const sel = $('yearSel');
@@ -1886,12 +2049,13 @@ function renderYear() {
   for (const [key, d] of first) if (d.startsWith(y)) { const q = key.split('|')[0]; newPerQ.set(q, (newPerQ.get(q) || 0) + 1); }
   const newTotal = [...newPerQ.values()].reduce((a, b) => a + b, 0);
   const top = [...newPerQ].sort((a, b) => b[1] - a[1]).slice(0, 10);
-  const stale = [...lastVisit].sort((a, b) => a[1].localeCompare(b[1])).slice(0, 10);
+  // nur das eigene Gebiet Mondsee-Irrsee (Wunsch von Thomas), nie besuchte zuerst, dann der am längsten nicht besuchte
+  const stale = HOME.map(q => [q, lastVisit.get(q) || '']).sort((a, b) => a[1].localeCompare(b[1]));
   $('yearOut').innerHTML = `
     <div class="cover"><div><b class="num">${inYear.length}</b> ${inYear.length === 1 ? 'Fund' : 'Funde'} in <b class="num">${quads.size}</b> ${quads.size === 1 ? 'Quadrant' : 'Quadranten'}, davon <b class="num">${newTotal}</b> ${newTotal === 1 ? 'Erstnachweis' : 'Erstnachweise'} (Art neu im Quadranten).</div></div>
     ${top.length ? `<div class="small"><b>Meiste Erstnachweise ${y}</b></div><ul class="list">${top.map(([q, n]) => `<li class="tap" data-q="${q}"><span class="num">${q}</span><span class="d">${n} ${n === 1 ? 'neue Art' : 'neue Arten'}</span></li>`).join('')}</ul>` : ''}
-    <div class="small"><b>Am längsten nicht besucht</b></div>
-    <ul class="list">${stale.map(([q, d]) => `<li class="tap" data-q="${q}"><span class="num">${q}</span><span class="d">zuletzt ${fmtDate(d)}</span></li>`).join('')}</ul>`;
+    <div class="small"><b>Am längsten nicht besucht</b> <span class="muted">(${HOME_NAME})</span></div>
+    <ul class="list">${stale.map(([q, d]) => `<li class="tap" data-q="${q}"><span class="num">${q}</span><span class="d">${d ? `zuletzt ${fmtDate(d)}` : 'noch nie'}</span></li>`).join('')}</ul>`;
   $('yearOut').querySelectorAll('li.tap').forEach(li => li.onclick = () => { setHere({ ...parseQuad(li.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
 }
 $('yearSel').addEventListener('change', renderYear);
@@ -1906,7 +2070,7 @@ async function offerFile(file, statusEl) {
 }
 $('btnBackup').onclick = async () => {
   const { token, ...safeSettings } = settings; // der Token wird nicht mitgesichert
-  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish };
+  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish, tracks };
   const file = new File([JSON.stringify(data)], `kartierungshilfe-sicherung-${todayIso()}.json`, { type: 'application/json' });
   if (await offerFile(file, $('backupStatus'))) $('backupStatus').textContent = `Gesichert: ${day.length} Einträge der Tagesliste und deine Einstellungen.`;
 };
@@ -1922,6 +2086,10 @@ $('restoreFile').addEventListener('change', async e => {
     if (d.export) { expMeta = d.export; store.set('export', expMeta); renderExpLabel(); }
     if (d.wish) { const ws = new Set(wish.map(w => w.s + '|' + w.q)); wish = [...wish, ...d.wish.filter(w => !ws.has(w.s + '|' + w.q))]; store.set('wish', wish); renderWish(); updateWishNote(); }
     if (d.taxIds) { taxIds = Object.assign(taxIds, d.taxIds); store.set('taxIds', taxIds); }
+    if (d.tracks) { // Spuren je Tag zusammenführen, Punkte nach Zeit
+      for (const [dd, a] of Object.entries(d.tracks)) { const m = new Map([...(tracks[dd] || []), ...a].map(p => [p[2], p])); tracks[dd] = [...m.values()].sort((x, y) => x[2] - y[2]); }
+      kv.set('tracks', tracks);
+    }
     $('user').value = settings.user;
     renderDay();
     $('backupStatus').textContent = `Wiederhergestellt: Sicherung vom ${new Date(d.t).toLocaleDateString('de-AT')}. Tagesliste hat jetzt ${day.length} Einträge.`;
@@ -2827,6 +2995,7 @@ async function loadAtlas() {
     store.set('atlasChecked41', new Date().toISOString());
     if (atlas && raw.t === atlas.t) return;
     await kv.set('atlas', raw); atlas = prepAtlas(raw);
+    if (!$('view-data').hidden) renderHome();
     renderList(); renderTips(); drawGrid(true); if (current) showResult(current);
   } catch { /* noch keine Atlasdatei oder kein Empfang */ }
 }
@@ -2893,7 +3062,7 @@ $('token').value = settings.token;
 buildIndex(); renderStats(); renderHead(); renderList();
 showTab(store.get('tab', 'check'));
 renderDay();
-statsReady = true; renderOpenIds(); renderYear(); renderLiferStats(); renderWish(); renderNewNear(); renderTour();
+statsReady = true; renderOpenIds(); renderYear(); renderHome(); renderLiferStats(); renderWish(); renderNewNear(); renderTour();
 // Zustand wiederherstellen: iOS beendet die App oft im Hintergrund (z. B. beim Wechsel zu Apple Karten)
 const ui = store.get('ui', null);
 if (ui && Date.now() - ui.t < 12 * 3600e3) {
