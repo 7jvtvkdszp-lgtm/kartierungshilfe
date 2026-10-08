@@ -513,7 +513,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 51</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 52</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -523,6 +523,11 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 <script>
 (() => {
 'use strict';
+// Mondsee-Irrsee: Thomas' Kartierungsgebiet. Ganz oben, weil schon beim Start (z. B. gespeicherte Lohnende Quadranten) gebraucht
+const HOME_NAME = 'Mondsee-Irrsee';
+const HOME = ['8045/2', '8045/4', '8046/3', '8145/2', '8145/4', '8146/1', '8146/2', '8146/3', '8146/4', '8246/1', '8246/2'];
+const HOME_SET = new Set(HOME);
+const homeChip = id => HOME_SET.has(id) ? `<span class="chip home">${HOME_NAME}</span>` : '';
 // ---------- Raster ----------
 const LAT0 = 56, LON0 = 5 + 40 / 60;
 const pad = n => String(n).padStart(2, '0');
@@ -1995,10 +2000,6 @@ function renderOpenIds() {
 }
 
 // ---------- Mondsee-Irrsee: Thomas' Kartierungsgebiet, hat überall Vorrang ----------
-const HOME_NAME = 'Mondsee-Irrsee';
-const HOME = ['8045/2', '8045/4', '8046/3', '8145/2', '8145/4', '8146/1', '8146/2', '8146/3', '8146/4', '8246/1', '8246/2'];
-const HOME_SET = new Set(HOME);
-const homeChip = id => HOME_SET.has(id) ? `<span class="chip home">${HOME_NAME}</span>` : '';
 function renderHome() {
   const out = $('homeOut'); if (!out) return;
   const ok = o => o.k && HOME_SET.has(o.k) && !o.x && o.d && !(o.r > 10);
