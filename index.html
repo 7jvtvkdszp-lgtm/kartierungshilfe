@@ -73,7 +73,7 @@ button { cursor: pointer }
 .manual { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap }
 .manual input { flex: 1 1 180px; min-width: 0 }
 
-.tabs { display: grid; grid-template-columns: repeat(6, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
+.tabs { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px; gap: 4px }
 .tabs button { border: 0; background: transparent; border-radius: 9px; min-height: 40px; font-weight: 600; color: var(--muted); font-size: 14px; padding: 0 2px }
 .tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg) }
 
@@ -96,6 +96,16 @@ button { cursor: pointer }
 .list li.ok .sci, .list li.ok .d { color: var(--found) }
 .list li.tap { cursor: pointer }
 .tabs.seg { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) }
+nav.tabs button { font-size: 12.5px; padding: 0 1px }
+/* Mondsee-Irrsee-Tab: Kachelkarte der 11 Quadranten in ihrer Lage zueinander */
+.hgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px }
+.hgrid button { border: 2px solid transparent; border-radius: 10px; padding: 6px 4px; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.15 }
+.hgrid button b { font-size: 15px }
+.hgrid button .s { font-size: 11px; opacity: .95 }
+.hgrid button.sel { border-color: var(--text); box-shadow: 0 0 0 2px var(--surface) inset }
+.hgrid button.here::after { content: '● hier'; font-size: 10px }
+.hgrid .rank { font-size: 10px; background: rgb(0 0 0 / .28); border-radius: 6px; padding: 0 5px }
+.hgrid .empty { visibility: hidden }
 .tourpin { background: #7c3aed; color: #fff; border: 2px solid #fff; border-radius: 50%; font: 700 12px/20px system-ui, sans-serif; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.4) }
 .grid3 button .tot { font-size: 12px; opacity: .75 }
 .cover { display: flex; flex-direction: column; gap: 6px; font-size: 14px }
@@ -260,6 +270,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
   <nav class="tabs" role="tablist">
     <button role="tab" id="tab-check" aria-selected="true">Prüfen</button>
+    <button role="tab" id="tab-home" aria-selected="false">Mondsee</button>
     <button role="tab" id="tab-list" aria-selected="false">Arten</button>
     <button role="tab" id="tab-map" aria-selected="false">Karte</button>
     <button role="tab" id="tab-day" aria-selected="false">Heute</button>
@@ -280,6 +291,36 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
       <div id="tips"></div>
       <div id="dataHint"></div>
       <div id="newNear"></div>
+    </div>
+  </section>
+
+  <section id="view-home" class="view" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <h2>Mondsee-Irrsee <span class="muted small">deine 11 Quadranten · Farbe = dein Anteil der bekannten Arten</span></h2>
+        <div class="hgrid" id="homeGrid"></div>
+      </div>
+      <div class="panel">
+        <h2>Wohin als Nächstes?</h2>
+        <p class="small muted" style="margin:0">Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1). Ein grober Richtwert.</p>
+        <ul class="list" id="homeRank"></ul>
+      </div>
+      <div class="panel">
+        <h2 id="homeQTitle">Quadrant</h2>
+        <div class="tabs seg" role="tablist" id="homeModes">
+          <button role="tab" data-m="jon">Jetzt oder nie</button>
+          <button role="tab" data-m="lif">Lifer</button>
+          <button role="tab" data-m="due">Fällig</button>
+          <button role="tab" data-m="lost">Verschollen</button>
+        </div>
+        <div class="small muted" id="homeQHelp"></div>
+        <ul class="list" id="homeQList"></ul>
+        <div class="row"><button class="btn" id="homeGo">Als aktuellen Quadranten wählen</button></div>
+      </div>
+      <details class="panel fold" id="fold-home-statistik">
+        <summary><h2>Statistik</h2></summary>
+        <div id="homeOut"></div>
+      </details>
     </div>
   </section>
 
@@ -486,11 +527,6 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <p class="small muted" style="margin:0">Eigene Funde, die nur bis zur Gattung (oder gröber) bestimmt sind, und Funde ohne Bestätigung. Gattungsfunde zählen nicht als kartierte Art.</p>
         <div id="openIds"></div>
       </details>
-      <details class="panel fold" id="fold-data-mondsee-irrsee">
-        <summary><h2>Mondsee-Irrsee</h2></summary>
-        <p class="small muted" style="margin:0">Dein Kartierungsgebiet: 8045/2, 8045/4, 8046/3, 8145/2, 8145/4, 8146/1–4, 8246/1, 8246/2. Zeile antippen, um den Quadranten zu wählen.</p>
-        <div id="homeOut"></div>
-      </details>
       <details class="panel fold" id="fold-data-jahresbilanz">
         <summary><h2>Jahresbilanz</h2></summary>
         <div class="row"><select class="field" id="yearSel" style="flex:0 0 auto;width:auto"></select></div>
@@ -515,7 +551,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 55</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 56</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -699,14 +735,14 @@ $('manualForm').onsubmit = e => {
 };
 
 // ---------- Tabs ----------
-const tabs = ['check', 'list', 'map', 'day', 'data', 'off'];
+const tabs = ['check', 'home', 'list', 'map', 'day', 'data', 'off'];
 function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
   if (t === 'list') renderList();
   if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); if (typeof renderLifeTargets === 'function') renderLifeTargets(); }, 60); }
   if (t === 'day') renderDay();
-  if (t === 'data' && typeof renderHome === 'function') renderHome();
+  if (t === 'home') renderHomeTab();
   if (t === 'off') renderOff();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
@@ -830,7 +866,7 @@ function showResult(cur) {
   else {
     const near = all.filter(o => o.la != null && !o.x).map(o => ({ o, d: dist(here, o) })).sort((a, b) => a.d - b.d)[0];
     if (!near) { if (!fuzzy.length) lines.push('Alle eigenen Funde dieser Art haben verschleierte Koordinaten.'); }
-    else if (here.lat != null) lines.push(`Nächster eigener Fund: ${near.o.k}, ${(near.d / 1000).toFixed(1).replace('.', ',')} km entfernt (${fmtDate(near.o.d)}).`);
+    else if (here.lat != null) { const m = outside(b, near.o); lines.push(`Nächster eigener Fund: ${near.o.k}, ${(near.d / 1000).toFixed(1).replace('.', ',')} km entfernt (${fmtDate(near.o.d)})${m < 1000 ? `, nur ${Math.round(m)} m außerhalb von ${here.id}${near.o.a ? ` bei ± ${Math.round(near.o.a)} m Genauigkeit` : ''}` : ''}.`); }
     else lines.push(`Insgesamt ${all.length} eigene Funde in ${new Set(all.map(o => o.k)).size} Quadranten.`);
   }
   if (areaLine(cur.s)) lines.unshift(areaLine(cur.s));
@@ -1059,14 +1095,23 @@ $('mode-exp').onclick = () => setListMode('exp');
 $('mode-lost').onclick = () => setListMode('lost');
 // Verschollene Arten eines Quadranten: im Atlas nur vor atlas.ry gemeldet, von dir seither nicht wiedergefunden.
 // Reihenfolge: in Saison, dann in vielen Nachbarn noch aktuell (also plausibel noch da), dann mehr alte Meldungen
+// Abstand eines Fundes vom Quadranten in Metern (0 = liegt drin)
+function outside(b, o) {
+  const dy = Math.max(b.s - o.la, 0, o.la - b.n) * 111320, dx = Math.max(b.w - o.lo, 0, o.lo - b.e) * 111320 * Math.cos(o.la * Math.PI / 180);
+  return Math.hypot(dx, dy);
+}
+const lostNear = r => r.near ? ` · dein Fund ${fmtDate(r.near.o.d)} liegt in ${r.near.o.k}, ${r.near.m < 1000 ? Math.round(r.near.m) + ' m' : (r.near.m / 1000).toFixed(1).replace('.', ',') + ' km'} außerhalb` : '';
 function lostList(Q) {
   const old = atlas && atlas.ry && atlas.oldByQuad.get(Q.id); if (!old) return [];
   const ry = String(atlas.ry), spQ = spOf(Q.id) || {}, sea = seasonSet(Q);
   const nbFresh = s => NB.reduce((n, [dr, dc]) => { const id = neighbour(Q, dr, dc).id, sp = spOf(id); return n + (sp && sp[s] && !atlas.oldByQuad.get(id)?.has(s) ? 1 : 0); }, 0);
-  const out = [];
+  const out = [], b = quadBounds(Q);
   for (const s of old) {
     if ((index.byQuad.get(Q.id)?.get(s) || []).length) continue; // selbst hier gefunden (egal wann): für Thomas nicht verschollen
-    out.push({ s, now: sea ? (sea.has(s) ? 1 : 0) : 1, nb: nbFresh(s), n: (spQ[s] || [0])[0] });
+    // eigener Fund knapp außerhalb: reicht der Genauigkeitskreis (mind. 100 m) herein, gilt die Art als hier gefunden
+    const near = (index.bySp.get(s) || []).filter(o => o.la != null && !o.x).map(o => ({ o, m: outside(b, o) })).sort((x, y) => x.m - y.m)[0];
+    if (near && near.m <= Math.max(near.o.a || 0, 100)) continue;
+    out.push({ s, now: sea ? (sea.has(s) ? 1 : 0) : 1, nb: nbFresh(s), n: (spQ[s] || [0])[0], near: near && near.m < 3000 ? near : null });
   }
   return out.sort((a, b) => b.now - a.now || b.nb - a.nb || b.n - a.n || a.s.localeCompare(b.s));
 }
@@ -1137,7 +1182,7 @@ function renderList() {
     const rows = all.filter(r => (!onlySea || sea.has(r.s)) && (!onlyRed || isRed(r.s)) && (!onlyLif || isLifer(r.s)));
     $('listTitle').textContent = `Verschollen in ${here.id} (${rows.length})`;
     ul.innerHTML = !(atlas && atlas.ry) ? '<li class="muted">Erscheint, sobald der neue Österreich-Atlas geladen ist (mit Empfang).</li>'
-      : rows.length ? rows.map(r => spRow(r.s, `nur vor ${atlas.ry} gemeldet${r.n ? ` (${r.n}×)` : ''} · in ${r.nb}/8 Nachbarn aktuell`,
+      : rows.length ? rows.map(r => spRow(r.s, `nur vor ${atlas.ry} gemeldet${r.n ? ` (${r.n}×)` : ''} · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}`,
           `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${sea && sea.has(r.s) ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}`)).join('')
       : `<li class="muted">${all.length ? 'Keine Art für diesen Filter.' : 'Keine verschollene Art: alles hier Bekannte wurde seit ' + atlas.ry + ' wieder gemeldet.'}</li>`;
   } else {
@@ -1160,14 +1205,14 @@ function renderList() {
 // ---------- Aus der Artenliste in die Artansicht und wieder zurück (Knopf oder Wischen nach rechts) ----------
 let listReturn = null;
 function openFromList(sp) {
-  listReturn = { y: window.scrollY };
+  listReturn = { y: window.scrollY, tab: store.get('tab', 'list') };
   showTab('check'); lastQuery = ''; $('back').hidden = true; $('backList').hidden = false;
   current = { s: sp, c: commonName(sp) }; $('q').value = current.s; showResult(current); window.scrollTo(0, 0);
 }
 function backToList() {
   if (!listReturn) return;
-  const y = listReturn.y; listReturn = null; $('backList').hidden = true;
-  showTab('list'); requestAnimationFrame(() => window.scrollTo(0, y));
+  const y = listReturn.y, tab = listReturn.tab || 'list'; listReturn = null; $('backList').hidden = true;
+  showTab(tab === 'check' ? 'list' : tab); requestAnimationFrame(() => window.scrollTo(0, y));
 }
 $('backList').onclick = backToList;
 (() => {
@@ -1202,7 +1247,7 @@ const nearTxt = n => !n ? '' : n.d === 0 ? `hier in ${n.id}` : `nächster Fund $
 $('listFilter').addEventListener('input', renderList);
 // nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
 const _renderList = renderList;
-renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); if (typeof renderOff === 'function') renderOff(); if (typeof renderFreq === 'function') renderFreq(); };
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); if (typeof renderOff === 'function') renderOff(); if (typeof renderFreq === 'function') renderFreq(); if (typeof renderHomeTab === 'function') renderHomeTab(); };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -2050,7 +2095,7 @@ function renderHome() {
     const due = [...e.last.values()].filter(isDue).length;
     const lastDay = [...e.days].sort().pop() || '';
     let lo = null;
-    if (atlas && atlas.ry && atlas.oldByQuad.get(q)) { lo = 0; for (const x of atlas.oldByQuad.get(q)) if (!(index.byQuad.get(q)?.get(x) || []).length) { lo++; lost.add(x); } }
+    if (atlas && atlas.ry && atlas.oldByQuad.get(q)) { const L = lostList(parseQuad(q)); lo = L.length; L.forEach(r => lost.add(r.s)); }
     return { q, mine: e.last.size, total: c.total, pct: c.pct, due, lastDay, days: e.days.size, lo, yr: [...e.days].filter(d => d.startsWith(y)).length };
   });
   // je Jahr im Gebiet
@@ -2079,8 +2124,76 @@ function renderHome() {
       <thead><tr><th>Jahr</th><th>Funde</th><th>Tage</th><th>Arten</th><th>Erstnachweise</th></tr></thead>
       <tbody>${[...years].sort((a, b) => b[0].localeCompare(a[0])).map(([yy, e]) => `<tr><td>${yy}</td><td>${e.n}</td><td>${e.days.size}</td><td>${e.sp.size}</td><td>${e.neu}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Noch keine Funde im Gebiet.</td></tr>'}</tbody>
     </table></div>`;
-  out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = e => { if (e.target.closest('td.lo')) { listMode = 'lost'; store.set('listMode', 'lost'); } setHere({ ...parseQuad(tr.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
+  out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = e => { homeSel = tr.dataset.q; store.set('homeSel', homeSel); if (e.target.closest('td.lo')) { homeMode = 'lost'; store.set('homeMode', 'lost'); } renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
 }
+
+// ---------- Tab Mondsee-Irrsee (Thomas, 09.10.: eigener Tab statt in den anderen versteckt) ----------
+let homeSel = store.get('homeSel', null), homeMode = store.get('homeMode', 'jon');
+const H_RC = id => { const Q = parseQuad(id); return [Q.R * 2 + (Q.q > 2 ? 1 : 0), Q.C * 2 + (Q.q % 2 === 0 ? 1 : 0)]; };
+// Saison und „bald vorbei“ gelten für die Umgebung: was für irgendeinen der Quadranten (oder den Standort) geladen ist
+const unionOf = (fn, ids) => { let u = null; for (const id of ids) { const m = fn(parseQuad(id)); if (m) { u = u || new Set(); for (const k of m.keys ? m.keys() : m) u.add(k); } } return u; };
+function homeMetrics(id) {
+  const ids = [...HOME, ...(here ? [here.id] : [])];
+  const sea = unionOf(seasonSet, ids), ends = unionOf(endingMap, ids);
+  const Q = parseQuad(id), sp = spOf(id) || {}, mineQ = index.byQuad.get(id);
+  const r = { id, jon: [], lif: [], due: [], lost: [], last: '' };
+  for (const os of (mineQ || new Map()).values()) for (const o of os) if (!o.x && o.d && o.d > r.last) r.last = o.d;
+  for (const s of Object.keys(sp)) {
+    if (!s.includes(' ')) continue;
+    const ds = (mineQ?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d).sort(), last = ds[ds.length - 1];
+    const due = ds.length > 0 && isDue(last), open = !ds.length || due, inSea = !sea || sea.has(s);
+    const c = { s, pct: chance(s, Q).pct, last };
+    if (open && ends && ends.has(s)) r.jon.push(c);
+    if (isLifer(s) && inSea) r.lif.push(c);
+    if (due && inSea) r.due.push(c);
+  }
+  r.lost = lostList(Q).filter(x => !sea || sea.has(x.s));
+  r.score = 5 * r.lif.length + 3 * r.jon.length + 2 * r.due.length + r.lost.length;
+  r.sea = !!sea; r.ends = !!ends;
+  return r;
+}
+function renderHomeTab() {
+  if ($('view-home').hidden) return;
+  const ms = HOME.map(homeMetrics), byId = new Map(ms.map(m => [m.id, m]));
+  const ranked = [...ms].sort((a, b) => b.score - a.score || a.last.localeCompare(b.last));
+  const rankOf = new Map(ranked.map((m, i) => [m.id, i + 1]));
+  if (!homeSel || !HOME_SET.has(homeSel)) homeSel = here && HOME_SET.has(here.id) ? here.id : ranked[0].id;
+  // Kachelkarte in Lage der Quadranten (Zeilen von Nord nach Süd, Spalten von West nach Ost)
+  const rc = HOME.map(H_RC), r0 = Math.min(...rc.map(x => x[0])), r1 = Math.max(...rc.map(x => x[0])), c0 = Math.min(...rc.map(x => x[1])), c1 = Math.max(...rc.map(x => x[1]));
+  const at = new Map(HOME.map((id, i) => [rc[i][0] * 1000 + rc[i][1], id]));
+  $('homeGrid').style.gridTemplateColumns = `repeat(${c1 - c0 + 1}, 1fr)`;
+  const cells = [];
+  for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) {
+    const id = at.get(r * 1000 + c);
+    if (!id) { cells.push('<button class="empty" tabindex="-1" aria-hidden="true"></button>'); continue; }
+    const cov = quadCoverage(id), m = byId.get(id);
+    cells.push(`<button data-q="${id}" class="${id === homeSel ? 'sel' : ''}${here && here.id === id ? ' here' : ''}" style="background:${cov.pct != null ? covColor(cov.pct) : '#9ca3af'}"><b>${id}</b><span class="s">${cov.pct != null ? cov.pct + ' %' : '–'}</span><span class="rank">#${rankOf.get(id)} · ${Math.round(m.score)}</span></button>`);
+  }
+  $('homeGrid').innerHTML = cells.join('');
+  $('homeGrid').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { homeSel = b.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); });
+  // Rangliste: die ersten fünf
+  const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
+  $('homeRank').innerHTML = ranked.slice(0, 5).map((m, i) => `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`).join('');
+  $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
+  // Liste für den gewählten Quadranten
+  const m = byId.get(homeSel);
+  $('homeQTitle').textContent = `${homeSel}${m.last ? ' · zuletzt ' + fmtDate(m.last) : ' · noch nie besucht'}`;
+  $('homeModes').querySelectorAll('button').forEach(b => { b.setAttribute('aria-selected', b.dataset.m === homeMode); b.textContent = { jon: 'Jetzt oder nie', lif: 'Lifer', due: 'Fällig', lost: 'Verschollen' }[b.dataset.m] + ` (${m[b.dataset.m].length})`; b.onclick = () => { homeMode = b.dataset.m; store.set('homeMode', homeMode); renderHomeTab(); }; });
+  const HELP = { jon: m.ends ? 'Hier bekannt, von dir noch nicht oder nicht mehr kartiert, im nächsten Monat in der Umgebung kaum noch gemeldet.' : 'Die Daten zu „bald vorbei“ fehlen noch (mit Empfang unter Prüfen laden).',
+    lif: 'Hier bekannte Arten, die du in Österreich noch nie gefunden hast' + (m.sea ? ', in Saison.' : '.'), due: `Von dir hier vor mehr als ${REPEAT_YEARS} Jahren kartiert` + (m.sea ? ', in Saison.' : '.'),
+    lost: `Hier nur vor ${atlas && atlas.ry || '–'} gemeldet, von dir nie gefunden` + (m.sea ? ', in Saison.' : '.') };
+  $('homeQHelp').textContent = HELP[homeMode];
+  const rows = m[homeMode];
+  const meta = r => homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
+  const sorted = homeMode === 'lost' ? rows : [...rows].sort((a, b) => b.pct - a.pct || a.s.localeCompare(b.s));
+  $('homeQList').innerHTML = sorted.length ? sorted.slice(0, 200).map(r => spRow(r.s, meta(r), `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
+    : '<li class="muted">Nichts in dieser Liste.</li>';
+  $('homeQList').querySelectorAll('li.tap').forEach(li => li.onclick = () => { if (!here || here.id !== homeSel) setHere({ ...parseQuad(homeSel), acc: null, t: Date.now(), src: 'manual' }); openFromList(li.dataset.s); });
+  $('homeGo').textContent = here && here.id === homeSel ? `${homeSel} ist dein aktueller Quadrant` : `${homeSel} als aktuellen Quadranten wählen`;
+  $('homeGo').disabled = !!(here && here.id === homeSel);
+  renderHome();
+}
+$('homeGo').onclick = () => { if (homeSel) { setHere({ ...parseQuad(homeSel), acc: null, t: Date.now(), src: 'manual' }); renderHomeTab(); } };
 
 // ---------- Ungenaue Funde (Wunsch von Thomas): Genauigkeit über 50 m, ohne verschleierte ----------
 let accMode = store.get('accMode', 'edge');
@@ -2994,7 +3107,7 @@ function renderTips() {
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '')
     + (lost ? row('Verschollen: hier seit Jahren nicht gemeldet', `${isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas.ry}</span>`, lost.s,
-      `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}`)
+      `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostNear(lost)}${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}`)
       : `<li class="small muted" style="display:block"><b>Verschollen:</b> ${atlas && atlas.ry ? `keine Art, alle bekannten Arten wurden hier seit ${atlas.ry} wieder gemeldet.` : 'erscheint, sobald der neue Österreich-Atlas geladen ist (mit Empfang).'}</li>`);
   // Jetzt oder nie: nur Arten, die im gewählten Quadranten bekannt und dort von dir noch nicht (oder nicht mehr) kartiert sind,
   // Saison endet bald (Thomas, 09.10.: direkter Bezug zum gewählten Quadranten)
