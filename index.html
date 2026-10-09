@@ -513,7 +513,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 53</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 54</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2975,8 +2975,9 @@ function renderTips() {
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
     + row('Wahrscheinlichste noch nicht kartierte Art', '<span class="chip new">neu hier</span>', open && open.s, open ? `Fundchance ${open.pct} %` : '')
     + row('Am längsten nicht mehr kartiert', `<span class="chip ${isDue(old && old.last) ? 'due' : 'ok'}">${old ? old.last.slice(0, 4) : ''}</span>`, old && old.s, old ? `zuletzt ${fmtDate(old.last)}` : '')
-    + row('Verschollen: hier seit Jahren nicht gemeldet', `${lost && isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas && atlas.ry}</span>`, lost && lost.s,
-      lost ? `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}` : '');
+    + (lost ? row('Verschollen: hier seit Jahren nicht gemeldet', `${isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas.ry}</span>`, lost.s,
+      `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}`)
+      : `<li class="small muted" style="display:block"><b>Verschollen:</b> ${atlas && atlas.ry ? `keine Art, alle bekannten Arten wurden hier seit ${atlas.ry} wieder gemeldet.` : 'erscheint, sobald der neue Österreich-Atlas geladen ist (mit Empfang).'}</li>`);
   // Jetzt oder nie (Wunsch von Thomas): nur Arten, die in einem der 11 Mondsee-Irrsee-Quadranten bekannt und dort von dir noch nicht
   // (oder nicht mehr) kartiert sind, Saison endet bald. Dazu der Quadrant mit der besten Fundchance.
   const ends = [here, ...HOME.map(parseQuad)].map(endingMap).filter(Boolean);
@@ -3056,7 +3057,8 @@ function prepAtlas(raw) {
 }
 async function loadAtlas() {
   try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); } } catch {}
-  const age = atlas ? Date.now() - new Date(store.get('atlasChecked41', 0)) : Infinity;
+  // Atlas ohne Stichjahr (vor Oktober 2026) sofort neu holen, sonst höchstens einmal am Tag
+  const age = atlas && atlas.ry ? Date.now() - new Date(store.get('atlasChecked41', 0)) : Infinity;
   if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
   try {
     const r = await fetch('atlas.json', { cache: 'no-cache' });
