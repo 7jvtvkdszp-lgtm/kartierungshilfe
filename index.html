@@ -106,6 +106,7 @@ button { cursor: pointer }
 .stat tr.tap td:first-child { color: var(--accent, inherit); font-weight: 600 }
 .statwrap { overflow-x: auto }
 .chip.home { background: #0f766e; color: #fff }
+#mode-mine, #mode-miss, #mode-exp, #mode-lost { font-size: 13px; padding-left: 3px; padding-right: 3px; hyphens: auto }
 .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden }
 .bar div { height: 100%; background: var(--found) }
 .chance { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex: 0 1 auto; min-width: 0; max-width: 55% }
@@ -308,6 +309,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button role="tab" id="mode-mine" aria-selected="true">Meine Arten</button>
           <button role="tab" id="mode-miss" aria-selected="false">Noch nicht gefunden</button>
           <button role="tab" id="mode-exp" aria-selected="false">Erwartet</button>
+          <button role="tab" id="mode-lost" aria-selected="false">Verschollen</button>
         </div>
         <div id="missOpts" hidden style="display:flex;flex-direction:column;gap:8px">
           <div class="tabs seg" role="tablist" id="missSortBox"><button role="tab" id="sort-pct" aria-selected="true">Nach Fundchance</button><button role="tab" id="sort-km" aria-selected="false">Nach Entfernung</button></div>
@@ -513,7 +515,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 54</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 55</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1054,6 +1056,20 @@ function setListMode(m) { listMode = m; store.set('listMode', m); renderList(); 
 $('mode-mine').onclick = () => setListMode('mine');
 $('mode-miss').onclick = () => setListMode('miss');
 $('mode-exp').onclick = () => setListMode('exp');
+$('mode-lost').onclick = () => setListMode('lost');
+// Verschollene Arten eines Quadranten: im Atlas nur vor atlas.ry gemeldet, von dir seither nicht wiedergefunden.
+// Reihenfolge: in Saison, dann in vielen Nachbarn noch aktuell (also plausibel noch da), dann mehr alte Meldungen
+function lostList(Q) {
+  const old = atlas && atlas.ry && atlas.oldByQuad.get(Q.id); if (!old) return [];
+  const ry = String(atlas.ry), spQ = spOf(Q.id) || {}, sea = seasonSet(Q);
+  const nbFresh = s => NB.reduce((n, [dr, dc]) => { const id = neighbour(Q, dr, dc).id, sp = spOf(id); return n + (sp && sp[s] && !atlas.oldByQuad.get(id)?.has(s) ? 1 : 0); }, 0);
+  const out = [];
+  for (const s of old) {
+    if ((index.byQuad.get(Q.id)?.get(s) || []).length) continue; // selbst hier gefunden (egal wann): für Thomas nicht verschollen
+    out.push({ s, now: sea ? (sea.has(s) ? 1 : 0) : 1, nb: nbFresh(s), n: (spQ[s] || [0])[0] });
+  }
+  return out.sort((a, b) => b.now - a.now || b.nb - a.nb || b.n - a.n || a.s.localeCompare(b.s));
+}
 $('freqSel').value = String(store.get('freqSel', 10));
 $('freqSel').onchange = () => { store.set('freqSel', +$('freqSel').value); renderFreq(); };
 $('freqLifer').checked = !!store.get('freqLifer', false);
@@ -1088,10 +1104,13 @@ function renderList() {
   $('mode-mine').setAttribute('aria-selected', listMode === 'mine');
   $('mode-miss').setAttribute('aria-selected', listMode === 'miss');
   $('mode-exp').setAttribute('aria-selected', listMode === 'exp');
+  $('mode-lost').setAttribute('aria-selected', listMode === 'lost');
   $('missOpts').hidden = listMode === 'mine';
   $('missSortBox').hidden = listMode !== 'miss';
   $('sort-pct').setAttribute('aria-selected', missSort !== 'km'); $('sort-km').setAttribute('aria-selected', missSort === 'km');
-  $('missHelp').textContent = listMode === 'exp'
+  $('missHelp').textContent = listMode === 'lost'
+    ? `Arten, die in diesem Quadranten bekannt sind, aber nur vor ${atlas && atlas.ry || '(Atlas fehlt)'} gemeldet wurden und die du hier selbst noch nie gefunden hast. Oben: was jetzt Saison hat und in vielen Nachbarquadranten noch aktuell gemeldet wird. Darunter sind auch kritische Sippen, die früher oft nur so bestimmt wurden.`
+    : listMode === 'exp'
     ? 'Arten, die in mindestens einem der Nachbarquadranten bekannt sind, hier aber noch nie gemeldet wurden. 4/8 heißt: in 4 von 8 Nachbarquadranten bekannt. „jetzt“: in diesem Monat in der Umgebung beobachtet.'
     : 'Nur Arten, die in diesem Quadranten auf iNaturalist oder GBIF bekannt sind. Fundchance: Beobachtungen im Quadranten (60 %) und Verbreitung in den Nachbarquadranten (40 %), ein grober Richtwert. „jetzt“: in diesem Monat in der Umgebung beobachtet. Entfernung: von deinem Standort zum nächsten öffentlichen iNaturalist-Fundpunkt der Art im Quadranten.';
   const f = norm($('listFilter').value);
@@ -1111,6 +1130,16 @@ function renderList() {
     }).join('') : `<li class="muted">${own.length ? 'Kein Treffer für den Filter.' : 'In diesem Quadranten hast du noch nichts gemeldet.'}</li>`;
   } else if (listMode === 'exp') {
     renderExpected(ul, match);
+  } else if (listMode === 'lost') {
+    const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked, onlyLif = $('onlyLif').checked;
+    const all = lostList(here).filter(r => match(r.s));
+    filterCounts(all.map(r => r.s), sea);
+    const rows = all.filter(r => (!onlySea || sea.has(r.s)) && (!onlyRed || isRed(r.s)) && (!onlyLif || isLifer(r.s)));
+    $('listTitle').textContent = `Verschollen in ${here.id} (${rows.length})`;
+    ul.innerHTML = !(atlas && atlas.ry) ? '<li class="muted">Erscheint, sobald der neue Österreich-Atlas geladen ist (mit Empfang).</li>'
+      : rows.length ? rows.map(r => spRow(r.s, `nur vor ${atlas.ry} gemeldet${r.n ? ` (${r.n}×)` : ''} · in ${r.nb}/8 Nachbarn aktuell`,
+          `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${sea && sea.has(r.s) ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}`)).join('')
+      : `<li class="muted">${all.length ? 'Keine Art für diesen Filter.' : 'Keine verschollene Art: alles hier Bekannte wurde seit ' + atlas.ry + ' wieder gemeldet.'}</li>`;
   } else {
     const cand = new Set(a ? Object.keys(a.sp) : []); // nur der gewählte Quadrant
     const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked, onlyLif = $('onlyLif').checked;
@@ -2021,7 +2050,7 @@ function renderHome() {
     const due = [...e.last.values()].filter(isDue).length;
     const lastDay = [...e.days].sort().pop() || '';
     let lo = null;
-    if (atlas && atlas.ry && atlas.oldByQuad.get(q)) { lo = 0; for (const x of atlas.oldByQuad.get(q)) if (!(e.last.get(x) >= String(atlas.ry))) { lo++; lost.add(x); } }
+    if (atlas && atlas.ry && atlas.oldByQuad.get(q)) { lo = 0; for (const x of atlas.oldByQuad.get(q)) if (!(index.byQuad.get(q)?.get(x) || []).length) { lo++; lost.add(x); } }
     return { q, mine: e.last.size, total: c.total, pct: c.pct, due, lastDay, days: e.days.size, lo, yr: [...e.days].filter(d => d.startsWith(y)).length };
   });
   // je Jahr im Gebiet
@@ -2043,14 +2072,14 @@ function renderHome() {
     </div>
     <div class="statwrap"><table class="stat">
       <thead><tr><th>Quadrant</th><th>deine / bekannt</th><th>%</th><th>fällig</th><th>versch.</th><th>Tage ${y}</th><th>zuletzt</th></tr></thead>
-      <tbody>${rows.map(r => `<tr class="tap" data-q="${r.q}"><td>${r.q}</td><td>${r.mine} / ${r.total ?? '–'}</td><td>${r.pct ?? '–'}</td><td>${r.due}</td><td>${r.lo ?? '–'}</td><td>${r.yr}</td><td>${r.lastDay ? fmtDate(r.lastDay) : 'nie'}</td></tr>`).join('')}</tbody>
+      <tbody>${rows.map(r => `<tr class="tap" data-q="${r.q}"><td>${r.q}</td><td>${r.mine} / ${r.total ?? '–'}</td><td>${r.pct ?? '–'}</td><td>${r.due}</td><td class="lo">${r.lo ?? '–'}</td><td>${r.yr}</td><td>${r.lastDay ? fmtDate(r.lastDay) : 'nie'}</td></tr>`).join('')}</tbody>
     </table></div>
     <div class="small"><b>Je Jahr im Gebiet</b> <span class="muted">(Erstnachweis = Art zum ersten Mal von dir im Quadranten)</span></div>
     <div class="statwrap"><table class="stat">
       <thead><tr><th>Jahr</th><th>Funde</th><th>Tage</th><th>Arten</th><th>Erstnachweise</th></tr></thead>
       <tbody>${[...years].sort((a, b) => b[0].localeCompare(a[0])).map(([yy, e]) => `<tr><td>${yy}</td><td>${e.n}</td><td>${e.days.size}</td><td>${e.sp.size}</td><td>${e.neu}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">Noch keine Funde im Gebiet.</td></tr>'}</tbody>
     </table></div>`;
-  out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = () => { setHere({ ...parseQuad(tr.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
+  out.querySelectorAll('tr.tap').forEach(tr => tr.onclick = e => { if (e.target.closest('td.lo')) { listMode = 'lost'; store.set('listMode', 'lost'); } setHere({ ...parseQuad(tr.dataset.q), acc: null, t: Date.now(), src: 'manual' }); showTab('list'); });
 }
 
 // ---------- Ungenaue Funde (Wunsch von Thomas): Genauigkeit über 50 m, ohne verschleierte ----------
@@ -2933,13 +2962,13 @@ for (const id of ['q', 'listFilter', 'manualInput', 'tallyFilter', 'offCenter'])
 }
 
 // ---------- Drei Tipps zum aktuellen Quadranten ----------
-let homeEndTried = false;
+let homeEndTried = null;
 function renderTips() {
   const el = $('tips'); if (!el) return;
   if (!here || !spOf(here.id) || current) { el.innerHTML = ''; return; }
   const mine = mySpeciesIn(here.id);
-  const cand = new Set(Object.keys(spOf(here.id)));
-  for (const [dr, dc] of NB) Object.keys(spOf(neighbour(here, dr, dc).id) || {}).forEach(s => cand.add(s));
+  // nur Arten, die im gewählten Quadranten selbst bekannt sind (Wunsch von Thomas, 09.10.)
+  const cand = new Set(Object.keys(spOf(here.id)).filter(s => s.includes(' ')));
   // Vorrang hat, was gerade beobachtbar ist (diesen Monat in der Umgebung gemeldet)
   const sea = seasonSet(here), inS = s => sea ? (sea.has(s) ? 1 : 0) : 1;
   const better = (a, b) => !b || a.now > b.now || (a.now === b.now && (a.pct > b.pct || (a.pct === b.pct && a.inQ > b.inQ)));
@@ -2958,18 +2987,7 @@ function renderTips() {
   }
   // Verschollen (Wunsch von Thomas): im Quadranten bekannt, aber seit atlas.ry von niemandem mehr gemeldet. Vorrang: in Saison,
   // dann in möglichst vielen Nachbarquadranten noch aktuell gemeldet (also plausibel noch da), dann mehr alte Meldungen
-  let lost = null, lostN = 0;
-  const oldHere = atlas && atlas.ry && atlas.oldByQuad.get(here.id);
-  if (oldHere) {
-    const ry = String(atlas.ry), spHere = spOf(here.id) || {};
-    const nbFresh = s => NB.reduce((n, [dr, dc]) => { const id = neighbour(here, dr, dc).id, sp = spOf(id); return n + (sp && sp[s] && !atlas.oldByQuad.get(id)?.has(s) ? 1 : 0); }, 0);
-    for (const s of oldHere) {
-      if ((index.byQuad.get(here.id)?.get(s) || []).some(o => o.d && o.d >= ry)) continue; // selbst wiedergefunden
-      lostN++;
-      const c = { s, now: inS(s), nb: nbFresh(s), n: (spHere[s] || [0])[0] };
-      if (!lost || c.now > lost.now || (c.now === lost.now && (c.nb > lost.nb || (c.nb === lost.nb && c.n > lost.n)))) lost = c;
-    }
-  }
+  const lostAll = lostList(here), lost = lostAll[0] || null, lostN = lostAll.length;
   const seaChip = s => !sea ? '' : sea.has(s) ? (isEnding(s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : '<span class="chip unsure">nicht in Saison</span>';
   const row = (label, cls, s, detail) => s ? spRow(s, detail, `${cls}${blChip(s)}${rlChip(s)}${seaChip(s)}${freqChip(s)}`, '', label) : '';
   const html = row('Wahrscheinlichster Lifer', '<span class="chip lifer">Lifer</span>', lifer && lifer.s, lifer ? `Fundchance ${lifer.pct} %` : '')
@@ -2978,24 +2996,19 @@ function renderTips() {
     + (lost ? row('Verschollen: hier seit Jahren nicht gemeldet', `${isLifer(lost.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip due">vor ${atlas.ry}</span>`, lost.s,
       `nur vor ${atlas.ry} gemeldet · in ${lost.nb}/8 Nachbarn aktuell${lostN > 1 ? ` · ${lostN - 1} weitere verschollen` : ''}`)
       : `<li class="small muted" style="display:block"><b>Verschollen:</b> ${atlas && atlas.ry ? `keine Art, alle bekannten Arten wurden hier seit ${atlas.ry} wieder gemeldet.` : 'erscheint, sobald der neue Österreich-Atlas geladen ist (mit Empfang).'}</li>`);
-  // Jetzt oder nie (Wunsch von Thomas): nur Arten, die in einem der 11 Mondsee-Irrsee-Quadranten bekannt und dort von dir noch nicht
-  // (oder nicht mehr) kartiert sind, Saison endet bald. Dazu der Quadrant mit der besten Fundchance.
-  const ends = [here, ...HOME.map(parseQuad)].map(endingMap).filter(Boolean);
-  if (!ends.length && navigator.onLine && !homeEndTried) { homeEndTried = true; loadEnding(parseQuad('8146/1')).then(() => renderTips()).catch(() => {}); }
+  // Jetzt oder nie: nur Arten, die im gewählten Quadranten bekannt und dort von dir noch nicht (oder nicht mehr) kartiert sind,
+  // Saison endet bald (Thomas, 09.10.: direkter Bezug zum gewählten Quadranten)
+  const ends = [endingMap(here)].filter(Boolean);
+  if (!ends.length && navigator.onLine && homeEndTried !== here.id) { homeEndTried = here.id; loadEnding(here).then(() => renderTips()).catch(() => {}); }
   const best = new Map();
-  if (ends.length) for (const id of HOME) {
-    const Q = parseQuad(id), sp = spOf(id); if (!sp) continue;
-    const mineQ = index.byQuad.get(id);
-    for (const s of Object.keys(sp)) {
-      if (!s.includes(' ') || !ends.some(e => e.has(s))) continue;
-      const ds = (mineQ?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d);
-      if (ds.length && !isDue(ds.sort().pop())) continue;
-      const c = chance(s, Q), b = best.get(s);
-      if (!b) best.set(s, { s, pct: c.pct, q: id, more: 0 }); else { b.more++; if (c.pct > b.pct) { b.pct = c.pct; b.q = id; } }
-    }
+  if (ends.length) for (const s of cand) {
+    if (!ends.some(e => e.has(s))) continue;
+    const ds = (index.byQuad.get(here.id)?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d);
+    if (ds.length && !isDue(ds.sort().pop())) continue;
+    best.set(s, { s, pct: chance(s, here).pct, due: ds.length > 0 });
   }
   const enders = [...best.values()].sort((a, b) => isLifer(b.s) - isLifer(a.s) || b.pct - a.pct).slice(0, 5);
-  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px;display:block"><b>Jetzt oder nie</b> (${HOME_NAME}): im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => spRow(r.s, `Fundchance ${r.pct} % in ${r.q}${r.more ? ` · noch in ${r.more} weiteren` : ''}`, `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}`)).join('') : '';
+  const endHtml = enders.length ? `<li class="small muted" style="padding-top:10px;display:block"><b>Jetzt oder nie</b> in ${here.id}: im ${MONTHS_LONG[monthNext() - 1]} in der Umgebung kaum noch gemeldet</li>` + enders.map(r => spRow(r.s, `Fundchance ${r.pct} % in ${here.id}${r.due ? ' · wieder fällig' : ''}`, `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="chip ending">bald vorbei</span>${freqChip(r.s)}`)).join('') : '';
   el.innerHTML = html || endHtml ? `<div class="panel"><h2>Tipps für ${here.id}</h2><ul class="list">${html}${endHtml}</ul></div>` : '';
   el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); window.scrollTo(0, 0); });
 }
