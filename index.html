@@ -96,7 +96,9 @@ button { cursor: pointer }
 .list li.ok .sci, .list li.ok .d { color: var(--found) }
 .list li.tap { cursor: pointer }
 .tabs.seg { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) }
-nav.tabs button { font-size: 12.5px; padding: 0 1px }
+nav.tabs { grid-template-columns: repeat(10, 1fr) }
+nav.tabs button { grid-column: span 2; font-size: 14px }
+nav.tabs #tab-check, nav.tabs #tab-home { grid-column: span 5 }
 /* Mondsee-Irrsee-Tab: Kachelkarte der 11 Quadranten in ihrer Lage zueinander */
 .hgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px }
 .hgrid button { border: 2px solid transparent; border-radius: 10px; padding: 6px 4px; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.15 }
@@ -270,7 +272,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
   <nav class="tabs" role="tablist">
     <button role="tab" id="tab-check" aria-selected="true">Prüfen</button>
-    <button role="tab" id="tab-home" aria-selected="false">Mondsee</button>
+    <button role="tab" id="tab-home" aria-selected="false">Mondsee-Irrsee</button>
     <button role="tab" id="tab-list" aria-selected="false">Arten</button>
     <button role="tab" id="tab-map" aria-selected="false">Karte</button>
     <button role="tab" id="tab-day" aria-selected="false">Heute</button>
@@ -551,7 +553,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 56</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 57</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
