@@ -1,5 +1,5 @@
 // Offline-Cache für die App-Dateien. Bei jeder Änderung an der App VERSION erhöhen.
-const VERSION = 'kh-57';
+const VERSION = 'kh-58';
 const TILES = 'kh-tiles'; // Kartenkacheln, bleibt über Versionen hinweg erhalten
 const PHOTOS = 'kh-photos'; // kleine Artfotos von iNaturalist für die Listen, ebenfalls dauerhaft
 const PHOTO_HOSTS = ['inaturalist-open-data.s3.amazonaws.com', 'static.inaturalist.org'];

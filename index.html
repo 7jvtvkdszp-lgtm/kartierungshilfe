@@ -97,6 +97,11 @@ button { cursor: pointer }
 .list li.tap { cursor: pointer }
 .tabs.seg { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) }
 nav.tabs { grid-template-columns: repeat(10, 1fr) }
+#homeModes { grid-template-columns: repeat(12, 1fr) }
+#homeModes button { grid-column: span 6 }
+#homeModes button[data-m="jon"] { grid-column: span 5 }
+#homeModes button[data-m="lif"] { grid-column: span 3 }
+#homeModes button[data-m="due"] { grid-column: span 4 }
 nav.tabs button { grid-column: span 2; font-size: 14px }
 nav.tabs #tab-check, nav.tabs #tab-home { grid-column: span 5 }
 /* Mondsee-Irrsee-Tab: Kachelkarte der 11 Quadranten in ihrer Lage zueinander */
@@ -314,6 +319,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button role="tab" data-m="lif">Lifer</button>
           <button role="tab" data-m="due">Fällig</button>
           <button role="tab" data-m="lost">Verschollen</button>
+          <button role="tab" data-m="done">Kartiert</button>
         </div>
         <div class="small muted" id="homeQHelp"></div>
         <ul class="list" id="homeQList"></ul>
@@ -553,7 +559,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupStatus"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 57</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 58</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -622,6 +628,30 @@ let index = null;
 // Taxonomische Festlegungen von Thomas: diese Namen gelten in Österreich immer als die rechte Art
 const TAX_FIX = { 'Dactylorhiza maculata': 'Dactylorhiza fuchsii' };
 const canonTax = s => TAX_FIX[s] || s;
+// Aggregate und ihre in den letzten Jahren abgetrennten Kleinarten (Thomas: Dryopteris affinis → D. borreri).
+// Ist eine Art der Gruppe im Quadranten aktuell gemeldet, gilt keine der anderen als verschollen. Weitere Gruppen hier eintragen.
+const AGG = {
+  'Dryopteris affinis': ['Dryopteris borreri', 'Dryopteris cambrensis', 'Dryopteris pseudodisjuncta'],
+  'Senecio nemorensis': ['Senecio ovatus', 'Senecio hercynicus'],
+  'Callitriche palustris': ['Callitriche cophocarpa', 'Callitriche stagnalis'],
+  'Festuca ovina': ['Festuca guestfalica', 'Festuca rupicola', 'Festuca filiformis'],
+  'Carex muricata': ['Carex spicata', 'Carex pairae', 'Carex divulsa'],
+  'Veronica anagallis-aquatica': ['Veronica anagalloides', 'Veronica catenata'],
+  'Myosotis scorpioides': ['Myosotis nemorosa', 'Myosotis laxiflora'],
+  'Ranunculus auricomus': ['Ranunculus cassubicifolius'],
+  'Arabis hirsuta': ['Arabis sagittata', 'Arabis ciliata'],
+  'Galium mollugo': ['Galium album'],
+  'Leucanthemum vulgare': ['Leucanthemum ircutianum'],
+  'Polygonum aviculare': ['Polygonum arenastrum', 'Polygonum depressum'],
+  'Euphrasia officinalis': ['Euphrasia rostkoviana', 'Euphrasia stricta', 'Euphrasia nemorosa', 'Euphrasia picta'],
+  'Achillea millefolium': ['Achillea roseoalba', 'Achillea collina', 'Achillea pannonica'],
+  'Valeriana officinalis': ['Valeriana excelsa', 'Valeriana sambucifolia', 'Valeriana wallrothii'],
+  'Asplenium trichomanes': ['Asplenium quadrivalens'],
+  'Poa pratensis': ['Poa angustifolia', 'Poa humilis'],
+  'Pulmonaria officinalis': ['Pulmonaria obscura'],
+};
+const AGG_OF = new Map(); // Art → alle Arten ihrer Gruppe
+for (const [a, ks] of Object.entries(AGG)) { const g = [a, ...ks]; for (const x of g) AGG_OF.set(x, g); }
 function speciesName(name, rankLevel) { return canonTax(speciesNameRaw(name, rankLevel)); }
 function speciesNameRaw(name, rankLevel) {
   if (!name) return '';
@@ -1110,6 +1140,8 @@ function lostList(Q) {
   const out = [], b = quadBounds(Q);
   for (const s of old) {
     if ((index.byQuad.get(Q.id)?.get(s) || []).length) continue; // selbst hier gefunden (egal wann): für Thomas nicht verschollen
+    // Aggregat oder Kleinart: eine andere Art der Gruppe hier aktuell gemeldet oder von dir gefunden → nicht verschollen
+    if ((AGG_OF.get(s) || []).some(x => x !== s && ((spQ[x] && !old.has(x)) || (index.byQuad.get(Q.id)?.get(x) || []).length))) continue;
     // eigener Fund knapp außerhalb: reicht der Genauigkeitskreis (mind. 100 m) herein, gilt die Art als hier gefunden
     const near = (index.bySp.get(s) || []).filter(o => o.la != null && !o.x).map(o => ({ o, m: outside(b, o) })).sort((x, y) => x.m - y.m)[0];
     if (near && near.m <= Math.max(near.o.a || 0, 100)) continue;
@@ -2138,7 +2170,7 @@ function homeMetrics(id) {
   const ids = [...HOME, ...(here ? [here.id] : [])];
   const sea = unionOf(seasonSet, ids), ends = unionOf(endingMap, ids);
   const Q = parseQuad(id), sp = spOf(id) || {}, mineQ = index.byQuad.get(id);
-  const r = { id, jon: [], lif: [], due: [], lost: [], last: '' };
+  const r = { id, jon: [], lif: [], due: [], lost: [], done: [], last: '' };
   for (const os of (mineQ || new Map()).values()) for (const o of os) if (!o.x && o.d && o.d > r.last) r.last = o.d;
   for (const s of Object.keys(sp)) {
     if (!s.includes(' ')) continue;
@@ -2150,6 +2182,11 @@ function homeMetrics(id) {
     if (due && inSea) r.due.push(c);
   }
   r.lost = lostList(Q).filter(x => !sea || sea.has(x.s));
+  // Kartiert: alle Arten, die du hier gefunden hast (ohne verschleierte), mit letztem Funddatum
+  for (const [s, os] of mineQ || []) {
+    const ex = os.filter(o => !o.x); if (!ex.length || !s.includes(' ')) continue;
+    r.done.push({ s, n: ex.length, last: ex.map(o => o.d || '').sort().pop() });
+  }
   r.score = 5 * r.lif.length + 3 * r.jon.length + 2 * r.due.length + r.lost.length;
   r.sea = !!sea; r.ends = !!ends;
   return r;
@@ -2180,15 +2217,16 @@ function renderHomeTab() {
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
   $('homeQTitle').textContent = `${homeSel}${m.last ? ' · zuletzt ' + fmtDate(m.last) : ' · noch nie besucht'}`;
-  $('homeModes').querySelectorAll('button').forEach(b => { b.setAttribute('aria-selected', b.dataset.m === homeMode); b.textContent = { jon: 'Jetzt oder nie', lif: 'Lifer', due: 'Fällig', lost: 'Verschollen' }[b.dataset.m] + ` (${m[b.dataset.m].length})`; b.onclick = () => { homeMode = b.dataset.m; store.set('homeMode', homeMode); renderHomeTab(); }; });
+  $('homeModes').querySelectorAll('button').forEach(b => { b.setAttribute('aria-selected', b.dataset.m === homeMode); b.textContent = { jon: 'Jetzt oder nie', lif: 'Lifer', due: 'Fällig', lost: 'Verschollen', done: 'Kartiert' }[b.dataset.m] + ` (${m[b.dataset.m].length})`; b.onclick = () => { homeMode = b.dataset.m; store.set('homeMode', homeMode); renderHomeTab(); }; });
   const HELP = { jon: m.ends ? 'Hier bekannt, von dir noch nicht oder nicht mehr kartiert, im nächsten Monat in der Umgebung kaum noch gemeldet.' : 'Die Daten zu „bald vorbei“ fehlen noch (mit Empfang unter Prüfen laden).',
     lif: 'Hier bekannte Arten, die du in Österreich noch nie gefunden hast' + (m.sea ? ', in Saison.' : '.'), due: `Von dir hier vor mehr als ${REPEAT_YEARS} Jahren kartiert` + (m.sea ? ', in Saison.' : '.'),
-    lost: `Hier nur vor ${atlas && atlas.ry || '–'} gemeldet, von dir nie gefunden` + (m.sea ? ', in Saison.' : '.') };
+    lost: `Hier nur vor ${atlas && atlas.ry || '–'} gemeldet, von dir nie gefunden` + (m.sea ? ', in Saison.' : '.'),
+    done: `Alle Arten, die du hier schon kartiert hast, alphabetisch. Orange = älter als ${REPEAT_YEARS} Jahre, wieder fällig.` };
   $('homeQHelp').textContent = HELP[homeMode];
   const rows = m[homeMode];
-  const meta = r => homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
-  const sorted = homeMode === 'lost' ? rows : [...rows].sort((a, b) => b.pct - a.pct || a.s.localeCompare(b.s));
-  $('homeQList').innerHTML = sorted.length ? sorted.slice(0, 200).map(r => spRow(r.s, meta(r), `${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
+  const meta = r => homeMode === 'done' ? `zuletzt ${fmtDate(r.last)} · ${r.n} Fund${r.n > 1 ? 'e' : ''}` : homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
+  const sorted = homeMode === 'done' ? [...rows].sort((a, b) => a.s.localeCompare(b.s)) : homeMode === 'lost' ? rows : [...rows].sort((a, b) => b.pct - a.pct || a.s.localeCompare(b.s));
+  $('homeQList').innerHTML = sorted.length ? sorted.slice(0, homeMode === 'done' ? 1500 : 200).map(r => spRow(r.s, meta(r), `${homeMode === 'done' ? `<span class="chip ${isDue(r.last) ? 'due' : 'ok'}">${isDue(r.last) ? 'fällig' : '✓ ' + (r.last || '').slice(0, 4)}</span>` : ''}${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
     : '<li class="muted">Nichts in dieser Liste.</li>';
   $('homeQList').querySelectorAll('li.tap').forEach(li => li.onclick = () => { if (!here || here.id !== homeSel) setHere({ ...parseQuad(homeSel), acc: null, t: Date.now(), src: 'manual' }); openFromList(li.dataset.s); });
   $('homeGo').textContent = here && here.id === homeSel ? `${homeSel} ist dein aktueller Quadrant` : `${homeSel} als aktuellen Quadranten wählen`;
