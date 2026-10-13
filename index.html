@@ -98,10 +98,9 @@ button { cursor: pointer }
 .tabs.seg { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) }
 nav.tabs { grid-template-columns: repeat(10, 1fr) }
 #homeModes { grid-template-columns: repeat(12, 1fr) }
-#homeModes button { grid-column: span 6 }
+#homeModes button { grid-column: span 4; font-size: 12.5px; padding: 0 }
 #homeModes button[data-m="jon"] { grid-column: span 5 }
 #homeModes button[data-m="lif"] { grid-column: span 3 }
-#homeModes button[data-m="due"] { grid-column: span 4 }
 nav.tabs button { grid-column: span 2; font-size: 14px }
 nav.tabs #tab-check, nav.tabs #tab-home { grid-column: span 5 }
 /* Mondsee-Irrsee-Tab: Kachelkarte der 11 Quadranten in ihrer Lage zueinander */
@@ -287,6 +286,10 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
   <section id="view-check" class="view">
     <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="msg warn" id="bkNag" hidden>
+        <div id="bkNagText"></div>
+        <div class="row" style="margin-top:8px"><button class="btn primary" id="bkNow">Jetzt sichern</button><button class="btn" id="bkLater">In einer Woche</button></div>
+      </div>
       <div>
         <label for="q" class="small muted">Art eingeben (wissenschaftlich oder deutsch)</label>
         <input class="field" id="q" placeholder="z. B. Gentiana clusii oder Enzian" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -309,7 +312,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
       </div>
       <div class="panel">
         <h2>Wohin als Nächstes?</h2>
-        <p class="small muted" style="margin:0">Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1). Ein grober Richtwert.</p>
+        <p class="small muted" style="margin:0">Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1), von November bis Februar auch die Winterliste (×1). Ein grober Richtwert.</p>
         <ul class="list" id="homeRank"></ul>
       </div>
       <div class="panel">
@@ -320,10 +323,11 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button role="tab" data-m="due">Fällig</button>
           <button role="tab" data-m="lost">Verschollen</button>
           <button role="tab" data-m="done">Kartiert</button>
+          <button role="tab" data-m="win">Winter</button>
         </div>
         <div class="small muted" id="homeQHelp"></div>
         <ul class="list" id="homeQList"></ul>
-        <div class="row"><button class="btn" id="homeGo">Als aktuellen Quadranten wählen</button></div>
+        <div class="row"><button class="btn" id="homeGo">Als aktuellen Quadranten wählen</button><button class="btn" id="homeGaps">Begehungslücken auf der Karte</button></div>
       </div>
       <details class="panel fold" id="fold-home-statistik">
         <summary><h2>Statistik</h2></summary>
@@ -411,6 +415,8 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
           <button class="btn" id="trkGpxAll">GPX</button>
           <button class="btn" id="trkHide">Ausblenden</button>
         </div>
+        <div class="row"><button class="btn" id="gapBtn">Lücken im aktuellen Quadranten</button></div>
+        <div class="small muted" id="gapInfo"></div>
         <div class="small muted" id="trkStatus"></div>
         <ul class="list" id="trkList"></ul>
       </details>
@@ -557,9 +563,10 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="row"><button class="btn primary" id="btnBackup">Sicherung erstellen</button></div>
         <label class="small">Sicherung wiederherstellen: <input type="file" id="restoreFile" accept=".json,application/json"></label>
         <div class="small muted" id="backupStatus"></div>
+        <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 58</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 59</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -650,6 +657,25 @@ const AGG = {
   'Poa pratensis': ['Poa angustifolia', 'Poa humilis'],
   'Pulmonaria officinalis': ['Pulmonaria obscura'],
 };
+// Winterliste (Wunsch von Thomas): Arten, die man von November bis Februar ohne Blüte ansprechen kann.
+// Claudes Startliste, Thomas passt sie an: Gattung gilt ganz, sonst einzelne Arten.
+const WINTER_WOOD = new Set(('Abies Acer Aesculus Ailanthus Alnus Amelanchier Arctostaphylos Berberis Betula Buddleja Buxus Calluna Carpinus Castanea Chamaecytisus Colutea Cornus Corylus ' +
+  'Cotinus Cotoneaster Crataegus Cytisus Daphne Dryas Elaeagnus Empetrum Erica Euonymus Fagus Forsythia Frangula Fraxinus Genista Hedera Hippophae Ilex Juglans Juniperus Kerria Laburnum ' +
+  'Larix Ligustrum Loiseleuria Lonicera Lycium Mahonia Malus Mespilus Morus Myricaria Parthenocissus Philadelphus Picea Pinus Platanus Populus Prunus Pseudotsuga Pyrus Quercus Rhamnus ' +
+  'Rhododendron Rhodothamnus Rhus Ribes Robinia Rosa Salix Sambucus Sorbus Spiraea Staphylea Symphoricarpos Syringa Taxus Thuja Tilia Ulmus Vaccinium Viburnum Viscum Vitis').split(' '));
+const WINTER_FERN = new Set(('Asplenium Athyrium Blechnum Ceterach Cryptogramma Diphasiastrum Dryopteris Huperzia Lycopodiella Lycopodium Matteuccia Osmunda Polypodium Polystichum ' +
+  'Pteridium Selaginella Woodsia').split(' '));
+const WINTER_SP = new Set(['Equisetum hyemale', 'Equisetum variegatum', 'Clematis vitalba', 'Polygala chamaebuxus', 'Hepatica nobilis', 'Asarum europaeum', 'Vinca minor',
+  'Luzula sylvatica', 'Luzula nivea', 'Carex pendula', 'Carex sylvatica', 'Carex digitata', 'Carex pilosa', 'Carex alba', 'Sesleria caerulea', 'Saxifraga paniculata',
+  'Globularia cordifolia', 'Lamium galeobdolon', 'Lamium montanum']);
+const WINTER_GEN = new Set(['Helleborus', 'Pyrola', 'Orthilia', 'Moneses', 'Chimaphila', 'Sempervivum', 'Jovibarba', 'Sedum']);
+const WINTER_NOT = new Set(['Sambucus ebulus', 'Vaccinium oxycoccos']); // krautig bzw. im Winter kaum zu finden
+function winterKind(s) {
+  if (WINTER_NOT.has(s) || !s.includes(' ')) return '';
+  const g = s.split(' ')[0];
+  return WINTER_WOOD.has(g) ? 'Gehölz' : WINTER_FERN.has(g) ? 'Farn' : WINTER_SP.has(s) || WINTER_GEN.has(g) ? 'wintergrün' : '';
+}
+const isWinter = () => [10, 11, 0, 1].includes(new Date().getMonth()); // November bis Februar
 const AGG_OF = new Map(); // Art → alle Arten ihrer Gruppe
 for (const [a, ks] of Object.entries(AGG)) { const g = [a, ...ks]; for (const x of g) AGG_OF.set(x, g); }
 function speciesName(name, rankLevel) { return canonTax(speciesNameRaw(name, rankLevel)); }
@@ -775,6 +801,7 @@ function showTab(t) {
   if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); if (typeof renderLifeTargets === 'function') renderLifeTargets(); }, 60); }
   if (t === 'day') renderDay();
   if (t === 'home') renderHomeTab();
+  if (t === 'check') renderBackupNag();
   if (t === 'off') renderOff();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
@@ -1453,7 +1480,7 @@ async function kvInit() {
   season = (await kv.get('season')) || {};
   pts = (await kv.get('pts')) || {};
   photos = (await kv.get('photos')) || {};
-  tracks = (await kv.get('tracks')) || {};
+  tracks = (await kv.get('tracks')) || {}; renderBackupNag();
   if (tracks[todayIso()]) trkShown = [todayIso()];
   redlist = (await kv.get('redlist')) || null;
   redSet = new Set(redlist ? redlist.sp : []);
@@ -1750,7 +1777,7 @@ function showMap() {
     if (here) { const b = quadBounds(here); map.setView(here.lat != null ? [here.lat, here.lon] : [(b.n + b.s) / 2, (b.w + b.e) / 2], 11); }
     else if (v) map.setView(v.c, v.z); else map.setView([47.6, 13.5], 8);
   }
-  setTimeout(() => { map.invalidateSize(); drawGrid(); drawTracks(); renderTracks(); }, 0);
+  setTimeout(() => { map.invalidateSize(); drawGrid(); drawTracks(); renderTracks(); if (walkQuad) drawWalkGaps(); }, 0);
 }
 function quadsInBounds(s, n, w, e, max) {
   const r2a = Math.floor((LAT0 - n) * 20), r2b = Math.floor((LAT0 - s) * 20 - 1e-9);
@@ -1991,6 +2018,49 @@ function drawTracks(fit) {
   trkShown.forEach((d, k) => { for (const seg of segments(tracks[d] || [])) { const ll = seg.map(p => [p[0], p[1]]); all.push(...ll); L.polyline(ll, { color: TRK_COLORS[k % TRK_COLORS.length], weight: 4, opacity: 0.85 }).bindTooltip(fmtDate(d)).addTo(trackLayer); } });
   if (fit && all.length) map.fitBounds(L.latLngBounds(all).pad(0.15));
 }
+// ---------- Begehungslücken (Wunsch von Thomas): wo im Quadranten war ich noch nie? ----------
+// Raster aus Zellen von etwa 200 m. Begangen = eine Begehungsspur führt hindurch oder du hast dort etwas gemeldet
+// (eigene Funde mit genauen Koordinaten, ±100 m oder besser, auch aus der Zeit vor den Spuren).
+const GAP_M = 200;
+let walkQuad = null, walkLayer = null; const walkCache = new Map();
+function coverGrid(id) {
+  const key = id + '|' + Object.values(tracks).reduce((n, a) => n + a.length, 0) + '|' + obs.length;
+  if (walkCache.get(id)?.key === key) return walkCache.get(id);
+  const b = quadBounds(parseQuad(id)), lat0 = (b.n + b.s) / 2;
+  const nx = Math.max(1, Math.round((b.e - b.w) * 111320 * Math.cos(lat0 * Math.PI / 180) / GAP_M)), ny = Math.max(1, Math.round((b.n - b.s) * 111320 / GAP_M));
+  const v = new Uint8Array(nx * ny);
+  const mark = (la, lo, bit) => { if (la > b.n || la <= b.s || lo < b.w || lo >= b.e) return; const i = Math.min(nx - 1, Math.floor((lo - b.w) / (b.e - b.w) * nx)), j = Math.min(ny - 1, Math.floor((b.n - la) / (b.n - b.s) * ny)); v[j * nx + i] |= bit; };
+  for (const a of Object.values(tracks)) for (const seg of segments(a)) for (let k = 0; k < seg.length; k++) {
+    const p = seg[k], q = seg[k + 1]; mark(p[0], p[1], 1);
+    if (!q) continue; // Zwischenpunkte alle ~50 m, damit schnelle Abschnitte keine Löcher lassen
+    const n = Math.min(200, Math.ceil(dist({ lat: p[0], lon: p[1] }, { la: q[0], lo: q[1] }) / 50));
+    for (let t = 1; t < n; t++) mark(p[0] + (q[0] - p[0]) * t / n, p[1] + (q[1] - p[1]) * t / n, 1);
+  }
+  for (const o of obs) if (o.k === id && !o.x && o.la != null && (!o.a || o.a <= 100)) mark(o.la, o.lo, 2);
+  let tr = 0, fd = 0, any = 0; for (const x of v) { if (x) any++; if (x & 1) tr++; if (x & 2) fd++; }
+  const r = { key, b, nx, ny, v, pct: Math.round(any / v.length * 100), tr, fd, any, n: v.length };
+  walkCache.set(id, r); return r;
+}
+function drawWalkGaps(fit) {
+  if (!map || !window.L) return;
+  if (!walkLayer) walkLayer = L.layerGroup().addTo(map);
+  walkLayer.clearLayers();
+  if (!walkQuad) { $('gapInfo').textContent = ''; $('gapBtn').textContent = 'Lücken im aktuellen Quadranten'; return; }
+  const g = coverGrid(walkQuad), { b, nx, ny, v } = g, dx = (b.e - b.w) / nx, dy = (b.n - b.s) / ny, rnd = L.canvas({ padding: 0.3 });
+  // nicht begangene Zellen je Zeile zu Streifen zusammenfassen (weniger Rechtecke)
+  for (let j = 0; j < ny; j++) for (let i = 0; i < nx;) {
+    if (v[j * nx + i]) { i++; continue; }
+    let k = i; while (k < nx && !v[j * nx + k]) k++;
+    L.rectangle([[b.n - (j + 1) * dy, b.w + i * dx], [b.n - j * dy, b.w + k * dx]], { renderer: rnd, stroke: false, fillColor: '#1e3a8a', fillOpacity: 0.45, interactive: false }).addTo(walkLayer);
+    i = k;
+  }
+  L.rectangle([[b.s, b.w], [b.n, b.e]], { renderer: rnd, color: '#111827', weight: 2, fill: false, interactive: false }).addTo(walkLayer);
+  if (fit) map.fitBounds([[b.s, b.w], [b.n, b.e]], { padding: [10, 10] });
+  $('gapBtn').textContent = 'Lücken ausblenden';
+  $('gapInfo').textContent = `${walkQuad}: ${g.pct} % begangen (${g.any} von ${g.n} Feldern à ${GAP_M} m; ${g.tr} mit Spur, ${g.fd} mit eigenem Fund). Dunkelblau = noch nie dort gewesen.`;
+}
+function showWalkGaps(id) { walkQuad = id; showTab('map'); setTimeout(() => { drawWalkGaps(true); window.scrollTo(0, 0); }, 120); }
+$('gapBtn').onclick = () => { if (walkQuad) { walkQuad = null; drawWalkGaps(); } else if (here) showWalkGaps(here.id); else $('gapInfo').textContent = 'Erst einen Quadranten wählen.'; };
 function gpxOf(days) {
   const x = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const trk = days.map(d => `  <trk><name>Begehung ${fmtDate(d)}</name>\n${segments(tracks[d] || []).map(seg => `    <trkseg>\n${seg.map(p => `      <trkpt lat="${p[0]}" lon="${p[1]}"><time>${new Date(p[2] * 1000).toISOString()}</time></trkpt>`).join('\n')}\n    </trkseg>`).join('\n')}\n  </trk>`).join('\n');
@@ -2170,7 +2240,7 @@ function homeMetrics(id) {
   const ids = [...HOME, ...(here ? [here.id] : [])];
   const sea = unionOf(seasonSet, ids), ends = unionOf(endingMap, ids);
   const Q = parseQuad(id), sp = spOf(id) || {}, mineQ = index.byQuad.get(id);
-  const r = { id, jon: [], lif: [], due: [], lost: [], done: [], last: '' };
+  const r = { id, jon: [], lif: [], due: [], lost: [], done: [], win: [], last: '' };
   for (const os of (mineQ || new Map()).values()) for (const o of os) if (!o.x && o.d && o.d > r.last) r.last = o.d;
   for (const s of Object.keys(sp)) {
     if (!s.includes(' ')) continue;
@@ -2180,6 +2250,7 @@ function homeMetrics(id) {
     if (open && ends && ends.has(s)) r.jon.push(c);
     if (isLifer(s) && inSea) r.lif.push(c);
     if (due && inSea) r.due.push(c);
+    const wk = open && winterKind(s); if (wk) r.win.push({ ...c, wk });
   }
   r.lost = lostList(Q).filter(x => !sea || sea.has(x.s));
   // Kartiert: alle Arten, die du hier gefunden hast (ohne verschleierte), mit letztem Funddatum
@@ -2187,7 +2258,7 @@ function homeMetrics(id) {
     const ex = os.filter(o => !o.x); if (!ex.length || !s.includes(' ')) continue;
     r.done.push({ s, n: ex.length, last: ex.map(o => o.d || '').sort().pop() });
   }
-  r.score = 5 * r.lif.length + 3 * r.jon.length + 2 * r.due.length + r.lost.length;
+  r.score = 5 * r.lif.length + 3 * r.jon.length + 2 * r.due.length + r.lost.length + (isWinter() ? r.win.length : 0); // im Winter zählt die Winterliste mit
   r.sea = !!sea; r.ends = !!ends;
   return r;
 }
@@ -2212,19 +2283,20 @@ function renderHomeTab() {
   $('homeGrid').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { homeSel = b.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); });
   // Rangliste: die ersten fünf
   const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
-  $('homeRank').innerHTML = ranked.slice(0, 5).map((m, i) => `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`).join('');
+  $('homeRank').innerHTML = ranked.slice(0, 5).map((m, i) => `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() ? chip(m.win.length, 'season', 'Winter') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`).join('');
   $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
-  $('homeQTitle').textContent = `${homeSel}${m.last ? ' · zuletzt ' + fmtDate(m.last) : ' · noch nie besucht'}`;
-  $('homeModes').querySelectorAll('button').forEach(b => { b.setAttribute('aria-selected', b.dataset.m === homeMode); b.textContent = { jon: 'Jetzt oder nie', lif: 'Lifer', due: 'Fällig', lost: 'Verschollen', done: 'Kartiert' }[b.dataset.m] + ` (${m[b.dataset.m].length})`; b.onclick = () => { homeMode = b.dataset.m; store.set('homeMode', homeMode); renderHomeTab(); }; });
+  $('homeQTitle').textContent = `${homeSel}${m.last ? ' · zuletzt ' + fmtDate(m.last) : ' · noch nie besucht'} · begangen ${coverGrid(homeSel).pct} %`;
+  $('homeModes').querySelectorAll('button').forEach(b => { b.setAttribute('aria-selected', b.dataset.m === homeMode); b.textContent = { jon: 'Jetzt oder nie', lif: 'Lifer', due: 'Fällig', lost: 'Verschollen', done: 'Kartiert', win: 'Winter' }[b.dataset.m] + ` (${m[b.dataset.m].length})`; b.onclick = () => { homeMode = b.dataset.m; store.set('homeMode', homeMode); renderHomeTab(); }; });
   const HELP = { jon: m.ends ? 'Hier bekannt, von dir noch nicht oder nicht mehr kartiert, im nächsten Monat in der Umgebung kaum noch gemeldet.' : 'Die Daten zu „bald vorbei“ fehlen noch (mit Empfang unter Prüfen laden).',
     lif: 'Hier bekannte Arten, die du in Österreich noch nie gefunden hast' + (m.sea ? ', in Saison.' : '.'), due: `Von dir hier vor mehr als ${REPEAT_YEARS} Jahren kartiert` + (m.sea ? ', in Saison.' : '.'),
     lost: `Hier nur vor ${atlas && atlas.ry || '–'} gemeldet, von dir nie gefunden` + (m.sea ? ', in Saison.' : '.'),
+    win: `Gehölze, Farne und wintergrüne Arten, die hier bekannt und von dir noch nicht oder nicht mehr kartiert sind. Auch ohne Blüte ansprechbar, gut für Begehungen von November bis Februar` + (isWinter() ? ' (zählen jetzt in der Rangliste mit).' : '.'),
     done: `Alle Arten, die du hier schon kartiert hast, alphabetisch. Orange = älter als ${REPEAT_YEARS} Jahre, wieder fällig.` };
   $('homeQHelp').textContent = HELP[homeMode];
   const rows = m[homeMode];
-  const meta = r => homeMode === 'done' ? `zuletzt ${fmtDate(r.last)} · ${r.n} Fund${r.n > 1 ? 'e' : ''}` : homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
+  const meta = r => homeMode === 'win' ? `${r.wk} · ${r.last ? 'zuletzt ' + fmtDate(r.last) + ' · ' : ''}Fundchance ${r.pct} %` : homeMode === 'done' ? `zuletzt ${fmtDate(r.last)} · ${r.n} Fund${r.n > 1 ? 'e' : ''}` : homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
   const sorted = homeMode === 'done' ? [...rows].sort((a, b) => a.s.localeCompare(b.s)) : homeMode === 'lost' ? rows : [...rows].sort((a, b) => b.pct - a.pct || a.s.localeCompare(b.s));
   $('homeQList').innerHTML = sorted.length ? sorted.slice(0, homeMode === 'done' ? 1500 : 200).map(r => spRow(r.s, meta(r), `${homeMode === 'done' ? `<span class="chip ${isDue(r.last) ? 'due' : 'ok'}">${isDue(r.last) ? 'fällig' : '✓ ' + (r.last || '').slice(0, 4)}</span>` : ''}${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
     : '<li class="muted">Nichts in dieser Liste.</li>';
@@ -2233,6 +2305,7 @@ function renderHomeTab() {
   $('homeGo').disabled = !!(here && here.id === homeSel);
   renderHome();
 }
+$('homeGaps').onclick = () => { if (homeSel) showWalkGaps(homeSel); };
 $('homeGo').onclick = () => { if (homeSel) { setHere({ ...parseQuad(homeSel), acc: null, t: Date.now(), src: 'manual' }); renderHomeTab(); } };
 
 // ---------- Ungenaue Funde (Wunsch von Thomas): Genauigkeit über 50 m, ohne verschleierte ----------
@@ -2306,12 +2379,31 @@ async function offerFile(file, statusEl) {
   setTimeout(() => URL.revokeObjectURL(a.href), 10000);
   return true;
 }
-$('btnBackup').onclick = async () => {
+async function doBackup(statusEl) {
   const { token, ...safeSettings } = settings; // der Token wird nicht mitgesichert
   const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish, tracks };
   const file = new File([JSON.stringify(data)], `kartierungshilfe-sicherung-${todayIso()}.json`, { type: 'application/json' });
-  if (await offerFile(file, $('backupStatus'))) $('backupStatus').textContent = `Gesichert: ${day.length} Einträge der Tagesliste und deine Einstellungen.`;
-};
+  if (!(await offerFile(file, statusEl))) return false;
+  store.set('lastBackup', Date.now()); store.set('backupSnooze', 0);
+  statusEl.textContent = `Gesichert: ${Object.keys(tracks).length} Tage Begehungsspuren, ${day.length} Einträge der Tagesliste, ${wish.length} Wünsche und deine Einstellungen. Am besten in iCloud Drive ablegen.`;
+  renderBackupNag(); return true;
+}
+$('btnBackup').onclick = () => doBackup($('backupStatus'));
+// Sicherungs-Erinnerung (Wunsch von Thomas): Spuren, Tagesliste und Wunschliste gibt es nur auf diesem Gerät.
+// Nach 30 Tagen ohne Sicherung erscheint unter Prüfen ein Hinweis, „In einer Woche“ schiebt ihn auf.
+
+function renderBackupNag() {
+  const last = store.get('lastBackup', 0), snooze = store.get('backupSnooze', 0), nTr = Object.keys(tracks || {}).length;
+  const days = last ? Math.floor((Date.now() - last) / 864e5) : null;
+  $('backupLast').textContent = last ? `Letzte Sicherung: ${new Date(last).toLocaleDateString('de-AT')} (vor ${days} Tag${days === 1 ? '' : 'en'}).` : 'Noch keine Sicherung erstellt.';
+  const has = nTr || day.length || wish.length;
+  const show = has && (!last || days >= 30) && Date.now() > snooze;
+  $('bkNag').hidden = !show; if (!show) return;
+  const what = [nTr ? `${nTr} Tag${nTr > 1 ? 'e' : ''} Begehungsspuren` : '', day.length ? `${day.length} Einträge der Tagesliste` : '', wish.length ? `${wish.length} Wünsche` : ''].filter(Boolean).join(', ');
+  $('bkNagText').innerHTML = `<b>${last ? `Letzte Sicherung vor ${days} Tagen.` : 'Noch keine Sicherung.'}</b> ${esc(what)} gibt es nur auf diesem iPhone. Eine Sicherung in iCloud Drive schützt sie, falls die App ihre Daten verliert.`;
+}
+$('bkNow').onclick = () => doBackup($('bkNagText'));
+$('bkLater').onclick = () => { store.set('backupSnooze', Date.now() + 7 * 864e5); renderBackupNag(); };
 $('restoreFile').addEventListener('change', async e => {
   const f = e.target.files[0]; if (!f) return;
   try {
