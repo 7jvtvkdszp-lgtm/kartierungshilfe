@@ -1,15 +1,16 @@
-name: Verwechslungspaare Mondsee-Irrsee
+name: Verwechslungspaare Österreich
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths: ['scripts/build_similar.py']
+concurrency: { group: similar, cancel-in-progress: true }
 permissions:
   contents: write
 jobs:
   similar:
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
