@@ -176,6 +176,12 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 .chip.rl { background: var(--warn-bg); color: var(--warn) }
 .chip.season { border: 1px solid var(--accent); color: var(--accent) }
 .chip.lifer { background: #7c3aed; color: #fff }
+.chip.win { border: 1px solid #1d4ed8; color: #1d4ed8 }
+details.merk { border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; margin-top: 6px; font-size: 13.5px }
+details.merk summary { cursor: pointer; font-weight: 600 }
+details.merk table { width: 100%; border-collapse: collapse; margin-top: 6px }
+details.merk th, details.merk td { text-align: left; vertical-align: top; padding: 4px 4px; border-top: 1px solid var(--line) }
+details.merk td:first-child { color: var(--muted); width: 28% }
 .chip.ending { background: #c2410c; color: #fff }
 .mbars { display: grid; grid-template-columns: 34px 1fr 64px; gap: 3px 8px; align-items: center; font-size: 13px }
 .mbars .b { height: 14px; background: #7c3aed; border-radius: 3px; min-width: 1px }
@@ -566,7 +572,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 59</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 60</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2296,9 +2302,16 @@ function renderHomeTab() {
     done: `Alle Arten, die du hier schon kartiert hast, alphabetisch. Orange = älter als ${REPEAT_YEARS} Jahre, wieder fällig.` };
   $('homeQHelp').textContent = HELP[homeMode];
   const rows = m[homeMode];
-  const meta = r => homeMode === 'win' ? `${r.wk} · ${r.last ? 'zuletzt ' + fmtDate(r.last) + ' · ' : ''}Fundchance ${r.pct} %` : homeMode === 'done' ? `zuletzt ${fmtDate(r.last)} · ${r.n} Fund${r.n > 1 ? 'e' : ''}` : homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : homeMode === 'due' ? `zuletzt ${fmtDate(r.last)} · Fundchance ${r.pct} %` : `Fundchance ${r.pct} %`;
+  const meta = r => homeMode === 'win' ? `${r.wk} · Fundchance ${r.pct} %` : homeMode === 'done' ? `${r.n} Fund${r.n > 1 ? 'e' : ''}` : homeMode === 'lost' ? `nur vor ${atlas.ry} gemeldet · in ${r.nb}/8 Nachbarn aktuell${lostNear(r)}` : `Fundchance ${r.pct} %`;
+  // Chips bei jeder Art (Wunsch von Thomas): letzter eigener Fund hier (orange = fällig), jetzt, Winter, Lifer
+  const seaH = unionOf(seasonSet, [...HOME, ...(here ? [here.id] : [])]), ownH = index.byQuad.get(homeSel);
+  const lastOwn = sp => (ownH?.get(sp) || []).filter(o => !o.x && o.d).map(o => o.d).sort().pop();
+  const tags = sp => { const l = lastOwn(sp);
+    return (l ? `<span class="chip ${isDue(l) ? 'due' : 'ok'}">${isDue(l) ? 'fällig · ' : ''}${fmtDate(l)}</span>` : '')
+      + (seaH && seaH.has(sp) ? '<span class="chip season">jetzt</span>' : '') + (winterKind(sp) ? '<span class="chip win">Winter</span>' : '')
+      + (isLifer(sp) ? '<span class="chip lifer">Lifer</span>' : ''); };
   const sorted = homeMode === 'done' ? [...rows].sort((a, b) => a.s.localeCompare(b.s)) : homeMode === 'lost' ? rows : [...rows].sort((a, b) => b.pct - a.pct || a.s.localeCompare(b.s));
-  $('homeQList').innerHTML = sorted.length ? sorted.slice(0, homeMode === 'done' ? 1500 : 200).map(r => spRow(r.s, meta(r), `${homeMode === 'done' ? `<span class="chip ${isDue(r.last) ? 'due' : 'ok'}">${isDue(r.last) ? 'fällig' : '✓ ' + (r.last || '').slice(0, 4)}</span>` : ''}${isLifer(r.s) ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
+  $('homeQList').innerHTML = sorted.length ? sorted.slice(0, homeMode === 'done' ? 1500 : 200).map(r => spRow(r.s, meta(r), `${tags(r.s)}${blChip(r.s)}${rlChip(r.s)}${freqChip(r.s)}`)).join('')
     : '<li class="muted">Nichts in dieser Liste.</li>';
   $('homeQList').querySelectorAll('li.tap').forEach(li => li.onclick = () => { if (!here || here.id !== homeSel) setHere({ ...parseQuad(homeSel), acc: null, t: Date.now(), src: 'manual' }); openFromList(li.dataset.s); });
   $('homeGo').textContent = here && here.id === homeSel ? `${homeSel} ist dein aktueller Quadrant` : `${homeSel} als aktuellen Quadranten wählen`;
@@ -2454,21 +2467,47 @@ async function loadTaxInfo(s) {
   saveTaxInfo();
   return taxInfo[s];
 }
+// Abgrenzungsmerkmale zu den Verwechslungsarten (Wunsch von Thomas), aus merkmale.json:
+// Paar „A|B“ alphabetisch, je Zeile [Merkmal, A, B]; ok = von Thomas geprüft. Formuliert von Claude, nicht aus Bestimmungsbüchern übernommen.
+let merk = null;
+async function loadMerk() {
+  try { merk = await kv.get('merkmale'); } catch {}
+  if (!navigator.onLine) return;
+  try { const r = await fetch('merkmale.json', { cache: 'no-cache' }); if (r.ok) { merk = await r.json(); kv.set('merkmale', merk); if (current) renderTaxBox(current); } } catch {}
+}
+function merkFor(a, b) {
+  if (!merk) return null;
+  const [x, y] = [a, b].sort(), e = merk.pairs[x + '|' + y]; if (!e) return null;
+  return { ok: e.ok, rows: e.m.map(([m, p, q]) => x === a ? [m, p, q] : [m, q, p]) };
+}
+function merkHtml(s, others) {
+  const seen = new Set(), parts = [];
+  const list = [...others, ...(merk ? Object.keys(merk.pairs).flatMap(k => { const [x, y] = k.split('|'); return x === s ? [y] : y === s ? [x] : []; }) : [])];
+  for (const o of list) {
+    if (seen.has(o)) continue; seen.add(o);
+    const e = merkFor(s, o); if (!e) continue;
+    parts.push(`<details class="merk"><summary>Unterschied zu <i>${esc(o)}</i>${e.ok ? '' : ' <span class="chip unsure">ungeprüft</span>'}</summary>
+      <table><tr><th></th><th><i>${esc(s.split(' ')[0][0] + '. ' + s.split(' ').slice(1).join(' '))}</i></th><th><i>${esc(o.split(' ')[0][0] + '. ' + o.split(' ').slice(1).join(' '))}</i></th></tr>
+      ${e.rows.map(([m, p, q]) => `<tr><td>${esc(m)}</td><td>${esc(p)}</td><td>${esc(q)}</td></tr>`).join('')}</table></details>`);
+  }
+  return parts.length ? `<div class="small"><b>Abgrenzung</b> <span class="muted">(Merkmale von Claude formuliert${parts.some(p => p.includes('ungeprüft')) ? ', noch nicht von dir geprüft' : ''})</span></div>${parts.join('')}` : '';
+}
 function renderTaxBox(cur) {
   const box = $('taxBox'); if (!box) return;
-  if (!navigator.onLine && !taxInfo[cur.s]) { box.innerHTML = ''; return; }
+  if (!navigator.onLine && !taxInfo[cur.s]) { box.innerHTML = merkHtml(cur.s, []); return; }
   const show = info => {
     const b = $('taxBox'); if (!b || current !== cur) return;
-    if (!info) { b.innerHTML = ''; return; }
+    if (!info) { b.innerHTML = merkHtml(cur.s, []); return; }
     b.innerHTML = (info.p ? `<figure class="taxphoto"><img src="${esc(info.p)}" alt="${esc(cur.s)}" loading="lazy" onerror="this.parentNode.hidden=true"><figcaption>${esc(info.a)}</figcaption></figure>` : '')
       + (info.sim.length ? `<div class="small"><b>Häufig verwechselt mit</b> <span class="muted">(Bestimmungen auf iNaturalist${settings.onlyAT ? ' in Österreich' : ''})</span></div>
-        <div class="simlist">${info.sim.map(([s, c, ph, n], i) => `<button class="sim" data-i="${i}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="noimg"></span>'}<i>${esc(s)}</i>${c ? `<span class="muted">${esc(c)}</span>` : ''}${isLifer(s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="muted">${n}×</span></button>`).join('')}</div>` : '');
+        <div class="simlist">${info.sim.map(([s, c, ph, n], i) => `<button class="sim" data-i="${i}">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="noimg"></span>'}<i>${esc(s)}</i>${c ? `<span class="muted">${esc(c)}</span>` : ''}${isLifer(s) ? '<span class="chip lifer">Lifer</span>' : ''}<span class="muted">${n}×</span></button>`).join('')}</div>` : '')
+      + merkHtml(cur.s, info.sim.map(x => x[0]));
     b.querySelectorAll('button.sim').forEach(btn => btn.onclick = () => { const [s, c] = info.sim[+btn.dataset.i]; $('back').hidden = true; lastQuery = ''; pick({ s, c }); window.scrollTo(0, 0); });
   };
   if (taxInfo[cur.s]) show(taxInfo[cur.s]);
   if (navigator.onLine && (!taxInfo[cur.s] || Date.now() - taxInfo[cur.s].t >= 60 * 864e5)) {
     box.innerHTML = '<div class="small muted">Lade Foto und Verwechslungsarten …</div>';
-    loadTaxInfo(cur.s).then(show).catch(() => { const b = $('taxBox'); if (b) b.innerHTML = ''; });
+    loadTaxInfo(cur.s).then(show).catch(() => { const b = $('taxBox'); if (b) b.innerHTML = merkHtml(cur.s, []); });
   }
 }
 
@@ -3410,7 +3449,7 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas(); loadRl(); loadPheno();
+  loadAtlas(); loadRl(); loadPheno(); loadMerk();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }

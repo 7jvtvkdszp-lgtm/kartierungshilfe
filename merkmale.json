@@ -1,0 +1,206 @@
+{
+ "v": 1,
+ "t": "2026-10-13",
+ "pairs": {
+  "Erigeron annuus|Erigeron strigosus": {
+   "m": [
+    [
+     "Stängel",
+     "abstehend behaart",
+     "kurz angedrückt behaart oder fast kahl"
+    ],
+    [
+     "mittlere Stängelblätter",
+     "lanzettlich, deutlich gezähnt",
+     "schmal lineal-lanzettlich, meist ganzrandig"
+    ]
+   ],
+   "ok": false
+  },
+  "Leontodon hispidus|Scorzoneroides autumnalis": {
+   "m": [
+    [
+     "Pappus",
+     "zwei Reihen: innen gefiederte, außen kurze raue Borsten",
+     "eine Reihe gefiederter Borsten"
+    ],
+    [
+     "Stängel",
+     "unverzweigt, einköpfig, blattlos",
+     "meist verzweigt, mehrköpfig, unter den Köpfen mit kleinen Schuppen"
+    ],
+    [
+     "Knospen",
+     "nickend",
+     "aufrecht"
+    ],
+    [
+     "Behaarung",
+     "meist mit Gabelhaaren, rau",
+     "kahl oder mit einfachen Haaren"
+    ],
+    [
+     "Blätter",
+     "buchtig gezähnt bis schrotsägeförmig",
+     "oft tief fiederteilig mit schmalen Abschnitten"
+    ],
+    [
+     "Blütezeit",
+     "ab Juni",
+     "vor allem Juli bis Oktober"
+    ]
+   ],
+   "ok": false
+  },
+  "Leontodon hispidus|Scorzoneroides helvetica": {
+   "m": [
+    [
+     "Pappus",
+     "zwei Reihen: innen gefiedert, außen kurze raue Borsten",
+     "eine Reihe gefiederter Borsten"
+    ],
+    [
+     "Behaarung",
+     "meist mit Gabelhaaren, rau",
+     "kahl oder mit einfachen Haaren"
+    ],
+    [
+     "Knospen",
+     "nickend",
+     "aufrecht"
+    ],
+    [
+     "Stängel unter dem Kopf",
+     "kaum verdickt",
+     "deutlich verdickt, mit einigen Schuppen; Hülle schwärzlich behaart"
+    ],
+    [
+     "Standort",
+     "Wiesen von tief bis alpin, eher basisch",
+     "subalpine bis alpine Weiden auf saurem Boden (Borstgras)"
+    ]
+   ],
+   "ok": false
+  },
+  "Scorzoneroides autumnalis|Scorzoneroides helvetica": {
+   "m": [
+    [
+     "Stängel",
+     "meist verzweigt, mehrköpfig",
+     "unverzweigt, einköpfig"
+    ],
+    [
+     "Stängel unter dem Kopf",
+     "allmählich verdickt, mit Schuppen",
+     "deutlich verdickt, Hülle schwärzlich behaart"
+    ],
+    [
+     "Blätter",
+     "oft tief fiederteilig, schmale Abschnitte",
+     "lanzettlich, nur gezähnt bis buchtig"
+    ],
+    [
+     "Standort",
+     "von tief bis subalpin, Wiesen, Wege, Trittrasen",
+     "subalpin bis alpin, saure Weiden"
+    ]
+   ],
+   "ok": false
+  },
+  "Dryopteris carthusiana|Dryopteris dilatata": {
+   "m": [
+    [
+     "Spreuschuppen am Stiel",
+     "einfarbig hellbraun",
+     "mit dunklem Mittelstreif (zweifarbig)"
+    ],
+    [
+     "Spreite",
+     "schmal eiförmig, hellgrün, flach",
+     "breit dreieckig-eiförmig, dunkelgrün, oft etwas gewölbt"
+    ],
+    [
+     "unterste Fieder",
+     "unteres inneres Fiederchen wenig verlängert",
+     "unteres inneres Fiederchen deutlich verlängert"
+    ]
+   ],
+   "ok": false
+  },
+  "Dryopteris borreri|Dryopteris filix-mas": {
+   "m": [
+    [
+     "Spreuschuppen am Stiel",
+     "dicht, goldbraun bis rotbraun",
+     "locker, hellbraun"
+    ],
+    [
+     "Fiederansatz",
+     "unterseits mit dunklem Fleck an der Spindel",
+     "ohne dunklen Fleck"
+    ],
+    [
+     "Fiederchen",
+     "fast parallelrandig, vorn gestutzt, nur an der Spitze gezähnt",
+     "ringsum gekerbt bis gesägt, vorn abgerundet"
+    ],
+    [
+     "im Winter",
+     "Wedel oft noch grün",
+     "Wedel meist abgestorben"
+    ]
+   ],
+   "ok": false
+  },
+  "Ranunculus acris|Ranunculus repens": {
+   "m": [
+    [
+     "Ausläufer",
+     "keine",
+     "lange oberirdische Ausläufer, oft wurzelnd"
+    ],
+    [
+     "Blütenstiel",
+     "rund, ungefurcht",
+     "gefurcht"
+    ],
+    [
+     "Grundblätter",
+     "handförmig geteilt, Abschnitte ungestielt",
+     "dreizählig, mittleres Teilblatt deutlich gestielt"
+    ]
+   ],
+   "ok": false
+  },
+  "Medicago lupulina|Trifolium dubium": {
+   "m": [
+    [
+     "Blättchen",
+     "mittleres mit kleinem Stachelspitzchen",
+     "ohne Stachelspitzchen"
+    ],
+    [
+     "Fruchtstand",
+     "schwarze, nierenförmige Hülsen",
+     "vertrocknete braune Blüten bleiben stehen"
+    ],
+    [
+     "Nebenblätter",
+     "gezähnt",
+     "ganzrandig, breit eiförmig"
+    ]
+   ],
+   "ok": false
+  },
+  "Galeopsis bifida|Galeopsis tetrahit": {
+   "m": [
+    [
+     "Unterlippe, Mittellappen",
+     "vorne ausgerandet, Ränder zurückgerollt",
+     "flach, gerade, nicht ausgerandet"
+    ]
+   ],
+   "ok": false
+  }
+ }
+}
