@@ -1,206 +1,11296 @@
 {
- "v": 1,
- "t": "2026-10-13",
- "pairs": {
-  "Erigeron annuus|Erigeron strigosus": {
-   "m": [
-    [
-     "Stängel",
-     "abstehend behaart",
-     "kurz angedrückt behaart oder fast kahl"
-    ],
-    [
-     "mittlere Stängelblätter",
-     "lanzettlich, deutlich gezähnt",
-     "schmal lineal-lanzettlich, meist ganzrandig"
-    ]
-   ],
-   "ok": false
-  },
-  "Leontodon hispidus|Scorzoneroides autumnalis": {
-   "m": [
-    [
-     "Pappus",
-     "zwei Reihen: innen gefiederte, außen kurze raue Borsten",
-     "eine Reihe gefiederter Borsten"
-    ],
-    [
-     "Stängel",
-     "unverzweigt, einköpfig, blattlos",
-     "meist verzweigt, mehrköpfig, unter den Köpfen mit kleinen Schuppen"
-    ],
-    [
-     "Knospen",
-     "nickend",
-     "aufrecht"
-    ],
-    [
-     "Behaarung",
-     "meist mit Gabelhaaren, rau",
-     "kahl oder mit einfachen Haaren"
-    ],
-    [
-     "Blätter",
-     "buchtig gezähnt bis schrotsägeförmig",
-     "oft tief fiederteilig mit schmalen Abschnitten"
-    ],
-    [
-     "Blütezeit",
-     "ab Juni",
-     "vor allem Juli bis Oktober"
-    ]
-   ],
-   "ok": false
-  },
-  "Leontodon hispidus|Scorzoneroides helvetica": {
-   "m": [
-    [
-     "Pappus",
-     "zwei Reihen: innen gefiedert, außen kurze raue Borsten",
-     "eine Reihe gefiederter Borsten"
-    ],
-    [
-     "Behaarung",
-     "meist mit Gabelhaaren, rau",
-     "kahl oder mit einfachen Haaren"
-    ],
-    [
-     "Knospen",
-     "nickend",
-     "aufrecht"
-    ],
-    [
-     "Stängel unter dem Kopf",
-     "kaum verdickt",
-     "deutlich verdickt, mit einigen Schuppen; Hülle schwärzlich behaart"
-    ],
-    [
-     "Standort",
-     "Wiesen von tief bis alpin, eher basisch",
-     "subalpine bis alpine Weiden auf saurem Boden (Borstgras)"
-    ]
-   ],
-   "ok": false
-  },
-  "Scorzoneroides autumnalis|Scorzoneroides helvetica": {
-   "m": [
-    [
-     "Stängel",
-     "meist verzweigt, mehrköpfig",
-     "unverzweigt, einköpfig"
-    ],
-    [
-     "Stängel unter dem Kopf",
-     "allmählich verdickt, mit Schuppen",
-     "deutlich verdickt, Hülle schwärzlich behaart"
-    ],
-    [
-     "Blätter",
-     "oft tief fiederteilig, schmale Abschnitte",
-     "lanzettlich, nur gezähnt bis buchtig"
-    ],
-    [
-     "Standort",
-     "von tief bis subalpin, Wiesen, Wege, Trittrasen",
-     "subalpin bis alpin, saure Weiden"
-    ]
-   ],
-   "ok": false
-  },
-  "Dryopteris carthusiana|Dryopteris dilatata": {
-   "m": [
-    [
-     "Spreuschuppen am Stiel",
-     "einfarbig hellbraun",
-     "mit dunklem Mittelstreif (zweifarbig)"
-    ],
-    [
-     "Spreite",
-     "schmal eiförmig, hellgrün, flach",
-     "breit dreieckig-eiförmig, dunkelgrün, oft etwas gewölbt"
-    ],
-    [
-     "unterste Fieder",
-     "unteres inneres Fiederchen wenig verlängert",
-     "unteres inneres Fiederchen deutlich verlängert"
-    ]
-   ],
-   "ok": false
-  },
-  "Dryopteris borreri|Dryopteris filix-mas": {
-   "m": [
-    [
-     "Spreuschuppen am Stiel",
-     "dicht, goldbraun bis rotbraun",
-     "locker, hellbraun"
-    ],
-    [
-     "Fiederansatz",
-     "unterseits mit dunklem Fleck an der Spindel",
-     "ohne dunklen Fleck"
-    ],
-    [
-     "Fiederchen",
-     "fast parallelrandig, vorn gestutzt, nur an der Spitze gezähnt",
-     "ringsum gekerbt bis gesägt, vorn abgerundet"
-    ],
-    [
-     "im Winter",
-     "Wedel oft noch grün",
-     "Wedel meist abgestorben"
-    ]
-   ],
-   "ok": false
-  },
-  "Ranunculus acris|Ranunculus repens": {
-   "m": [
-    [
-     "Ausläufer",
-     "keine",
-     "lange oberirdische Ausläufer, oft wurzelnd"
-    ],
-    [
-     "Blütenstiel",
-     "rund, ungefurcht",
-     "gefurcht"
-    ],
-    [
-     "Grundblätter",
-     "handförmig geteilt, Abschnitte ungestielt",
-     "dreizählig, mittleres Teilblatt deutlich gestielt"
-    ]
-   ],
-   "ok": false
-  },
-  "Medicago lupulina|Trifolium dubium": {
-   "m": [
-    [
-     "Blättchen",
-     "mittleres mit kleinem Stachelspitzchen",
-     "ohne Stachelspitzchen"
-    ],
-    [
-     "Fruchtstand",
-     "schwarze, nierenförmige Hülsen",
-     "vertrocknete braune Blüten bleiben stehen"
-    ],
-    [
-     "Nebenblätter",
-     "gezähnt",
-     "ganzrandig, breit eiförmig"
-    ]
-   ],
-   "ok": false
-  },
-  "Galeopsis bifida|Galeopsis tetrahit": {
-   "m": [
-    [
-     "Unterlippe, Mittellappen",
-     "vorne ausgerandet, Ränder zurückgerollt",
-     "flach, gerade, nicht ausgerandet"
-    ]
-   ],
-   "ok": false
-  }
- }
+"v": 1,
+"t": "2026-10-13",
+"pairs": {
+"Erigeron annuus|Erigeron strigosus": {
+"m": [
+[
+"Stängel",
+"abstehend behaart",
+"kurz angedrückt behaart oder fast kahl"
+],
+[
+"mittlere Stängelblätter",
+"lanzettlich, deutlich gezähnt",
+"schmal lineal-lanzettlich, meist ganzrandig"
+]
+],
+"ok": false
+},
+"Leontodon hispidus|Scorzoneroides autumnalis": {
+"m": [
+[
+"Pappus",
+"zwei Reihen: innen gefiederte, außen kurze raue Borsten",
+"eine Reihe gefiederter Borsten"
+],
+[
+"Stängel",
+"unverzweigt, einköpfig, blattlos",
+"meist verzweigt, mehrköpfig, unter den Köpfen mit kleinen Schuppen"
+],
+[
+"Knospen",
+"nickend",
+"aufrecht"
+],
+[
+"Behaarung",
+"meist mit Gabelhaaren, rau",
+"kahl oder mit einfachen Haaren"
+],
+[
+"Blätter",
+"buchtig gezähnt bis schrotsägeförmig",
+"oft tief fiederteilig mit schmalen Abschnitten"
+],
+[
+"Blütezeit",
+"ab Juni",
+"vor allem Juli bis Oktober"
+]
+],
+"ok": false
+},
+"Leontodon hispidus|Scorzoneroides helvetica": {
+"m": [
+[
+"Pappus",
+"zwei Reihen: innen gefiedert, außen kurze raue Borsten",
+"eine Reihe gefiederter Borsten"
+],
+[
+"Behaarung",
+"meist mit Gabelhaaren, rau",
+"kahl oder mit einfachen Haaren"
+],
+[
+"Knospen",
+"nickend",
+"aufrecht"
+],
+[
+"Stängel unter dem Kopf",
+"kaum verdickt",
+"deutlich verdickt, mit einigen Schuppen; Hülle schwärzlich behaart"
+],
+[
+"Standort",
+"Wiesen von tief bis alpin, eher basisch",
+"subalpine bis alpine Weiden auf saurem Boden (Borstgras)"
+]
+],
+"ok": false
+},
+"Scorzoneroides autumnalis|Scorzoneroides helvetica": {
+"m": [
+[
+"Stängel",
+"meist verzweigt, mehrköpfig",
+"unverzweigt, einköpfig"
+],
+[
+"Stängel unter dem Kopf",
+"allmählich verdickt, mit Schuppen",
+"deutlich verdickt, Hülle schwärzlich behaart"
+],
+[
+"Blätter",
+"oft tief fiederteilig, schmale Abschnitte",
+"lanzettlich, nur gezähnt bis buchtig"
+],
+[
+"Standort",
+"von tief bis subalpin, Wiesen, Wege, Trittrasen",
+"subalpin bis alpin, saure Weiden"
+]
+],
+"ok": false
+},
+"Dryopteris carthusiana|Dryopteris dilatata": {
+"m": [
+[
+"Spreuschuppen am Stiel",
+"einfarbig hellbraun",
+"mit dunklem Mittelstreif (zweifarbig)"
+],
+[
+"Spreite",
+"schmal eiförmig, hellgrün, flach",
+"breit dreieckig-eiförmig, dunkelgrün, oft etwas gewölbt"
+],
+[
+"unterste Fieder",
+"unteres inneres Fiederchen wenig verlängert",
+"unteres inneres Fiederchen deutlich verlängert"
+]
+],
+"ok": false
+},
+"Dryopteris borreri|Dryopteris filix-mas": {
+"m": [
+[
+"Spreuschuppen am Stiel",
+"dicht, goldbraun bis rotbraun",
+"locker, hellbraun"
+],
+[
+"Fiederansatz",
+"unterseits mit dunklem Fleck an der Spindel",
+"ohne dunklen Fleck"
+],
+[
+"Fiederchen",
+"fast parallelrandig, vorn gestutzt, nur an der Spitze gezähnt",
+"ringsum gekerbt bis gesägt, vorn abgerundet"
+],
+[
+"im Winter",
+"Wedel oft noch grün",
+"Wedel meist abgestorben"
+]
+],
+"ok": false
+},
+"Ranunculus acris|Ranunculus repens": {
+"m": [
+[
+"Ausläufer",
+"keine",
+"lange oberirdische Ausläufer, oft wurzelnd"
+],
+[
+"Blütenstiel",
+"rund, ungefurcht",
+"gefurcht"
+],
+[
+"Grundblätter",
+"handförmig geteilt, Abschnitte ungestielt",
+"dreizählig, mittleres Teilblatt deutlich gestielt"
+]
+],
+"ok": false
+},
+"Medicago lupulina|Trifolium dubium": {
+"m": [
+[
+"Blättchen",
+"mittleres mit kleinem Stachelspitzchen",
+"ohne Stachelspitzchen"
+],
+[
+"Fruchtstand",
+"schwarze, nierenförmige Hülsen",
+"vertrocknete braune Blüten bleiben stehen"
+],
+[
+"Nebenblätter",
+"gezähnt",
+"ganzrandig, breit eiförmig"
+]
+],
+"ok": false
+},
+"Galeopsis bifida|Galeopsis tetrahit": {
+"m": [
+[
+"Unterlippe, Mittellappen",
+"vorne ausgerandet, Ränder zurückgerollt",
+"flach, gerade, nicht ausgerandet"
+]
+],
+"ok": false
+},
+"Reynoutria japonica|Reynoutria × bohemica": {
+"m": [
+[
+"Blattunterseite, Nerven (Lupe)",
+"kahl, nur winzige Papillen",
+"kurze, einzellige Haare auf den Nerven"
+],
+[
+"Blattgrund",
+"gerade abgestutzt",
+"gestutzt bis schwach herzförmig"
+],
+[
+"Blattgröße",
+"bis ca. 15 cm, derb",
+"meist größer, bis ca. 25 cm"
+]
+],
+"ok": false
+},
+"Tragopogon orientalis|Tragopogon pratensis": {
+"m": [
+[
+"Zungenblüten vs. Hüllblätter",
+"deutlich länger als Hülle",
+"etwa so lang oder kürzer als Hülle"
+],
+[
+"Blütenfarbe",
+"kräftig goldgelb",
+"blass- bis zitronengelb"
+],
+[
+"Köpfchengröße (offen)",
+"groß, ca. 4–6 cm Ø",
+"kleiner, ca. 2–4 cm Ø"
+]
+],
+"ok": false
+},
+"Gentiana acaulis|Gentiana clusii": {
+"m": [
+[
+"Kelchzipfel",
+"am Grund verschmälert, abstehend",
+"breit dreieckig, dem Kelch anliegend"
+],
+[
+"Kelchbuchten",
+"mit weißlicher Haut, gestutzt",
+"spitz, ohne Haut"
+],
+[
+"Rosettenblätter",
+"breit elliptisch, weich, matt",
+"lanzettlich, ledrig, glänzend"
+],
+[
+"Krone innen",
+"mit olivgrünen Flecken",
+"meist ohne grüne Flecken"
+],
+[
+"Boden",
+"kalkarm, Silikat",
+"Kalk"
+]
+],
+"ok": false
+},
+"Verbascum chaixii|Verbascum nigrum": {
+"m": [
+[
+"Grundblätter, Grund",
+"keilig bis gestutzt",
+"deutlich herzförmig, lang gestielt"
+],
+[
+"Blütenstand",
+"meist rispig verzweigt",
+"meist unverzweigte Traube"
+]
+],
+"ok": false
+},
+"Gentiana bavarica|Gentiana verna": {
+"m": [
+[
+"Grundrosette",
+"fehlt, Blätter gleichmäßig am Stängel",
+"deutliche Rosette größerer Blätter"
+],
+[
+"Blattform",
+"verkehrt-eiförmig, gelbgrün",
+"elliptisch-lanzettlich, dunkelgrün"
+],
+[
+"Kelch",
+"kantig, kaum geflügelt",
+"an den Kanten deutlich geflügelt"
+]
+],
+"ok": false
+},
+"Lamium maculatum|Lamium purpureum": {
+"m": [
+[
+"Kronengröße",
+"groß, 2–3 cm",
+"klein, 1–1,5 cm"
+],
+[
+"Kronröhre",
+"deutlich gekrümmt",
+"gerade"
+],
+[
+"Lebensform",
+"ausdauernd, mit Ausläufern",
+"einjährig, Oberblätter gehäuft, rötlich"
+]
+],
+"ok": false
+},
+"Solidago canadensis|Solidago gigantea": {
+"m": [
+[
+"Stängel",
+"oben dicht kurzhaarig",
+"kahl, oft bläulich bereift, rötlich"
+],
+[
+"Blattunterseite",
+"rau behaart",
+"kahl, höchstens Nerven behaart"
+],
+[
+"Zungenblüten",
+"kurz, kaum länger als Hülle",
+"deutlich länger, Köpfchen etwas größer"
+],
+[
+"Blühbeginn",
+"später, ab Mitte August",
+"früher, ab Ende Juli"
+]
+],
+"ok": false
+},
+"Aconitum napellus|Aconitum variegatum": {
+"m": [
+[
+"Helm",
+"halbkugelig, etwa so breit wie hoch",
+"hoch kegelförmig, höher als breit"
+],
+[
+"Blütenstand",
+"dicht, ährenartig",
+"locker, oft verzweigt"
+],
+[
+"Blattzipfel",
+"schmal-lineal",
+"breiter, lanzettlich"
+],
+[
+"Blütenfarbe",
+"einheitlich dunkelblau",
+"blau, oft weißlich gescheckt"
+]
+],
+"ok": false
+},
+"Trifolium medium|Trifolium pratense": {
+"m": [
+[
+"Nebenblätter",
+"schmal, Spitze lanzettlich, abstehend",
+"breit, plötzlich in Grannenspitze"
+],
+[
+"Köpfchen",
+"oft kurz gestielt, über Blättern",
+"sitzend, von 2 Blättern umhüllt"
+],
+[
+"Teilblättchen",
+"schmal-elliptisch, ohne Fleck",
+"eiförmig, oft heller Winkelfleck"
+],
+[
+"Wuchs",
+"Stängel hin-und-her gebogen, Ausläufer",
+"Stängel gerade, horstig"
+]
+],
+"ok": false
+},
+"Gentiana brachyphylla|Gentiana verna": {
+"m": [
+[
+"Rosettenblätter",
+"rhombisch, kaum länger als breit",
+"elliptisch-lanzettlich, deutlich länger"
+],
+[
+"Kelch",
+"kantig, ungeflügelt",
+"an den Kanten geflügelt"
+],
+[
+"Standort",
+"hochalpin, meist Silikat",
+"montan bis alpin, Rasen, oft Kalk"
+]
+],
+"ok": false
+},
+"Parthenocissus inserta|Parthenocissus quinquefolia": {
+"m": [
+[
+"Ranken",
+"3–5-ästig, ohne Haftscheiben, windend",
+"5–8-ästig, mit Haftscheiben"
+],
+[
+"Blattoberseite",
+"glänzend",
+"matt"
+],
+[
+"Wuchs",
+"braucht Stütze, klettert nicht an Mauer",
+"klettert frei an Mauern"
+]
+],
+"ok": false
+},
+"Primula elatior|Primula veris": {
+"m": [
+[
+"Kronfarbe",
+"blass schwefelgelb, ohne Flecken",
+"dottergelb, orange Schlundflecken"
+],
+[
+"Kronsaum",
+"flach ausgebreitet",
+"glockig-schüsselförmig"
+],
+[
+"Kelch",
+"eng anliegend, Zipfel spitz",
+"weit aufgeblasen, gelbgrün"
+],
+[
+"Blattunterseite",
+"kurz behaart, grün",
+"graufilzig, Spreite plötzlich verschmälert"
+]
+],
+"ok": false
+},
+"Corydalis cava|Corydalis solida": {
+"m": [
+[
+"Tragblätter",
+"ganzrandig",
+"fingerig eingeschnitten"
+],
+[
+"Schuppenblatt unter Laubblättern",
+"fehlt",
+"vorhanden, am Stängelgrund"
+],
+[
+"Knolle",
+"hohl",
+"massiv"
+]
+],
+"ok": false
+},
+"Gentianella aspera|Gentianella germanica": {
+"m": [
+[
+"Kelchzipfel",
+"deutlich ungleich, 2 breiter",
+"± gleich gestaltet"
+],
+[
+"Rand der Kelchzipfel (Lupe)",
+"dicht papillös-rau",
+"glatt oder kaum papillös"
+]
+],
+"ok": false
+},
+"Polygonatum multiflorum|Polygonatum odoratum": {
+"m": [
+[
+"Stängel",
+"stielrund",
+"kantig (zweischneidig)"
+],
+[
+"Blüten pro Achsel",
+"2–5",
+"1–2"
+],
+[
+"Blütenform",
+"in der Mitte eingeschnürt, duftlos",
+"nicht eingeschnürt, größer, duftend"
+],
+[
+"Staubfäden",
+"behaart",
+"kahl"
+]
+],
+"ok": false
+},
+"Adenostyles alliariae|Adenostyles alpina": {
+"m": [
+[
+"Blattunterseite",
+"grau, dicht weichhaarig",
+"grün, kahl oder fast kahl"
+],
+[
+"Blattrand",
+"unregelmäßig grob doppelt gezähnt",
+"regelmäßig gezähnt, Blatt derb"
+],
+[
+"Boden",
+"meist kalkarm, feuchte Hochstauden",
+"Kalk, Schutt, Bergwald"
+]
+],
+"ok": false
+},
+"Gymnadenia conopsea|Gymnadenia odoratissima": {
+"m": [
+[
+"Spornlänge",
+"1,5–2× so lang wie Fruchtknoten",
+"etwa so lang wie Fruchtknoten"
+],
+[
+"Duft",
+"schwach",
+"kräftig nach Vanille"
+],
+[
+"Blätter",
+"breiter lanzettlich",
+"schmal lineal, unter 1 cm"
+],
+[
+"Blüten",
+"größer, Ähre lockerer",
+"klein, Ähre schmal und dicht"
+]
+],
+"ok": false
+},
+"Phyteuma hemisphaericum|Phyteuma orbiculare": {
+"m": [
+[
+"Grundblätter",
+"grasartig schmal-lineal",
+"eiförmig-lanzettlich, lang gestielt"
+],
+[
+"Standort",
+"alpin, Silikat",
+"montan bis alpin, meist Kalk"
+]
+],
+"ok": false
+},
+"Rhododendron ferrugineum|Rhododendron hirsutum": {
+"m": [
+[
+"Blattunterseite",
+"dicht rostbraun beschuppt",
+"grün, nur wenige Drüsenschuppen"
+],
+[
+"Blattrand",
+"kahl, etwas umgerollt",
+"abstehend bewimpert, flach"
+],
+[
+"Boden",
+"sauer, Silikat/Rohhumus",
+"Kalk, Dolomit"
+]
+],
+"ok": false
+},
+"Dactylorhiza fuchsii|Dactylorhiza majalis": {
+"m": [
+[
+"Lippe",
+"tief 3-lappig, Mittellappen ≥ Seitenlappen",
+"schwach 3-lappig, Mittellappen klein"
+],
+[
+"Stängel",
+"markig gefüllt",
+"hohl"
+],
+[
+"Unterstes Blatt",
+"breit, stumpf abgerundet",
+"Blätter alle breit-lanzettlich, spitzlich"
+],
+[
+"Blütenfarbe",
+"blasslila mit Schleifenmuster",
+"purpurn"
+],
+[
+"Blütezeit",
+"Juni–Juli",
+"Mai–Juni"
+]
+],
+"ok": false
+},
+"Ajuga genevensis|Ajuga reptans": {
+"m": [
+[
+"Ausläufer",
+"fehlen",
+"oberirdische, beblätterte Ausläufer"
+],
+[
+"Stängelbehaarung",
+"rundum zottig",
+"zweizeilig behaart"
+],
+[
+"Obere Tragblätter",
+"oft 3-lappig, kürzer als Blüten",
+"ganzrandig, eiförmig"
+]
+],
+"ok": false
+},
+"Crepis aurea|Pilosella aurantiaca": {
+"m": [
+[
+"Köpfchen pro Stängel",
+"meist 1",
+"mehrere, doldig gehäuft"
+],
+[
+"Blätter",
+"kahl, glänzend, gezähnt",
+"behaart, ganzrandig"
+],
+[
+"Ausläufer",
+"fehlen",
+"vorhanden"
+]
+],
+"ok": false
+},
+"Euphrasia nemorosa|Euphrasia officinalis": {
+"m": [
+[
+"Drüsenhaare an Tragblättern",
+"fehlen",
+"lange Drüsenhaare vorhanden"
+],
+[
+"Kronlänge",
+"klein, ca. 5–7 mm",
+"größer, ca. 8–12 mm"
+]
+],
+"ok": false
+},
+"Viola reichenbachiana|Viola riviniana": {
+"m": [
+[
+"Sporn",
+"dunkelviolett, schlank, ungekerbt",
+"hell bis weißlich, dick, vorn gekerbt"
+],
+[
+"Kronblätter",
+"schmal, sich nicht überdeckend",
+"breit, sich überdeckend"
+],
+[
+"Kelchanhängsel",
+"klein, kaum sichtbar",
+"groß, an Frucht erhalten"
+]
+],
+"ok": false
+},
+"Geranium purpureum|Geranium robertianum": {
+"m": [
+[
+"Staubbeutel",
+"gelb",
+"orange bis rotviolett"
+],
+[
+"Kronblattlänge",
+"unter ca. 9 mm",
+"ca. 9–14 mm"
+],
+[
+"Teilfrüchte",
+"mit groben Querrippen",
+"netzig-runzelig"
+]
+],
+"ok": false
+},
+"Soldanella alpina|Soldanella pusilla": {
+"m": [
+[
+"Blüten pro Stängel",
+"meist 2–3",
+"1"
+],
+[
+"Kronfransen",
+"bis etwa zur Mitte zerschlitzt",
+"nur oben (bis ca. 1/4) gefranst"
+],
+[
+"Kronform",
+"trichterig-glockig",
+"schmal röhrig-glockig, hängend"
+],
+[
+"Boden",
+"Kalk",
+"Silikat, Schneetälchen"
+]
+],
+"ok": false
+},
+"Trifolium pratense|Trifolium repens": {
+"m": [
+[
+"Wuchs",
+"aufrecht, ohne Ausläufer",
+"kriechend, an Knoten wurzelnd"
+],
+[
+"Blütenfarbe",
+"rosa- bis purpurrot",
+"weiß, verblüht bräunlich"
+],
+[
+"Köpfchen",
+"sitzend, von 2 Blättern umhüllt",
+"lang gestielt aus Blattachsel"
+],
+[
+"Nebenblätter",
+"breit, mit Grannenspitze",
+"häutig, schmal zugespitzt"
+]
+],
+"ok": false
+},
+"Vinca major|Vinca minor": {
+"m": [
+[
+"Blattform",
+"breit eiförmig, Grund gestutzt",
+"elliptisch-lanzettlich"
+],
+[
+"Blattrand",
+"fein bewimpert",
+"kahl"
+],
+[
+"Krone",
+"4–5 cm Ø",
+"2–3 cm Ø"
+],
+[
+"Kelchzipfel",
+"lang, schmal, bewimpert",
+"kurz, kahl"
+]
+],
+"ok": false
+},
+"Carpinus betulus|Fagus sylvatica": {
+"m": [
+[
+"Blattrand",
+"scharf doppelt gesägt",
+"ganzrandig, wellig, jung bewimpert"
+],
+[
+"Stamm",
+"grau, spannrückig gewulstet",
+"glatt, silbergrau, rund"
+],
+[
+"Knospen",
+"kurz, angedrückt",
+"lang spindelförmig, abstehend"
+],
+[
+"Frucht",
+"Nüsschen mit 3-lappigem Flügel",
+"Bucheckern in stacheligem Becher"
+]
+],
+"ok": false
+},
+"Reynoutria sachalinensis|Reynoutria × bohemica": {
+"m": [
+[
+"Blattgrund",
+"tief herzförmig",
+"gestutzt bis schwach herzförmig"
+],
+[
+"Blattunterseite, Nerven (Lupe)",
+"lange, mehrzellige Haare",
+"kurze, einzellige Haare"
+],
+[
+"Blattgröße",
+"sehr groß, bis 40 cm",
+"mittel, bis ca. 25 cm"
+],
+[
+"Blattspitze",
+"allmählich zugespitzt",
+"kurz zugespitzt"
+]
+],
+"ok": false
+},
+"Senecio nemorensis|Senecio ovatus": {
+"m": [
+[
+"Stängelblätter, Grund",
+"sitzend, halbstängelumfassend",
+"in kurzen geflügelten Stiel verschmälert"
+],
+[
+"Blattform",
+"breiter, elliptisch-lanzettlich",
+"schmal lanzettlich"
+],
+[
+"Blattunterseite",
+"meist kurz behaart",
+"meist kahl"
+]
+],
+"ok": false
+},
+"Dipsacus fullonum|Dipsacus laciniatus": {
+"m": [
+[
+"Stängelblätter",
+"ungeteilt, gekerbt-gesägt",
+"fiederspaltig, tief eingeschnitten"
+],
+[
+"Blütenfarbe",
+"lila",
+"weißlich bis blassrosa"
+],
+[
+"Hüllblätter",
+"bogig aufwärts, über Köpfchen ragend",
+"abstehend, meist kürzer als Köpfchen"
+]
+],
+"ok": false
+},
+"Erigeron alpinus|Erigeron glabratus": {
+"m": [
+[
+"Behaarung Stängel/Blätter",
+"rundum zottig behaart",
+"fast kahl, Blattrand bewimpert"
+],
+[
+"Hüllblätter",
+"dicht behaart",
+"kahl bis schwach behaart"
+],
+[
+"Boden",
+"verschieden, oft kalkarm",
+"Kalk"
+]
+],
+"ok": false
+},
+"Sonchus asper|Sonchus oleraceus": {
+"m": [
+[
+"Blattöhrchen",
+"abgerundet, dem Stängel anliegend",
+"spitz, pfeilförmig abstehend"
+],
+[
+"Blätter",
+"glänzend, starr dornig gezähnt",
+"matt, weich gezähnt"
+],
+[
+"Achänen (Lupe)",
+"glatt, nur Längsrippen",
+"längsgerippt und querrunzelig"
+]
+],
+"ok": false
+},
+"Carex agastachys|Carex pendula": {
+"m": [
+[
+"Wuchsgröße",
+"30–70 cm, zierlich",
+"kräftig, 1–1,5 m"
+],
+[
+"Weibliche Ähren",
+"dünn, locker, 3–7 cm",
+"dicht, walzlich, 7–16 cm, hängend"
+],
+[
+"Blattbreite",
+"ca. 5–10 mm",
+"bis 2 cm"
+]
+],
+"ok": false
+},
+"Galium aparine|Galium spurium": {
+"m": [
+[
+"Fruchtgröße",
+"ca. 3–5 mm",
+"ca. 1,5–3 mm"
+],
+[
+"Kronfarbe",
+"weiß",
+"grünlich-gelblich"
+],
+[
+"Stängelknoten",
+"oberhalb mit Haarkranz",
+"kahl"
+]
+],
+"ok": false
+},
+"Oenothera biennis|Oenothera glazioviana": {
+"m": [
+[
+"Kronblattlänge",
+"ca. 1,5–3 cm",
+"ca. 3–5 cm"
+],
+[
+"Narbe",
+"zwischen den Staubbeuteln",
+"deutlich über die Staubbeutel ragend"
+],
+[
+"Kelch/Blütenknospe",
+"grün",
+"rot gestreift"
+],
+[
+"Stängel",
+"grün",
+"mit roten Höckerhaaren"
+]
+],
+"ok": false
+},
+"Veronica chamaedrys|Veronica persica": {
+"m": [
+[
+"Blütenstand",
+"seitliche, reichblütige Trauben",
+"Einzelblüten, lang gestielt"
+],
+[
+"Stängel",
+"mit 2 gegenüberliegenden Haarleisten",
+"rundum behaart"
+],
+[
+"Lebensform",
+"ausdauernd",
+"einjährig, Acker/Garten"
+],
+[
+"Frucht",
+"verkehrt-herzförmig, flach",
+"2 spreizende, gekielte Lappen"
+]
+],
+"ok": false
+},
+"Dianthus carthusianorum|Dianthus deltoides": {
+"m": [
+[
+"Blütenanordnung",
+"köpfchenartig gebüschelt",
+"einzeln, locker gabelig"
+],
+[
+"Hüllschuppen",
+"braun, trockenhäutig",
+"fehlen (nur Kelchschuppen)"
+],
+[
+"Kronblatt",
+"einfarbig purpur",
+"mit dunklem Ring und hellen Punkten"
+]
+],
+"ok": false
+},
+"Helianthemum alpestre|Helianthemum nummularium": {
+"m": [
+[
+"Nebenblätter",
+"fehlen",
+"vorhanden, lanzettlich"
+],
+[
+"Blattgröße",
+"klein, ca. 1 cm",
+"größer, 1–4 cm"
+],
+[
+"Wuchs",
+"niedrig, polsterig, alpin",
+"höher, locker, kollin bis subalpin"
+]
+],
+"ok": false
+},
+"Melampyrum pratense|Melampyrum sylvaticum": {
+"m": [
+[
+"Kronlänge",
+"ca. 10–18 mm",
+"ca. 6–10 mm"
+],
+[
+"Kronschlund",
+"± geschlossen",
+"weit offen, Unterlippe abwärts"
+],
+[
+"Kronfarbe",
+"blassgelb bis weißlich",
+"kräftig goldgelb"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea nigrescens": {
+"m": [
+[
+"Hüllblattanhängsel",
+"hellbraun, ganzrandig, rundlich",
+"schwarzbraun, kammförmig gefranst"
+],
+[
+"Deckung der Hüllblätter",
+"Anhängsel decken Hülle ganz",
+"grüner Hüllblattgrund sichtbar"
+]
+],
+"ok": false
+},
+"Pulmonaria obscura|Pulmonaria officinalis": {
+"m": [
+[
+"Blattflecken",
+"fehlen oder undeutlich",
+"deutlich weiß gefleckt"
+],
+[
+"Grundblatt, Spreitengrund",
+"allmählich in Stiel verschmälert",
+"herzförmig, plötzlich abgesetzt"
+]
+],
+"ok": false
+},
+"Digitalis grandiflora|Digitalis lutea": {
+"m": [
+[
+"Kronlänge",
+"groß, 3–5 cm, bauchig",
+"klein, 1,5–2,5 cm, schmal"
+],
+[
+"Krone innen",
+"ockergelb, braunes Adernetz",
+"hellgelb, ohne Netz"
+],
+[
+"Blätter",
+"unterseits behaart",
+"kahl, glänzend"
+]
+],
+"ok": false
+},
+"Veronica hederifolia|Veronica sublobata": {
+"m": [
+[
+"Kronfarbe",
+"hellblau",
+"blasslila bis weißlich"
+],
+[
+"Fruchtstiel vs. Kelch",
+"ca. 2–4× so lang",
+"ca. 3,5–7× so lang"
+],
+[
+"Standort",
+"Äcker, Weinberge",
+"Wälder, Gebüsche, schattig"
+]
+],
+"ok": false
+},
+"Euphorbia cyparissias|Euphorbia esula": {
+"m": [
+[
+"Blattbreite",
+"1–3 mm, lineal",
+"3–10 mm, lanzettlich"
+],
+[
+"Blätter",
+"dicht gedrängt, viele sterile Triebe",
+"lockerer, oberhalb Mitte am breitesten"
+],
+[
+"Wuchshöhe",
+"15–30 cm",
+"30–80 cm"
+]
+],
+"ok": false
+},
+"Veratrum album|Veratrum lobelianum": {
+"m": [
+[
+"Perigon innen",
+"weiß",
+"grün"
+],
+[
+"Perigon außen",
+"grünlich",
+"grün"
+]
+],
+"ok": false
+},
+"Campanula alpina|Campanula barbata": {
+"m": [
+[
+"Blütenstand",
+"reichblütig, pyramidale Traube",
+"wenigblütig, einseitswendig"
+],
+[
+"Krone",
+"dunkel blauviolett, nur Saum bewimpert",
+"hellblau, innen lang bärtig"
+]
+],
+"ok": false
+},
+"Platanthera bifolia|Platanthera chlorantha": {
+"m": [
+[
+"Pollinien",
+"parallel, eng beisammen",
+"unten weit auseinander spreizend"
+],
+[
+"Blütenfarbe",
+"reinweiß",
+"grünlich-weiß"
+],
+[
+"Sporn",
+"fadenförmig",
+"vorn keulig verdickt"
+]
+],
+"ok": false
+},
+"Dactylorhiza incarnata|Dactylorhiza majalis": {
+"m": [
+[
+"Blätter",
+"ungefleckt, gelbgrün, aufrecht",
+"meist gefleckt, abstehend"
+],
+[
+"Blattspitze",
+"kapuzenförmig",
+"flach, spitzlich"
+],
+[
+"Lippe",
+"klein, rautenförmig, Seiten zurückgeschlagen",
+"breit, flach bis schwach 3-lappig"
+],
+[
+"Blütenfarbe",
+"fleischrosa bis hellpurpur",
+"purpurn"
+]
+],
+"ok": false
+},
+"Veronica filiformis|Veronica persica": {
+"m": [
+[
+"Lebensform",
+"ausdauernd, rasig kriechend",
+"einjährig"
+],
+[
+"Blätter",
+"klein, nierenförmig-rund, gekerbt",
+"eiförmig, grob gezähnt"
+],
+[
+"Früchte",
+"kaum ausgebildet",
+"regelmäßig, 2 spreizende Lappen"
+],
+[
+"Standort",
+"Rasen, Wiesen",
+"Äcker, Gärten"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Chaerophyllum hirsutum": {
+"m": [
+[
+"Kronblattrand (Lupe)",
+"kahl",
+"bewimpert"
+],
+[
+"Blattzipfel",
+"fein, spitz, Blatt glänzend",
+"breiter, gröber, Blatt behaart"
+],
+[
+"Frucht",
+"glatt, glänzend schwarz, kurz",
+"länglich, gerippt"
+]
+],
+"ok": false
+},
+"Calystegia sepium|Calystegia silvatica": {
+"m": [
+[
+"Vorblätter",
+"flach, Kelch seitlich sichtbar",
+"stark aufgeblasen, überlappend"
+],
+[
+"Krone",
+"ca. 3–5 cm lang",
+"ca. 5–7,5 cm lang"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum telmateia": {
+"m": [
+[
+"Steriler Spross",
+"grün, dünn",
+"elfenbeinweiß, dick"
+],
+[
+"Scheidenzähne",
+"6–19",
+"20–40"
+],
+[
+"Wuchshöhe",
+"bis ca. 40 cm",
+"bis über 1 m"
+]
+],
+"ok": false
+},
+"Veronica persica|Veronica polita": {
+"m": [
+[
+"Blütengröße",
+"8–12 mm Ø",
+"4–8 mm Ø"
+],
+[
+"Kronfarbe",
+"hellblau, unteres Blatt heller",
+"einheitlich tiefblau"
+],
+[
+"Frucht",
+"Lappen spreizend, gekielt",
+"Lappen aufrecht, gewölbt"
+],
+[
+"Kelchzipfel",
+"eiförmig-lanzettlich, spreizend",
+"breit eiförmig, sich überdeckend"
+]
+],
+"ok": false
+},
+"Centaurea nervosa|Centaurea phrygia": {
+"m": [
+[
+"Köpfchen pro Stängel",
+"meist 1",
+"mehrere"
+],
+[
+"Hüllblattanhängsel",
+"lang, fedrig, hellbraun, zurückgebogen",
+"schwarzbraun, gefranst, zurückgebogen"
+],
+[
+"Behaarung",
+"Blätter graufilzig-wollig",
+"Blätter grün, rau"
+]
+],
+"ok": false
+},
+"Polygala comosa|Polygala vulgaris": {
+"m": [
+[
+"Tragblätter der Knospen",
+"länger als Knospen, Schopf bildend",
+"kürzer, kein Schopf"
+],
+[
+"Traube",
+"dicht, zur Spitze schopfig",
+"locker, Spitze ohne Schopf"
+]
+],
+"ok": false
+},
+"Populus alba|Populus × canescens": {
+"m": [
+[
+"Langtriebblätter",
+"handförmig 3–5-lappig",
+"nur grob buchtig gezähnt"
+],
+[
+"Blattunterseite",
+"bleibend dicht weißfilzig",
+"graufilzig, später verkahlend"
+]
+],
+"ok": false
+},
+"Quercus petraea|Quercus robur": {
+"m": [
+[
+"Blattstiel",
+"1–2,5 cm",
+"kurz, unter 1 cm"
+],
+[
+"Blattgrund",
+"keilig",
+"geöhrt"
+],
+[
+"Eicheln",
+"sitzend, büschelig",
+"an langem Stiel"
+]
+],
+"ok": false
+},
+"Acer campestre|Acer pseudoplatanus": {
+"m": [
+[
+"Blattgröße/Lappen",
+"klein, Lappen stumpf, ganzrandig",
+"groß, Lappen grob gekerbt-gesägt"
+],
+[
+"Milchsaft im Blattstiel",
+"vorhanden",
+"fehlt"
+],
+[
+"Fruchtflügel",
+"waagrecht gespreizt",
+"spitzwinkelig"
+],
+[
+"Zweige",
+"oft mit Korkleisten",
+"glatt, Knospen grün"
+]
+],
+"ok": false
+},
+"Campanula rotundifolia|Campanula scheuchzeri": {
+"m": [
+[
+"Knospen",
+"aufrecht",
+"nickend"
+],
+[
+"Blüten pro Stängel",
+"mehrere, kleiner",
+"1–wenige, größer"
+],
+[
+"Grundblätter",
+"rundlich, zur Blütezeit oft welk",
+"lanzettlich, nicht rundlich"
+],
+[
+"Höhenstufe",
+"kollin bis montan",
+"subalpin bis alpin"
+]
+],
+"ok": false
+},
+"Cruciata glabra|Cruciata laevipes": {
+"m": [
+[
+"Stängel/Blätter",
+"kahl oder fast kahl",
+"abstehend rauhaarig"
+],
+[
+"Blütenstiele",
+"ohne Vorblätter",
+"mit kleinen Vorblättern"
+],
+[
+"Blütenstand",
+"kürzer als Blätter",
+"etwa so lang wie Blätter"
+]
+],
+"ok": false
+},
+"Lysimachia punctata|Lysimachia vulgaris": {
+"m": [
+[
+"Blütenstand",
+"Blüten in Blattachseln quirlig",
+"endständige Rispe"
+],
+[
+"Kelchzipfel",
+"ganz grün",
+"rot berandet"
+],
+[
+"Kronblattrand",
+"drüsig bewimpert",
+"kahl"
+]
+],
+"ok": false
+},
+"Vicia cracca|Vicia tenuifolia": {
+"m": [
+[
+"Fahne: Platte vs. Nagel",
+"Platte ≈ so lang wie Nagel",
+"Platte ca. 2× so lang wie Nagel"
+],
+[
+"Blüte",
+"blauviolett, einfarbig",
+"größer, lila, Flügel heller"
+],
+[
+"Teilblättchen",
+"lanzettlich",
+"schmal lineal"
+]
+],
+"ok": false
+},
+"Vicia cracca|Vicia villosa": {
+"m": [
+[
+"Kelchgrund",
+"nicht ausgesackt",
+"stark sackartig ausgebuchtet"
+],
+[
+"Fahne: Platte vs. Nagel",
+"Platte ≈ so lang wie Nagel",
+"Platte ca. halb so lang wie Nagel"
+],
+[
+"Behaarung",
+"anliegend kurzhaarig",
+"oft abstehend zottig"
+]
+],
+"ok": false
+},
+"Campanula rapunculoides|Campanula trachelium": {
+"m": [
+[
+"Kelchzipfel",
+"zurückgeschlagen",
+"aufrecht bis abstehend"
+],
+[
+"Stängel",
+"rund, kurzhaarig",
+"scharfkantig, steifhaarig"
+],
+[
+"Blütenstand",
+"einseitswendige Traube",
+"1–4 Blüten je Achsel"
+]
+],
+"ok": false
+},
+"Petasites albus|Petasites hybridus": {
+"m": [
+[
+"Blütenfarbe",
+"gelblich-weiß",
+"rosa bis rötlich"
+],
+[
+"Blattunterseite",
+"bleibend weißfilzig",
+"graugrün, dünn behaart"
+],
+[
+"Blattgröße",
+"15–30 cm, eckig gezähnt",
+"bis 60 cm und mehr"
+]
+],
+"ok": false
+},
+"Pinguicula leptoceras|Pinguicula vulgaris": {
+"m": [
+[
+"Unterlippenzipfel",
+"breit, sich überdeckend",
+"schmäler, voneinander getrennt"
+],
+[
+"Schlund",
+"großer weißer Fleck",
+"weißer Fleck klein oder fehlend"
+],
+[
+"Boden",
+"kalkarm, Silikat",
+"meist kalkhaltig"
+]
+],
+"ok": false
+},
+"Ajuga pyramidalis|Ajuga reptans": {
+"m": [
+[
+"Ausläufer",
+"fehlen",
+"oberirdisch, beblättert"
+],
+[
+"Tragblätter",
+"groß, länger als Blüten, oft violett",
+"obere kürzer als Blüten"
+],
+[
+"Gesamtform",
+"pyramidal, dicht beblättert",
+"Blütenähre locker, zylindrisch"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum palustre": {
+"m": [
+[
+"1. Astglied vs. Stängelscheide",
+"länger",
+"kürzer"
+],
+[
+"Scheidenzähne",
+"dunkel, schmal",
+"schwarz mit breitem weißem Hautrand"
+],
+[
+"Sporenähre",
+"auf eigenem bleichem Frühjahrsspross",
+"an der Spitze grüner Sprosse"
+]
+],
+"ok": false
+},
+"Hypericum maculatum|Hypericum perforatum": {
+"m": [
+[
+"Stängel",
+"deutlich 4-kantig",
+"rund mit 2 Längsleisten"
+],
+[
+"Durchscheinende Blattpunkte",
+"fehlend oder wenige",
+"zahlreich"
+],
+[
+"Kelchzipfel",
+"stumpf",
+"spitz"
+]
+],
+"ok": false
+},
+"Medicago sativa|Medicago × varia": {
+"m": [
+[
+"Blütenfarbe",
+"blauviolett",
+"gescheckt: gelbgrün, violett, schwärzlich"
+],
+[
+"Hülse",
+"2–3 enge Windungen",
+"1–1,5 lockere Windungen"
+]
+],
+"ok": false
+},
+"Potentilla indica|Potentilla reptans": {
+"m": [
+[
+"Blätter",
+"3-zählig",
+"5-zählig gefingert"
+],
+[
+"Außenkelch",
+"groß, 3-zähnig, länger als Kelch",
+"ganzrandig, etwa kelchlang"
+],
+[
+"Frucht",
+"rote, erdbeerartige Scheinfrucht",
+"trocken, unauffällig"
+]
+],
+"ok": false
+},
+"Vicia sativa|Vicia sepium": {
+"m": [
+[
+"Blüten",
+"1–2, fast sitzend in Blattachseln",
+"2–6 in kurzer Traube"
+],
+[
+"Nebenblätter",
+"mit dunklem Nektarfleck",
+"ohne Fleck"
+],
+[
+"Lebensform",
+"einjährig",
+"ausdauernd"
+]
+],
+"ok": false
+},
+"Acer platanoides|Acer pseudoplatanus": {
+"m": [
+[
+"Blattlappen",
+"lang zugespitzt, wenige lange Zähne",
+"stumpflich, grob gekerbt-gesägt"
+],
+[
+"Milchsaft im Blattstiel",
+"vorhanden",
+"fehlt"
+],
+[
+"Knospen",
+"rotbraun",
+"grün"
+],
+[
+"Fruchtflügel",
+"stumpfwinklig bis waagrecht",
+"spitzwinkelig"
+]
+],
+"ok": false
+},
+"Epipactis atrorubens|Epipactis helleborine": {
+"m": [
+[
+"Blütenfarbe",
+"dunkel weinrot, Vanilleduft",
+"grünlich bis rosa, duftlos"
+],
+[
+"Fruchtknoten/Stängel oben",
+"dicht flaumig behaart",
+"schwach behaart"
+],
+[
+"Blätter",
+"zweizeilig, schmäler",
+"spiralig, breit eiförmig"
+]
+],
+"ok": false
+},
+"Plantago lanceolata|Plantago media": {
+"m": [
+[
+"Blätter",
+"lanzettlich, ± aufrecht",
+"breit elliptisch, flach rosettig"
+],
+[
+"Ähre",
+"kurz, dunkelbraun",
+"lang walzlich"
+],
+[
+"Staubfäden",
+"weißlich",
+"lila-rosa, duftend"
+],
+[
+"Schaft",
+"5-furchig",
+"rund"
+]
+],
+"ok": false
+},
+"Ranunculus aconitifolius|Ranunculus platanifolius": {
+"m": [
+[
+"Blütenstiele oben",
+"behaart",
+"kahl"
+],
+[
+"Wuchshöhe",
+"20–60 cm",
+"50–130 cm"
+],
+[
+"Standort",
+"nass: Bachufer, Quellfluren",
+"Hochstauden, lichte Bergwälder"
+]
+],
+"ok": false
+},
+"Gentiana pannonica|Gentiana purpurea": {
+"m": [
+[
+"Kelch",
+"glockig, Zipfel zurückgekrümmt",
+"scheidenartig, einseitig aufgeschlitzt"
+],
+[
+"Krone",
+"dicht dunkel punktiert",
+"kaum punktiert"
+]
+],
+"ok": false
+},
+"Geranium pratense|Geranium sylvaticum": {
+"m": [
+[
+"Blütenfarbe",
+"himmel- bis violettblau",
+"rotviolett, Mitte weißlich"
+],
+[
+"Fruchtstiele",
+"abwärts geschlagen",
+"aufrecht"
+],
+[
+"Blattabschnitte",
+"tief zerschlitzt, schmal",
+"breiter, weniger tief"
+]
+],
+"ok": false
+},
+"Cardamine amara|Nasturtium officinale": {
+"m": [
+[
+"Staubbeutel",
+"violett",
+"gelb"
+],
+[
+"Stängel",
+"markig",
+"hohl"
+],
+[
+"Schoten",
+"lang, schmal, aufrecht",
+"kurz, gebogen, auf abstehenden Stielen"
+]
+],
+"ok": false
+},
+"Cephalanthera damasonium|Cephalanthera longifolia": {
+"m": [
+[
+"Blütenfarbe",
+"cremeweiß",
+"reinweiß"
+],
+[
+"Tragblätter",
+"laubig, länger als Fruchtknoten",
+"winzig, kürzer als Fruchtknoten"
+],
+[
+"Blätter",
+"eiförmig-lanzettlich",
+"lang, schmal-lanzettlich"
+]
+],
+"ok": false
+},
+"Gentiana pumila|Gentiana verna": {
+"m": [
+[
+"Rosettenblätter",
+"schmal lineal-lanzettlich, steif",
+"elliptisch-lanzettlich, breiter"
+],
+[
+"Blattspitze",
+"stachelspitzig",
+"spitz bis stumpflich"
+]
+],
+"ok": false
+},
+"Petasites hybridus|Petasites paradoxus": {
+"m": [
+[
+"Blattform",
+"rundlich-herzförmig, sehr groß",
+"dreieckig-herzförmig, Lappen spreizend"
+],
+[
+"Blattunterseite",
+"graugrün",
+"schneeweiß filzig"
+],
+[
+"Standort",
+"Ufer, feuchte Wiesen",
+"Kalkschutt, Bachgeröll"
+]
+],
+"ok": false
+},
+"Valeriana montana|Valeriana tripteris": {
+"m": [
+[
+"Stängelblätter",
+"ungeteilt",
+"3-teilig"
+],
+[
+"Grundblätter",
+"eiförmig, ganzrandig",
+"herzförmig, grob gezähnt"
+]
+],
+"ok": false
+},
+"Asplenium trichomanes|Asplenium viride": {
+"m": [
+[
+"Blattspindel",
+"ganz schwarzbraun",
+"nur am Grund braun, sonst grün"
+],
+[
+"Fiedern",
+"dunkelgrün, derb",
+"hellgrün, weich, rundlich gekerbt"
+]
+],
+"ok": false
+},
+"Glechoma hederacea|Glechoma hirsuta": {
+"m": [
+[
+"Behaarung Stängel",
+"kahl bis zerstreut kurzhaarig",
+"dicht abstehend langhaarig"
+],
+[
+"Kelchzähne",
+"kurz, breit dreieckig",
+"lang, lanzettlich-pfriemlich zugespitzt"
+],
+[
+"Blüte",
+"meist 1–2 cm",
+"größer, um 2 cm und mehr"
+],
+[
+"Standort",
+"überall, Wiesen, Wälder, Ruderal",
+"wärmeliebende Eichenwälder, v. a. Osten"
+]
+],
+"ok": false
+},
+"Globularia cordifolia|Globularia nudicaulis": {
+"m": [
+[
+"Wuchs",
+"Spalierstrauch, verholzte kriechende Triebe",
+"krautige Rosettenstaude, nicht verholzt"
+],
+[
+"Blätter",
+"klein, spatelig, vorn oft ausgerandet",
+"groß, bis >10 cm, lanzettlich-spatelig, ganz"
+],
+[
+"Blütenköpfe",
+"klein, Schaft kurz (bis ~10 cm)",
+"größer, Schaft bis 30 cm, blattlos"
+]
+],
+"ok": false
+},
+"Impatiens glandulifera|Impatiens parviflora": {
+"m": [
+[
+"Blüte",
+"groß, 2,5–4 cm, rosa bis purpurn",
+"klein, ~1 cm, blassgelb"
+],
+[
+"Wuchshöhe",
+"1–2,5 m, Stängel dick, rötlich",
+"20–60 cm, zart"
+],
+[
+"Blätter",
+"gegenständig/quirlig, Stiel mit Drüsen",
+"wechselständig, ohne Stieldrüsen"
+]
+],
+"ok": false
+},
+"Malva alcea|Malva moschata": {
+"m": [
+[
+"Haare",
+"Sternhaare (Lupe), Pflanze rau",
+"einfache, lange abstehende Haare"
+],
+[
+"Außenkelchblätter",
+"eiförmig bis breit-lanzettlich",
+"schmal lineal-lanzettlich"
+],
+[
+"Teilfrüchte",
+"kahl oder fast kahl",
+"dicht behaart"
+]
+],
+"ok": false
+},
+"Verbascum densiflorum|Verbascum phlomoides": {
+"m": [
+[
+"Stängelblätter",
+"breit flügelig bis zum nächsten Blatt herablaufend",
+"nicht oder nur kurz herablaufend"
+],
+[
+"Blattrand",
+"deutlich gekerbt",
+"schwach gekerbt bis fast ganzrandig"
+]
+],
+"ok": false
+},
+"Crataegus laevigata|Crataegus monogyna": {
+"m": [
+[
+"Griffel/Steinkerne",
+"2–3",
+"1"
+],
+[
+"Blattlappen",
+"seicht 3–5-lappig, Buchten flach",
+"tief 3–7-lappig, Buchten fast bis Mittelrippe"
+],
+[
+"Blattoberseite",
+"meist glänzend",
+"eher matt"
+]
+],
+"ok": false
+},
+"Papaver dubium|Papaver rhoeas": {
+"m": [
+[
+"Kapsel",
+"keulig, deutlich länger als breit",
+"kugelig bis kurz eiförmig"
+],
+[
+"Narbenstrahlen",
+"meist 5–9",
+"meist 8–12"
+],
+[
+"Haare am Blütenstiel",
+"angedrückt",
+"meist abstehend"
+],
+[
+"Blüte",
+"kleiner, orangerot, meist ohne Fleck",
+"größer, scharlachrot, oft schwarzer Fleck"
+]
+],
+"ok": false
+},
+"Pinguicula alpina|Pinguicula vulgaris": {
+"m": [
+[
+"Blütenfarbe",
+"weiß, Unterlippe mit gelben Flecken",
+"violett"
+],
+[
+"Sporn",
+"kurz, kegelig, nach unten gebogen",
+"länger, schlank"
+]
+],
+"ok": false
+},
+"Plantago major|Plantago media": {
+"m": [
+[
+"Blätter",
+"breit eiförmig, lang gestielt, ± kahl",
+"elliptisch, kurz gestielt, behaart, flach anliegend"
+],
+[
+"Ähre",
+"lang, dünn, unscheinbar bräunlich",
+"kurz walzlich, auffällig lila Staubfäden"
+],
+[
+"Duft",
+"keiner",
+"Blüten duftend"
+]
+],
+"ok": false
+},
+"Soldanella alpina|Soldanella montana": {
+"m": [
+[
+"Drüsen am Blütenstiel",
+"sitzend bzw. sehr kurz gestielt",
+"deutlich lang gestielt"
+],
+[
+"Blätter",
+"klein, nierenförmig, ganzrandig",
+"größer, Rand schwach gekerbt-wellig"
+],
+[
+"Blüten je Stängel",
+"meist 2–3",
+"meist 3–8"
+],
+[
+"Standort",
+"alpine Matten, Schneeböden",
+"montane Fichtenwälder"
+]
+],
+"ok": false
+},
+"Viola arvensis|Viola tricolor": {
+"m": [
+[
+"Kronblätter",
+"kürzer bis so lang wie Kelch",
+"deutlich länger als Kelch"
+],
+[
+"Blütenfarbe",
+"gelblich-weiß, oft nur Spitzen violett",
+"meist violett-gelb-weiß, auffällig"
+],
+[
+"Blütengröße",
+"1–1,5 cm",
+"1,5–3 cm"
+]
+],
+"ok": false
+},
+"Viola odorata|Viola suavis": {
+"m": [
+[
+"Blütenfarbe",
+"dunkelviolett",
+"hell blauviolett, Schlund weiß"
+],
+[
+"Nebenblätter",
+"eiförmig, kurz gefranst",
+"lanzettlich, lang gefranst, Fransen bewimpert"
+]
+],
+"ok": false
+},
+"Calystegia sepium|Convolvulus arvensis": {
+"m": [
+[
+"Vorblätter",
+"groß, umhüllen den Kelch",
+"klein, schmal, weit unter der Blüte"
+],
+[
+"Blüte",
+"4–6 cm, reinweiß",
+"1,5–2,5 cm, weiß oder rosa"
+],
+[
+"Narbe",
+"2 eiförmige Lappen",
+"2 fadenförmige Äste"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum pratense": {
+"m": [
+[
+"1. Astglied vs. Stängelscheide",
+"1. Astglied länger als Scheide",
+"1. Astglied kürzer als Scheide"
+],
+[
+"Scheidenzähne",
+"dunkel, ohne deutlichen Hautrand",
+"mit weißem Hautrand"
+],
+[
+"Fertile Sprosse",
+"bräunlich, unverzweigt, vergehend",
+"ergrünen nach Sporenreife, verzweigen"
+]
+],
+"ok": false
+},
+"Galium album|Galium mollugo": {
+"m": [
+[
+"Rispenäste",
+"steil aufrecht abstehend",
+"weit, fast rechtwinkelig abstehend"
+],
+[
+"Fruchtstiele",
+"kurz, aufrecht",
+"lang, 2–3× Frucht, gespreizt"
+],
+[
+"Blüten",
+"größer, 3–5 mm",
+"kleiner, 2–3 mm"
+]
+],
+"ok": false
+},
+"Hylotelephium maximum|Hylotelephium telephium": {
+"m": [
+[
+"Blattstellung",
+"gegenständig oder quirlig",
+"wechselständig"
+],
+[
+"Blattgrund",
+"breit, halb stängelumfassend",
+"keilig verschmälert"
+],
+[
+"Blütenfarbe",
+"grünlich- bis gelblich-weiß",
+"rosa bis purpurn"
+]
+],
+"ok": false
+},
+"Knautia arvensis|Knautia dipsacifolia": {
+"m": [
+[
+"Stängelblätter",
+"fiederspaltig",
+"ungeteilt, breit lanzettlich"
+],
+[
+"Stängel",
+"abstehend steifborstig",
+"zerstreut behaart"
+],
+[
+"Standort",
+"Wiesen, Raine",
+"Wälder, Hochstauden, montan"
+]
+],
+"ok": false
+},
+"Medicago falcata|Medicago × varia": {
+"m": [
+[
+"Blütenfarbe",
+"einheitlich gelb",
+"bunt: grünlich, gelb, violett, schwärzlich"
+],
+[
+"Hülse",
+"sichelförmig, < 1 Windung",
+"0,5–1,5 Windungen gedreht"
+]
+],
+"ok": false
+},
+"Petasites albus|Tussilago farfara": {
+"m": [
+[
+"Köpfe",
+"viele, weißlich, in Traube",
+"einzeln, goldgelb, am beschuppten Schaft"
+],
+[
+"Blätter",
+"rundlich-nierenförmig, gezähnt",
+"eckig-herzförmig, Zähne schwarzspitzig"
+],
+[
+"Blütezeit vs. Laub",
+"Blätter erscheinen bald danach",
+"blüht deutlich vor Blattaustrieb"
+]
+],
+"ok": false
+},
+"Prunella grandiflora|Prunella vulgaris": {
+"m": [
+[
+"Krone",
+"20–25 mm",
+"10–15 mm"
+],
+[
+"Blattpaar unter Ähre",
+"fehlt, Ähre gestielt",
+"direkt unter der Ähre"
+],
+[
+"Standort",
+"Kalkmagerrasen",
+"Wiesen, Wege, verbreitet"
+]
+],
+"ok": false
+},
+"Thymus pulegioides|Thymus serpyllum": {
+"m": [
+[
+"Stängel",
+"scharf 4-kantig, nur Kanten behaart",
+"rundlich, ringsum behaart"
+],
+[
+"Wuchs",
+"ohne lange Kriechtriebe",
+"lange kriechende Triebe, mattenbildend"
+],
+[
+"Blätter",
+"breiter, elliptisch-eiförmig",
+"schmal lineal-elliptisch"
+]
+],
+"ok": false
+},
+"Urtica dioica|Urtica urens": {
+"m": [
+[
+"Geschlecht",
+"zweihäusig",
+"einhäusig"
+],
+[
+"Lebensdauer/Wuchs",
+"ausdauernd, 0,5–1,5 m, Rhizom",
+"einjährig, 10–40 cm"
+],
+[
+"Blätter",
+"länglich-herzförmig, zugespitzt",
+"klein, eiförmig, tief eingeschnitten gesägt"
+],
+[
+"Blütenstände",
+"länger als Blattstiele",
+"kürzer als Blattstiele"
+]
+],
+"ok": false
+},
+"Viola tricolor|Viola × williamsii": {
+"m": [
+[
+"Herkunft",
+"wild, Äcker, Wiesen",
+"Gartenpflanze, Verwilderung"
+],
+[
+"Blüte",
+"1,5–3 cm, meist dreifarbig",
+"größer, oft einfarbig, Zuchtfarben"
+],
+[
+"Wuchs",
+"locker, schlaff",
+"kompakt-polsterig"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea scabiosa": {
+"m": [
+[
+"Blätter",
+"ungeteilt bis buchtig",
+"fiederteilig"
+],
+[
+"Hüllschuppenanhängsel",
+"braun, trockenhäutig, rundlich",
+"schwarz berandet, kammförmig gefranst"
+],
+[
+"Köpfe",
+"kleiner, 1,5–2 cm Hülle rund",
+"größer, Hülle 2–3 cm"
+]
+],
+"ok": false
+},
+"Cirsium palustre|Cirsium vulgare": {
+"m": [
+[
+"Stängel",
+"durchgehend dornig geflügelt",
+"unterbrochen dornig geflügelt"
+],
+[
+"Köpfe",
+"klein, gehäuft an Triebspitzen",
+"groß, einzeln, Hülle mit langen gelben Dornen"
+],
+[
+"Blattoberseite",
+"weichhaarig",
+"rau, mit Dörnchen besetzt"
+],
+[
+"Standort",
+"Feuchtwiesen, Moore",
+"Ruderalstellen, Kahlschläge"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum sylvaticum": {
+"m": [
+[
+"Äste",
+"unverzweigt",
+"selbst wieder quirlig verzweigt, überhängend"
+],
+[
+"Stängelscheiden",
+"Zähne einzeln, dunkel",
+"rotbraun, Zähne zu 3–4 Lappen verwachsen"
+]
+],
+"ok": false
+},
+"Fragaria vesca|Fragaria viridis": {
+"m": [
+[
+"Kelch an Frucht",
+"abstehend bis zurückgeschlagen",
+"der Frucht angedrückt"
+],
+[
+"Frucht",
+"leicht ablösbar, rundum rot",
+"schwer ablösbar, knackt, am Grund oft hell"
+],
+[
+"Endzahn Fiederblättchen",
+"± so lang wie Nachbarzähne",
+"kürzer als Nachbarzähne"
+]
+],
+"ok": false
+},
+"Fragaria vesca|Potentilla indica": {
+"m": [
+[
+"Blütenfarbe",
+"weiß",
+"gelb"
+],
+[
+"Außenkelch",
+"kleiner als Kelch, ganzrandig",
+"größer als Kelch, vorn 3-zähnig"
+],
+[
+"Frucht",
+"aromatisch, saftig",
+"fade, schwammig, aufrecht stehend"
+]
+],
+"ok": false
+},
+"Galinsoga parviflora|Galinsoga quadriradiata": {
+"m": [
+[
+"Behaarung",
+"fast kahl, nur oben spärlich",
+"dicht abstehend, oben drüsig behaart"
+],
+[
+"Pappus Scheibenblüten",
+"Schuppen gefranst, stumpf",
+"Schuppen in Grannenspitze auslaufend"
+]
+],
+"ok": false
+},
+"Heracleum mantegazzianum|Heracleum sphondylium": {
+"m": [
+[
+"Größe",
+"2–5 m, Stängel bis 10 cm dick",
+"0,5–1,5 m"
+],
+[
+"Stängel",
+"dicht purpurn gefleckt",
+"gerieft, steifhaarig, kaum gefleckt"
+],
+[
+"Dolde",
+"bis 50 cm, 50–150 Strahlen",
+"bis ~15 cm, 15–30 Strahlen"
+]
+],
+"ok": false
+},
+"Leonurus cardiaca|Leonurus quinquelobatus": {
+"m": [
+[
+"Stängelbehaarung",
+"± kahl, Haare v. a. an Kanten",
+"ringsum dicht abstehend behaart"
+],
+[
+"Untere Blätter",
+"meist 3-lappig",
+"tief 5-lappig"
+]
+],
+"ok": false
+},
+"Primula elatior|Primula vulgaris": {
+"m": [
+[
+"Blütenstand",
+"Dolde auf langem Schaft",
+"Blüten einzeln aus Rosette"
+],
+[
+"Krone",
+"trichterig, blassgelb, kleiner",
+"flach, schwefelgelb, groß, Schlund orange"
+],
+[
+"Blattgrund",
+"plötzlich in Stiel verschmälert",
+"allmählich verschmälert"
+]
+],
+"ok": false
+},
+"Campanula cochleariifolia|Campanula rotundifolia": {
+"m": [
+[
+"Wuchs",
+"5–15 cm, rasig, Ausläufer",
+"20–50 cm, aufrecht"
+],
+[
+"Stängelblätter",
+"eiförmig-lanzettlich, gezähnt",
+"schmal-lineal, ganzrandig"
+],
+[
+"Blüten",
+"1–6, nickend, breitglockig",
+"mehrere in lockerer Rispe"
+],
+[
+"Standort",
+"Kalkschutt, Felsen",
+"Magerrasen, Wegränder"
+]
+],
+"ok": false
+},
+"Geranium molle|Geranium pyrenaicum": {
+"m": [
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd"
+],
+[
+"Kronblätter",
+"3–7 mm, rosa",
+"7–10 mm, purpurviolett, tief ausgerandet"
+],
+[
+"Teilfrüchte",
+"kahl, quer runzelig",
+"glatt, angedrückt behaart"
+]
+],
+"ok": false
+},
+"Hippocrepis comosa|Lotus corniculatus": {
+"m": [
+[
+"Blätter",
+"unpaarig gefiedert, 4–7 Paare",
+"5 Blättchen (3 + 2 am Grund)"
+],
+[
+"Hülse",
+"gegliedert, hufeisenförmig eingebuchtet",
+"gerade, walzlich"
+],
+[
+"Krone",
+"Schiffchen-Nagel sehr lang, Blüten schmal",
+"Fahne breit, oft rot überlaufen"
+]
+],
+"ok": false
+},
+"Jacobaea alpina|Jacobaea subalpina": {
+"m": [
+[
+"Blätter",
+"ungeteilt, herz-eiförmig, gezähnt",
+"leierförmig fiederspaltig"
+],
+[
+"Blattstiel",
+"ungeflügelt oder schmal",
+"am Grund mit Fiederläppchen/Öhrchen"
+]
+],
+"ok": false
+},
+"Lotus alpinus|Lotus corniculatus": {
+"m": [
+[
+"Blüten je Köpfchen",
+"1–3",
+"3–8"
+],
+[
+"Wuchs",
+"niederliegend, klein, Blättchen dicklich",
+"größer, aufsteigend"
+],
+[
+"Höhenstufe",
+"subalpin–alpin",
+"Tieflagen bis subalpin"
+]
+],
+"ok": false
+},
+"Petasites albus|Petasites paradoxus": {
+"m": [
+[
+"Blattform",
+"rundlich-herzförmig",
+"dreieckig-spießförmig"
+],
+[
+"Blattunterseite",
+"anfangs graufilzig, später verkahlend",
+"bleibend dicht weißfilzig"
+],
+[
+"Blütenfarbe",
+"gelblich-weiß",
+"rötlich bis rosa"
+],
+[
+"Standort",
+"Wälder, Bachränder",
+"Kalkschutt, Bachalluvionen"
+]
+],
+"ok": false
+},
+"Pinus nigra|Pinus sylvestris": {
+"m": [
+[
+"Nadeln",
+"8–15 cm, dunkelgrün, steif",
+"3–7 cm, blaugrün, gedreht"
+],
+[
+"Rinde oben",
+"grau bis schwarzgrau",
+"orangerot, abblätternd"
+],
+[
+"Zapfen",
+"5–8 cm, glänzend gelbbraun",
+"3–6 cm, matt graubraun"
+]
+],
+"ok": false
+},
+"Thymus praecox|Thymus pulegioides": {
+"m": [
+[
+"Wuchs",
+"lange kriechende, wurzelnde Triebe",
+"ohne Kriechtriebe, horstig"
+],
+[
+"Blühstängel",
+"ringsum oder zweizeilig behaart",
+"scharf 4-kantig, nur Kanten behaart"
+],
+[
+"Blätter",
+"klein, oft am Grund bewimpert",
+"größer, meist kahl"
+]
+],
+"ok": false
+},
+"Centaurea montana|Centaurea triumfettii": {
+"m": [
+[
+"Hüllschuppensaum",
+"schwarzbraun, dunkel gefranst",
+"Fransen silbrig-weiß bis hell"
+],
+[
+"Blätter",
+"breit lanzettlich, grün",
+"schmäler, grau-weißfilzig"
+],
+[
+"Wuchs",
+"einzeln, Ausläufer",
+"dichtrasig, mehrstängelig"
+]
+],
+"ok": false
+},
+"Sedum acre|Sedum sexangulare": {
+"m": [
+[
+"Blätter",
+"eiförmig, dick, dachig",
+"walzlich-lineal, in 6 geraden Zeilen"
+],
+[
+"Geschmack",
+"scharf pfeffrig",
+"mild"
+]
+],
+"ok": false
+},
+"Capsella bursa-pastoris|Noccaea perfoliata": {
+"m": [
+[
+"Schötchen",
+"dreieckig-herzförmig, ungeflügelt",
+"verkehrt herzförmig, breit geflügelt"
+],
+[
+"Grundblätter",
+"meist fiederspaltig",
+"ungeteilt, eiförmig, bläulich-grün"
+],
+[
+"Stängelblätter",
+"pfeilförmig umfassend",
+"herzförmig umfassend, rundliche Öhrchen"
+],
+[
+"Behaarung",
+"± behaart",
+"kahl"
+]
+],
+"ok": false
+},
+"Dactylorhiza fuchsii|Gymnadenia conopsea": {
+"m": [
+[
+"Sporn",
+"kurz, dick",
+"sehr lang, fadenförmig, ~2× Fruchtknoten"
+],
+[
+"Blätter",
+"meist gefleckt, breiter",
+"ungefleckt, schmal lineal-lanzettlich"
+],
+[
+"Lippe",
+"tief 3-lappig, Schleifenzeichnung",
+"schwach 3-lappig, ohne Zeichnung"
+],
+[
+"Duft",
+"kaum",
+"deutlich süß duftend"
+]
+],
+"ok": false
+},
+"Myosotis alpestris|Myosotis sylvatica": {
+"m": [
+[
+"Fruchtstiele",
+"± so lang wie Kelch, aufrecht",
+"1,5–2× so lang wie Kelch, abstehend"
+],
+[
+"Wuchs",
+"niedrig, kompakt, Blüten tiefblau",
+"höher, locker"
+],
+[
+"Höhenstufe",
+"subalpin–alpin",
+"Wälder, Tieflagen bis montan"
+]
+],
+"ok": false
+},
+"Rhinanthus alectorolophus|Rhinanthus minor": {
+"m": [
+[
+"Kelch",
+"zottig lang behaart",
+"kahl"
+],
+[
+"Krone",
+"groß, 17–22 mm, Röhre aufwärts gebogen",
+"klein, 12–15 mm, Röhre gerade"
+],
+[
+"Schlund",
+"geschlossen",
+"geöffnet"
+]
+],
+"ok": false
+},
+"Salvia nemorosa|Salvia pratensis": {
+"m": [
+[
+"Krone",
+"klein, 8–12 mm",
+"groß, 20–30 mm, Oberlippe sichelig"
+],
+[
+"Tragblätter",
+"violett gefärbt, auffällig",
+"grün, unscheinbar"
+],
+[
+"Blätter",
+"Stängel reich beblättert",
+"v. a. grundständige Rosette"
+]
+],
+"ok": false
+},
+"Sedum alpestre|Sedum atratum": {
+"m": [
+[
+"Blütenfarbe",
+"gelb",
+"weißlich-grünlich bis rötlich"
+],
+[
+"Lebensdauer",
+"ausdauernd, mit sterilen Trieben",
+"einjährig, keine sterilen Triebe"
+],
+[
+"Färbung",
+"grün",
+"ganze Pflanze oft rotbraun"
+]
+],
+"ok": false
+},
+"Athyrium filix-femina|Dryopteris filix-mas": {
+"m": [
+[
+"Sori",
+"länglich bis hakenförmig",
+"rund, Schleier nierenförmig"
+],
+[
+"Teilung",
+"2–3-fach gefiedert, zart",
+"1–2-fach, Fiederchen stumpf"
+],
+[
+"Stiel",
+"spärlich beschuppt",
+"dicht braun spreuschuppig"
+]
+],
+"ok": false
+},
+"Cyclamen hederifolium|Cyclamen purpurascens": {
+"m": [
+[
+"Blütezeit",
+"Spätsommer–Herbst, vor den Blättern",
+"Juli–September, mit Laub"
+],
+[
+"Kronblattgrund",
+"mit Öhrchen",
+"ohne Öhrchen"
+],
+[
+"Blätter",
+"efeuartig eckig-gelappt",
+"rundlich-herzförmig, wintergrün"
+],
+[
+"Duft",
+"kaum",
+"stark duftend"
+]
+],
+"ok": false
+},
+"Dryopteris filix-mas|Matteuccia struthiopteris": {
+"m": [
+[
+"Wuchs",
+"Trichter locker",
+"regelmäßiger Federball-Trichter"
+],
+[
+"Wedel",
+"alle gleich, Sori unterseits",
+"sporentragende Wedel separat, braun, steif"
+],
+[
+"Blattgrund",
+"Fiedern kaum verkleinert",
+"Fiedern zum Grund stark verkleinert"
+]
+],
+"ok": false
+},
+"Lamium album|Lamium maculatum": {
+"m": [
+[
+"Blütenfarbe",
+"weiß",
+"purpurrot"
+],
+[
+"Kronröhre",
+"gekrümmt, Haarring schräg",
+"gekrümmt, Haarring quer, oberhalb verengt"
+],
+[
+"Blätter",
+"ungefleckt",
+"oft mit weißem Mittelstreif"
+]
+],
+"ok": false
+},
+"Medicago lupulina|Trifolium campestre": {
+"m": [
+[
+"Krone nach Blüte",
+"fällt ab",
+"bleibt, braun, hängend"
+],
+[
+"Frucht",
+"schwarze, nierenförmige Hülse",
+"in vertrockneter Krone verborgen"
+],
+[
+"Blättchenspitze",
+"mit kleiner Stachelspitze",
+"ohne Stachelspitze"
+],
+[
+"Fahne",
+"schmal",
+"breit, löffelig, quergefurcht"
+]
+],
+"ok": false
+},
+"Phyteuma betonicifolium|Phyteuma orbiculare": {
+"m": [
+[
+"Blütenstand",
+"walzlich-ährig",
+"kugelig"
+],
+[
+"Grundblätter",
+"lang gestielt, herz-lanzettlich",
+"schmäler, Grund keilig bis gestutzt"
+],
+[
+"Standort",
+"Silikat, Bergwiesen",
+"Kalk, Magerrasen"
+]
+],
+"ok": false
+},
+"Rhinanthus glacialis|Rhinanthus serotinus": {
+"m": [
+[
+"Tragblattzähne",
+"lang begrannt",
+"dreieckig, nicht begrannt"
+],
+[
+"Höhenstufe",
+"montan–alpin",
+"Tieflagen–montan"
+]
+],
+"ok": false
+},
+"Tilia cordata|Tilia platyphyllos": {
+"m": [
+[
+"Blattunterseite",
+"kahl, rostbraune Achselbärte",
+"flaumig, weißliche Achselbärte"
+],
+[
+"Blätter",
+"kleiner, 4–8 cm",
+"größer, 7–15 cm"
+],
+[
+"Blüten je Stand",
+"5–10, abstehend",
+"2–5, hängend"
+],
+[
+"Frucht",
+"dünnschalig, zerdrückbar",
+"hart, deutlich 4–5-rippig"
+]
+],
+"ok": false
+},
+"Trifolium aureum|Trifolium campestre": {
+"m": [
+[
+"Endblättchen",
+"sitzend wie die Seitenblättchen",
+"deutlich gestielt"
+],
+[
+"Köpfchen",
+"größer, goldgelb, 30–60 Blüten",
+"kleiner, hellgelb, 20–30 Blüten"
+]
+],
+"ok": false
+},
+"Veronica chamaedrys|Veronica filiformis": {
+"m": [
+[
+"Blütenstand",
+"reichblütige Trauben",
+"Einzelblüten an langen fädigen Stielen"
+],
+[
+"Stängel",
+"aufsteigend, 2 Haarleisten",
+"kriechend, rasenbildend"
+],
+[
+"Blätter",
+"eiförmig, grob gekerbt",
+"klein, rundlich-nierenförmig"
+]
+],
+"ok": false
+},
+"Viola canina|Viola riviniana": {
+"m": [
+[
+"Grundblattrosette",
+"fehlt",
+"vorhanden"
+],
+[
+"Sporn",
+"gelblich-grünlich",
+"weißlich, dick, oft ausgerandet"
+],
+[
+"Kelchanhängsel",
+"klein",
+"groß, an Frucht vergrößert"
+],
+[
+"Blattform",
+"länglich-eiförmig, Grund gestutzt",
+"rundlich-herzförmig"
+]
+],
+"ok": false
+},
+"Abies alba|Picea abies": {
+"m": [
+[
+"Nadeln",
+"flach, stumpf, unten 2 weiße Streifen",
+"vierkantig, spitz, ringsum grün"
+],
+[
+"Nadelansatz",
+"mit Saugnapf-Fuß, glatte Narbe",
+"auf Blattkissen, Zweig raspelig"
+],
+[
+"Zapfen",
+"aufrecht, zerfallen am Baum",
+"hängend, fallen ganz ab"
+],
+[
+"Rinde",
+"weißgrau, glatt",
+"rötlichbraun, schuppig"
+]
+],
+"ok": false
+},
+"Aegopodium podagraria|Chaerophyllum hirsutum": {
+"m": [
+[
+"Blätter",
+"doppelt 3-zählig, Blättchen groß",
+"2–3-fach fein gefiedert"
+],
+[
+"Behaarung",
+"± kahl",
+"behaart"
+],
+[
+"Hüllchen",
+"fehlen",
+"vorhanden, bewimpert"
+],
+[
+"Kronblätter",
+"kahl",
+"bewimpert"
+]
+],
+"ok": false
+},
+"Ailanthus altissima|Rhus typhina": {
+"m": [
+[
+"Fiederblättchen",
+"ganzrandig, am Grund 1–2 Drüsenzähne",
+"ringsum scharf gesägt"
+],
+[
+"Zweige",
+"kahl, dick",
+"samtig-filzig behaart"
+],
+[
+"Frucht",
+"geflügelte Nüsschen, hängend",
+"rote, behaarte Kolben, aufrecht"
+]
+],
+"ok": false
+},
+"Anthriscus cerefolium|Anthriscus sylvestris": {
+"m": [
+[
+"Geruch",
+"nach Anis",
+"unauffällig"
+],
+[
+"Frucht",
+"lang geschnäbelt, 7–10 mm",
+"kurz geschnäbelt, glänzend schwarz"
+],
+[
+"Wuchs",
+"einjährig, niedrig, Dolden seitlich",
+"ausdauernd, bis 1,5 m"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Chaerophyllum aureum": {
+"m": [
+[
+"Frucht",
+"glatt, rippenlos, glänzend schwarz",
+"deutlich gerippt, gelblich"
+],
+[
+"Stängel",
+"nicht verdickt",
+"unter Knoten verdickt, rot gefleckt"
+],
+[
+"Blattzipfel",
+"spitz",
+"lang zugespitzt"
+]
+],
+"ok": false
+},
+"Cotoneaster divaricatus|Cotoneaster horizontalis": {
+"m": [
+[
+"Wuchs",
+"aufrecht, 1–2 m",
+"flach, Zweige fischgrätartig"
+],
+[
+"Blätter",
+"1–2,5 cm, elliptisch",
+"klein, 0,6–1,2 cm, rundlich"
+],
+[
+"Blüten",
+"2–4 je Stand",
+"1–2"
+]
+],
+"ok": false
+},
+"Erigeron annuus|Erigeron canadensis": {
+"m": [
+[
+"Strahlblüten",
+"zahlreich, weiß, auffällig",
+"winzig, kaum sichtbar"
+],
+[
+"Köpfe",
+"1,5–2 cm",
+"3–5 mm, sehr zahlreich in Rispe"
+],
+[
+"Blätter",
+"untere breit, gezähnt",
+"schmal lineal, bewimpert"
+]
+],
+"ok": false
+},
+"Eriophorum scheuchzeri|Eriophorum vaginatum": {
+"m": [
+[
+"Wuchs",
+"lockerrasig mit Ausläufern",
+"dichte Horste (Bulte)"
+],
+[
+"Oberste Stängelscheide",
+"nicht aufgeblasen",
+"deutlich aufgeblasen, ohne Spreite"
+],
+[
+"Wollschopf",
+"kugelig, rein weiß",
+"verkehrt eiförmig"
+],
+[
+"Standort",
+"alpine Tümpelränder",
+"Hochmoore"
+]
+],
+"ok": false
+},
+"Gentiana nivalis|Gentiana verna": {
+"m": [
+[
+"Lebensdauer",
+"einjährig, ohne Rosette",
+"ausdauernd, Grundrosette"
+],
+[
+"Krone",
+"klein, Saum ~1 cm",
+"größer, Saum ~2 cm"
+],
+[
+"Wuchs",
+"oft verzweigt, mehrblütig",
+"einblütig"
+]
+],
+"ok": false
+},
+"Lamium galeobdolon|Lamium maculatum": {
+"m": [
+[
+"Blütenfarbe",
+"gelb",
+"purpurrot"
+],
+[
+"Unterlippe",
+"3 spitze Lappen",
+"Mittellappen ausgerandet, Seitenl. zahnartig"
+],
+[
+"Wuchs",
+"Ausläufer, oft silbrig gefleckt",
+"ohne lange Ausläufer"
+]
+],
+"ok": false
+},
+"Lathyrus latifolius|Lathyrus sylvestris": {
+"m": [
+[
+"Nebenblätter",
+"breit, > halbe Stängelbreite",
+"schmal, < halbe Stängelbreite"
+],
+[
+"Blättchen",
+"breit elliptisch",
+"schmal lanzettlich"
+],
+[
+"Blüten",
+"2–3 cm, leuchtend magenta",
+"~1,5 cm, blassrosa-grünlich"
+]
+],
+"ok": false
+},
+"Lycopodium clavatum|Spinulum annotinum": {
+"m": [
+[
+"Blattspitze",
+"mit langer weißer Haarspitze",
+"stachelspitzig, ohne Haar"
+],
+[
+"Sporenähren",
+"1–3 auf langem Stiel",
+"einzeln, sitzend"
+],
+[
+"Blätter",
+"weich, angedrückt",
+"starr, abstehend, Jahresabsätze"
+]
+],
+"ok": false
+},
+"Phyteuma ovatum|Phyteuma spicatum": {
+"m": [
+[
+"Blütenfarbe",
+"dunkelviolett bis schwarzviolett",
+"gelblich-weiß"
+],
+[
+"Ähre",
+"kurz eiförmig",
+"walzlich verlängert"
+],
+[
+"Höhenstufe",
+"montan–subalpin, Hochstauden",
+"Tieflagen–montan, Wälder"
+]
+],
+"ok": false
+},
+"Anthericum liliago|Anthericum ramosum": {
+"m": [
+[
+"Blütenstand",
+"unverzweigte Traube",
+"rispig verzweigt"
+],
+[
+"Blüte",
+"groß, 3–4 cm",
+"klein, 2–2,5 cm"
+],
+[
+"Griffel",
+"abwärts gebogen",
+"gerade"
+]
+],
+"ok": false
+},
+"Athyrium distentifolium|Athyrium filix-femina": {
+"m": [
+[
+"Sori",
+"rundlich, randnah",
+"länglich bis hakig"
+],
+[
+"Schleier",
+"fehlend oder winzig",
+"deutlich"
+],
+[
+"Höhenstufe",
+"subalpin, Hochstauden",
+"Tieflagen–montan"
+]
+],
+"ok": false
+},
+"Cardamine flexuosa|Cardamine hirsuta": {
+"m": [
+[
+"Staubblätter",
+"6",
+"meist 4"
+],
+[
+"Stängel",
+"hin- und hergebogen, beblättert",
+"gerade, fast blattlos"
+],
+[
+"Rosette",
+"undeutlich",
+"kräftige Grundrosette"
+],
+[
+"Fruchtstand",
+"Schoten überragen Blüten kaum",
+"Schoten überragen Blüten deutlich"
+]
+],
+"ok": false
+},
+"Dactylorhiza majalis|Dactylorhiza traunsteineri": {
+"m": [
+[
+"Blätter",
+"4–6, breit lanzettlich, kräftig gefleckt",
+"2–4, schmal lineal, wenig gefleckt"
+],
+[
+"Blütenstand",
+"dicht, reichblütig",
+"locker, armblütig"
+],
+[
+"Stängel",
+"kräftig, hohl",
+"dünn, schlank"
+]
+],
+"ok": false
+},
+"Gagea lutea|Gagea pratensis": {
+"m": [
+[
+"Grundblatt",
+"1, breit (7–12 mm), mit Kapuzenspitze",
+"1, schmal (2–4 mm), gekielt"
+],
+[
+"Zwiebeln",
+"1",
+"3 (2 Tochterzwiebeln)"
+],
+[
+"Standort",
+"Laubwälder",
+"Äcker, Weinberge, Trockenrasen"
+]
+],
+"ok": false
+},
+"Homogyne alpina|Homogyne discolor": {
+"m": [
+[
+"Blattunterseite",
+"grün, kahl, oft violett",
+"dicht weißfilzig"
+],
+[
+"Standort",
+"verbreitet, saure Rohhumusböden",
+"Kalk, Ostalpen"
+]
+],
+"ok": false
+},
+"Hypochaeris radicata|Leontodon hispidus": {
+"m": [
+[
+"Spreublätter",
+"vorhanden",
+"fehlen"
+],
+[
+"Stängel",
+"oft verzweigt, mit Schuppen",
+"unverzweigt, 1 Kopf"
+],
+[
+"Blatthaare",
+"einfache Borsten",
+"gabelige Haare (Lupe)"
+],
+[
+"Knospen",
+"aufrecht",
+"nickend"
+]
+],
+"ok": false
+},
+"Impatiens noli-tangere|Impatiens parviflora": {
+"m": [
+[
+"Blüte",
+"2–3 cm, goldgelb, hängend",
+"~1 cm, blassgelb, aufrecht"
+],
+[
+"Sporn",
+"gekrümmt",
+"gerade"
+],
+[
+"Blattrand",
+"grob stumpf gezähnt",
+"fein gesägt"
+]
+],
+"ok": false
+},
+"Pinus mugo|Pinus sylvestris": {
+"m": [
+[
+"Wuchs",
+"Strauch, Krummholz",
+"Baum, schlank"
+],
+[
+"Rinde",
+"grauschwarz, nicht rot",
+"oben orangerot"
+],
+[
+"Nadeln",
+"dunkelgrün, dicht, gerade",
+"blaugrün, gedreht"
+]
+],
+"ok": false
+},
+"Rhinanthus alectorolophus|Rhinanthus glacialis": {
+"m": [
+[
+"Kelch",
+"zottig behaart",
+"kahl"
+],
+[
+"Tragblattzähne",
+"spitz, nicht begrannt",
+"lang begrannt"
+],
+[
+"Krone",
+"groß, 17–22 mm",
+"kleiner"
+]
+],
+"ok": false
+},
+"Scabiosa columbaria|Scabiosa lucida": {
+"m": [
+[
+"Blätter",
+"matt, behaart",
+"glänzend, ± kahl"
+],
+[
+"Blütenfarbe",
+"blau-lila",
+"rötlich-lila"
+],
+[
+"Höhenstufe",
+"Tieflagen–montan",
+"subalpin–alpin, Kalk"
+]
+],
+"ok": false
+},
+"Ulmus glabra|Ulmus minor": {
+"m": [
+[
+"Blattstiel",
+"sehr kurz, von Spreitengrund verdeckt",
+"5–15 mm, gut sichtbar"
+],
+[
+"Blatt",
+"groß, oberseits rau, oft 3-spitzig",
+"kleiner, glatt, glänzend"
+],
+[
+"Samen in Frucht",
+"zentral",
+"nahe der Kerbe"
+]
+],
+"ok": false
+},
+"Allium carinatum|Allium cirrhosum": {
+"m": [
+[
+"Brutzwiebeln im Blütenstand",
+"vorhanden, Blüten wenige",
+"fehlen, Dolde reichblütig"
+],
+[
+"Dolde",
+"locker, oft schütter",
+"voll, Blütenstiele bogig überhängend"
+]
+],
+"ok": false
+},
+"Alnus glutinosa|Alnus incana": {
+"m": [
+[
+"Blattspitze",
+"gestutzt bis ausgerandet",
+"zugespitzt"
+],
+[
+"Blattunterseite",
+"grün, Aderwinkel bärtig, jung klebrig",
+"graugrün, fein behaart"
+],
+[
+"Rinde",
+"dunkel, im Alter rissig",
+"hellgrau, lange glatt"
+],
+[
+"Weibliche Kätzchen",
+"deutlich gestielt",
+"fast sitzend"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Conium maculatum": {
+"m": [
+[
+"Stängel",
+"unten behaart, gefurcht, grün",
+"kahl, bereift, rotbraun gefleckt"
+],
+[
+"Geruch zerrieben",
+"würzig, angenehm",
+"unangenehm nach Mäuseharn"
+],
+[
+"Frucht",
+"lang, glatt, schmal geschnäbelt",
+"rundlich mit welligen Rippen"
+],
+[
+"Hüllblätter",
+"fehlen",
+"vorhanden, kurz, zurückgeschlagen"
+]
+],
+"ok": false
+},
+"Berberis thunbergii|Berberis vulgaris": {
+"m": [
+[
+"Blattrand",
+"ganzrandig",
+"dicht stachelig gesägt"
+],
+[
+"Blütenstand",
+"Blüten einzeln oder zu 2–4",
+"vielblütige hängende Trauben"
+],
+[
+"Dornen",
+"meist einfach",
+"meist dreiteilig"
+]
+],
+"ok": false
+},
+"Caltha palustris|Ficaria verna": {
+"m": [
+[
+"Blütenhülle",
+"5 gleiche gelbe Hüllblätter, kein Kelch",
+"3 Kelchblätter, 8–12 schmale Kronblätter"
+],
+[
+"Blätter",
+"groß, nierenförmig, gekerbt",
+"klein, herzförmig, glänzend"
+],
+[
+"Brutknöllchen",
+"fehlen",
+"oft in Blattachseln"
+],
+[
+"Frucht",
+"Balgfrüchte",
+"Nüsschen"
+]
+],
+"ok": false
+},
+"Campanula cochleariifolia|Campanula scheuchzeri": {
+"m": [
+[
+"Wuchs",
+"rasig, mit vielen sterilen Rosetten",
+"meist einzelne Stängel"
+],
+[
+"Grundblätter",
+"rundlich, grob gezähnt, zur Blüte da",
+"zur Blüte meist verwelkt"
+],
+[
+"Blüten",
+"1–2 cm, oft mehrere je Stängel",
+"1,5–2,5 cm, meist einzeln"
+]
+],
+"ok": false
+},
+"Galeopsis pubescens|Galeopsis tetrahit": {
+"m": [
+[
+"Stängel unter Knoten",
+"weich und drüsig behaart",
+"steifborstig, Knoten verdickt"
+],
+[
+"Krone",
+"leuchtend karminrot, gelber Schlund",
+"blassrosa bis weißlich"
+],
+[
+"Kronröhre",
+"deutlich länger als Kelch",
+"etwa kelchlang"
+]
+],
+"ok": false
+},
+"Lathyrus pratensis|Lotus corniculatus": {
+"m": [
+[
+"Blatt",
+"1 Fiederpaar + Ranke",
+"5 Fiedern, unterstes Paar am Grund"
+],
+[
+"Nebenblätter",
+"groß, pfeilförmig",
+"fehlen (Fiederpaar am Grund)"
+],
+[
+"Stängel",
+"kantig, kletternd",
+"rund, niederliegend bis aufsteigend"
+],
+[
+"Schiffchen",
+"nicht geschnäbelt",
+"deutlich geschnäbelt"
+]
+],
+"ok": false
+},
+"Lotus corniculatus|Lotus pedunculatus": {
+"m": [
+[
+"Stängel",
+"markig, voll",
+"hohl"
+],
+[
+"Kelchzähne in Knospe",
+"aufrecht zusammenneigend",
+"spreizend bis zurückgebogen"
+],
+[
+"Blüten je Köpfchen",
+"2–7",
+"meist 8–12"
+],
+[
+"Standort",
+"trockene bis frische Wiesen",
+"Nasswiesen, Gräben"
+]
+],
+"ok": false
+},
+"Pedicularis rostratocapitata|Pedicularis verticillata": {
+"m": [
+[
+"Stängelblätter",
+"wechselständig",
+"zu 3–4 quirlig"
+],
+[
+"Oberlippe",
+"in deutlichen Schnabel verlängert",
+"ungeschnäbelt"
+],
+[
+"Blütenstand",
+"kopfig gedrängt",
+"quirlig gestockt"
+]
+],
+"ok": false
+},
+"Primula clusiana|Primula minima": {
+"m": [
+[
+"Blattrand",
+"ganzrandig, knorpelig berandet",
+"vorn mit wenigen scharfen Zähnen"
+],
+[
+"Blattform",
+"länglich, glänzend",
+"keilförmig, klein"
+],
+[
+"Kronzipfel",
+"ausgerandet",
+"tief 2-spaltig, Y-förmig"
+],
+[
+"Gestein",
+"Kalk, nordöstl. Kalkalpen",
+"meist Silikat, saure Böden"
+]
+],
+"ok": false
+},
+"Ranunculus alpestris|Ranunculus glacialis": {
+"m": [
+[
+"Kelchblätter",
+"kahl",
+"dicht braunrot zottig"
+],
+[
+"Blätter",
+"glänzend, rundlich, gekerbt-gelappt",
+"fleischig, tief geteilt"
+],
+[
+"Krone",
+"reinweiß",
+"weiß, später rosa bis rötlich"
+],
+[
+"Gestein",
+"Kalk",
+"Silikat, Hochalpen"
+]
+],
+"ok": false
+},
+"Ranunculus lanuginosus|Ranunculus repens": {
+"m": [
+[
+"Ausläufer",
+"fehlen",
+"oberirdische, wurzelnde Ausläufer"
+],
+[
+"Behaarung",
+"dicht abstehend, gelblich zottig",
+"spärlich bis mäßig"
+],
+[
+"Grundblatt",
+"Mittelabschnitt sitzend, breit gelappt",
+"Mittelabschnitt deutlich gestielt"
+],
+[
+"Standort",
+"feuchte Laubwälder",
+"Wiesen, Äcker, Ufer, ruderal"
+]
+],
+"ok": false
+},
+"Reynoutria japonica|Reynoutria sachalinensis": {
+"m": [
+[
+"Blattgrund",
+"gestutzt, gerade",
+"deutlich herzförmig"
+],
+[
+"Blattgröße",
+"meist 10–15 cm",
+"meist 20–40 cm"
+],
+[
+"Blattunterseite",
+"kahl, Nerven höchstens papillös",
+"mit langen Haaren auf Nerven"
+],
+[
+"Wuchshöhe",
+"bis ca. 2,5 m",
+"bis 4 m"
+]
+],
+"ok": false
+},
+"Rumex acetosa|Rumex thyrsiflorus": {
+"m": [
+[
+"Spreitenöhrchen",
+"abwärts gerichtet",
+"seitlich spreizend, oft geteilt"
+],
+[
+"Stängelblätter",
+"breit spießförmig, wenige",
+"schmal-lanzettlich, zahlreich"
+],
+[
+"Rispe",
+"locker, wenig verzweigt",
+"dicht, reich verzweigt, pyramidal"
+],
+[
+"Standort",
+"frische Wiesen",
+"trockene Ruderalstellen, Dämme"
+]
+],
+"ok": false
+},
+"Saponaria pumila|Silene acaulis": {
+"m": [
+[
+"Griffel",
+"2",
+"3"
+],
+[
+"Blüte",
+"ca. 2 cm, Kelch röhrig, behaart",
+"ca. 1 cm, Kelch kurz, kahl"
+],
+[
+"Blätter",
+"lineal, fleischig, stumpflich",
+"starr, spitz, gewimpert"
+],
+[
+"Wuchs",
+"lockere Rasen, nur Silikat Ostalpen",
+"dichte Polster, Kalk und Silikat"
+]
+],
+"ok": false
+},
+"Trifolium alpestre|Trifolium medium": {
+"m": [
+[
+"Teilblättchen",
+"schmal-lanzettlich, fein gezähnt",
+"elliptisch, ganzrandig"
+],
+[
+"Nebenblätter",
+"freier Teil lang pfriemlich",
+"freier Teil kurz dreieckig"
+],
+[
+"Kelchröhre",
+"behaart",
+"kahl"
+],
+[
+"Köpfchen",
+"oft zu zweit",
+"einzeln; Stängel hin- und hergebogen"
+]
+],
+"ok": false
+},
+"Viola odorata|Viola reichenbachiana": {
+"m": [
+[
+"Stängel",
+"fehlt, Blüten aus Rosette; Ausläufer",
+"beblätterter Stängel, keine Ausläufer"
+],
+[
+"Duft",
+"stark duftend",
+"duftlos"
+],
+[
+"Sporn",
+"kurz, wie Krone gefärbt",
+"schlank, dunkelviolett"
+],
+[
+"Kelchblätter",
+"stumpf",
+"spitz"
+]
+],
+"ok": false
+},
+"Betula pendula|Betula pubescens": {
+"m": [
+[
+"Junge Zweige",
+"kahl, mit Harzwarzen, hängend",
+"flaumig behaart, kaum Warzen"
+],
+[
+"Blatt",
+"rhombisch, lang zugespitzt, doppelt gesägt",
+"eiförmig, kurz spitz, einfacher gesägt"
+],
+[
+"Stammbasis",
+"schwarz, tief rissig",
+"kaum borkig"
+],
+[
+"Standort",
+"trocken bis frisch, Pionier",
+"Moore, nasse Böden"
+]
+],
+"ok": false
+},
+"Calluna vulgaris|Erica carnea": {
+"m": [
+[
+"Blätter",
+"schuppenförmig, 4-zeilig dachig",
+"nadelförmig, zu 4 quirlig"
+],
+[
+"Blüte",
+"Kelch kronartig, länger als Krone",
+"Krone glockig, Antheren dunkel, vorragend"
+],
+[
+"Blütezeit",
+"Aug–Okt",
+"Jan–Mai"
+]
+],
+"ok": false
+},
+"Cardamine amara|Cardamine pratensis": {
+"m": [
+[
+"Antheren",
+"violett",
+"gelb"
+],
+[
+"Krone",
+"weiß",
+"meist blasslila"
+],
+[
+"Grundblattrosette",
+"fehlt, mit Ausläufern",
+"vorhanden"
+],
+[
+"Fiedern der Stängelblätter",
+"breit, eiförmig, gezähnt",
+"schmal-lineal"
+]
+],
+"ok": false
+},
+"Carduus defloratus|Cirsium heterophyllum": {
+"m": [
+[
+"Pappus",
+"rau, nicht gefiedert",
+"gefiedert"
+],
+[
+"Blattunterseite",
+"grün bis blaugrün",
+"dicht weißfilzig"
+],
+[
+"Blattrand",
+"dornig gezähnt",
+"weich, fein gezähnt, unbewehrt"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea stoebe": {
+"m": [
+[
+"Hüllblattanhängsel",
+"braun, rundlich, trockenhäutig",
+"dreieckig, schwarze Spitze, gefranst"
+],
+[
+"Blätter",
+"lanzettlich, ungeteilt bis schwach gelappt",
+"1–2fach fiederteilig, graufilzig"
+],
+[
+"Standort",
+"frische bis wechselfeuchte Wiesen",
+"Trockenrasen, Bahndämme"
+]
+],
+"ok": false
+},
+"Centaurea scabiosa|Knautia arvensis": {
+"m": [
+[
+"Hülle",
+"dachige Hüllblätter, schwarz gefranst",
+"grüne, krautige Hüllblätter"
+],
+[
+"Blattstellung",
+"wechselständig",
+"gegenständig"
+],
+[
+"Staubblätter",
+"zu Röhre verwachsen",
+"frei, weit herausragend"
+],
+[
+"Einzelblüte",
+"röhrig, Randblüten vergrößert",
+"4-zipfelig, mit Außenkelch"
+]
+],
+"ok": false
+},
+"Epipactis helleborine|Epipactis muelleri": {
+"m": [
+[
+"Rostellum/Klebdrüse",
+"vorhanden, funktionsfähig",
+"fehlt; selbstbestäubend"
+],
+[
+"Blüten",
+"weit offen",
+"wenig geöffnet, gelbgrün"
+],
+[
+"Epichil",
+"herzförmig, Spitze zurückgebogen",
+"klein, breiter als lang"
+],
+[
+"Blätter",
+"groß, dunkelgrün",
+"kleiner, gelblichgrün, gewellt"
+]
+],
+"ok": false
+},
+"Fragaria moschata|Fragaria vesca": {
+"m": [
+[
+"Haare an Blütenstielen",
+"waagrecht abstehend",
+"anliegend"
+],
+[
+"Endzahn Teilblättchen",
+"kürzer als Nachbarzähne",
+"so lang oder länger als Nachbarn"
+],
+[
+"Wuchs/Blüten",
+"kräftig, Blüten 2–2,5 cm",
+"zierlicher, Blüten 1–1,5 cm"
+],
+[
+"Ausläufer",
+"wenige",
+"zahlreich"
+]
+],
+"ok": false
+},
+"Gagea lutea|Gagea villosa": {
+"m": [
+[
+"Grundblätter",
+"1, breit (7–15 mm), Spitze kappenförmig",
+"2, schmal-lineal (1–3 mm)"
+],
+[
+"Blütenstiele",
+"kahl",
+"zottig behaart"
+],
+[
+"Standort",
+"feuchte Laubwälder",
+"Äcker, Weinberge, Trockenhänge"
+]
+],
+"ok": false
+},
+"Gentiana bavarica|Gentiana nivalis": {
+"m": [
+[
+"Lebensdauer",
+"ausdauernd, sterile Rosetten",
+"einjährig, ohne Rosetten"
+],
+[
+"Blätter",
+"verkehrt-eiförmig, gelbgrün, dachig",
+"klein, eiförmig, entfernt"
+],
+[
+"Kelch",
+"schmal geflügelt",
+"kantig, deutlich geflügelt"
+],
+[
+"Krone",
+"ca. 2 cm",
+"ca. 1–1,5 cm; Pflanze oft verzweigt"
+]
+],
+"ok": false
+},
+"Geranium molle|Geranium pusillum": {
+"m": [
+[
+"Kronblätter",
+"tief ausgerandet, länger als Kelch",
+"seicht ausgerandet, kaum kelchlang"
+],
+[
+"Fruchtbare Staubblätter",
+"10",
+"5"
+],
+[
+"Teilfrüchte",
+"kahl, quer runzelig",
+"glatt, anliegend behaart"
+]
+],
+"ok": false
+},
+"Geranium phaeum|Geranium sylvaticum": {
+"m": [
+[
+"Kronfarbe",
+"dunkel braunviolett",
+"violett, Grund weißlich"
+],
+[
+"Kronblätter",
+"flach ausgebreitet bis zurückgebogen",
+"schalenförmig ausgebreitet"
+],
+[
+"Blüte",
+"nickend, ca. 2 cm",
+"aufrecht, 2,5–3 cm"
+],
+[
+"Blätter",
+"oft dunkel gefleckt",
+"ungefleckt"
+]
+],
+"ok": false
+},
+"Mentha longifolia|Mentha spicata": {
+"m": [
+[
+"Blattunterseite",
+"dicht graufilzig",
+"kahl oder schwach behaart"
+],
+[
+"Blattfarbe",
+"graugrün",
+"frisch- bis dunkelgrün, glänzend"
+],
+[
+"Geruch",
+"streng, minzig-muffig",
+"Grüne Minze (Kaugummi)"
+]
+],
+"ok": false
+},
+"Oxalis corniculata|Oxalis dillenii": {
+"m": [
+[
+"Wuchs",
+"niederliegend, an Knoten wurzelnd",
+"aufrecht, nicht wurzelnd"
+],
+[
+"Nebenblätter",
+"deutlich, länglich",
+"undeutlich bis fehlend"
+],
+[
+"Blätter",
+"oft purpurbraun überlaufen",
+"grün"
+]
+],
+"ok": false
+},
+"Ranunculus acris|Ranunculus lanuginosus": {
+"m": [
+[
+"Grundblatt",
+"tief 5–7-teilig, Zipfel schmal",
+"nur bis ca. Mitte gelappt, breit"
+],
+[
+"Behaarung",
+"anliegend, spärlich",
+"dicht abstehend, gelblich zottig"
+],
+[
+"Fruchtschnabel",
+"kurz, gerade",
+"lang, stark eingerollt"
+],
+[
+"Standort",
+"Wiesen",
+"feuchte Laubwälder"
+]
+],
+"ok": false
+},
+"Ranunculus acris|Ranunculus bulbosus": {
+"m": [
+[
+"Kelchblätter",
+"anliegend",
+"zurückgeschlagen"
+],
+[
+"Stängelgrund",
+"nicht verdickt",
+"knollig verdickt"
+],
+[
+"Blütenstiele",
+"rund, ungefurcht",
+"gefurcht"
+]
+],
+"ok": false
+},
+"Rumex crispus|Rumex obtusifolius": {
+"m": [
+[
+"Grundblätter",
+"schmal-lanzettlich, Rand kraus",
+"breit, Grund herzförmig"
+],
+[
+"Fruchtklappen",
+"ganzrandig, herzförmig",
+"jederseits mit langen Zähnen"
+],
+[
+"Schwielen",
+"meist an allen 3 Klappen",
+"meist nur an 1 Klappe"
+]
+],
+"ok": false
+},
+"Silene dioica|Viscaria vulgaris": {
+"m": [
+[
+"Stängel unter Knoten",
+"nicht klebrig",
+"klebrig, dunkel"
+],
+[
+"Behaarung",
+"ganze Pflanze weich behaart",
+"weitgehend kahl"
+],
+[
+"Blätter",
+"breit eiförmig",
+"schmal lanzettlich"
+],
+[
+"Geschlecht",
+"zweihäusig",
+"zwittrig"
+]
+],
+"ok": false
+},
+"Silene latifolia|Silene vulgaris": {
+"m": [
+[
+"Kelch",
+"behaart, nicht netzaderig",
+"kahl, blasig, netzaderig"
+],
+[
+"Behaarung",
+"Pflanze drüsig-weich behaart",
+"kahl, blaugrün"
+],
+[
+"Geschlecht",
+"zweihäusig",
+"zwittrig"
+],
+[
+"Krone",
+"groß, abends duftend",
+"kleiner, tief 2-spaltig"
+]
+],
+"ok": false
+},
+"Tragopogon dubius|Tragopogon orientalis": {
+"m": [
+[
+"Hüllblätter vs. Zungen",
+"Hülle deutlich länger",
+"Zungen länger als Hülle"
+],
+[
+"Köpfchenstiel",
+"unter Köpfchen stark keulig",
+"kaum verdickt"
+],
+[
+"Blütenfarbe",
+"hellgelb",
+"goldgelb"
+]
+],
+"ok": false
+},
+"Trifolium campestre|Trifolium dubium": {
+"m": [
+[
+"Blüten je Köpfchen",
+"20–40, Köpfchen dicht",
+"10–20, Köpfchen locker"
+],
+[
+"Fahne",
+"breit, gefurcht, löffelförmig",
+"schmal, gefaltet"
+],
+[
+"Nebenblätter",
+"eiförmig",
+"lanzettlich"
+]
+],
+"ok": false
+},
+"Typha angustifolia|Typha latifolia": {
+"m": [
+[
+"Kolben",
+"♂ und ♀ durch Lücke getrennt",
+"♂ und ♀ aneinanderstoßend"
+],
+[
+"Blattbreite",
+"3–10 mm",
+"10–20 mm"
+],
+[
+"♀ Kolben",
+"zimtbraun, schlank",
+"schwarzbraun, dick"
+]
+],
+"ok": false
+},
+"Acer campestre|Acer platanoides": {
+"m": [
+[
+"Blatt",
+"klein, 3–5 stumpfe Lappen",
+"groß, Lappen lang zugespitzt-gezähnt"
+],
+[
+"Flügel der Frucht",
+"waagrecht abstehend",
+"stumpfwinklig"
+],
+[
+"Zweige",
+"oft mit Korkleisten",
+"glatt"
+]
+],
+"ok": false
+},
+"Alopecurus pratensis|Phleum pratense": {
+"m": [
+[
+"Hüllspelzen",
+"ohne Hörnchen, weich",
+"mit 2 kurzen, steifen Grannenspitzen"
+],
+[
+"Ährenrispe",
+"weich, Grannen vorragend",
+"rau, walzlich"
+],
+[
+"Blütezeit",
+"Apr–Jun",
+"Jun–Aug"
+],
+[
+"Halmgrund",
+"nicht verdickt",
+"oft zwiebelig verdickt"
+]
+],
+"ok": false
+},
+"Anemonoides nemorosa|Anemonoides ranunculoides": {
+"m": [
+[
+"Blütenfarbe",
+"weiß, außen oft rötlich",
+"gelb"
+],
+[
+"Hochblattstiele",
+"deutlich gestielt",
+"fast sitzend"
+],
+[
+"Blüten je Stängel",
+"meist 1",
+"oft 1–3"
+]
+],
+"ok": false
+},
+"Aquilegia atrata|Aquilegia vulgaris": {
+"m": [
+[
+"Blütenfarbe",
+"dunkel braunviolett",
+"blauviolett"
+],
+[
+"Staubblätter",
+"deutlich aus Krone herausragend",
+"nicht länger als Kronblattplatte"
+]
+],
+"ok": false
+},
+"Artemisia verlotiorum|Artemisia vulgaris": {
+"m": [
+[
+"Ausläufer",
+"unterirdische Ausläufer, Herden",
+"fehlen, horstig"
+],
+[
+"Blattzipfel",
+"lang, schmal lanzettlich",
+"kürzer, breiter"
+],
+[
+"Geruch",
+"stark aromatisch",
+"schwach"
+],
+[
+"Blütezeit",
+"Okt–Nov",
+"Jul–Sep"
+]
+],
+"ok": false
+},
+"Athyrium filix-femina|Oreopteris limbosperma": {
+"m": [
+[
+"Sori",
+"länglich bis hakenförmig, mit Schleier",
+"rund, randnah, ohne Schleier"
+],
+[
+"Blattunterseite",
+"ohne Drüsen",
+"gelbe Drüsen, Zitronenduft"
+],
+[
+"Untere Fiedern",
+"kaum verkürzt",
+"allmählich stark verkürzt"
+]
+],
+"ok": false
+},
+"Digitalis grandiflora|Digitalis purpurea": {
+"m": [
+[
+"Krone",
+"blassgelb, innen braun geadert",
+"purpurn, innen dunkel gefleckt"
+],
+[
+"Blattunterseite",
+"grün, schwach behaart",
+"graufilzig"
+],
+[
+"Vorkommen",
+"heimisch, Waldsäume",
+"selten verwildert"
+]
+],
+"ok": false
+},
+"Eriophorum angustifolium|Eriophorum latifolium": {
+"m": [
+[
+"Ährchenstiele",
+"glatt",
+"rau"
+],
+[
+"Blätter",
+"rinnig, 3–6 mm, Spitze 3-kantig",
+"flach, 4–8 mm"
+],
+[
+"Wuchs",
+"mit Ausläufern, Herden",
+"horstig"
+],
+[
+"Standort",
+"saure Moore",
+"basenreiche Quellmoore"
+]
+],
+"ok": false
+},
+"Galanthus elwesii|Galanthus nivalis": {
+"m": [
+[
+"Blätter",
+"breit, blaugrün, eines umfasst das andere",
+"schmal, flach aneinanderliegend"
+],
+[
+"Innere Hüllblätter",
+"grüner Fleck an Spitze und Grund",
+"nur ein Fleck an der Spitze"
+],
+[
+"Blüte",
+"größer",
+"kleiner"
+]
+],
+"ok": false
+},
+"Gymnadenia conopsea|Orchis mascula": {
+"m": [
+[
+"Sporn",
+"sehr lang, fadenförmig",
+"dick, etwa fruchtknotenlang"
+],
+[
+"Blätter",
+"schmal, ungefleckt",
+"breiter, oft dunkel gefleckt"
+],
+[
+"Seitliche Kelchblätter",
+"waagrecht abstehend",
+"aufrecht zurückgeschlagen"
+],
+[
+"Blütezeit",
+"Jun–Jul",
+"Apr–Mai"
+]
+],
+"ok": false
+},
+"Gymnocarpium dryopteris|Gymnocarpium robertianum": {
+"m": [
+[
+"Blattspindel/Stiel",
+"kahl",
+"dicht drüsig"
+],
+[
+"Blattfarbe",
+"hellgrün, zart",
+"matt graugrün, derb"
+],
+[
+"Standort",
+"saure Böden, Wälder",
+"Kalkschutt, Mauern"
+]
+],
+"ok": false
+},
+"Knautia arvensis|Knautia drymeja": {
+"m": [
+[
+"Stängelblätter",
+"meist fiederteilig",
+"ungeteilt, breit eiförmig-lanzettlich"
+],
+[
+"Standort",
+"Wiesen, Raine",
+"Wälder, Waldsäume"
+]
+],
+"ok": false
+},
+"Leontodon hispidus|Taraxacum officinale": {
+"m": [
+[
+"Schaft",
+"massiv, mit Gabelhaaren",
+"hohl, kahl"
+],
+[
+"Äußere Hüllblätter",
+"anliegend",
+"zurückgeschlagen"
+],
+[
+"Pappus",
+"gefiedert, sitzend",
+"einfach, lang gestielt (Schnabel)"
+],
+[
+"Blätter",
+"rau behaart",
+"kahl"
+]
+],
+"ok": false
+},
+"Luzula luzuloides|Luzula sylvatica": {
+"m": [
+[
+"Blütenfarbe",
+"weißlich",
+"braun"
+],
+[
+"Blattbreite",
+"2–4 mm",
+"6–20 mm"
+],
+[
+"Wuchs",
+"lockerrasig",
+"kräftige Horste"
+]
+],
+"ok": false
+},
+"Myosotis arvensis|Myosotis sylvatica": {
+"m": [
+[
+"Krone",
+"2–4 mm, glockig vertieft",
+"6–10 mm, flach ausgebreitet"
+],
+[
+"Fruchtstiele",
+"1,5–2× so lang wie Kelch",
+"etwa kelchlang"
+],
+[
+"Standort",
+"Äcker, Ruderalstellen",
+"Wälder, Bergwiesen"
+]
+],
+"ok": false
+},
+"Omalotheca norvegica|Omalotheca sylvatica": {
+"m": [
+[
+"Stängelblätter",
+"breit lanzettlich, 3-nervig",
+"schmal, 1-nervig"
+],
+[
+"Blattgröße längs Stängel",
+"mittlere am größten",
+"untere am längsten"
+],
+[
+"Blütenstand",
+"kurz, gedrängt",
+"lang, ährenartig"
+],
+[
+"Hüllblätter",
+"breit dunkelbraun berandet",
+"hellbraun berandet"
+]
+],
+"ok": false
+},
+"Pyrola media|Pyrola minor": {
+"m": [
+[
+"Griffel",
+"gerade, 4–6 mm, vorragend",
+"1–2 mm, in Krone eingeschlossen"
+],
+[
+"Narbe",
+"breiter als Griffel, ringförmig",
+"kaum breiter als Griffel"
+],
+[
+"Blüte",
+"größer, offener",
+"klein, kugelig geschlossen"
+]
+],
+"ok": false
+},
+"Trifolium pallescens|Trifolium pratense": {
+"m": [
+[
+"Blütenfarbe",
+"weißlich, später blassrosa-bräunlich",
+"purpurrot"
+],
+[
+"Einzelblüten",
+"kurz gestielt, verblüht zurückgeschlagen",
+"sitzend"
+],
+[
+"Behaarung",
+"kahl",
+"behaart"
+],
+[
+"Standort",
+"alpine Silikatschutthalden",
+"Wiesen, alle Höhen"
+]
+],
+"ok": false
+},
+"Abies alba|Taxus baccata": {
+"m": [
+[
+"Nadelunterseite",
+"2 weiße Wachsstreifen",
+"hellgrün, ohne weiße Streifen"
+],
+[
+"Nadelspitze",
+"stumpf, ausgerandet",
+"spitz"
+],
+[
+"Fortpflanzungsorgane",
+"aufrechte Zapfen",
+"rote Samenmäntel"
+],
+[
+"Rinde",
+"weißgrau, glatt",
+"rotbraun, schuppig abblätternd"
+]
+],
+"ok": false
+},
+"Ailanthus altissima|Fraxinus excelsior": {
+"m": [
+[
+"Blattstellung",
+"wechselständig",
+"gegenständig"
+],
+[
+"Fiederblättchen",
+"ganzrandig, am Grund 1–2 Drüsenzähne",
+"durchgehend gesägt"
+],
+[
+"Knospen",
+"klein, braun",
+"schwarz, filzig"
+],
+[
+"Geruch zerrieben",
+"unangenehm",
+"unauffällig"
+]
+],
+"ok": false
+},
+"Allium oleraceum|Allium vineale": {
+"m": [
+[
+"Blätter",
+"flach-rinnig, oben ausgehöhlt",
+"röhrig, rund"
+],
+[
+"Spatha",
+"2 ungleiche, lang geschwänzte Teile",
+"1-teilig, kurz geschnäbelt"
+],
+[
+"Staubblätter",
+"nicht vorragend",
+"vorragend"
+]
+],
+"ok": false
+},
+"Allium scorodoprasum|Allium vineale": {
+"m": [
+[
+"Blätter",
+"flach, gekielt, 7–20 mm breit",
+"röhrig, rund, 2–4 mm"
+],
+[
+"Blütenfarbe",
+"dunkelpurpurn",
+"rosa bis grünlich"
+],
+[
+"Spatha",
+"2-teilig, kurz",
+"1-teilig, kurz geschnäbelt"
+]
+],
+"ok": false
+},
+"Anemonoides nemorosa|Anemonoides trifolia": {
+"m": [
+[
+"Hochblätter",
+"Abschnitte tief eingeschnitten",
+"3 ungeteilte, gesägte Blättchen"
+],
+[
+"Antheren",
+"gelb",
+"weiß"
+],
+[
+"Verbreitung",
+"allgemein",
+"Südalpen, Südkärnten"
+]
+],
+"ok": false
+},
+"Arnica montana|Buphthalmum salicifolium": {
+"m": [
+[
+"Blattstellung",
+"Grundrosette, Stängelblätter gegenständig",
+"wechselständig"
+],
+[
+"Zungenblüten",
+"dottergelb, 3-zähnig, ungleichmäßig",
+"goldgelb, regelmäßig"
+],
+[
+"Boden",
+"sauer, Magerwiesen",
+"Kalk, Trockenrasen"
+],
+[
+"Geruch",
+"aromatisch",
+"kaum"
+]
+],
+"ok": false
+},
+"Campanula patula|Campanula rapunculus": {
+"m": [
+[
+"Blütenstand",
+"sparrig ausgebreitete Rispe",
+"schmal traubig"
+],
+[
+"Kelchzipfel",
+"kurz",
+"pfriemlich, fast so lang wie Krone"
+],
+[
+"Krone",
+"weit trichterförmig, tief gespalten",
+"röhrig-glockig, blass"
+]
+],
+"ok": false
+},
+"Carduus crispus|Carduus personata": {
+"m": [
+[
+"Stängelflügel",
+"kraus, dornig",
+"schmal, schwach bewehrt"
+],
+[
+"Untere Blätter",
+"fiederlappig",
+"groß, ungeteilt bis gelappt"
+],
+[
+"Blattunterseite",
+"grauweiß spinnwebig",
+"grünlich, weich behaart"
+],
+[
+"Standort",
+"Ruderalstellen, Ufer, Tieflagen",
+"Hochstaudenfluren, montan"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea phrygia": {
+"m": [
+[
+"Hüllblattanhängsel",
+"braun, rundlich, kaum gefranst",
+"schwarz, lang zurückgekrümmt gefranst"
+],
+[
+"Hülle",
+"Grün der Hüllblätter sichtbar",
+"durch Anhängsel völlig verdeckt"
+]
+],
+"ok": false
+},
+"Cirsium arvense|Cirsium palustre": {
+"m": [
+[
+"Stängel",
+"ungeflügelt",
+"durchgehend dornig geflügelt"
+],
+[
+"Köpfchen",
+"zahlreich, rispig, lila",
+"knäuelig gehäuft, purpurn"
+],
+[
+"Wuchs",
+"Wurzelausläufer, Herden",
+"zweijährig, einzeln, hoch"
+]
+],
+"ok": false
+},
+"Dianthus alpinus|Dianthus deltoides": {
+"m": [
+[
+"Blüte",
+"3–4 cm, meist einzeln",
+"1,5–2 cm, mehrere"
+],
+[
+"Blätter",
+"breit lineal, stumpf, glänzend",
+"schmal, spitz, rau"
+],
+[
+"Kronschlund",
+"weiß punktiert, dunkler Ring",
+"dunkler Querring"
+],
+[
+"Standort",
+"alpin, Kalk, NO-Alpen",
+"Magerrasen, Tieflagen–montan"
+]
+],
+"ok": false
+},
+"Dianthus carthusianorum|Dianthus sylvestris": {
+"m": [
+[
+"Blütenstand",
+"Büschel, von braunen Hüllblättern",
+"Blüten einzeln oder zu 2"
+],
+[
+"Kelchschuppen",
+"braun, begrannt",
+"kurz, anliegend, max. 1/4 Kelch"
+],
+[
+"Krone",
+"purpurn",
+"blassrosa, ungefleckt"
+]
+],
+"ok": false
+},
+"Euphorbia amygdaloides|Euphorbia esula": {
+"m": [
+[
+"Blätter",
+"verkehrt-eiförmig, überwinternd, rosettig",
+"lineal-lanzettlich, sommergrün"
+],
+[
+"Hüllchenblätter",
+"paarweise zu Schale verwachsen",
+"frei"
+],
+[
+"Standort",
+"Laubwälder",
+"Wiesen, Raine, Ufer"
+]
+],
+"ok": false
+},
+"Fragaria vesca|Potentilla sterilis": {
+"m": [
+[
+"Kronblätter",
+"berühren sich, nicht ausgerandet",
+"deutlich getrennt, ausgerandet"
+],
+[
+"Endzahn Teilblättchen",
+"länger als Nachbarzähne",
+"kürzer als Nachbarzähne"
+],
+[
+"Blattfarbe",
+"frischgrün",
+"blaugrün, abstehend behaart"
+],
+[
+"Frucht",
+"rote Scheinbeere",
+"trocken"
+]
+],
+"ok": false
+},
+"Galium odoratum|Galium sylvaticum": {
+"m": [
+[
+"Blattquirle",
+"6–9, lanzettlich, grün",
+"meist 8, länglich, blaugrün"
+],
+[
+"Wuchs",
+"niedrig, bis 30 cm",
+"hoch, bis 1 m"
+],
+[
+"Blütenstand",
+"kleine Trugdolde",
+"weit ausladende, lockere Rispe"
+],
+[
+"Geruch welkend",
+"nach Cumarin",
+"fehlt"
+]
+],
+"ok": false
+},
+"Gentiana utriculosa|Gentiana verna": {
+"m": [
+[
+"Kelch",
+"aufgeblasen, breit geflügelt",
+"röhrig, schmal geflügelt"
+],
+[
+"Lebensdauer",
+"einjährig, ohne Rosetten",
+"ausdauernd, Grundrosetten"
+],
+[
+"Wuchs",
+"oft verzweigt, mehrblütig",
+"Stängel 1-blütig"
+]
+],
+"ok": false
+},
+"Globularia bisnagarica|Globularia cordifolia": {
+"m": [
+[
+"Wuchs",
+"Rosettenstaude, aufrechte Stängel",
+"kriechender Zwergstrauch, Teppiche"
+],
+[
+"Stängel",
+"beblättert, 10–30 cm",
+"blattlos, niedrig"
+],
+[
+"Grundblätter",
+"lang gestielt, Spitze ganz",
+"spatelig, vorn ausgerandet"
+]
+],
+"ok": false
+},
+"Heracleum austriacum|Heracleum sphondylium": {
+"m": [
+[
+"Wuchshöhe",
+"niedrig, meist 15–50 cm",
+"hochwüchsig, 50–150 cm"
+],
+[
+"Blatt",
+"einfach gefiedert, 1–2 Fiederpaare, ±kahl",
+"Fiedern breit, gelappt, rau behaart"
+],
+[
+"Standort",
+"Kalkschutt, Rasen montan–alpin",
+"Wiesen, Säume, kollin–subalpin"
+]
+],
+"ok": false
+},
+"Knautia arvensis|Scabiosa lucida": {
+"m": [
+[
+"Kelch",
+"ca. 8 kurze Borsten",
+"5 lange, dunkle Borsten"
+],
+[
+"Außenkelch",
+"ohne Hautsaum",
+"mit trockenhäutigem Saum"
+],
+[
+"Blütenboden",
+"behaart, ohne Spreublätter",
+"mit Spreublättern"
+],
+[
+"Kronzipfel",
+"4",
+"5"
+],
+[
+"Blatt/Standort",
+"matt, behaart; Wiesen, Tieflagen",
+"glänzend, ±kahl; Kalkrasen montan–alpin"
+]
+],
+"ok": false
+},
+"Lamium album|Lamium galeobdolon": {
+"m": [
+[
+"Blütenfarbe",
+"weiß",
+"gelb"
+],
+[
+"Wuchs",
+"ohne Ausläufer, aufrecht",
+"oft lange oberirdische Ausläufer"
+],
+[
+"Blätter",
+"einfarbig grün",
+"oft silbrig gefleckt"
+],
+[
+"Standort",
+"Ruderalstellen, Wegränder",
+"Laubwälder, schattig"
+]
+],
+"ok": false
+},
+"Lotus corniculatus|Lotus tenuis": {
+"m": [
+[
+"Teilblättchen",
+"verkehrt-eiförmig, breit",
+"schmal lineal-lanzettlich"
+],
+[
+"Blüten je Dolde",
+"meist 3–8",
+"meist 1–4"
+],
+[
+"Standort",
+"Wiesen, Magerrasen, verbreitet",
+"feuchte, oft salzige Böden, Pannonikum"
+]
+],
+"ok": false
+},
+"Lunaria annua|Lunaria rediviva": {
+"m": [
+[
+"Schötchen",
+"rundlich-oval, Enden abgerundet",
+"elliptisch, beidseits zugespitzt"
+],
+[
+"Obere Blätter",
+"sitzend",
+"alle gestielt"
+],
+[
+"Blüte",
+"purpurviolett, kaum duftend",
+"blasslila, stark duftend"
+],
+[
+"Lebensdauer/Standort",
+"zweijährig; verwildert, Siedlungen",
+"ausdauernd; Schlucht- und Hangwälder"
+]
+],
+"ok": false
+},
+"Malva neglecta|Malva sylvestris": {
+"m": [
+[
+"Kronblätter",
+"1–1,5 cm, blassrosa bis weißlich",
+"2–3 cm, purpur mit dunklen Adern"
+],
+[
+"Kronblatt : Kelch",
+"etwa 2× so lang",
+"3–4× so lang"
+],
+[
+"Wuchs",
+"niederliegend bis aufsteigend",
+"aufrecht, kräftig"
+],
+[
+"Teilfrüchte",
+"glatt, Rand abgerundet",
+"netzig-runzelig, scharfkantig"
+]
+],
+"ok": false
+},
+"Muscari armeniacum|Muscari neglectum": {
+"m": [
+[
+"Fertile Blüten",
+"leuchtend hell- bis mittelblau",
+"dunkel schwarzblau, Saum weiß"
+],
+[
+"Sterile Blüten",
+"wenige, ähnlich gefärbt",
+"deutlich heller blau, abgesetzt"
+],
+[
+"Vorkommen",
+"Gartenpflanze, verwildert",
+"Weinberge, Trockenrasen, heimisch"
+]
+],
+"ok": false
+},
+"Orobanche gracilis|Orobanche lutea": {
+"m": [
+[
+"Krone innen",
+"glänzend blutrot",
+"nicht blutrot, bräunlich-gelb"
+],
+[
+"Narbe",
+"gelb",
+"weißlich bis blassgelb"
+],
+[
+"Wirt",
+"Genista, Cytisus, Lotus u. a.",
+"v. a. Medicago, Trifolium"
+]
+],
+"ok": false
+},
+"Petasites hybridus|Tussilago farfara": {
+"m": [
+[
+"Blütenköpfe",
+"viele, rötlich, in Traube",
+"einzeln, gelb, Zungenblüten"
+],
+[
+"Blattgröße",
+"sehr groß, bis 60 cm",
+"klein, meist 10–20 cm"
+],
+[
+"Blattbucht",
+"von Nerv berandet",
+"nicht von Nerv berandet"
+],
+[
+"Blattrand",
+"unregelmäßig gezähnt",
+"eckig, Zähnchen schwarz bespitzt"
+]
+],
+"ok": false
+},
+"Potentilla incana|Potentilla verna": {
+"m": [
+[
+"Behaarung",
+"Sternhaare, Blätter grau-filzig",
+"nur einfache Haare, grün"
+],
+[
+"Blattunterseite",
+"dicht grau bis weißfilzig",
+"grün, locker behaart"
+],
+[
+"Standort",
+"Trockenrasen, Fels, Pannonikum",
+"Magerrasen, weit verbreitet"
+]
+],
+"ok": false
+},
+"Pyrola minor|Pyrola rotundifolia": {
+"m": [
+[
+"Griffel",
+"kurz, gerade, nicht vorragend",
+"lang, S-förmig gebogen, vorragend"
+],
+[
+"Krone",
+"kugelig geschlossen, weiß-rosa",
+"offen glockig, weiß"
+],
+[
+"Kelchzipfel",
+"kurz, dreieckig",
+"lanzettlich, zugespitzt"
+]
+],
+"ok": false
+},
+"Ranunculus bulbosus|Ranunculus repens": {
+"m": [
+[
+"Kelchblätter",
+"zurückgeschlagen",
+"anliegend"
+],
+[
+"Stängelgrund",
+"knollig verdickt",
+"nicht verdickt"
+],
+[
+"Ausläufer",
+"fehlen",
+"lange, wurzelnde Ausläufer"
+],
+[
+"Standort",
+"trockene Magerwiesen",
+"feuchte, nährstoffreiche Böden"
+]
+],
+"ok": false
+},
+"Rumex alpinus|Rumex obtusifolius": {
+"m": [
+[
+"Grundblätter",
+"rundlich-herzförmig, sehr breit",
+"länglich-eiförmig, stumpf"
+],
+[
+"Innere Perigonblätter",
+"ganzrandig, ohne Schwiele",
+"gezähnt, mit Schwiele"
+],
+[
+"Standort",
+"Lägerfluren montan–subalpin",
+"Weiden, Ruderalstellen, Tieflagen"
+]
+],
+"ok": false
+},
+"Sambucus nigra|Sambucus racemosa": {
+"m": [
+[
+"Blütenstand",
+"flache Schirmrispe, weiß",
+"eiförmige Rispe, gelblich-grün"
+],
+[
+"Blütezeit",
+"Mai–Juli",
+"April–Mai"
+],
+[
+"Früchte",
+"schwarz",
+"scharlachrot"
+],
+[
+"Mark",
+"weiß",
+"gelbbraun"
+]
+],
+"ok": false
+},
+"Setaria pumila|Setaria viridis": {
+"m": [
+[
+"Borsten",
+"gelb bis rotbraun, 4–12 je Ährchen",
+"grün bis violett, 1–3 je Ährchen"
+],
+[
+"Deckspelze",
+"deutlich quergerunzelt",
+"fein punktiert, kaum runzelig"
+],
+[
+"Blatthäutchen",
+"Haarkranz, Blattgrund bewimpert",
+"Haarkranz, Blattgrund kahl"
+]
+],
+"ok": false
+},
+"Soldanella alpina|Soldanella major": {
+"m": [
+[
+"Drüsen am Blütenstiel",
+"sitzend",
+"deutlich gestielt"
+],
+[
+"Blüten je Stängel",
+"meist 2–3",
+"meist 3–8"
+],
+[
+"Standort",
+"Schneeböden, alpine Rasen",
+"montane Wälder, SO-Alpen"
+]
+],
+"ok": false
+},
+"Trifolium hybridum|Trifolium repens": {
+"m": [
+[
+"Stängel",
+"aufsteigend, nicht wurzelnd",
+"kriechend, an Knoten wurzelnd"
+],
+[
+"Köpfchenstiele",
+"aus Blattachseln am Stängel",
+"lang, aus kriechendem Stängel"
+],
+[
+"Blättchen",
+"ohne helle Zeichnung",
+"oft mit heller V-Zeichnung"
+],
+[
+"Blütenfarbe",
+"weiß, rasch rosa werdend",
+"weiß, verblüht bräunlich"
+]
+],
+"ok": false
+},
+"Trifolium hybridum|Trifolium pratense": {
+"m": [
+[
+"Köpfchen",
+"lang gestielt, einzeln",
+"sitzend, von 2 Blättern umhüllt"
+],
+[
+"Blütenfarbe",
+"weiß bis rosa",
+"purpurrot"
+],
+[
+"Behaarung",
+"±kahl",
+"Blätter und Kelch behaart"
+],
+[
+"Nebenblätter",
+"ohne Grannenspitze",
+"mit borstiger Spitze"
+]
+],
+"ok": false
+},
+"Verbascum lychnitis|Verbascum speciosum": {
+"m": [
+[
+"Stängelblätter",
+"nicht umfassend, oben dünn behaart",
+"herzförmig stängelumfassend"
+],
+[
+"Behaarung",
+"Oberseite grün, unten grau",
+"beidseits dicht weiß-grau filzig"
+],
+[
+"Blüten",
+"klein, 1,2–2 cm, weiß oder gelb",
+"groß, 2–3 cm, gelb"
+],
+[
+"Verbreitung",
+"verbreitet",
+"selten, Pannonikum"
+]
+],
+"ok": false
+},
+"Ajuga reptans|Glechoma hederacea": {
+"m": [
+[
+"Oberlippe",
+"extrem kurz, scheinbar fehlend",
+"deutlich, gerade"
+],
+[
+"Blätter",
+"verkehrt-eiförmig, Rosette",
+"nierenförmig, grob gekerbt"
+],
+[
+"Blütenstand",
+"endständige, beblätterte Ähre",
+"2–3 Blüten in Blattachseln"
+],
+[
+"Geruch",
+"kaum",
+"stark würzig beim Zerreiben"
+]
+],
+"ok": false
+},
+"Anacamptis morio|Orchis mascula": {
+"m": [
+[
+"Seitliche Sepalen",
+"zum Helm geschlossen, grün geadert",
+"seitlich aufwärts abstehend"
+],
+[
+"Blätter",
+"ungefleckt",
+"oft dunkel gefleckt"
+],
+[
+"Größe",
+"meist 10–25 cm, armblütig",
+"meist 20–50 cm, reichblütig"
+]
+],
+"ok": false
+},
+"Androsace chamaejasme|Androsace obtusifolia": {
+"m": [
+[
+"Blattrand",
+"lang weiß bewimpert",
+"kurz, z. T. gabelig behaart"
+],
+[
+"Wuchs",
+"lockere Rasen mit Ausläufern",
+"Einzelrosetten, ohne Ausläufer"
+],
+[
+"Blattform",
+"lanzettlich, spitz",
+"spatelig, stumpf"
+],
+[
+"Untergrund",
+"Kalk",
+"meist Silikat"
+]
+],
+"ok": false
+},
+"Angelica archangelica|Angelica sylvestris": {
+"m": [
+[
+"Blütenfarbe",
+"grünlich-gelb",
+"weiß bis rosa"
+],
+[
+"Dolden",
+"halbkugelig gewölbt",
+"flach bis leicht gewölbt"
+],
+[
+"Geruch",
+"stark würzig",
+"schwach"
+],
+[
+"Vorkommen",
+"selten, Flussufer, verwildert",
+"häufig, Feuchtwiesen, Auen"
+]
+],
+"ok": false
+},
+"Athyrium filix-femina|Pteridium aquilinum": {
+"m": [
+[
+"Wuchs",
+"Wedel im Trichter",
+"Wedel einzeln aus langem Rhizom"
+],
+[
+"Wedelform",
+"lanzettlich, unten verschmälert",
+"dreieckig, waagrecht ausgebreitet"
+],
+[
+"Sori",
+"hakig bis J-förmig",
+"randlich unter umgerolltem Rand"
+],
+[
+"Konsistenz",
+"zart, weich",
+"derb, ledrig"
+]
+],
+"ok": false
+},
+"Campanula persicifolia|Campanula rotundifolia": {
+"m": [
+[
+"Blütengröße",
+"groß, 3–4 cm, weit glockig",
+"klein, 1,5–2 cm, nickend"
+],
+[
+"Stängelblätter",
+"lanzettlich, fein gesägt",
+"schmal-lineal, ganzrandig"
+],
+[
+"Grundblätter",
+"länglich, zur Blüte vorhanden",
+"rundlich, zur Blüte oft verdorrt"
+]
+],
+"ok": false
+},
+"Carduus acanthoides|Cirsium vulgare": {
+"m": [
+[
+"Pappus",
+"einfache, rauhe Haare",
+"gefiedert"
+],
+[
+"Blattoberseite",
+"kaum stachelborstig",
+"rau, mit Stachelborsten"
+],
+[
+"Köpfe",
+"klein, rundlich",
+"groß, eiförmig, Hülle mit Dornspitzen"
+]
+],
+"ok": false
+},
+"Centaurea axillaris|Centaurea montana": {
+"m": [
+[
+"Blätter",
+"schmal, grau spinnwebig-filzig",
+"breit-lanzettlich, grün, schwach behaart"
+],
+[
+"Standort",
+"Trockenrasen, warme Säume",
+"Bergwälder, Hochstauden, montan"
+]
+],
+"ok": false
+},
+"Cirsium vulgare|Lophiolepis eriophora": {
+"m": [
+[
+"Köpfe",
+"eiförmig, wenig spinnwebig",
+"kugelig, dicht weißwollig"
+],
+[
+"Stängel",
+"dornig geflügelt",
+"ungeflügelt"
+],
+[
+"Blattzipfel",
+"in einer Ebene",
+"gespalten, in zwei Ebenen"
+]
+],
+"ok": false
+},
+"Cornus sanguinea|Rhamnus cathartica": {
+"m": [
+[
+"Blattrand",
+"ganzrandig",
+"fein gekerbt-gesägt"
+],
+[
+"Seitennerven",
+"bogig zur Spitze laufend",
+"bogig, 2–4 Paare"
+],
+[
+"Zweige",
+"ohne Dornen, im Winter rot",
+"Kurztriebe oft in Dorn endend"
+],
+[
+"Blüten",
+"weiß, in Trugdolde",
+"klein, grünlich, büschelig"
+]
+],
+"ok": false
+},
+"Corylus avellana|Ulmus glabra": {
+"m": [
+[
+"Blattgrund",
+"symmetrisch herzförmig",
+"stark asymmetrisch"
+],
+[
+"Blattspitze",
+"einfach, kurz zugespitzt",
+"oft 3-spitzig"
+],
+[
+"Blattoberseite",
+"weich behaart",
+"sehr rau"
+],
+[
+"Blattstiel",
+"drüsig behaart, ~1 cm",
+"sehr kurz, im Blattgrund versteckt"
+]
+],
+"ok": false
+},
+"Dactylorhiza fuchsii|Orchis militaris": {
+"m": [
+[
+"Lippe",
+"3-lappig, Mittellappen schmal",
+"menschenförmig mit Armen und Beinen"
+],
+[
+"Helm",
+"Sepalen abstehend",
+"blass graurosa Helm"
+],
+[
+"Blätter",
+"meist gefleckt",
+"ungefleckt, glänzend hellgrün"
+],
+[
+"Tragblätter",
+"laubblattartig, lang",
+"klein, häutig"
+]
+],
+"ok": false
+},
+"Dryopteris filix-mas|Oreopteris limbosperma": {
+"m": [
+[
+"Untere Fiedern",
+"nur wenig verkürzt",
+"stark verkürzt, bis zu Öhrchen"
+],
+[
+"Unterseite",
+"ohne gelbe Drüsen",
+"gelbe Drüsen, Zitronenduft"
+],
+[
+"Sori",
+"mit nierenförmigem Schleier",
+"randnah, Schleier winzig/fehlend"
+]
+],
+"ok": false
+},
+"Echium plantagineum|Echium vulgare": {
+"m": [
+[
+"Staubblätter",
+"2 herausragend",
+"4–5 weit herausragend"
+],
+[
+"Krone",
+"groß, 2–3 cm",
+"1–2 cm"
+],
+[
+"Behaarung",
+"weich",
+"steif, Borsten auf dunklen Höckern"
+],
+[
+"Vorkommen",
+"selten, unbeständig",
+"verbreitet, heimisch"
+]
+],
+"ok": false
+},
+"Equisetum fluviatile|Equisetum palustre": {
+"m": [
+[
+"Zentralhöhle",
+"sehr weit, ~4/5 Durchmesser",
+"eng"
+],
+[
+"Stängel",
+"glatt, 10–30 feine Rippen",
+"5–10 tiefe Rippen"
+],
+[
+"Scheidenzähne",
+"schwarz, schmal",
+"schwarz mit weißem Hautrand"
+],
+[
+"Unterstes Astglied",
+"länger als Stängelscheide",
+"kürzer als Stängelscheide"
+]
+],
+"ok": false
+},
+"Equisetum pratense|Equisetum sylvaticum": {
+"m": [
+[
+"Äste",
+"unverzweigt, waagrecht",
+"nochmals verzweigt, überhängend"
+],
+[
+"Stängelscheiden",
+"Zähne frei, weiß berandet",
+"rotbraun, zu 3–4 Lappen verwachsen"
+],
+[
+"Gesamteindruck",
+"steif, schlank",
+"locker, federartig"
+]
+],
+"ok": false
+},
+"Euonymus europaeus|Euonymus latifolius": {
+"m": [
+[
+"Knospen",
+"kurz, eiförmig",
+"lang, spindelförmig spitz (~1 cm)"
+],
+[
+"Blüten",
+"4-zählig",
+"5-zählig"
+],
+[
+"Kapsel",
+"4-lappig, ungeflügelt",
+"5-lappig, geflügelt"
+],
+[
+"Zweige",
+"oft mit Korkleisten",
+"ohne Korkleisten"
+]
+],
+"ok": false
+},
+"Filipendula ulmaria|Filipendula vulgaris": {
+"m": [
+[
+"Fiederblättchen",
+"2–5 Paare, groß",
+"8–25 Paare, klein, fiederspaltig"
+],
+[
+"Endfieder",
+"groß, 3–5-lappig",
+"klein, kaum größer"
+],
+[
+"Blüte",
+"meist 5-zählig, cremeweiß",
+"meist 6-zählig, Knospen rötlich"
+],
+[
+"Standort",
+"nasse Wiesen, Gräben",
+"Trockenrasen"
+]
+],
+"ok": false
+},
+"Genista germanica|Genista tinctoria": {
+"m": [
+[
+"Dornen",
+"verzweigte Dornen vorhanden",
+"dornenlos"
+],
+[
+"Behaarung",
+"abstehend behaart",
+"±kahl"
+],
+[
+"Hülse",
+"behaart",
+"kahl"
+]
+],
+"ok": false
+},
+"Genista pilosa|Genista tinctoria": {
+"m": [
+[
+"Wuchs",
+"niederliegend, knorrig",
+"aufrecht"
+],
+[
+"Blätter",
+"klein, unten seidig behaart",
+"lanzettlich, ±kahl"
+],
+[
+"Blüten",
+"1–3 in Blattachseln",
+"in endständigen Trauben"
+],
+[
+"Krone",
+"Fahne und Schiffchen behaart",
+"kahl"
+]
+],
+"ok": false
+},
+"Glechoma hederacea|Lamium purpureum": {
+"m": [
+[
+"Lebensdauer",
+"ausdauernd, kriechend",
+"einjährig, aufrecht"
+],
+[
+"Blätter",
+"nierenförmig, lang gestielt",
+"herz-eiförmig, oben gedrängt, oft rot"
+],
+[
+"Blüten",
+"blauviolett, in Blattachseln",
+"purpurrosa, gehäuft am Sprossende"
+]
+],
+"ok": false
+},
+"Huperzia selago|Spinulum annotinum": {
+"m": [
+[
+"Wuchs",
+"büschelig aufrecht, kein Kriechspross",
+"lang kriechend, aufrechte Äste"
+],
+[
+"Sporangien",
+"in Blattachseln, ohne Zapfen",
+"in sitzenden Endähren"
+],
+[
+"Brutkörper",
+"in oberen Blattachseln",
+"fehlen"
+],
+[
+"Blätter",
+"anliegend bis abstehend, ganzrandig",
+"abstehend, stachelspitzig"
+]
+],
+"ok": false
+},
+"Iris sanguinea|Iris sibirica": {
+"m": [
+[
+"Stängel",
+"unverzweigt, so hoch wie Blätter",
+"verzweigt, deutlich höher als Blätter"
+],
+[
+"Hochblätter",
+"grün, oft rötlich überlaufen",
+"zur Blüte trockenhäutig braun"
+],
+[
+"Vorkommen",
+"Gartenpflanze",
+"Streuwiesen, heimisch"
+]
+],
+"ok": false
+},
+"Jacobaea erucifolia|Jacobaea vulgaris": {
+"m": [
+[
+"Außenhüllblätter",
+"4–6, halb so lang wie Hülle",
+"1–3, sehr kurz"
+],
+[
+"Blattzipfel",
+"schmal-lineal, Rand umgerollt",
+"breiter, Endabschnitt stumpf"
+],
+[
+"Behaarung",
+"graufilzig behaart",
+"±kahl"
+],
+[
+"Wuchs",
+"mit kriechendem Rhizom",
+"Pfahlwurzel, ohne Ausläufer"
+]
+],
+"ok": false
+},
+"Lamium galeobdolon|Urtica dioica": {
+"m": [
+[
+"Brennhaare",
+"fehlen",
+"vorhanden"
+],
+[
+"Blüten",
+"gelbe Lippenblüten",
+"unscheinbar grün, hängende Rispen"
+],
+[
+"Blätter",
+"oft silbrig gefleckt",
+"einfarbig grün"
+]
+],
+"ok": false
+},
+"Medicago lupulina|Medicago minima": {
+"m": [
+[
+"Hülse",
+"nierenförmig, 1-samig, schwarz",
+"spiralig, mit Hakenstacheln"
+],
+[
+"Blüten je Köpfchen",
+"10–50",
+"1–6"
+],
+[
+"Behaarung",
+"schwach",
+"dicht abstehend"
+]
+],
+"ok": false
+},
+"Medicago lupulina|Trifolium repens": {
+"m": [
+[
+"Blütenfarbe",
+"gelb",
+"weiß"
+],
+[
+"Mittelblättchen",
+"gestielt, mit Stachelspitzchen",
+"sitzend, ohne Spitzchen"
+],
+[
+"Wuchs",
+"niederliegend, nicht wurzelnd",
+"kriechend, an Knoten wurzelnd"
+]
+],
+"ok": false
+},
+"Pedicularis kerneri|Pedicularis rostratocapitata": {
+"m": [
+[
+"Wuchs",
+"niederliegend, Stängel kurz",
+"aufrecht"
+],
+[
+"Blütenstand",
+"armblütig (meist 2–6)",
+"reicherblütige, kopfige Traube"
+],
+[
+"Untergrund",
+"Silikat",
+"Kalk"
+]
+],
+"ok": false
+},
+"Polypodium interjectum|Polypodium vulgare": {
+"m": [
+[
+"Wedelform",
+"eiförmig, breiteste Stelle unten",
+"lanzettlich, Ränder ±parallel"
+],
+[
+"Fiederspitze",
+"zugespitzt",
+"stumpf bis abgerundet"
+],
+[
+"Sori",
+"oval",
+"rund"
+],
+[
+"Neuaustrieb",
+"Spätsommer",
+"Frühsommer"
+]
+],
+"ok": false
+},
+"Polystichum aculeatum|Polystichum lonchitis": {
+"m": [
+[
+"Teilung",
+"doppelt gefiedert",
+"einfach gefiedert"
+],
+[
+"Fiedern",
+"in stachelspitze Fiederchen geteilt",
+"ungeteilt, gesägt, oben geöhrt"
+],
+[
+"Standort",
+"Schluchtwälder, montan",
+"Kalkblockschutt, subalpin"
+]
+],
+"ok": false
+},
+"Prunus avium|Prunus padus": {
+"m": [
+[
+"Blütenstand",
+"doldig gebüschelt",
+"lange hängende Traube"
+],
+[
+"Rinde",
+"glänzend rotbraun, quer abrollend",
+"grauschwarz, unangenehm riechend"
+],
+[
+"Früchte",
+"rote Kirschen",
+"klein, schwarz, bitter"
+],
+[
+"Blattrand",
+"grob gesägt",
+"fein und scharf gesägt"
+]
+],
+"ok": false
+},
+"Pulmonaria officinalis|Pulmonaria saccharata": {
+"m": [
+[
+"Grundblätter",
+"herzförmig, abrupt gestielt",
+"elliptisch, in Stiel verschmälert"
+],
+[
+"Flecken",
+"deutlich, hellgrün bis weißlich",
+"zahlreich, silberweiß, oft fließend"
+],
+[
+"Vorkommen",
+"heimisch, Laubwälder",
+"Gartenpflanze, verwildert"
+]
+],
+"ok": false
+},
+"Salvia glutinosa|Stachys sylvatica": {
+"m": [
+[
+"Blütenfarbe",
+"blassgelb",
+"dunkel purpur, weiß gezeichnet"
+],
+[
+"Behaarung",
+"drüsig, stark klebrig",
+"weich, nicht klebrig"
+],
+[
+"Blattgrund",
+"spießförmig-herzförmig",
+"herzförmig"
+],
+[
+"Geruch",
+"würzig",
+"unangenehm beim Zerreiben"
+]
+],
+"ok": false
+},
+"Saxifraga caesia|Saxifraga paniculata": {
+"m": [
+[
+"Blätter",
+"3–6 mm, zurückgebogen, blaugrau",
+"1–4 cm, zungenförmig, Kalkzähnchen"
+],
+[
+"Wuchs",
+"dichte Polster",
+"Rosetten, oft mit Ausläufern"
+],
+[
+"Blütenstand",
+"2–6 Blüten, wenig beblättert",
+"vielblütige Rispe"
+]
+],
+"ok": false
+},
+"Setaria italica|Setaria viridis": {
+"m": [
+[
+"Rispe",
+"groß, gelappt, überhängend",
+"klein, walzlich, aufrecht"
+],
+[
+"Früchte",
+"groß, fallen leicht aus",
+"klein, bleiben mit Spelzen"
+],
+[
+"Vorkommen",
+"Kulturhirse, unbeständig",
+"Unkraut, häufig"
+]
+],
+"ok": false
+},
+"Stellaria aquatica|Stellaria nemorum": {
+"m": [
+[
+"Griffel",
+"5",
+"3"
+],
+[
+"Kronblätter",
+"wenig länger als Kelch",
+"etwa 2× so lang wie Kelch"
+],
+[
+"Kapsel",
+"mit 5 zweispaltigen Zähnen",
+"mit 6 Klappen"
+]
+],
+"ok": false
+},
+"Trifolium alpestre|Trifolium pratense": {
+"m": [
+[
+"Blättchen",
+"schmal-lanzettlich, ohne Fleck",
+"elliptisch, oft heller Fleck"
+],
+[
+"Nebenblätter",
+"freier Teil lang pfriemlich",
+"kurz, mit Grannenspitze"
+],
+[
+"Köpfchen",
+"oft zu zweit, tief purpur",
+"meist einzeln, purpurrot"
+],
+[
+"Standort",
+"warme Säume, Trockenwälder",
+"Wiesen, verbreitet"
+]
+],
+"ok": false
+},
+"Trifolium montanum|Trifolium repens": {
+"m": [
+[
+"Wuchs",
+"aufrecht, ohne Ausläufer",
+"kriechend, an Knoten wurzelnd"
+],
+[
+"Blättchen",
+"länglich-lanzettlich, unten behaart",
+"rundlich, kahl, oft V-Zeichnung"
+],
+[
+"Köpfchen",
+"oft zu zweit, endständig",
+"einzeln, lang gestielt"
+]
+],
+"ok": false
+},
+"Vicia lathyroides|Vicia sativa": {
+"m": [
+[
+"Blütengröße",
+"winzig, 5–8 mm",
+"1,5–3 cm"
+],
+[
+"Fiederpaare",
+"1–3",
+"4–7"
+],
+[
+"Ranke",
+"einfach oder fehlend",
+"verzweigt"
+],
+[
+"Samen",
+"würfelig, warzig",
+"rundlich, glatt"
+]
+],
+"ok": false
+},
+"Alnus alnobetula|Alnus incana": {
+"m": [
+[
+"Knospen",
+"sitzend, spitz",
+"gestielt"
+],
+[
+"Blätter",
+"jung klebrig, fein scharf gesägt",
+"unten graugrün behaart"
+],
+[
+"Wuchs/Standort",
+"Strauch, subalpine Hänge",
+"Baum, Auen, Bachufer"
+]
+],
+"ok": false
+},
+"Alyssum alyssoides|Alyssum gmelinii": {
+"m": [
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd, verholzt"
+],
+[
+"Blüte",
+"klein, blassgelb, verbleicht weiß",
+"größer, leuchtend goldgelb"
+],
+[
+"Kelch",
+"bleibt an der Frucht",
+"fällt früh ab"
+]
+],
+"ok": false
+},
+"Angelica sylvestris|Heracleum sphondylium": {
+"m": [
+[
+"Behaarung",
+"Stängel kahl, oft bereift",
+"Stängel rau borstig"
+],
+[
+"Blätter",
+"2–3fach gefiedert, Fiedern eiförmig",
+"einfach gefiedert, Fiedern gelappt"
+],
+[
+"Randblüten",
+"nicht strahlend",
+"äußere Kronblätter vergrößert"
+],
+[
+"Blattscheiden",
+"stark aufgeblasen",
+"weniger aufgeblasen, behaart"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Chaerophyllum bulbosum": {
+"m": [
+[
+"Stängel",
+"ungefleckt, kaum verdickt",
+"rot gefleckt, unter Knoten verdickt"
+],
+[
+"Stängelgrund",
+"±kahl",
+"abstehend steifhaarig"
+],
+[
+"Früchte",
+"glatt, glänzend, geschnäbelt",
+"gerippt"
+],
+[
+"Blütezeit",
+"April–Juni",
+"Juni–Juli"
+]
+],
+"ok": false
+},
+"Arctium lappa|Arctium nemorosum": {
+"m": [
+[
+"Köpfe",
+"groß, lang gestielt, doldig",
+"traubig an überhängenden Ästen"
+],
+[
+"Hülle",
+"kahl, grün",
+"spinnwebig"
+],
+[
+"Standort",
+"Ruderalfluren",
+"Waldschläge, Wälder"
+]
+],
+"ok": false
+},
+"Arctostaphylos uva-ursi|Vaccinium vitis-idaea": {
+"m": [
+[
+"Blattrand",
+"flach",
+"umgerollt"
+],
+[
+"Blattunterseite",
+"netznervig, ohne Punkte",
+"mit dunklen Drüsenpunkten"
+],
+[
+"Wuchs",
+"lange kriechende Triebe",
+"aufrecht, 10–30 cm"
+],
+[
+"Früchte",
+"rot, mehlig",
+"rot, saftig"
+]
+],
+"ok": false
+},
+"Athyrium filix-femina|Dryopteris carthusiana": {
+"m": [
+[
+"Sori",
+"länglich bis J-förmig",
+"rund, nierenförmiger Schleier"
+],
+[
+"Wedelform",
+"lanzettlich, unten verschmälert",
+"dreieckig-eiförmig"
+],
+[
+"Fiederchenrand",
+"gezähnt",
+"stachelspitzig gezähnt"
+],
+[
+"Spreuschuppen",
+"dunkelbraun",
+"einfarbig hellbraun"
+]
+],
+"ok": false
+},
+"Bromus erectus|Bromus inermis": {
+"m": [
+[
+"Wuchs",
+"dichte Horste",
+"lange unterirdische Ausläufer"
+],
+[
+"Grannen",
+"3–8 mm",
+"fehlend oder sehr kurz"
+],
+[
+"Blätter",
+"Grundblätter schmal, lang bewimpert",
+"breit, kahl"
+]
+],
+"ok": false
+},
+"Cardamine amara|Cardamine flexuosa": {
+"m": [
+[
+"Staubbeutel",
+"violett",
+"gelb"
+],
+[
+"Blüte",
+"groß, ~1 cm, weiß",
+"klein, 3–5 mm"
+],
+[
+"Stängel",
+"markig, gerade",
+"hin- und hergebogen, behaart"
+],
+[
+"Standort",
+"Quellfluren, Bachufer",
+"feuchte Waldwege"
+]
+],
+"ok": false
+},
+"Carduus acanthoides|Cirsium arvense": {
+"m": [
+[
+"Stängel",
+"durchgehend dornig geflügelt",
+"ungeflügelt"
+],
+[
+"Pappus",
+"einfache Haare",
+"gefiedert"
+],
+[
+"Köpfe",
+"einzeln, purpurn",
+"zahlreich, klein, blasslila"
+],
+[
+"Wuchs",
+"Pfahlwurzel",
+"Wurzelausläufer, Herden"
+]
+],
+"ok": false
+},
+"Cerastium arvense|Rabelera holostea": {
+"m": [
+[
+"Stängel",
+"rund, behaart",
+"4-kantig, kahl"
+],
+[
+"Griffel",
+"5",
+"3"
+],
+[
+"Blätter",
+"schmal-lanzettlich, behaart",
+"lanzettlich, lang zugespitzt, rau"
+],
+[
+"Kronblätter",
+"bis 1/3 eingeschnitten",
+"bis etwa zur Mitte gespalten"
+]
+],
+"ok": false
+},
+"Chamaecytisus hirsutus|Chamaecytisus supinus": {
+"m": [
+[
+"Blütenstellung",
+"seitlich an vorjährigen Trieben",
+"endständige Köpfchen an Jahrestrieben"
+],
+[
+"Blütezeit",
+"Frühling (April–Mai)",
+"Sommer (Juni–August)"
+]
+],
+"ok": false
+},
+"Cirsium palustre|Cirsium rivulare": {
+"m": [
+[
+"Stängel",
+"bis oben dornig geflügelt",
+"ungeflügelt, oben fast blattlos"
+],
+[
+"Köpfe",
+"zahlreich, klein, gehäuft",
+"2–5, größer, am Ende gedrängt"
+],
+[
+"Blätter",
+"stark dornig",
+"weich, schwach dornig"
+]
+],
+"ok": false
+},
+"Dactylorhiza majalis|Orchis mascula": {
+"m": [
+[
+"Sporn",
+"kegelförmig, abwärts",
+"walzlich, waagrecht bis aufwärts"
+],
+[
+"Tragblätter",
+"laubig, länger als Blüte",
+"violett, häutig, kürzer"
+],
+[
+"Stängel",
+"hohl",
+"voll"
+],
+[
+"Standort",
+"Feuchtwiesen",
+"Wiesen, lichte Wälder, trocken"
+]
+],
+"ok": false
+},
+"Dianthus barbatus|Dianthus carthusianorum": {
+"m": [
+[
+"Blätter",
+"lanzettlich, 1–2 cm breit",
+"schmal-lineal, grasartig"
+],
+[
+"Hochblätter",
+"krautig, lang begrannt",
+"braun, trockenhäutig"
+],
+[
+"Vorkommen",
+"Gartenpflanze, verwildert",
+"Trockenrasen, heimisch"
+]
+],
+"ok": false
+},
+"Drosera anglica|Drosera × obovata": {
+"m": [
+[
+"Blattspreite",
+"lineal-spatelig, schmal",
+"verkehrt-eiförmig, breiter"
+],
+[
+"Fruchtbarkeit",
+"fertil",
+"steril, keine Samen"
+],
+[
+"Vorkommen",
+"Hochmoorschlenken",
+"mit beiden Eltern (D. rotundifolia)"
+]
+],
+"ok": false
+},
+"Equisetum palustre|Equisetum variegatum": {
+"m": [
+[
+"Äste",
+"in Quirlen",
+"unverzweigt"
+],
+[
+"Stängel",
+"grün, sommergrün",
+"dünn, wintergrün"
+],
+[
+"Scheiden",
+"grün, Zähne schwarz",
+"oben schwarz gebändert, Zähne breit weiß"
+]
+],
+"ok": false
+},
+"Ficaria verna|Gagea lutea": {
+"m": [
+[
+"Blätter",
+"herzförmig, glänzend, mehrere",
+"meist 1 Grundblatt, lineal-lanzettlich"
+],
+[
+"Blütenhülle",
+"3 Kelch-, 8–12 Kronblätter",
+"6 Perigonblätter, außen grün"
+],
+[
+"Gruppe",
+"Hahnenfußgewächs, netznervig",
+"Einkeimblättrige, parallelnervig"
+]
+],
+"ok": false
+},
+"Fraxinus excelsior|Juglans regia": {
+"m": [
+[
+"Blattstellung",
+"gegenständig",
+"wechselständig"
+],
+[
+"Fiederblättchen",
+"9–15, gesägt",
+"5–9, ganzrandig"
+],
+[
+"Knospen",
+"schwarz",
+"braun-grau"
+],
+[
+"Geruch",
+"kaum",
+"stark aromatisch beim Zerreiben"
+]
+],
+"ok": false
+},
+"Gentiana nivalis|Gentiana utriculosa": {
+"m": [
+[
+"Kelch",
+"eng, kantig",
+"aufgeblasen, breit geflügelt"
+],
+[
+"Grundrosette",
+"fehlend",
+"vorhanden"
+],
+[
+"Wuchs",
+"zierlich, oft verzweigt",
+"kräftiger"
+]
+],
+"ok": false
+},
+"Geranium robertianum|Geranium sylvaticum": {
+"m": [
+[
+"Blatt",
+"3–5-zählig, Teile fiederschnittig",
+"handförmig 5–7-lappig"
+],
+[
+"Blüte",
+"1–2 cm, rosa",
+"2,5–3 cm, blauviolett"
+],
+[
+"Geruch",
+"unangenehm",
+"unauffällig"
+],
+[
+"Stängel",
+"oft rot überlaufen",
+"grün"
+]
+],
+"ok": false
+},
+"Geum montanum|Pulsatilla alpina": {
+"m": [
+[
+"Grundblätter",
+"leierförmig, große Endfieder",
+"2–3fach fein gefiedert"
+],
+[
+"Stängelblätter",
+"klein, wechselständig",
+"Hüllblattquirl unter Blüte"
+],
+[
+"Blüte",
+"5 Kronblätter, mit Außenkelch",
+"6 außen behaarte Perigonblätter"
+],
+[
+"Blütenfarbe",
+"goldgelb",
+"weiß oder schwefelgelb"
+]
+],
+"ok": false
+},
+"Hypericum maculatum|Hypericum × desetangsii": {
+"m": [
+[
+"Stängel",
+"4-kantig, ungeflügelt",
+"2 deutliche + 2 schwache Leisten"
+],
+[
+"Durchscheinende Punkte",
+"fehlend oder sehr wenige",
+"wenige bis zerstreut"
+],
+[
+"Kelchblätter",
+"stumpf",
+"stumpf bis zugespitzt"
+]
+],
+"ok": false
+},
+"Iris pseudacorus|Typha latifolia": {
+"m": [
+[
+"Blätter",
+"schwertförmig, reitend, fächerig",
+"lang, schwammig, ohne Fächer"
+],
+[
+"Blüte",
+"gelbe Irisblüten",
+"brauner Kolben"
+],
+[
+"Blattfarbe",
+"frischgrün",
+"graugrün"
+]
+],
+"ok": false
+},
+"Iris sibirica|Iris spuria": {
+"m": [
+[
+"Stängel",
+"hohl, deutlich höher als Blätter",
+"voll, etwa so hoch wie Blätter"
+],
+[
+"Blätter",
+"schmal, grasartig, weich",
+"steif, blaugrün, bereift"
+],
+[
+"Hochblätter",
+"trockenhäutig braun",
+"krautig grün"
+],
+[
+"Standort",
+"Streuwiesen",
+"salzige Feuchtwiesen, Pannonikum"
+]
+],
+"ok": false
+},
+"Lolium perenne|Lolium × boucheanum": {
+"m": [
+[
+"Grannen",
+"fehlend",
+"einzelne Deckspelzen begrannt"
+],
+[
+"Junge Blätter",
+"gefaltet",
+"z. T. gerollt, variabel"
+],
+[
+"Ährchen",
+"meist 3–10 Blüten",
+"oft mehrblütiger"
+]
+],
+"ok": false
+},
+"Luzula pilosa|Luzula sylvatica": {
+"m": [
+[
+"Größe",
+"klein, 15–30 cm",
+"groß, 40–80 cm"
+],
+[
+"Blattbreite",
+"3–10 mm",
+"bis 15–20 mm"
+],
+[
+"Blütenstand",
+"Einzelblüten, Stiele später zurück",
+"vielblütige Rispe, Blüten zu 2–5"
+]
+],
+"ok": false
+},
+"Petasites paradoxus|Tussilago farfara": {
+"m": [
+[
+"Blütenköpfe",
+"weißlich-rosa, in Traube",
+"einzeln, gelb"
+],
+[
+"Blattform",
+"dreieckig-herzförmig, spitz",
+"rundlich-eckig, stumpf"
+],
+[
+"Blattunterseite",
+"schneeweiß filzig",
+"weißgrau filzig"
+],
+[
+"Standort",
+"Kalkschutt, montan–subalpin",
+"Lehm, Rohböden, Tieflagen"
+]
+],
+"ok": false
+},
+"Pimpinella major|Pimpinella saxifraga": {
+"m": [
+[
+"Stängel",
+"hohl, kantig gefurcht",
+"rund, fein gerillt, voll"
+],
+[
+"Grundblattfiedern",
+"groß, eiförmig, glänzend",
+"klein, rundlich"
+],
+[
+"Stängelblätter",
+"gut entwickelt",
+"stark reduziert"
+],
+[
+"Standort",
+"Fettwiesen, frisch",
+"Magerrasen, trocken"
+]
+],
+"ok": false
+},
+"Polygala amara|Polygala vulgaris": {
+"m": [
+[
+"Grundrosette",
+"vorhanden, Blätter verkehrt-eiförmig",
+"fehlt"
+],
+[
+"Stängelblätter",
+"nach oben kleiner",
+"nach oben größer"
+],
+[
+"Geschmack",
+"bitter",
+"nicht bitter"
+]
+],
+"ok": false
+},
+"Polygonatum latifolium|Polygonatum multiflorum": {
+"m": [
+[
+"Blattunterseite",
+"auf Nerven fein behaart",
+"kahl"
+],
+[
+"Stängel",
+"oben kurz behaart",
+"kahl"
+],
+[
+"Standort",
+"warme Laubwälder, Pannonikum",
+"Laubwälder, verbreitet"
+]
+],
+"ok": false
+},
+"Populus nigra|Populus × canadensis": {
+"m": [
+[
+"Stamm",
+"oft mit Maserknollen, krumm",
+"gerade, ohne Knollen"
+],
+[
+"Blattgrund",
+"ohne Drüsen",
+"mit 1–2 Drüsen"
+],
+[
+"Blattrand",
+"kahl",
+"jung fein bewimpert"
+],
+[
+"Vorkommen",
+"Flussauen, selten rein",
+"Forstpflanzungen, häufig"
+]
+],
+"ok": false
+},
+"Prunus avium|Prunus cerasus": {
+"m": [
+[
+"Wuchs",
+"hoher Baum, keine Ausläufer",
+"Strauch/kleiner Baum, Wurzelsprosse"
+],
+[
+"Blätter",
+"groß, hängend, unten behaart",
+"kleiner, steif, glänzend, kahl"
+],
+[
+"Blütenbüschel",
+"ohne Laubblätter am Grund",
+"am Grund mit kleinen Laubblättern"
+],
+[
+"Früchte",
+"süß",
+"sauer"
+]
+],
+"ok": false
+},
+"Rosa canina|Rosa corymbifera": {
+"m": [
+[
+"Blättchen",
+"kahl",
+"unterseits behaart"
+],
+[
+"Blattstiel",
+"kahl bis drüsig",
+"behaart"
+]
+],
+"ok": false
+},
+"Salvia pratensis|Salvia verticillata": {
+"m": [
+[
+"Blüte",
+"groß (2–3 cm), Oberlippe sichelförmig gewölbt",
+"klein (ca. 1 cm), Oberlippe fast gerade"
+],
+[
+"Blütenstand",
+"Scheinquirle wenigblütig, locker",
+"Scheinquirle vielblütig, dicht, kugelig gedrängt"
+],
+[
+"Stängelblätter",
+"wenige, meist sitzend",
+"mehrere, gestielt, am Grund oft geöhrt"
+],
+[
+"Griffel",
+"weit aus Oberlippe ragend",
+"auf der Unterlippe aufliegend"
+]
+],
+"ok": false
+},
+"Senecio ovatus|Solidago virgaurea": {
+"m": [
+[
+"Hülle",
+"Hüllblätter einreihig, oft schwarz bespitzt",
+"Hüllblätter dachziegelig, mehrreihig"
+],
+[
+"Blütenstand",
+"Köpfe in flacher Doldentraube",
+"Köpfe in traubig-rispigem Stand"
+],
+[
+"Strahlblüten",
+"meist 5, abstehend",
+"meist 6–12, kurz"
+],
+[
+"Blätter",
+"lanzettlich, kurz gestielt, fein gezähnt",
+"eiförmig bis lanzettlich, grundständige gestielt"
+]
+],
+"ok": false
+},
+"Silene latifolia|Silene nutans": {
+"m": [
+[
+"Blüte",
+"groß, weiß, aufrecht, abends duftend",
+"klein, weiß, nickend, einseitswendig"
+],
+[
+"Kelch",
+"aufgeblasen, ♀ deutlich bauchig",
+"schmal röhrig, drüsig-klebrig"
+],
+[
+"Geschlecht",
+"zweihäusig",
+"zwittrig"
+],
+[
+"Kronblätter",
+"breit, 2-spaltig",
+"tief 2-spaltig, schmal, eingerollt"
+]
+],
+"ok": false
+},
+"Thalictrum flavum|Thalictrum lucidum": {
+"m": [
+[
+"Blättchen",
+"keilförmig-verkehrteiförmig, vorn 3-lappig",
+"schmal lineal-lanzettlich, ganzrandig"
+],
+[
+"Blattoberfläche",
+"matt",
+"glänzend"
+],
+[
+"Wuchs",
+"mit unterirdischen Ausläufern",
+"ohne Ausläufer, horstig"
+]
+],
+"ok": false
+},
+"Valeriana dioica|Valeriana tripteris": {
+"m": [
+[
+"Stängelblätter",
+"fiederschnittig",
+"3-zählig bis 3-teilig"
+],
+[
+"Grundblätter",
+"eiförmig-elliptisch, ganzrandig",
+"herz-eiförmig, grob gezähnt"
+],
+[
+"Geschlecht",
+"zweihäusig, ♀ Blütenstand dicht",
+"zwittrig"
+],
+[
+"Standort",
+"Nasswiesen, Quellsümpfe",
+"Felsen, Schutt, Bergwälder"
+]
+],
+"ok": false
+},
+"Verbascum phlomoides|Verbascum thapsus": {
+"m": [
+[
+"Blattbasis",
+"nicht oder nur kurz herablaufend",
+"lang von Knoten zu Knoten herablaufend"
+],
+[
+"Blüte",
+"groß (3–5 cm), flach ausgebreitet",
+"klein (1,5–3 cm), trichterförmig"
+],
+[
+"Staubbeutel",
+"2 untere lang herablaufend",
+"2 untere kurz herablaufend"
+]
+],
+"ok": false
+},
+"Veronica arvensis|Veronica persica": {
+"m": [
+[
+"Blütenstiel",
+"sehr kurz, kürzer als Kelch",
+"lang, viel länger als Tragblatt"
+],
+[
+"Blüte",
+"winzig (2–3 mm), hellblau",
+"groß (8–12 mm), himmelblau, untere Zipfel hell"
+],
+[
+"Kapsel",
+"herzförmig, kurz",
+"breit, 2 Fächer abstehend gekielt"
+],
+[
+"Blätter",
+"eiförmig, obere tragblattartig klein",
+"gestielt, alle laubblattartig"
+]
+],
+"ok": false
+},
+"Ajuga genevensis|Ajuga pyramidalis": {
+"m": [
+[
+"Obere Tragblätter",
+"kürzer als Blüten, oft 3-lappig, bläulich",
+"länger als Blüten, ganzrandig, oft violett"
+],
+[
+"Wuchsform",
+"Blütenstand locker, walzlich",
+"pyramidenförmig dicht"
+],
+[
+"Grundblätter",
+"zur Blüte oft verwelkt",
+"große Rosette, zur Blüte vorhanden"
+]
+],
+"ok": false
+},
+"Anemonastrum narcissiflorum|Pulsatilla alpina": {
+"m": [
+[
+"Blütenstand",
+"Dolde mit 3–8 Blüten",
+"Einzelblüte"
+],
+[
+"Blüte",
+"weiß, ohne lange Behaarung",
+"weiß oder gelb, außen seidig behaart"
+],
+[
+"Frucht",
+"Nüsschen ohne Federschweif",
+"Fruchtstand mit langen Federschwänzen"
+],
+[
+"Hüllblätter",
+"sitzend, handförmig geteilt",
+"gestielt, fein zerschlitzt"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Daucus carota": {
+"m": [
+[
+"Hüllblätter",
+"fehlend",
+"zahlreich, fiederteilig"
+],
+[
+"Dolde",
+"flach, ohne Mittelblüte",
+"oft dunkle Mittelblüte, zur Fruchtzeit nestartig"
+],
+[
+"Frucht",
+"glatt, schmal länglich",
+"stachelig bewimpert"
+],
+[
+"Blütezeit",
+"Frühling (IV–VI)",
+"Sommer (VI–IX)"
+]
+],
+"ok": false
+},
+"Arabidopsis arenosa|Arabidopsis halleri": {
+"m": [
+[
+"Grundblätter",
+"leierförmig fiederspaltig",
+"lang gestielt, ungeteilt bis schwach leierförmig"
+],
+[
+"Ausläufer",
+"fehlend",
+"vorhanden, oberirdisch"
+],
+[
+"Lebensdauer",
+"ein- bis zweijährig",
+"ausdauernd, Matten bildend"
+],
+[
+"Standort",
+"Felsen, Schotter, Ruderalstellen",
+"feuchte Wiesen, Schwermetallböden"
+]
+],
+"ok": false
+},
+"Aria edulis|Scandosorbus intermedia": {
+"m": [
+[
+"Blattrand",
+"doppelt gesägt, nicht gelappt",
+"im unteren Teil deutlich gelappt"
+],
+[
+"Blattunterseite",
+"dicht weißfilzig",
+"graufilzig, etwas gelblich"
+],
+[
+"Seitennerven",
+"10–14 Paare",
+"7–9 Paare"
+]
+],
+"ok": false
+},
+"Aria edulis|Viburnum lantana": {
+"m": [
+[
+"Blattstellung",
+"wechselständig",
+"gegenständig"
+],
+[
+"Blattunterseite",
+"dicht weißfilzig",
+"graufilzig mit Sternhaaren, runzelig"
+],
+[
+"Knospen",
+"beschuppt, grün",
+"nackt, filzig"
+],
+[
+"Frucht",
+"rot, apfelförmig",
+"erst rot, dann schwarz, abgeflacht"
+]
+],
+"ok": false
+},
+"Aster bellidiastrum|Bellis perennis": {
+"m": [
+[
+"Pappus",
+"vorhanden, haarig",
+"fehlend"
+],
+[
+"Blattrand",
+"deutlich gezähnt bis gekerbt",
+"schwach gekerbt"
+],
+[
+"Blattform",
+"verkehrteiförmig, Stiel geflügelt",
+"spatelförmig, stumpf"
+],
+[
+"Standort",
+"kalkhaltig, montan bis alpin",
+"Rasen, Wiesen, v. a. tiefe Lagen"
+]
+],
+"ok": false
+},
+"Atriplex patula|Chenopodium album": {
+"m": [
+[
+"Frucht",
+"von 2 dreieckigen Vorblättern umhüllt",
+"von 5-zähliger Blütenhülle umgeben"
+],
+[
+"Geschlecht",
+"♂ und ♀ Blüten getrennt",
+"Blüten zwittrig"
+],
+[
+"Blätter",
+"untere spießförmig, obere lineal",
+"rhombisch, gezähnt, mehlig bestäubt"
+]
+],
+"ok": false
+},
+"Barbarea verna|Barbarea vulgaris": {
+"m": [
+[
+"Grundblätter",
+"6–10 Paar Seitenlappen",
+"2–5 Paar Seitenlappen"
+],
+[
+"Schote",
+"lang (4–7 cm)",
+"kürzer (1,5–3 cm)"
+]
+],
+"ok": false
+},
+"Brassica napus|Brassica rapa": {
+"m": [
+[
+"Blütenstand",
+"Knospen überragen offene Blüten",
+"offene Blüten überragen Knospen"
+],
+[
+"Blätter",
+"blaugrün bereift, kahl",
+"grasgrün, untere borstig behaart"
+]
+],
+"ok": false
+},
+"Brunnera macrophylla|Omphalodes verna": {
+"m": [
+[
+"Grundblätter",
+"groß, herzförmig, rau behaart",
+"eiförmig-herzförmig, spärlich behaart"
+],
+[
+"Blüte",
+"klein (3–7 mm), vielblütige Rispe",
+"größer (8–12 mm), lockere Traube"
+],
+[
+"Wuchs",
+"horstig, kräftig",
+"mit oberirdischen Ausläufern"
+]
+],
+"ok": false
+},
+"Brunnera macrophylla|Myosotis sylvatica": {
+"m": [
+[
+"Grundblätter",
+"groß, langgestielt, herzförmig",
+"länglich-lanzettlich, keine Herzbasis"
+],
+[
+"Blütenstand",
+"rispig verzweigt",
+"Wickel, zur Fruchtzeit verlängert"
+]
+],
+"ok": false
+},
+"Buphthalmum salicifolium|Doronicum austriacum": {
+"m": [
+[
+"Stängelblätter",
+"lanzettlich, schmal am Grund",
+"breit, geigenförmig, stängelumfassend"
+],
+[
+"Köpfe",
+"einzeln an Zweigenden",
+"mehrere in Doldentraube"
+],
+[
+"Pappus",
+"fehlt, nur kurzes Krönchen",
+"haarförmig"
+],
+[
+"Spreublätter",
+"vorhanden",
+"fehlend"
+]
+],
+"ok": false
+},
+"Campanula latifolia|Campanula rapunculoides": {
+"m": [
+[
+"Blüte",
+"groß (4–5,5 cm), schräg abstehend",
+"kleiner (2–3 cm), nickend, einseitswendig"
+],
+[
+"Kelchzipfel",
+"aufrecht, lanzettlich",
+"zurückgeschlagen"
+],
+[
+"Wuchs",
+"horstig, ohne Ausläufer",
+"mit unterirdischen Ausläufern"
+]
+],
+"ok": false
+},
+"Campanula persicifolia|Campanula rapunculoides": {
+"m": [
+[
+"Blätter",
+"schmal lanzettlich, kahl, ledrig",
+"herzförmig bis eiförmig, behaart"
+],
+[
+"Blüte",
+"breit glockig (3–4 cm), weit offen",
+"trichterförmig, nickend, einseitswendig"
+],
+[
+"Kelchzipfel",
+"aufrecht",
+"zurückgeschlagen"
+]
+],
+"ok": false
+},
+"Cardamine bulbifera|Cardamine pratensis": {
+"m": [
+[
+"Brutknospen",
+"dunkle Bulbillen in Blattachseln",
+"fehlend"
+],
+[
+"Grundblätter",
+"fehlend",
+"Rosette, Blättchen rundlich"
+],
+[
+"Standort",
+"Buchenwald",
+"feuchte Wiesen"
+]
+],
+"ok": false
+},
+"Cardamine flexuosa|Cardamine impatiens": {
+"m": [
+[
+"Blattgrund",
+"ohne Öhrchen",
+"mit pfeilförmigen Öhrchen stängelumfassend"
+],
+[
+"Kronblätter",
+"weiß, deutlich",
+"winzig oder fehlend"
+],
+[
+"Stängel",
+"hin und her gebogen, behaart",
+"gerade, kahl"
+],
+[
+"Fiederpaare",
+"4–5",
+"6–9"
+]
+],
+"ok": false
+},
+"Cardamine hirsuta|Cardamine parviflora": {
+"m": [
+[
+"Grundrosette",
+"zur Blüte vorhanden",
+"fehlend oder früh verwelkt"
+],
+[
+"Staubblätter",
+"meist 4",
+"6"
+],
+[
+"Blättchen",
+"rundlich bis eiförmig",
+"sehr schmal, lineal"
+],
+[
+"Standort",
+"Gärten, Äcker, Ruderal",
+"zeitweise überflutete Ufer"
+]
+],
+"ok": false
+},
+"Carduus crispus|Cirsium oleraceum": {
+"m": [
+[
+"Pappus",
+"einfache Haare",
+"gefiederte Haare"
+],
+[
+"Stängel",
+"dornig geflügelt",
+"ungeflügelt, nicht dornig"
+],
+[
+"Blütenfarbe",
+"purpurrot",
+"blassgelb"
+],
+[
+"Köpfe",
+"einzeln oder gebüschelt, ohne Hochblätter",
+"gehäuft, von bleichen Hochblättern umhüllt"
+]
+],
+"ok": false
+},
+"Carpinus betulus|Ulmus glabra": {
+"m": [
+[
+"Blattgrund",
+"symmetrisch, abgerundet",
+"deutlich asymmetrisch"
+],
+[
+"Blattoberseite",
+"glatt",
+"rau wie Schmirgelpapier"
+],
+[
+"Frucht",
+"Nüsschen an 3-lappigem Flügel",
+"Nuss in Mitte eines runden Flügels"
+],
+[
+"Rinde",
+"glatt, grau, Stamm spannrückig",
+"anfangs glatt, später längsrissig"
+]
+],
+"ok": false
+},
+"Centaurea scabiosa|Centaurea stoebe": {
+"m": [
+[
+"Köpfe",
+"groß (2–3 cm), Hülle kugelig",
+"klein (1 cm), Hülle eiförmig"
+],
+[
+"Hüllblätter",
+"grün, Anhängsel herablaufend schwarz",
+"mit dunkler Spitze, kurz gefranst"
+],
+[
+"Blätter",
+"grob fiederteilig, grün",
+"fein fiederteilig, graufilzig"
+],
+[
+"Lebensdauer",
+"ausdauernd",
+"zwei- bis mehrjährig"
+]
+],
+"ok": false
+},
+"Chaerophyllum aureum|Chaerophyllum hirsutum": {
+"m": [
+[
+"Blätter",
+"3-fach gefiedert, farnartig, spitz",
+"2-3-fach 3-zählig, Abschnitte breit"
+],
+[
+"Stängel",
+"unter den Knoten verdickt, gefleckt",
+"kaum verdickt, behaart"
+],
+[
+"Kronblätter",
+"kahl",
+"bewimpert"
+]
+],
+"ok": false
+},
+"Cirsium erisithales|Cirsium oleraceum": {
+"m": [
+[
+"Köpfe",
+"einzeln, nickend, klebrig",
+"gehäuft, aufrecht"
+],
+[
+"Hochblätter",
+"fehlend",
+"bleichgelb, Köpfe umhüllend"
+],
+[
+"Blätter",
+"tief fiederteilig, klebrig drüsig",
+"ungeteilt bis buchtig, stängelumfassend"
+],
+[
+"Blütenfarbe",
+"zitronengelb",
+"blassgelb bis grünlich"
+]
+],
+"ok": false
+},
+"Dactylorhiza fuchsii|Dactylorhiza incarnata": {
+"m": [
+[
+"Lippe",
+"tief 3-lappig, Mittellappen vorgezogen",
+"kaum gelappt, Ränder zurückgeschlagen"
+],
+[
+"Blätter",
+"gefleckt",
+"ungefleckt, kapuzenförmige Spitze"
+],
+[
+"Stängel",
+"markig gefüllt",
+"hohl"
+],
+[
+"Standort",
+"Wälder, Wiesen, kalkhold",
+"Flachmoore, nasse Wiesen"
+]
+],
+"ok": false
+},
+"Dactylorhiza majalis|Dactylorhiza sambucina": {
+"m": [
+[
+"Blütenfarbe",
+"purpurn",
+"gelb oder rot"
+],
+[
+"Sporn",
+"kürzer, konisch",
+"dick, sackartig, abwärts"
+],
+[
+"Blätter",
+"meist gefleckt",
+"ungefleckt"
+],
+[
+"Standort",
+"Feuchtwiesen",
+"trockene Bergwiesen, sauer"
+]
+],
+"ok": false
+},
+"Epilobium alsinifolium|Epilobium anagallidifolium": {
+"m": [
+[
+"Größe",
+"10–25 cm, kräftig",
+"5–15 cm, zierlich"
+],
+[
+"Blätter",
+"eiförmig, glänzend, gezähnelt",
+"schmal elliptisch, ganzrandig"
+],
+[
+"Blüte",
+"8–10 mm, rosa",
+"3–5 mm, blassrosa"
+],
+[
+"Stängelspitze",
+"aufrecht",
+"nickend"
+]
+],
+"ok": false
+},
+"Euphorbia cyparissias|Euphorbia virgata": {
+"m": [
+[
+"Blätter",
+"nadelförmig, 1–3 mm breit",
+"lineal-lanzettlich, 3–6 mm breit"
+],
+[
+"Sterile Triebe",
+"zahlreich, dicht beblättert",
+"selten"
+],
+[
+"Größe",
+"10–30 cm",
+"30–80 cm"
+],
+[
+"Blattbasis",
+"verschmälert",
+"etwas herzförmig"
+]
+],
+"ok": false
+},
+"Gentiana asclepiadea|Gentiana cruciata": {
+"m": [
+[
+"Blattstellung",
+"gegenständig 2-zeilig, lang zugespitzt",
+"kreuzgegenständig, am Grund scheidig verwachsen"
+],
+[
+"Blüte",
+"groß (3–5 cm), blau, in Blattachseln",
+"klein (2 cm), 4-zipfelig, gebüschelt"
+],
+[
+"Stängel",
+"bogig überhängend",
+"aufsteigend"
+]
+],
+"ok": false
+},
+"Gentiana verna|Gentianopsis ciliata": {
+"m": [
+[
+"Kronzipfel",
+"5, ungefranst",
+"4, am Rand lang gefranst"
+],
+[
+"Kronfarbe",
+"tiefblau, weißer Schlund",
+"hellblau"
+],
+[
+"Blattstellung",
+"Grundrosette",
+"keine Rosette, Stängelblätter"
+],
+[
+"Blütezeit",
+"Frühling",
+"Spätsommer–Herbst"
+]
+],
+"ok": false
+},
+"Geranium columbinum|Geranium dissectum": {
+"m": [
+[
+"Blütenstiel",
+"sehr lang (> 2 cm)",
+"kurz (< 1 cm)"
+],
+[
+"Kelch",
+"begrannt, anliegend behaart",
+"kurz begrannt, drüsig behaart"
+],
+[
+"Kronblätter",
+"ungespalten oder schwach ausgerandet",
+"deutlich ausgerandet"
+],
+[
+"Behaarung",
+"anliegend, keine Drüsen",
+"abstehend, mit Drüsen"
+]
+],
+"ok": false
+},
+"Geranium palustre|Geranium sylvaticum": {
+"m": [
+[
+"Fruchtstiele",
+"abwärts geknickt",
+"aufrecht bleibend"
+],
+[
+"Blütenfarbe",
+"purpurrot",
+"blauviolett, Mitte weißlich"
+],
+[
+"Behaarung",
+"abstehend, drüsenlos",
+"drüsig behaart"
+],
+[
+"Standort",
+"Nasswiesen, Gräben",
+"Bergwiesen, Hochstauden"
+]
+],
+"ok": false
+},
+"Geranium pusillum|Geranium pyrenaicum": {
+"m": [
+[
+"Blütengröße",
+"sehr klein (4–5 mm), blasslila",
+"größer (15–18 mm), purpurn"
+],
+[
+"Kronblätter",
+"schwach ausgerandet",
+"tief ausgerandet"
+],
+[
+"Staubblätter",
+"nur 5 fruchtbar",
+"10 fruchtbar"
+],
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd"
+]
+],
+"ok": false
+},
+"Geranium pyrenaicum|Geranium rotundifolium": {
+"m": [
+[
+"Kronblätter",
+"tief ausgerandet, purpurn",
+"ganzrandig bis schwach ausgerandet, hellrosa"
+],
+[
+"Lebensdauer",
+"ausdauernd",
+"einjährig"
+],
+[
+"Samen",
+"glatt",
+"netzgrubig"
+]
+],
+"ok": false
+},
+"Hedera colchica|Hedera helix": {
+"m": [
+[
+"Blattgröße",
+"groß (bis 20 cm), meist ungelappt",
+"kleiner, Triebblätter 3-5-lappig"
+],
+[
+"Haare",
+"Schuppenhaare, gelbbraun",
+"Sternhaare, weißgrau"
+]
+],
+"ok": false
+},
+"Helleborus niger|Helleborus × hybridus": {
+"m": [
+[
+"Blütenfarbe",
+"weiß, später rötlich",
+"variabel, oft rosa bis purpur"
+],
+[
+"Blütenstiel",
+"1–2-blütig, nur Hochblätter",
+"mehrblütig, verzweigt"
+],
+[
+"Blütenhaltung",
+"meist aufrecht",
+"meist nickend"
+],
+[
+"Vorkommen",
+"wild, Kalkalpen",
+"Gartenpflanze, verwildert"
+]
+],
+"ok": false
+},
+"Heracleum sphondylium|Peucedanum ostruthium": {
+"m": [
+[
+"Randblüten",
+"außen vergrößert, strahlend",
+"nicht strahlend"
+],
+[
+"Blätter",
+"fiederteilig, rauhaarig",
+"doppelt 3-zählig, fast kahl"
+],
+[
+"Frucht",
+"flach, rund, Ölstriemen keulig",
+"flach geflügelt, breit"
+]
+],
+"ok": false
+},
+"Impatiens parviflora|Mercurialis perennis": {
+"m": [
+[
+"Blattstellung",
+"wechselständig",
+"gegenständig"
+],
+[
+"Blüte",
+"blassgelb, gespornt",
+"unscheinbar grün, eingeschlechtig"
+],
+[
+"Frucht",
+"Schleuderkapsel",
+"2-knöpfige Kapsel, behaart"
+]
+],
+"ok": false
+},
+"Larix decidua|Picea abies": {
+"m": [
+[
+"Nadeln",
+"weich, in Büscheln an Kurztrieben",
+"steif, einzeln, spitz, 4-kantig"
+],
+[
+"Laubwechsel",
+"sommergrün",
+"immergrün"
+],
+[
+"Zapfen",
+"klein, aufrecht, bleiben am Zweig",
+"hängend, länglich, fallen ab"
+]
+],
+"ok": false
+},
+"Lathyrus latifolius|Lathyrus tuberosus": {
+"m": [
+[
+"Stängel",
+"breit geflügelt",
+"kantig, ungeflügelt"
+],
+[
+"Blattstiel",
+"geflügelt",
+"nicht geflügelt"
+],
+[
+"Blüte",
+"groß, magentarosa, vielblütig",
+"kleiner, karminrot, duftend"
+],
+[
+"Wurzel",
+"ohne Knollen",
+"mit Knollen"
+]
+],
+"ok": false
+},
+"Leucanthemum adustum|Leucanthemum vulgare": {
+"m": [
+[
+"Mittlere Stängelblätter",
+"lanzettlich, kaum stängelumfassend",
+"am Grund geöhrt-stängelumfassend"
+],
+[
+"Hüllblätter",
+"breit dunkelbraun berandet",
+"schmal hell oder braun berandet"
+],
+[
+"Standort",
+"Kalkfels, montan-subalpin",
+"Wiesen, tiefe bis mittlere Lagen"
+]
+],
+"ok": false
+},
+"Leucojum aestivum|Leucojum vernum": {
+"m": [
+[
+"Blüten pro Stängel",
+"3–7",
+"meist 1"
+],
+[
+"Blütezeit",
+"IV–V",
+"II–IV"
+],
+[
+"Stängel",
+"hoch (30–60 cm)",
+"niedrig (10–30 cm)"
+]
+],
+"ok": false
+},
+"Lolium multiflorum|Lolium perenne": {
+"m": [
+[
+"Deckspelze",
+"begrannt",
+"unbegrannt"
+],
+[
+"Junge Blätter",
+"in Knospe gerollt",
+"in Knospe gefaltet"
+],
+[
+"Ährchen",
+"10–20 Blüten",
+"4–10 Blüten"
+],
+[
+"Sterile Triebe",
+"wenige",
+"zahlreich"
+]
+],
+"ok": false
+},
+"Lonicera alpigena|Lonicera xylosteum": {
+"m": [
+[
+"Blätter",
+"groß, glänzend, fast kahl",
+"graugrün, weich behaart"
+],
+[
+"Beeren",
+"paarig verwachsen, kirschartig",
+"getrennt, nur am Grund verbunden"
+],
+[
+"Blütenstiel",
+"lang (3–5 cm)",
+"kurz (1–2 cm)"
+],
+[
+"Blütenfarbe",
+"rötlich-braun",
+"gelblich-weiß"
+]
+],
+"ok": false
+},
+"Lotus corniculatus|Medicago falcata": {
+"m": [
+[
+"Blätter",
+"5-zählig (3 + 2 am Grund)",
+"3-zählig, Blättchen vorn gezähnt"
+],
+[
+"Blütenstand",
+"Dolde mit 2–6 Blüten",
+"kurze, dichte Traube"
+],
+[
+"Frucht",
+"gerade Hülse, schotenartig",
+"sichelförmig gebogen"
+]
+],
+"ok": false
+},
+"Luzula luzuloides|Luzula nivea": {
+"m": [
+[
+"Blütenfarbe",
+"weißlich bis gelblich",
+"reinweiß"
+],
+[
+"Perigon",
+"etwa so lang wie Kapsel",
+"doppelt so lang wie Kapsel"
+],
+[
+"Blütenstand",
+"locker spreizend",
+"dichter, Büschel"
+],
+[
+"Standort",
+"saure Laubwälder, verbreitet",
+"Bergwälder, v. a. Südalpenrand, seltener"
+]
+],
+"ok": false
+},
+"Phyteuma betonicifolium|Phyteuma spicatum": {
+"m": [
+[
+"Blütenfarbe",
+"blau-violett",
+"gelblich-weiß"
+],
+[
+"Grundblätter",
+"lanzettlich, flacher Grund",
+"breit herzförmig"
+],
+[
+"Ähre",
+"schlank zylindrisch",
+"dichter, walzlich"
+],
+[
+"Standort",
+"saure Bergwiesen",
+"Laubwälder"
+]
+],
+"ok": false
+},
+"Plantago lanceolata|Plantago major": {
+"m": [
+[
+"Blätter",
+"lanzettlich, 3–5 Nerven parallel",
+"breit eiförmig, gestielt"
+],
+[
+"Ähre",
+"kurz, eiförmig, auf gefurchtem Schaft",
+"lang walzlich, Schaft kurz, ungefurcht"
+],
+[
+"Staubbeutel",
+"weiß, weit vorragend",
+"violett, später braun"
+]
+],
+"ok": false
+},
+"Poa annua|Poa pratensis": {
+"m": [
+[
+"Wuchs",
+"lockere Büschel, keine Ausläufer",
+"mit unterirdischen Ausläufern"
+],
+[
+"Blatthäutchen",
+"deutlich (2–5 mm)",
+"sehr kurz (< 1 mm)"
+],
+[
+"Rispenäste",
+"einzeln oder zu 2",
+"zu 3–5"
+],
+[
+"Lebensdauer",
+"kurzlebig, fast ganzjährig blühend",
+"ausdauernd, Blüte V–VI"
+]
+],
+"ok": false
+},
+"Potentilla aurea|Potentilla reptans": {
+"m": [
+[
+"Blätter",
+"5-zählig, Rand silbrig seidenhaarig",
+"5-zählig, Rand kahl oder spärlich behaart"
+],
+[
+"Wuchs",
+"horstig",
+"lange, wurzelnde Ausläufer"
+],
+[
+"Blüte",
+"goldgelb, Mitte orange",
+"gelb, einzeln an langen Stielen"
+],
+[
+"Standort",
+"alpine Rasen",
+"Wegränder, Wiesen, Tieflagen"
+]
+],
+"ok": false
+},
+"Prunus avium|Prunus serotina": {
+"m": [
+[
+"Blütenstand",
+"Büschel mit 2–6 Blüten",
+"lange, hängende Trauben"
+],
+[
+"Blätter",
+"matt, groß, doppelt gesägt",
+"glänzend, ledrig, fein gesägt"
+],
+[
+"Frucht",
+"rot, Kirsche",
+"schwarz, klein"
+],
+[
+"Blattdetail",
+"Blattstiel mit 2 Drüsen, unterseits kahl",
+"Mittelnerv unterseits rostbraun behaart"
+]
+],
+"ok": false
+},
+"Pyrola media|Pyrola rotundifolia": {
+"m": [
+[
+"Griffel",
+"gerade, kurz vorragend",
+"bogig abwärts gekrümmt, lang"
+],
+[
+"Blüte",
+"kugelig, wenig geöffnet",
+"weit geöffnet, glockig"
+],
+[
+"Blütenfarbe",
+"weiß, rosa überlaufen",
+"reinweiß"
+]
+],
+"ok": false
+},
+"Ranunculus acris|Ranunculus polyanthemos": {
+"m": [
+[
+"Blütenstiel",
+"rund, ungefurcht",
+"gefurcht"
+],
+[
+"Blattabschnitte",
+"breiter, rhombisch",
+"schmal lineal"
+],
+[
+"Standort",
+"Fettwiesen",
+"Halbtrockenrasen, Säume"
+]
+],
+"ok": false
+},
+"Reseda lutea|Reseda luteola": {
+"m": [
+[
+"Blätter",
+"fiederteilig",
+"ungeteilt, lanzettlich"
+],
+[
+"Kronblätter",
+"6, blassgelb",
+"4, grünlichgelb"
+],
+[
+"Wuchsform",
+"buschig verzweigt",
+"steif aufrecht, rutenförmig"
+]
+],
+"ok": false
+},
+"Rosa canina|Rosa spinosissima": {
+"m": [
+[
+"Stacheln",
+"gebogen, kräftig",
+"gerade, zahlreich, mit Borsten"
+],
+[
+"Blättchen",
+"5–7, groß",
+"7–11, klein, rundlich"
+],
+[
+"Frucht",
+"rot",
+"schwarzviolett"
+],
+[
+"Blüte",
+"rosa bis weiß",
+"weiß bis creme"
+]
+],
+"ok": false
+},
+"Rumex acetosa|Rumex acetosella": {
+"m": [
+[
+"Blattgrund",
+"pfeilförmig, Öhrchen abwärts",
+"spießförmig, Öhrchen abstehend"
+],
+[
+"Größe",
+"30–100 cm",
+"10–40 cm"
+],
+[
+"Wuchs",
+"ohne Ausläufer",
+"mit Wurzelausläufern"
+],
+[
+"Standort",
+"Fettwiesen",
+"trockene, saure Böden"
+]
+],
+"ok": false
+},
+"Salix eleagnos|Salix purpurea": {
+"m": [
+[
+"Blätter",
+"lineal, Rand eingerollt, unterseits weißfilzig",
+"lanzettlich, kahl, vorn verbreitert"
+],
+[
+"Blattstellung",
+"wechselständig",
+"teils gegenständig"
+],
+[
+"Staubbeutel",
+"gelb",
+"purpurrot"
+],
+[
+"Zweige",
+"graubraun",
+"rötlich, glänzend"
+]
+],
+"ok": false
+},
+"Sanguisorba minor|Sanguisorba officinalis": {
+"m": [
+[
+"Blütenköpfchen",
+"kugelig, grünlich",
+"länglich, dunkelrot"
+],
+[
+"Geschlecht",
+"♂ unten, ♀ oben, Narbe pinselig",
+"zwittrig"
+],
+[
+"Blättchen",
+"klein, rundlich",
+"größer, länglich-eiförmig"
+],
+[
+"Standort",
+"trockene Wiesen, Kalk",
+"feuchte Wiesen"
+]
+],
+"ok": false
+},
+"Saxifraga caesia|Saxifraga squarrosa": {
+"m": [
+[
+"Blätter",
+"von Grund an bogig zurückgekrümmt",
+"nur die Spitze abstehend"
+],
+[
+"Rosetten",
+"bläulich bereift, locker",
+"sehr klein, dicht gedrängt"
+],
+[
+"Verbreitung",
+"Kalkalpen, verbreitet",
+"Südalpen, selten"
+]
+],
+"ok": false
+},
+"Schoenus ferrugineus|Schoenus nigricans": {
+"m": [
+[
+"Ährchen",
+"1–3",
+"5–10"
+],
+[
+"Hüllblatt",
+"kurz, kaum länger als Köpfchen",
+"lang, Köpfchen weit überragend"
+],
+[
+"Blattscheiden",
+"rotbraun",
+"schwarzbraun glänzend"
+],
+[
+"Wuchsform",
+"kleiner, zierlicher",
+"größer, dicht horstig"
+]
+],
+"ok": false
+},
+"Senecio cacaliaster|Senecio ovatus": {
+"m": [
+[
+"Strahlblüten",
+"fehlend oder winzig",
+"vorhanden, gelb"
+],
+[
+"Blütenfarbe",
+"blassgelb",
+"gelb"
+],
+[
+"Hüllblätter",
+"grün, ohne schwarze Spitzen",
+"oft schwarz bespitzt"
+]
+],
+"ok": false
+},
+"Senecio hercynicus|Senecio ovatus": {
+"m": [
+[
+"Blattgrund",
+"breit sitzend, halb umfassend",
+"kurz gestielt, verschmälert"
+],
+[
+"Blattform",
+"breit lanzettlich",
+"schmal lanzettlich"
+]
+],
+"ok": false
+},
+"Thymus odoratissimus|Thymus pulegioides": {
+"m": [
+[
+"Stängelbehaarung",
+"rundum behaart",
+"nur an den Kanten behaart"
+],
+[
+"Blätter",
+"schmal elliptisch, behaart",
+"breiter, kahl"
+],
+[
+"Stängelquerschnitt",
+"rundlich",
+"scharf 4-kantig"
+],
+[
+"Standort",
+"Trockenrasen, Steppen",
+"Magerwiesen, weit verbreitet"
+]
+],
+"ok": false
+},
+"Trifolium aureum|Trifolium badium": {
+"m": [
+[
+"Köpfchen",
+"klein, hellgelb, verblüht hellbraun",
+"größer, goldgelb, verblüht kastanienbraun"
+],
+[
+"Wuchs",
+"aufrecht, 20–50 cm",
+"niederliegend-aufsteigend, 5–20 cm"
+],
+[
+"Standort",
+"Mager- und Silikatrasen",
+"kalkreiche subalpine Weiden"
+]
+],
+"ok": false
+},
+"Ulmus glabra|Ulmus laevis": {
+"m": [
+[
+"Blattoberseite",
+"rau",
+"glatt"
+],
+[
+"Blattspitze",
+"oft 3-spitzig",
+"einzelne Spitze"
+],
+[
+"Frucht",
+"sitzend, Nuss in Mitte",
+"lang gestielt, bewimpert"
+],
+[
+"Stamm",
+"ohne Brettwurzeln",
+"oft Brettwurzeln"
+]
+],
+"ok": false
+},
+"Utricularia vulgaris|Utricularia × neglecta": {
+"m": [
+[
+"Unterlippe",
+"Rand abwärts gebogen",
+"flach ausgebreitet, wellig"
+],
+[
+"Blütenfarbe",
+"goldgelb",
+"hellgelb"
+],
+[
+"Frucht",
+"regelmäßig fruchtend",
+"meist steril"
+]
+],
+"ok": false
+},
+"Verbascum densiflorum|Verbascum thapsus": {
+"m": [
+[
+"Blüte",
+"groß (3–5 cm), flach",
+"klein (1,5–3 cm), trichterförmig"
+],
+[
+"Staubbeutel",
+"2 untere lang herablaufend",
+"2 untere kurz herablaufend"
+],
+[
+"Blattrand",
+"deutlich gekerbt",
+"fast ganzrandig"
+]
+],
+"ok": false
+},
+"Veronica officinalis|Veronica serpyllifolia": {
+"m": [
+[
+"Blätter",
+"elliptisch, gesägt, behaart",
+"rundlich, ganzrandig, kahl"
+],
+[
+"Blütenstand",
+"seitenständig, aus Blattachseln",
+"endständig"
+],
+[
+"Blütenfarbe",
+"hellblau-lila",
+"weißlich mit blauen Adern"
+]
+],
+"ok": false
+},
+"Vicia cracca|Vicia sepium": {
+"m": [
+[
+"Blütenstand",
+"lange, vielblütige Traube",
+"kurze Traube, 2–6 Blüten"
+],
+[
+"Blütenfarbe",
+"blauviolett",
+"schmutzig violett"
+],
+[
+"Fiederpaare",
+"6–12",
+"4–8"
+],
+[
+"Blättchen",
+"schmal lanzettlich",
+"breit eiförmig"
+]
+],
+"ok": false
+},
+"Viola alba|Viola odorata": {
+"m": [
+[
+"Nebenblätter",
+"schmal lanzettlich, lang gefranst",
+"eiförmig, kurz gefranst"
+],
+[
+"Blütenfarbe",
+"meist weiß",
+"meist violett"
+],
+[
+"Blätter",
+"eher dreieckig-herzförmig",
+"rundlich-herzförmig"
+]
+],
+"ok": false
+},
+"Viola hirta|Viola odorata": {
+"m": [
+[
+"Ausläufer",
+"fehlend",
+"vorhanden"
+],
+[
+"Duft",
+"fehlend",
+"stark duftend"
+],
+[
+"Behaarung",
+"abstehend",
+"anliegend"
+],
+[
+"Nebenblätter",
+"schmal, kurz gefranst",
+"breit, kurz gefranst"
+]
+],
+"ok": false
+},
+"Acer campestre|Acer monspessulanum": {
+"m": [
+[
+"Blattlappen",
+"5, stumpf",
+"3, ganzrandig"
+],
+[
+"Blattstiel",
+"mit Milchsaft",
+"ohne Milchsaft"
+],
+[
+"Früchte",
+"waagrecht abstehend",
+"parallel bis spitzwinklig"
+]
+],
+"ok": false
+},
+"Acer pseudoplatanus|Viburnum opulus": {
+"m": [
+[
+"Blattlappen",
+"5, gezähnt",
+"3, unregelmäßig gezähnt"
+],
+[
+"Blattstiel",
+"ohne Drüsen",
+"mit Drüsen am Grund"
+],
+[
+"Frucht",
+"Flügelnüsse",
+"rote Beeren"
+]
+],
+"ok": false
+},
+"Ailanthus altissima|Juglans regia": {
+"m": [
+[
+"Fiederblättchen",
+"13–25, am Grund mit Drüsenzahn",
+"5–9, ganzrandig"
+],
+[
+"Geruch",
+"unangenehm",
+"aromatisch"
+],
+[
+"Frucht",
+"geflügelte Nüsschen",
+"Walnuss"
+]
+],
+"ok": false
+},
+"Allium carinatum|Allium oleraceum": {
+"m": [
+[
+"Staubblätter",
+"weit herausragend",
+"eingeschlossen"
+],
+[
+"Blütenfarbe",
+"purpurn",
+"grünlich-weiß bis bräunlich"
+],
+[
+"Blätter",
+"flach, gekielt",
+"halbstielrund, hohl"
+]
+],
+"ok": false
+},
+"Allium rotundum|Allium scorodoprasum": {
+"m": [
+[
+"Bulbillen",
+"meist fehlend",
+"zahlreich im Blütenstand"
+],
+[
+"Blütenstand",
+"dicht kugelig",
+"locker, wenige Blüten"
+],
+[
+"Blütenfarbe",
+"purpur, innere dunkel",
+"violett"
+]
+],
+"ok": false
+},
+"Alnus incana|Corylus avellana": {
+"m": [
+[
+"Fruchtstand",
+"verholzte Zäpfchen",
+"Nüsse in Fruchtbecher"
+],
+[
+"Blatt",
+"spitz, Unterseite graugrün",
+"rundlich, herzförmig"
+],
+[
+"Rinde",
+"glatt, grau",
+"glatt, braun"
+]
+],
+"ok": false
+},
+"Alopecurus myosuroides|Alopecurus pratensis": {
+"m": [
+[
+"Ährenrispe",
+"schlank, zugespitzt",
+"dick, walzlich"
+],
+[
+"Hüllspelzen",
+"bis zur Mitte verwachsen, kahl bis bewimpert",
+"nur am Grund verwachsen, lang seidig"
+],
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd"
+]
+],
+"ok": false
+},
+"Amaranthus hybridus|Amaranthus retroflexus": {
+"m": [
+[
+"Blütenhüllblätter",
+"spitz",
+"spatelförmig, stumpf"
+],
+[
+"Stängel",
+"kahl bis spärlich behaart",
+"oben dicht behaart"
+],
+[
+"Blütenstand",
+"lange, schlanke Endähre",
+"dicht, gedrungen"
+]
+],
+"ok": false
+},
+"Anemonoides nemorosa|Isopyrum thalictroides": {
+"m": [
+[
+"Blätter",
+"3-teilig, gesägt",
+"doppelt 3-zählig, zierlich"
+],
+[
+"Blüte",
+"einzeln, groß",
+"klein, mehrere"
+],
+[
+"Frucht",
+"Nüsschen",
+"Balgfrüchte"
+]
+],
+"ok": false
+},
+"Anemonoides sylvestris|Pulsatilla alpina": {
+"m": [
+[
+"Hüllblätter",
+"gestielt, laubblattartig",
+"fein zerschlitzt"
+],
+[
+"Frucht",
+"wollige Nüsschen",
+"lange Federschweife"
+],
+[
+"Standort",
+"Trockenwälder, tief",
+"alpine Rasen"
+]
+],
+"ok": false
+},
+"Antennaria carpatica|Antennaria dioica": {
+"m": [
+[
+"Ausläufer",
+"fehlend",
+"vorhanden"
+],
+[
+"Blätter",
+"beidseits behaart",
+"oben kahl"
+],
+[
+"Standort",
+"alpin, Kalk",
+"Magerrasen, sauer"
+]
+],
+"ok": false
+},
+"Anthriscus caucalis|Anthriscus sylvestris": {
+"m": [
+[
+"Frucht",
+"stachelig",
+"glatt"
+],
+[
+"Größe",
+"klein (bis 60 cm)",
+"groß (bis 150 cm)"
+],
+[
+"Dolden",
+"seitenständig, kurz gestielt",
+"endständig, lang gestielt"
+]
+],
+"ok": false
+},
+"Aquilegia alpina|Aquilegia vulgaris": {
+"m": [
+[
+"Blüte",
+"groß (5–8 cm), leuchtend hellblau",
+"kleiner (3–5 cm), blauviolett"
+],
+[
+"Sporn",
+"gerade bis schwach gebogen",
+"an der Spitze stark hakig eingekrümmt"
+],
+[
+"Grundblätter",
+"in schmale, lineale Zipfel zerteilt",
+"Abschnitte breit, rundlich gekerbt"
+],
+[
+"Standort",
+"subalpin, Hochstaudenfluren, Geröll",
+"kollin–montan, Wälder, Säume"
+]
+],
+"ok": false
+},
+"Arabidopsis arenosa|Arabidopsis lyrata": {
+"m": [
+[
+"Lebensdauer",
+"1–2-jährig, eine Rosette",
+"ausdauernd, mehrere Rosetten, horstig"
+],
+[
+"Stängelblätter",
+"zahlreich, gezähnt bis fiederlappig",
+"wenige, schmal, meist ganzrandig"
+],
+[
+"Stängel",
+"bis oben mit Gabelhaaren",
+"oben meist kahl"
+],
+[
+"Kronfarbe",
+"weiß bis lila",
+"weiß"
+]
+],
+"ok": false
+},
+"Arabidopsis thaliana|Capsella bursa-pastoris": {
+"m": [
+[
+"Frucht",
+"lange, schmale Schote",
+"flaches, dreieckig-herzförmiges Schötchen"
+],
+[
+"Stängelblätter",
+"sitzend, nicht stängelumfassend",
+"mit pfeilförmigem Grund stängelumfassend"
+],
+[
+"Grundblätter",
+"ungeteilt, entfernt gezähnt, Sternhaare",
+"oft fiederspaltig (variabel)"
+]
+],
+"ok": false
+},
+"Argentina anserina|Potentilla reptans": {
+"m": [
+[
+"Blatt",
+"unterbrochen gefiedert, viele Fiederpaare",
+"handförmig 5-zählig"
+],
+[
+"Behaarung",
+"unterseits (oft beidseits) silbrig-seidig",
+"grün, kaum behaart"
+],
+[
+"Standort",
+"Tritt- und Flutrasen, Ufer, Weiden",
+"Wegränder, feuchte Wiesen, Ruderalstellen"
+]
+],
+"ok": false
+},
+"Artemisia absinthium|Artemisia vulgaris": {
+"m": [
+[
+"Blattfarbe",
+"beidseits silbergrau-seidig behaart",
+"oben dunkelgrün, unten weißfilzig"
+],
+[
+"Köpfchen",
+"kugelig, 3–4 mm, gelb, nickend",
+"eiförmig, 2–3 mm, gelblich-rötlich"
+],
+[
+"Geruch",
+"stark wermutartig, Blätter sehr bitter",
+"schwach würzig"
+],
+[
+"Blütenboden",
+"behaart (Lupe)",
+"kahl"
+]
+],
+"ok": false
+},
+"Asplenium adulterinum|Asplenium trichomanes": {
+"m": [
+[
+"Blattspindel",
+"unten braun, obere Hälfte grün",
+"durchgehend glänzend schwarzbraun"
+],
+[
+"Substrat",
+"nur Serpentin",
+"Silikat- und Kalkfels, Mauern"
+]
+],
+"ok": false
+},
+"Athyrium filix-femina|Dryopteris dilatata": {
+"m": [
+[
+"Sori",
+"länglich bis hakenförmig, Schleier seitlich",
+"rund, nierenförmiger Schleier"
+],
+[
+"Spreite",
+"lanzettlich, zu beiden Enden verschmälert",
+"breit dreieckig-eiförmig"
+],
+[
+"Stielschuppen",
+"spärlich, einfarbig hellbraun",
+"zahlreich, mit dunklem Mittelstreif"
+],
+[
+"Wedeltextur",
+"zart, hellgrün",
+"derber, dunkelgrün"
+]
+],
+"ok": false
+},
+"Atocion rupestre|Gypsophila repens": {
+"m": [
+[
+"Kelch",
+"röhrig-keulig verwachsen, ohne Hautstreifen",
+"glockig, grüne Rippen mit weißen Hautstreifen"
+],
+[
+"Griffel",
+"3",
+"2"
+],
+[
+"Blätter",
+"lanzettlich-eiförmig, blaugrün",
+"schmal lineal"
+],
+[
+"Substrat",
+"Silikat",
+"Kalk, Kalkschutt"
+]
+],
+"ok": false
+},
+"Ballota nigra|Lamium purpureum": {
+"m": [
+[
+"Kelch",
+"trichterig, 10-rippig, Zähne breit begrannt",
+"glockig, Zähne schmal lanzettlich"
+],
+[
+"Wuchs",
+"ausdauernd, 40–100 cm, unangenehmer Geruch",
+"einjährig, 10–30 cm"
+],
+[
+"Obere Blätter",
+"wie die unteren, grün",
+"gedrängt, oft purpurn überlaufen"
+]
+],
+"ok": false
+},
+"Betonica officinalis|Stachys palustris": {
+"m": [
+[
+"Grundrosette",
+"vorhanden, lang gestielt, Grund herzförmig",
+"fehlt"
+],
+[
+"Stängelblätter",
+"wenige, Paare weit entfernt",
+"zahlreich, lanzettlich, fast sitzend"
+],
+[
+"Blütenstand",
+"dichte, kopfige Ähre",
+"unterbrochene Scheinquirle"
+],
+[
+"Standort",
+"magere Wiesen, lichte Wälder",
+"Ufer, Gräben, feuchte Äcker"
+]
+],
+"ok": false
+},
+"Bromus benekenii|Bromus ramosus": {
+"m": [
+[
+"Unterster Rispenknoten",
+"meist 3–5 Äste",
+"meist 2 Äste"
+],
+[
+"Blattscheiden",
+"nur untere behaart, obere kahl",
+"alle abstehend lang behaart"
+],
+[
+"Blütezeit",
+"Juni–Juli",
+"Juli–August"
+]
+],
+"ok": false
+},
+"Campanula persicifolia|Campanula scheuchzeri": {
+"m": [
+[
+"Höhe",
+"40–100 cm",
+"10–30 cm"
+],
+[
+"Blüten",
+"mehrere, weit glockig, aufrecht-abstehend",
+"1–3, nickend"
+],
+[
+"Stängelblätter",
+"lanzettlich, fein gekerbt, ledrig, kahl",
+"schmal lineal, ganzrandig"
+],
+[
+"Höhenstufe",
+"kollin–montan, Wälder, Säume",
+"subalpin–alpin, Rasen"
+]
+],
+"ok": false
+},
+"Carex digitata|Carex ornithopoda": {
+"m": [
+[
+"Ährenstellung",
+"♀ Ähren deutlich abgerückt",
+"Ähren fast aus einem Punkt (Vogelfuß)"
+],
+[
+"Tragspelzen",
+"rotbraun, etwa so lang wie Schlauch",
+"blass, kürzer als Schlauch"
+],
+[
+"Blattbreite",
+"2–4 mm",
+"1–2 mm"
+],
+[
+"Größe",
+"10–30 cm",
+"5–20 cm, zierlicher"
+]
+],
+"ok": false
+},
+"Carpinus betulus|Ulmus minor": {
+"m": [
+[
+"Blattgrund",
+"symmetrisch",
+"deutlich asymmetrisch"
+],
+[
+"Frucht",
+"Nüsschen an dreilappigem Flügel",
+"rundliche Flügelfrucht, Samen nahe Kerbe"
+],
+[
+"Rinde",
+"glatt, grau, Stamm spannrückig",
+"längsrissig, Zweige oft mit Korkleisten"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea nervosa": {
+"m": [
+[
+"Hüllblattanhängsel",
+"rundlich, häutig, braun, ganz/zerschlitzt",
+"lang federig gefranst, zurückgebogen"
+],
+[
+"Köpfe",
+"mehrere pro Stängel",
+"meist einzeln, groß"
+],
+[
+"Höhenstufe",
+"kollin–montan, Wiesen",
+"subalpin, Magerrasen"
+]
+],
+"ok": false
+},
+"Centaurea jacea|Centaurea triumfettii": {
+"m": [
+[
+"Randblüten",
+"rosapurpur",
+"blauviolett, stark vergrößert"
+],
+[
+"Hüllblätter",
+"häutige, braune Anhängsel",
+"dunkel berandet, kammförmig gefranst"
+],
+[
+"Blätter",
+"grün, kaum behaart",
+"grau-wollig behaart"
+]
+],
+"ok": false
+},
+"Centaurium erythraea|Centaurium pulchellum": {
+"m": [
+[
+"Grundrosette",
+"vorhanden zur Blütezeit",
+"fehlt"
+],
+[
+"Blütenstand",
+"dicht, doldenrispig, Blüten fast sitzend",
+"locker gabelig verzweigt, Blüten gestielt"
+],
+[
+"Größe",
+"15–50 cm",
+"meist 3–15 cm"
+]
+],
+"ok": false
+},
+"Anthriscus sylvestris|Chaerophyllum temulum": {
+"m": [
+[
+"Stängel",
+"gefurcht, oben kahl, grün",
+"rau behaart, rot gefleckt, unter Knoten verdickt"
+],
+[
+"Frucht",
+"glatt, glänzend schwarz, kurz geschnäbelt",
+"gerippt, ohne Schnabel"
+],
+[
+"Blattoberfläche",
+"fast kahl, frischgrün",
+"beidseits behaart, matt"
+],
+[
+"Blütezeit",
+"April–Juni",
+"Mai–Juli"
+]
+],
+"ok": false
+},
+"Cornus alba|Cornus sanguinea": {
+"m": [
+[
+"Früchte",
+"weiß bis bläulich-weiß",
+"schwarz"
+],
+[
+"Zweige (Winter)",
+"rundum leuchtend korallenrot",
+"nur sonnseitig rot, sonst grün"
+],
+[
+"Herkunft",
+"Zierstrauch, verwildert",
+"heimisch, Hecken, Waldränder"
+]
+],
+"ok": false
+},
+"Cornus mas|Cornus sanguinea": {
+"m": [
+[
+"Blüte",
+"gelb, vor dem Laub (Feb–März)",
+"weiß, nach dem Laub (Mai–Juni)"
+],
+[
+"Frucht",
+"länglich, glänzend rot",
+"kugelig, schwarz"
+],
+[
+"Blattunterseite",
+"Nervenwinkel mit Haarbüscheln",
+"ohne Haarbüschel"
+]
+],
+"ok": false
+},
+"Crepis biennis|Sonchus arvensis": {
+"m": [
+[
+"Hülle",
+"äußere Hüllblätter abstehend",
+"gelbe Drüsenhaare, Hüllblätter anliegend"
+],
+[
+"Blattrand",
+"weich gezähnt, Blätter rau behaart",
+"dornig gezähnt, kahl, glänzend"
+],
+[
+"Blattgrund",
+"sitzend, kaum geöhrt",
+"mit runden Öhrchen stängelumfassend"
+],
+[
+"Wuchs",
+"zweijährig, Pfahlwurzel",
+"ausdauernd, Ausläufer, Herden"
+]
+],
+"ok": false
+},
+"Drosera intermedia|Drosera × obovata": {
+"m": [
+[
+"Blütenschaft",
+"seitlich unter Rosette, bogig aufsteigend",
+"aus Rosettenmitte, aufrecht"
+],
+[
+"Schaftlänge",
+"kaum länger als Blätter",
+"Blätter deutlich überragend"
+],
+[
+"Blattspreite",
+"schmal spatelig, allmählich in Stiel",
+"verkehrt-eiförmig, breiter"
+]
+],
+"ok": false
+},
+"Dryopteris dilatata|Dryopteris filix-mas": {
+"m": [
+[
+"Teilung",
+"3-fach gefiedert, Zipfel stachelspitzig",
+"2-fach, Fiederchen stumpf, kaum gelappt"
+],
+[
+"Spreitenform",
+"breit dreieckig-eiförmig",
+"lanzettlich, zum Grund verschmälert"
+],
+[
+"Stielschuppen",
+"mit dunklem Mittelstreif",
+"einfarbig hellbraun"
+]
+],
+"ok": false
+},
+"Dryopteris filix-mas|Pteridium aquilinum": {
+"m": [
+[
+"Wuchs",
+"Wedel trichterig gebüschelt",
+"Wedel einzeln aus Kriechrhizom, Herden"
+],
+[
+"Sori",
+"rund, Schleier nierenförmig",
+"randständig, unter umgerolltem Rand"
+],
+[
+"Spreite",
+"lanzettlich, aufrecht",
+"dreieckig, waagrecht, langer kahler Stiel"
+]
+],
+"ok": false
+},
+"Epilobium nutans|Epilobium palustre": {
+"m": [
+[
+"Blätter",
+"elliptisch, stumpf, flach",
+"schmal lanzettlich, Rand umgerollt"
+],
+[
+"Ausläufer",
+"oberirdisch, beblättert",
+"fadenförmig, mit Winterknospe am Ende"
+],
+[
+"Größe",
+"5–15 cm",
+"15–50 cm"
+],
+[
+"Standort",
+"subalpine–alpine Quellfluren",
+"Moore, Nasswiesen, v. a. tiefere Lagen"
+]
+],
+"ok": false
+},
+"Epipactis helleborine|Epipactis purpurata": {
+"m": [
+[
+"Blätter",
+"breit eiförmig, grün, länger als Internodien",
+"klein, schmal, grau-violett überlaufen"
+],
+[
+"Pflanze",
+"grün, meist einzeln",
+"violett getönt, oft mehrstängelig"
+],
+[
+"Blüte",
+"grünlich bis rosa-purpur",
+"grünlichweiß, kaum gefärbt"
+],
+[
+"Standort",
+"verschiedene Wälder, Säume",
+"schattige Buchenwälder, dunkel"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum ramosissimum": {
+"m": [
+[
+"Sprosse",
+"steril/fertil getrennt, sommergrün",
+"einerlei, wintergrün, rau"
+],
+[
+"Scheiden",
+"kurz, grün, Zähne dunkel",
+"verlängert trichterig, unten dunkler Ring"
+],
+[
+"Äste",
+"regelmäßig quirlig, zahlreich",
+"spärlich, unregelmäßig"
+],
+[
+"Fertile Ähre",
+"auf braunen Frühjahrstrieben",
+"auf grünen Sprossen, spitz"
+]
+],
+"ok": false
+},
+"Equisetum arvense|Equisetum fluviatile": {
+"m": [
+[
+"Zentralhöhle",
+"klein, ≤1/3 Stängeldurchmesser",
+"sehr groß, ~4/5 Durchmesser"
+],
+[
+"Stängel",
+"deutlich gerippt, matt",
+"glatt, glänzend, fein gerieft"
+],
+[
+"1. Astglied",
+"länger als Stängelscheide",
+"kürzer als Stängelscheide"
+],
+[
+"Standort",
+"Äcker, Wegränder",
+"im Wasser, Verlandungszonen"
+]
+],
+"ok": false
+},
+"Equisetum sylvaticum|Equisetum telmateia": {
+"m": [
+[
+"Äste",
+"selbst wieder verzweigt, bogig hängend",
+"unverzweigt"
+],
+[
+"Stängel",
+"grün, dünn",
+"elfenbeinweiß, 1–2 cm dick"
+],
+[
+"Scheidenzähne",
+"rotbraun, zu 3–4 Lappen verklebt",
+"zahlreich (20–40), fein, frei"
+],
+[
+"Fertile Sprosse",
+"ergrünen später, verzweigen",
+"braun, unverzweigt, sterben ab"
+]
+],
+"ok": false
+},
+"Euphrasia alpina|Euphrasia officinalis": {
+"m": [
+[
+"Drüsenhaare",
+"fehlen",
+"vorhanden (bes. Kelch, Tragblätter)"
+],
+[
+"Blüte",
+"groß, lila bis purpurn",
+"weiß, violett geadert, gelber Schlundfleck"
+],
+[
+"Tragblätter",
+"schmal, wenige lang zugespitzte Zähne",
+"eiförmig, kurz gezähnt"
+]
+],
+"ok": false
+},
+"Fraxinus excelsior|Sambucus nigra": {
+"m": [
+[
+"Knospen",
+"schwarz, samtig",
+"grünlich-braun, Zweige mit weißem Mark"
+],
+[
+"Fiederblättchen",
+"9–13, sitzend",
+"5–7, deutlich gestielt"
+],
+[
+"Frucht",
+"einseitig geflügelte Nuss, büschelig",
+"schwarze Beeren in Schirmrispe"
+],
+[
+"Wuchs",
+"Baum, Rinde glatt bis netzrissig",
+"Strauch, Rinde korkig-warzig"
+]
+],
+"ok": false
+},
+"Fraxinus excelsior|Fraxinus pennsylvanica": {
+"m": [
+[
+"Knospen",
+"schwarz",
+"braun, filzig"
+],
+[
+"Fiederblättchen",
+"9–13, sitzend",
+"7–9, deutlich gestielt"
+],
+[
+"Flügelfrucht",
+"Flügel nur an der Spitze des Nüsschens",
+"Flügel weit am Nüsschen herablaufend"
+],
+[
+"Herkunft",
+"heimisch",
+"Neophyt, v. a. Auwälder"
+]
+],
+"ok": false
+},
+"Galium album|Galium sylvaticum": {
+"m": [
+[
+"Stängel",
+"deutlich 4-kantig, grün",
+"rund, blau bereift"
+],
+[
+"Blätter",
+"lineal-lanzettlich, grün",
+"breiter, unterseits bläulich-graugrün"
+],
+[
+"Knospen",
+"aufrecht",
+"Rispenäste vor Blüte nickend"
+],
+[
+"Standort",
+"Wiesen, Säume",
+"Laubwälder"
+]
+],
+"ok": false
+},
+"Galium album|Galium aparine": {
+"m": [
+[
+"Stängel/Blätter",
+"glatt, nicht klettend",
+"rückwärts hakig rau, klettend"
+],
+[
+"Frucht",
+"kahl, glatt",
+"dicht hakenborstig"
+],
+[
+"Blütenstand",
+"reiche endständige Rispe",
+"wenigblütig, blattachselständig"
+],
+[
+"Lebensdauer",
+"ausdauernd",
+"einjährig"
+]
+],
+"ok": false
+},
+"Galium aparine|Galium mollugo": {
+"m": [
+[
+"Stängel/Blätter",
+"rückwärts hakig rau, klettend",
+"glatt, nicht klettend"
+],
+[
+"Frucht",
+"dicht hakenborstig",
+"kahl, glatt"
+],
+[
+"Blütenstand",
+"wenigblütig, blattachselständig",
+"reiche, sparrige Rispe"
+],
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd"
+]
+],
+"ok": false
+},
+"Gentiana asclepiadea|Gentiana pneumonanthe": {
+"m": [
+[
+"Blätter",
+"breit lanzettlich, 5-nervig, zweizeilig",
+"lineal, 1-nervig, Rand umgerollt"
+],
+[
+"Blütenstellung",
+"zu 1–3 in Achseln des bogigen Stängels",
+"an aufrechter Stängelspitze gehäuft"
+],
+[
+"Standort",
+"montane Wälder, Hochstauden",
+"Streuwiesen, Moore, tiefe Lagen"
+]
+],
+"ok": false
+},
+"Gentiana brachyphylla|Gentiana nivalis": {
+"m": [
+[
+"Lebensdauer",
+"ausdauernd, Rosette, polsterig",
+"einjährig, ohne Rosette"
+],
+[
+"Blüte",
+"einzeln, Kronröhre ~2 cm",
+"klein (~1 cm), oft mehrere am Spross"
+],
+[
+"Kelch",
+"Kanten schmal",
+"Kanten deutlich geflügelt"
+],
+[
+"Blätter",
+"kurz rhombisch in Rosette",
+"klein eiförmig, Stängel oft verzweigt"
+]
+],
+"ok": false
+},
+"Geranium sanguineum|Geranium sylvaticum": {
+"m": [
+[
+"Blattteilung",
+"fast bis Grund, schmale Zipfel",
+"handförmig 7-teilig, Lappen breiter"
+],
+[
+"Blüten",
+"einzeln, karminrot, groß",
+"paarweise, violett, Mitte weißlich"
+],
+[
+"Standort",
+"trockenwarme Säume, kollin",
+"Bergwiesen, Hochstauden, montan"
+]
+],
+"ok": false
+},
+"Glechoma hederacea|Veronica persica": {
+"m": [
+[
+"Krone",
+"zweilippig, violett",
+"flach 4-zipfelig, himmelblau"
+],
+[
+"Blütenstand",
+"Scheinquirle in Blattachseln",
+"einzeln auf langen Stielen"
+],
+[
+"Stängel",
+"4-kantig, aromatisch",
+"rund, nicht duftend"
+],
+[
+"Blatt",
+"nierenförmig, grob gekerbt",
+"eiförmig, grob gesägt"
+]
+],
+"ok": false
+},
+"Globularia bisnagarica|Globularia nudicaulis": {
+"m": [
+[
+"Stängel",
+"dicht mit kleinen Blättern besetzt",
+"blattlos, höchstens Schuppen"
+],
+[
+"Grundblätter",
+"klein, spatelig, Spitze oft 3-zähnig",
+"groß (bis 15 cm), länglich-spatelig"
+],
+[
+"Standort",
+"Trockenrasen, tiefere Lagen",
+"montan–subalpin, Kalkrasen, Wälder"
+]
+],
+"ok": false
+},
+"Helleborus niger|Helleborus viridis": {
+"m": [
+[
+"Blütenfarbe",
+"weiß bis rosa",
+"grün"
+],
+[
+"Stängelblätter",
+"fehlen, nur Hochblätter",
+"vorhanden, gefingert"
+],
+[
+"Grundblätter",
+"ledrig, überwinternd",
+"sommergrün, weicher"
+],
+[
+"Blütezeit",
+"Dez–April",
+"März–April"
+]
+],
+"ok": false
+},
+"Helleborus niger|Helleborus orientalis": {
+"m": [
+[
+"Blüten pro Stängel",
+"1–2(3)",
+"mehrere, verzweigt"
+],
+[
+"Farbe",
+"reinweiß, verblüht rosa",
+"creme bis purpur, oft gesprenkelt"
+],
+[
+"Blattabschnitte",
+"nur gegen Spitze gezähnt",
+"ringsum gesägt"
+],
+[
+"Vorkommen",
+"heimisch, Kalkalpen",
+"Gartenpflanze, verwildert"
+]
+],
+"ok": false
+},
+"Hypericum perforatum|Hypericum tetrapterum": {
+"m": [
+[
+"Stängel",
+"mit 2 Längsleisten",
+"4-kantig, schmal geflügelt"
+],
+[
+"Blüte",
+"2–3 cm",
+"~1 cm, blassgelb"
+],
+[
+"Kelchblätter",
+"spitz, mit schwarzen Punkten",
+"lanzettlich, ohne schwarze Punkte"
+],
+[
+"Standort",
+"trocken, Wegränder, Magerwiesen",
+"nass, Gräben, Ufer"
+]
+],
+"ok": false
+},
+"Lactuca serriola|Sonchus oleraceus": {
+"m": [
+[
+"Mittelrippe unten",
+"mit Stachelreihe",
+"glatt"
+],
+[
+"Blätter",
+"senkrecht gestellt (Kompass)",
+"waagrecht, Öhrchen spitz abstehend"
+],
+[
+"Köpfchen",
+"klein, schmal, 7–35 Blüten, blassgelb",
+"größer, am Grund bauchig, viele Blüten"
+],
+[
+"Achäne",
+"lang geschnäbelt",
+"ungeschnäbelt"
+]
+],
+"ok": false
+},
+"Lactuca serriola|Lactuca virosa": {
+"m": [
+[
+"Blattstellung",
+"senkrecht gestellt",
+"waagrecht"
+],
+[
+"Stängelblätter",
+"meist buchtig fiederlappig",
+"meist ungeteilt, oft violett überlaufen"
+],
+[
+"Achäne",
+"grau- bis olivbraun",
+"schwarz-purpurn"
+]
+],
+"ok": false
+},
+"Lamium maculatum|Lamium orvala": {
+"m": [
+[
+"Größe",
+"20–60 cm",
+"40–100 cm, kräftig"
+],
+[
+"Krone",
+"2–3 cm, purpurrosa",
+"3–4,5 cm, Unterlippe dunkel geadert"
+],
+[
+"Blätter",
+"eiförmig, oft weißer Mittelfleck",
+"sehr groß, breit-eiförmig, bis 15 cm"
+],
+[
+"Verbreitung",
+"allgemein verbreitet",
+"südöstl. Österreich, Wälder"
+]
+],
+"ok": false
+},
+"Lysimachia nemorum|Lysimachia nummularia": {
+"m": [
+[
+"Blätter",
+"eiförmig, zugespitzt",
+"rundlich, stumpf"
+],
+[
+"Blütenstiel",
+"dünn, länger als Blatt",
+"kurz, kürzer als Blatt"
+],
+[
+"Kelchzipfel",
+"schmal lineal",
+"breit eiförmig-herzförmig"
+],
+[
+"Blütengröße",
+"~1 cm",
+"~2 cm"
+]
+],
+"ok": false
+},
+"Lythrum salicaria|Lythrum virgatum": {
+"m": [
+[
+"Behaarung",
+"Stängel und Blätter behaart",
+"kahl"
+],
+[
+"Blattgrund",
+"abgerundet bis herzförmig",
+"keilig verschmälert, Blatt schmal"
+],
+[
+"Blütenstand",
+"dichte, lange Ähre",
+"lockere, entfernte Wirtel"
+]
+],
+"ok": false
+},
+"Matricaria chamomilla|Tripleurospermum inodorum": {
+"m": [
+[
+"Blütenboden",
+"hohl, kegelig",
+"markig gefüllt, halbkugelig"
+],
+[
+"Geruch",
+"stark kamillenartig",
+"fast geruchlos"
+],
+[
+"Köpfchen",
+"1,5–2,5 cm, Zungen bald zurückgeschlagen",
+"3–4 cm, Zungen lange abstehend"
+]
+],
+"ok": false
+},
+"Lotus corniculatus|Medicago lupulina": {
+"m": [
+[
+"Blatt",
+"5 Blättchen (3 + 2 grundständige)",
+"3-zählig, Blättchen mit Stachelspitze"
+],
+[
+"Blüten",
+"1–1,5 cm, zu 2–6 doldig",
+"2–3 mm, dichte kugelige Köpfchen"
+],
+[
+"Frucht",
+"lineale Hülse, Stand wie Vogelfuß",
+"schwarze, nierenförmige Hülse"
+]
+],
+"ok": false
+},
+"Muscari armeniacum|Muscari botryoides": {
+"m": [
+[
+"Blätter",
+"viele, schmal lineal, schon im Herbst",
+"2–3, breiter, nach oben verbreitert"
+],
+[
+"Blüten",
+"länglich-krugförmig, dunkelblau",
+"kugelig, himmelblau"
+],
+[
+"Herkunft",
+"Gartenpflanze, verwildert",
+"heimisch, Wiesen, Weingärten"
+]
+],
+"ok": false
+},
+"Myosotis ramosissima|Myosotis stricta": {
+"m": [
+[
+"Fruchtstiele",
+"so lang wie Kelch oder länger, abstehend",
+"viel kürzer als Kelch, aufrecht"
+],
+[
+"Blütenstand",
+"erst oberhalb der Blätter beginnend",
+"bis zum Grund, unterste in Blattachseln"
+],
+[
+"Krone",
+"2–3 mm, ausgebreitet",
+"~2 mm, kaum geöffnet"
+]
+],
+"ok": false
+},
+"Noccaea perfoliata|Thlaspi arvense": {
+"m": [
+[
+"Schötchen",
+"4–6 mm, verkehrt-herzförmig",
+"10–18 mm, rundlich, breit geflügelt"
+],
+[
+"Geruch",
+"kaum",
+"beim Zerreiben lauchartig"
+],
+[
+"Stängelblätter",
+"bläulich, stängelumfassend",
+"grün, pfeilförmig umfassend, gezähnt"
+],
+[
+"Größe/Blüte",
+"5–20 cm, März–Mai",
+"10–40 cm, April–Herbst"
+]
+],
+"ok": false
+},
+"Dactylorhiza majalis|Orchis militaris": {
+"m": [
+[
+"Lippe",
+"breit, schwach dreilappig, gezeichnet",
+"menschenförmig: Arme und Beine"
+],
+[
+"Helm",
+"Seitensepalen abstehend",
+"grau-rosa Helm aus allen Perigonblättern"
+],
+[
+"Blätter",
+"meist gefleckt",
+"ungefleckt, glänzend"
+],
+[
+"Standort",
+"Feuchtwiesen",
+"Halbtrockenrasen, Kalk"
+]
+],
+"ok": false
+},
+"Origanum majorana|Origanum vulgare": {
+"m": [
+[
+"Behaarung",
+"graufilzig",
+"grün, schwach behaart"
+],
+[
+"Blütenstand",
+"kleine, dichte kugelige Ähren",
+"lockere Doldenrispe"
+],
+[
+"Blüte/Tragblatt",
+"weiß, Tragblätter grau-grün",
+"rosa-purpur, Tragblätter purpurn"
+],
+[
+"Herkunft",
+"Kulturpflanze, selten verwildert",
+"heimisch, Säume, Trockenrasen"
+]
+],
+"ok": false
+},
+"Origanum vulgare|Thymus pulegioides": {
+"m": [
+[
+"Wuchs",
+"aufrecht, 30–60 cm",
+"niederliegend, holzig, 5–25 cm"
+],
+[
+"Blätter",
+"eiförmig, 2–4 cm, gestielt",
+"klein, ~1 cm"
+],
+[
+"Stängel",
+"rund behaart",
+"4-kantig, nur Kanten behaart"
+],
+[
+"Blütenstand",
+"Doldenrispe, purpurne Tragblätter",
+"kopfige bis ährige Scheinquirle"
+]
+],
+"ok": false
+},
+"Orobanche alba|Orobanche gracilis": {
+"m": [
+[
+"Wirt",
+"Thymian, andere Lippenblütler",
+"Schmetterlingsblütler (Hornklee u. a.)"
+],
+[
+"Krone",
+"weißlich bis rötlich, dunkle Drüsenhaare",
+"außen gelblich, innen glänzend blutrot"
+],
+[
+"Narbe",
+"rotviolett",
+"gelb"
+]
+],
+"ok": false
+},
+"Parnassia palustris|Ranunculus alpestris": {
+"m": [
+[
+"Blütenmitte",
+"5 gefranste Staminodien mit gelben Drüsen",
+"viele Staubblätter und Fruchtblätter"
+],
+[
+"Grundblätter",
+"herzförmig, ganzrandig",
+"glänzend, 3–5-lappig gekerbt"
+],
+[
+"Stängelblatt",
+"1, stängelumfassend",
+"meist 1, klein, ungeteilt"
+],
+[
+"Blütezeit",
+"Juli–September",
+"Juni–August, früh nach Schnee"
+]
+],
+"ok": false
+},
+"Polystichum aculeatum|Polystichum setiferum": {
+"m": [
+[
+"Fiederchen",
+"sitzend, Grund keilig, spitzwinklig",
+"deutlich gestielt, Grund fast rechtwinklig"
+],
+[
+"Wedeltextur",
+"ledrig, oben glänzend",
+"weich, matt"
+],
+[
+"Untere Fiedern",
+"stark verkürzt",
+"wenig verkürzt"
+]
+],
+"ok": false
+},
+"Potentilla aurea|Potentilla crantzii": {
+"m": [
+[
+"Blättchen",
+"Flächen fast kahl, Rand silbrig gewimpert",
+"beidseits behaart"
+],
+[
+"Zähnung",
+"nur an Spitze, Endzahn kleiner",
+"obere Hälfte mehrzähnig"
+],
+[
+"Substrat",
+"Silikat, saure Rasen",
+"Kalk, basenreich"
+]
+],
+"ok": false
+},
+"Primula elatior|Primula × polyantha": {
+"m": [
+[
+"Blütenfarbe",
+"blass schwefelgelb, einheitlich",
+"bunt: rot, violett, weiß, mehrfarbig"
+],
+[
+"Blütengröße",
+"1,5–2,5 cm",
+"meist größer"
+],
+[
+"Vorkommen",
+"Wälder, Bergwiesen",
+"Gärten, Friedhöfe, verwildert"
+]
+],
+"ok": false
+},
+"Primula veris|Primula × polyantha": {
+"m": [
+[
+"Krone",
+"dottergelb, glockig, orange Schlundflecken",
+"flach ausgebreitet, bunt"
+],
+[
+"Kelch",
+"weit aufgeblasen, hellgrün",
+"enger, anliegend"
+],
+[
+"Vorkommen",
+"Magerwiesen, Säume",
+"Gärten, Friedhöfe, verwildert"
+]
+],
+"ok": false
+},
+"Prunus avium|Ulmus glabra": {
+"m": [
+[
+"Blattgrund",
+"symmetrisch",
+"stark asymmetrisch"
+],
+[
+"Blattstiel",
+"lang, oben 2 rote Drüsen",
+"sehr kurz, ohne Drüsen"
+],
+[
+"Blattfläche",
+"glatt",
+"oberseits sehr rau, oft 3 Spitzen"
+],
+[
+"Rinde",
+"glänzend, quer ringelnd abschälend",
+"längsrissig"
+]
+],
+"ok": false
+},
+"Prunus cerasifera|Prunus spinosa": {
+"m": [
+[
+"Dornen",
+"selten, schwach",
+"zahlreich, Kurztriebe verdornt"
+],
+[
+"Blüte",
+"größer, mit/kurz vor Laub",
+"klein, lange vor Laub, Hecke weiß"
+],
+[
+"Frucht",
+"2–3 cm, gelb oder rot",
+"~1 cm, blauschwarz bereift"
+],
+[
+"Junge Zweige",
+"grün, glänzend kahl",
+"dunkel, flaumig"
+]
+],
+"ok": false
+},
+"Pulsatilla alpina|Pulsatilla vernalis": {
+"m": [
+[
+"Grundblätter",
+"2–3-fach fein gefiedert, sommergrün",
+"einfach gefiedert, ledrig, überwinternd"
+],
+[
+"Blüte",
+"weiß (o. schwefelgelb), außen bläulich",
+"innen weiß, außen rosaviolett, goldhaarig"
+],
+[
+"Hochblätter",
+"gestielt, laubblattartig",
+"sitzend, in Zipfel geteilt"
+]
+],
+"ok": false
+},
+"Quercus cerris|Quercus robur": {
+"m": [
+[
+"Fruchtbecher",
+"mit langen, krausen, borstigen Schuppen",
+"Schuppen flach anliegend"
+],
+[
+"Knospen",
+"mit fädigen, bleibenden Nebenblättern",
+"ohne fädige Nebenblätter"
+],
+[
+"Blatt",
+"Lappen spitz, Stiel 1–2 cm",
+"Lappen rund, Grund geöhrt, kurzer Stiel"
+],
+[
+"Eichel",
+"kurz gestielt",
+"lang gestielt"
+]
+],
+"ok": false
+},
+"Ranunculus acris|Ranunculus auricomus": {
+"m": [
+[
+"Grundblätter",
+"tief handförmig geteilt",
+"ungeteilt bis schwach gelappt, rundlich"
+],
+[
+"Stängelblätter",
+"ähnlich den Grundblättern",
+"fingerförmig in lineale Zipfel"
+],
+[
+"Blüte",
+"regelmäßig, 5 Kronblätter",
+"Kronblätter oft unvollständig/verkümmert"
+],
+[
+"Standort",
+"Wiesen",
+"Laubwälder, feuchte Wiesen"
+]
+],
+"ok": false
+},
+"Ranunculus auricomus|Ranunculus montanus": {
+"m": [
+[
+"Grundblätter",
+"rundlich, ungeteilt bis gekerbt",
+"tief 3–5-teilig"
+],
+[
+"Kronblätter",
+"oft unvollständig",
+"vollständig, glänzend"
+],
+[
+"Höhe/Standort",
+"20–40 cm, Wälder, tiefere Lagen",
+"5–20 cm, montan–alpin, Rasen"
+]
+],
+"ok": false
+},
+"Ranunculus bulbosus|Ranunculus lanuginosus": {
+"m": [
+[
+"Kelchblätter",
+"zurückgeschlagen",
+"abstehend"
+],
+[
+"Stängelgrund",
+"knollig verdickt",
+"nicht verdickt"
+],
+[
+"Behaarung",
+"anliegend bis abstehend, mäßig",
+"dicht gelblich-zottig abstehend"
+],
+[
+"Standort",
+"Trockenrasen",
+"feuchte Laubwälder, montan"
+]
+],
+"ok": false
+},
+"Rosa arvensis|Rosa canina": {
+"m": [
+[
+"Griffel",
+"zu Säule verwachsen, so lang wie Staubbl.",
+"frei, kurz, Narbenpolster"
+],
+[
+"Wuchs",
+"kriechend-niederliegend, grüne Triebe",
+"aufrecht-bogig, 1–3 m"
+],
+[
+"Blüte",
+"weiß, Juni–Juli",
+"rosa bis weiß, Mai–Juni"
+]
+],
+"ok": false
+},
+"Sambucus ebulus|Sambucus racemosa": {
+"m": [
+[
+"Wuchs",
+"Staude, verholzt nicht",
+"Strauch, Mark braun"
+],
+[
+"Frucht",
+"schwarz",
+"scharlachrot"
+],
+[
+"Blütenstand",
+"flache Schirmrispe, weiß, rote Antheren",
+"eiförmige Rispe, gelblichgrün"
+],
+[
+"Blütezeit",
+"Juli–August",
+"April–Mai"
+]
+],
+"ok": false
+},
+"Securigera varia|Vicia sativa": {
+"m": [
+[
+"Blatt",
+"unpaarig gefiedert, ohne Ranke",
+"paarig gefiedert, mit Ranke"
+],
+[
+"Blütenstand",
+"10–20 Blüten, doldig auf langem Stiel",
+"1–2 Blüten, kurz in Blattachseln"
+],
+[
+"Blütenfarbe",
+"rosa-weiß-violett gescheckt",
+"purpur"
+],
+[
+"Frucht",
+"gegliedert, vierkantig",
+"lineale Hülse"
+]
+],
+"ok": false
+},
+"Sedum album|Sedum sexangulare": {
+"m": [
+[
+"Blüte",
+"weiß",
+"gelb"
+],
+[
+"Blätter",
+"walzlich, 5–12 mm, locker",
+"kurz, in 6 Längszeilen dicht"
+]
+],
+"ok": false
+},
+"Senecio vernalis|Senecio vulgaris": {
+"m": [
+[
+"Zungenblüten",
+"vorhanden, auffällig",
+"fehlen"
+],
+[
+"Behaarung",
+"spinnwebig-wollig",
+"schwach, fast kahl"
+],
+[
+"Köpfchen",
+"größer, ~2 cm",
+"klein, walzlich, ~5 mm"
+]
+],
+"ok": false
+},
+"Soldanella alpina|Soldanella austriaca": {
+"m": [
+[
+"Krone",
+"bis zur Hälfte zerschlitzt, violett",
+"nur bis ~1/4 eingeschnitten, blasslila"
+],
+[
+"Blüten pro Schaft",
+"2–4",
+"1"
+],
+[
+"Blätter",
+"nierenförmig, 2–4 cm",
+"klein, rundlich, <1,5 cm"
+],
+[
+"Verbreitung",
+"Alpen allgemein",
+"nordöstl. Kalkalpen"
+]
+],
+"ok": false
+},
+"Sonchus arvensis|Sonchus asper": {
+"m": [
+[
+"Köpfchen",
+"4–5 cm, Hülle gelb drüsenhaarig",
+"~2 cm, Hülle meist kahl"
+],
+[
+"Blattrand",
+"weich stachelig gezähnt",
+"derb stechend dornig"
+],
+[
+"Lebensdauer",
+"ausdauernd, Ausläufer",
+"einjährig, Pfahlwurzel"
+],
+[
+"Achäne",
+"quer runzelig",
+"glatt, berandet"
+]
+],
+"ok": false
+},
+"Symphytum officinale|Symphytum tuberosum": {
+"m": [
+[
+"Größe",
+"50–120 cm, verzweigt",
+"15–40 cm, kaum verzweigt"
+],
+[
+"Blattgrund",
+"weit herablaufend, Stängel geflügelt",
+"nicht oder kurz herablaufend"
+],
+[
+"Blüte",
+"violett oder cremeweiß",
+"blassgelb"
+],
+[
+"Rhizom/Standort",
+"Pfahlwurzel, nasse Wiesen",
+"knollig verdickt, Laubwälder"
+]
+],
+"ok": false
+},
+"Thalictrum aquilegiifolium|Thalictrum minus": {
+"m": [
+[
+"Blüte",
+"lila Staubfadenpinsel, aufrecht",
+"unscheinbar grüngelb, nickend"
+],
+[
+"Blättchengrund",
+"mit Nebenblättchen an Verzweigungen",
+"ohne"
+],
+[
+"Frucht",
+"hängend, 3-flügelig",
+"aufrecht, gerippt, ungeflügelt"
+],
+[
+"Standort",
+"feuchte Hochstauden, montan",
+"Trockenrasen, Säume"
+]
+],
+"ok": false
+},
+"Ulmus laevis|Ulmus minor": {
+"m": [
+[
+"Blüten/Früchte",
+"lang gestielt, hängend",
+"fast sitzend, gebüschelt"
+],
+[
+"Fruchtrand",
+"dicht gewimpert",
+"kahl"
+],
+[
+"Samenlage",
+"zentral in Flügelfrucht",
+"nahe der Kerbe (oben)"
+],
+[
+"Knospen",
+"spitz kegelig, braun",
+"stumpf eiförmig, dunkel"
+]
+],
+"ok": false
+},
+"Veratrum album|Veratrum nigrum": {
+"m": [
+[
+"Blütenfarbe",
+"weiß bis grünlich",
+"dunkel schwarzpurpur"
+],
+[
+"Blütenstand",
+"breite, dichte Rispe",
+"lange, schmale, lockere Trauben"
+],
+[
+"Blätter",
+"unterseits flaumig",
+"schmäler, kahl, gefaltet"
+],
+[
+"Standort",
+"Almen, Hochstauden",
+"warme Säume, Trockenwälder, selten"
+]
+],
+"ok": false
+},
+"Veronica agrestis|Veronica persica": {
+"m": [
+[
+"Krone",
+"4–6 mm, blass bis weißlich",
+"8–12 mm, himmelblau, unterer Zipfel weiß"
+],
+[
+"Kapsel",
+"Fächer bauchig, aufrecht",
+"Fächer gekielt, weit spreizend"
+],
+[
+"Blütenstiel",
+"etwa so lang wie Blatt",
+"deutlich länger als Blatt"
+]
+],
+"ok": false
+},
+"Veronica arvensis|Veronica chamaedrys": {
+"m": [
+[
+"Blüte",
+"2–3 mm, endständige Traube",
+"~1 cm, tiefblau, achselständig"
+],
+[
+"Stängelbehaarung",
+"rundum",
+"in 2 gegenüberliegenden Haarleisten"
+],
+[
+"Lebensdauer",
+"einjährig",
+"ausdauernd"
+]
+],
+"ok": false
+},
+"Veronica chamaedrys|Veronica montana": {
+"m": [
+[
+"Stängelbehaarung",
+"in 2 Haarleisten",
+"rundum behaart"
+],
+[
+"Blattstiel",
+"fehlend oder sehr kurz",
+"deutlich, 5–15 mm"
+],
+[
+"Blüte",
+"tiefblau, reichblütig",
+"blasslila, wenige"
+],
+[
+"Kapsel",
+"klein, herzförmig",
+"groß, flach, rundlich, gewimpert"
+]
+],
+"ok": false
+},
+"Viola arvensis|Viola kitaibeliana": {
+"m": [
+[
+"Größe",
+"10–30 cm",
+"3–10 cm, zwergig"
+],
+[
+"Blüte",
+"8–15 mm, gelblichweiß",
+"4–8 mm, cremegelb, oft bläulich"
+],
+[
+"Behaarung",
+"schwach",
+"dicht kurz grauflaumig"
+],
+[
+"Standort",
+"Äcker",
+"Sand- und Trockenrasen, offene Stellen"
+]
+],
+"ok": false
+},
+"Viola tricolor|Viola × wittrockiana": {
+"m": [
+[
+"Blütengröße",
+"1,5–2,5 cm",
+"3–10 cm"
+],
+[
+"Farbe",
+"violett-gelb-weiß, schlicht gezeichnet",
+"vielfarbig, oft große dunkle Flecke"
+],
+[
+"Vorkommen",
+"Wiesen, Äcker, Wegränder",
+"Beetpflanze, verwildert"
+]
+],
+"ok": false
+}
+}
 }
