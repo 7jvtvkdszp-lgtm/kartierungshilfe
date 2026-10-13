@@ -1,0 +1,15113 @@
+{
+"t": "2026-10-13T06:46Z",
+"n": 4088,
+"home": 1187,
+"pairs": [
+[
+"Centaurea axillaris",
+"Centaurea triumfettii",
+290,
+true,
+false
+],
+[
+"Dactylorhiza fuchsii",
+"Dactylorhiza maculata",
+282,
+false,
+true
+],
+[
+"Reynoutria japonica",
+"Reynoutria × bohemica",
+250,
+true,
+true
+],
+[
+"Tragopogon orientalis",
+"Tragopogon pratensis",
+184,
+true,
+true
+],
+[
+"Gentiana acaulis",
+"Gentiana clusii",
+114,
+true,
+true
+],
+[
+"Verbascum chaixii",
+"Verbascum nigrum",
+102,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana verna",
+101,
+true,
+true
+],
+[
+"Lamium maculatum",
+"Lamium purpureum",
+97,
+true,
+true
+],
+[
+"Pteridium aquilinum",
+"Pteridium pinetorum",
+96,
+true,
+true
+],
+[
+"Solidago canadensis",
+"Solidago gigantea",
+85,
+true,
+true
+],
+[
+"Aconitum napellus",
+"Aconitum tauricum",
+78,
+true,
+true
+],
+[
+"Trifolium medium",
+"Trifolium pratense",
+76,
+true,
+true
+],
+[
+"Erigeron annuus",
+"Erigeron strigosus",
+75,
+true,
+true
+],
+[
+"Gentiana brachyphylla",
+"Gentiana verna",
+70,
+true,
+true
+],
+[
+"Parthenocissus inserta",
+"Parthenocissus quinquefolia",
+68,
+true,
+true
+],
+[
+"Primula elatior",
+"Primula veris",
+68,
+true,
+true
+],
+[
+"Corydalis cava",
+"Corydalis solida",
+63,
+true,
+true
+],
+[
+"Gentianella aspera",
+"Gentianella germanica",
+61,
+true,
+true
+],
+[
+"Polygonatum multiflorum",
+"Polygonatum odoratum",
+61,
+true,
+true
+],
+[
+"Adenostyles alliariae",
+"Adenostyles alpina",
+60,
+true,
+true
+],
+[
+"Gymnadenia conopsea",
+"Gymnadenia odoratissima",
+60,
+true,
+true
+],
+[
+"Phyteuma hemisphaericum",
+"Phyteuma orbiculare",
+60,
+true,
+true
+],
+[
+"Aconitum napellus",
+"Aconitum variegatum",
+57,
+true,
+true
+],
+[
+"Melampyrum nemorosum",
+"Melampyrum subalpinum",
+56,
+true,
+false
+],
+[
+"Rhododendron ferrugineum",
+"Rhododendron hirsutum",
+55,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Dactylorhiza majalis",
+53,
+true,
+true
+],
+[
+"Ajuga genevensis",
+"Ajuga reptans",
+52,
+true,
+true
+],
+[
+"Crepis aurea",
+"Pilosella aurantiaca",
+52,
+true,
+true
+],
+[
+"Euphrasia nemorosa",
+"Euphrasia officinalis",
+51,
+true,
+true
+],
+[
+"Viola reichenbachiana",
+"Viola riviniana",
+49,
+true,
+true
+],
+[
+"Gymnadenia conopsea",
+"Gymnadenia densiflora",
+48,
+true,
+true
+],
+[
+"Geranium purpureum",
+"Geranium robertianum",
+47,
+true,
+true
+],
+[
+"Soldanella alpina",
+"Soldanella pusilla",
+47,
+true,
+true
+],
+[
+"Gentianella germanica",
+"Gentianella rhaetica",
+45,
+true,
+true
+],
+[
+"Pulsatilla grandis",
+"Pulsatilla vulgaris",
+45,
+true,
+false
+],
+[
+"Trifolium pratense",
+"Trifolium repens",
+43,
+true,
+true
+],
+[
+"Vinca major",
+"Vinca minor",
+43,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Fagus sylvatica",
+42,
+true,
+true
+],
+[
+"Reynoutria sachalinensis",
+"Reynoutria × bohemica",
+42,
+true,
+true
+],
+[
+"Senecio nemorensis",
+"Senecio ovatus",
+41,
+true,
+true
+],
+[
+"Dipsacus fullonum",
+"Dipsacus laciniatus",
+40,
+true,
+true
+],
+[
+"Erigeron alpinus",
+"Erigeron glabratus",
+40,
+true,
+true
+],
+[
+"Sonchus asper",
+"Sonchus oleraceus",
+40,
+true,
+true
+],
+[
+"Carex agastachys",
+"Carex pendula",
+39,
+true,
+true
+],
+[
+"Galium aparine",
+"Galium spurium",
+39,
+true,
+true
+],
+[
+"Oenothera biennis",
+"Oenothera glazioviana",
+38,
+true,
+true
+],
+[
+"Veronica chamaedrys",
+"Veronica persica",
+38,
+true,
+true
+],
+[
+"Dianthus carthusianorum",
+"Dianthus deltoides",
+37,
+true,
+true
+],
+[
+"Helianthemum alpestre",
+"Helianthemum nummularium",
+37,
+true,
+true
+],
+[
+"Melampyrum pratense",
+"Melampyrum sylvaticum",
+37,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea nigrescens",
+36,
+true,
+true
+],
+[
+"Dianthus carthusianorum",
+"Dianthus giganteiformis",
+36,
+true,
+true
+],
+[
+"Pulmonaria obscura",
+"Pulmonaria officinalis",
+36,
+true,
+true
+],
+[
+"Digitalis grandiflora",
+"Digitalis lutea",
+35,
+true,
+true
+],
+[
+"Scilla bifolia",
+"Scilla vindobonensis",
+35,
+true,
+true
+],
+[
+"Veronica hederifolia",
+"Veronica sublobata",
+35,
+true,
+true
+],
+[
+"Euphorbia cyparissias",
+"Euphorbia esula",
+34,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana brachyphylla",
+34,
+true,
+false
+],
+[
+"Veratrum album",
+"Veratrum lobelianum",
+34,
+true,
+true
+],
+[
+"Campanula alpina",
+"Campanula barbata",
+33,
+true,
+true
+],
+[
+"Platanthera bifolia",
+"Platanthera chlorantha",
+33,
+true,
+true
+],
+[
+"Dactylorhiza incarnata",
+"Dactylorhiza majalis",
+32,
+true,
+true
+],
+[
+"Veronica filiformis",
+"Veronica persica",
+32,
+true,
+true
+],
+[
+"Morus alba",
+"Morus nigra",
+31,
+true,
+false
+],
+[
+"Anthriscus sylvestris",
+"Chaerophyllum hirsutum",
+30,
+true,
+true
+],
+[
+"Calystegia sepium",
+"Calystegia silvatica",
+30,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum telmateia",
+30,
+true,
+true
+],
+[
+"Oreojuncus monanthos",
+"Oreojuncus trifidus",
+30,
+true,
+true
+],
+[
+"Petrosedum orientale",
+"Petrosedum rupestre",
+30,
+true,
+false
+],
+[
+"Veronica persica",
+"Veronica polita",
+30,
+true,
+true
+],
+[
+"Centaurea nervosa",
+"Centaurea phrygia",
+29,
+true,
+true
+],
+[
+"Polygala comosa",
+"Polygala vulgaris",
+29,
+true,
+true
+],
+[
+"Populus alba",
+"Populus × canescens",
+29,
+true,
+true
+],
+[
+"Pulsatilla alpina",
+"Pulsatilla scherfelii",
+29,
+true,
+true
+],
+[
+"Quercus petraea",
+"Quercus robur",
+29,
+true,
+true
+],
+[
+"Acer campestre",
+"Acer pseudoplatanus",
+28,
+true,
+true
+],
+[
+"Campanula rotundifolia",
+"Campanula scheuchzeri",
+28,
+true,
+true
+],
+[
+"Cruciata glabra",
+"Cruciata laevipes",
+28,
+true,
+true
+],
+[
+"Lysimachia punctata",
+"Lysimachia vulgaris",
+28,
+true,
+true
+],
+[
+"Vicia cracca",
+"Vicia tenuifolia",
+28,
+true,
+true
+],
+[
+"Vicia cracca",
+"Vicia villosa",
+28,
+true,
+true
+],
+[
+"Campanula rapunculoides",
+"Campanula trachelium",
+27,
+true,
+true
+],
+[
+"Petasites albus",
+"Petasites hybridus",
+27,
+true,
+true
+],
+[
+"Pinguicula leptoceras",
+"Pinguicula vulgaris",
+27,
+true,
+true
+],
+[
+"Ajuga pyramidalis",
+"Ajuga reptans",
+26,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum palustre",
+26,
+true,
+true
+],
+[
+"Hypericum maculatum",
+"Hypericum perforatum",
+26,
+true,
+true
+],
+[
+"Medicago sativa",
+"Medicago × varia",
+26,
+true,
+true
+],
+[
+"Potentilla indica",
+"Potentilla reptans",
+26,
+true,
+true
+],
+[
+"Vicia sativa",
+"Vicia sepium",
+26,
+true,
+true
+],
+[
+"Acer platanoides",
+"Acer pseudoplatanus",
+25,
+true,
+true
+],
+[
+"Epipactis atrorubens",
+"Epipactis helleborine",
+25,
+true,
+true
+],
+[
+"Gymnadenia austriaca",
+"Gymnadenia rhellicani",
+25,
+true,
+true
+],
+[
+"Helleborus dumetorum",
+"Helleborus viridis",
+25,
+true,
+false
+],
+[
+"Helleborus orientalis",
+"Helleborus × hybridus",
+25,
+true,
+false
+],
+[
+"Plantago lanceolata",
+"Plantago media",
+25,
+true,
+true
+],
+[
+"Ranunculus aconitifolius",
+"Ranunculus platanifolius",
+25,
+true,
+true
+],
+[
+"Arum cylindraceum",
+"Arum maculatum",
+24,
+true,
+true
+],
+[
+"Gentiana pannonica",
+"Gentiana purpurea",
+24,
+true,
+true
+],
+[
+"Geranium pratense",
+"Geranium sylvaticum",
+24,
+true,
+true
+],
+[
+"Veronica austriaca",
+"Veronica prostrata",
+24,
+true,
+false
+],
+[
+"Althaea officinalis",
+"Althaea taurinensis",
+23,
+true,
+false
+],
+[
+"Cardamine amara",
+"Nasturtium officinale",
+23,
+true,
+true
+],
+[
+"Cephalanthera damasonium",
+"Cephalanthera longifolia",
+23,
+true,
+true
+],
+[
+"Cerastium fontanum",
+"Cerastium holosteoides",
+23,
+true,
+true
+],
+[
+"Gentiana pumila",
+"Gentiana verna",
+23,
+true,
+true
+],
+[
+"Petasites hybridus",
+"Petasites paradoxus",
+23,
+true,
+true
+],
+[
+"Phytolacca acinosa",
+"Phytolacca americana",
+23,
+true,
+false
+],
+[
+"Valeriana montana",
+"Valeriana tripteris",
+23,
+true,
+true
+],
+[
+"Asplenium trichomanes",
+"Asplenium viride",
+22,
+true,
+true
+],
+[
+"Glechoma hederacea",
+"Glechoma hirsuta",
+22,
+true,
+true
+],
+[
+"Globularia cordifolia",
+"Globularia nudicaulis",
+22,
+true,
+true
+],
+[
+"Impatiens glandulifera",
+"Impatiens parviflora",
+22,
+true,
+true
+],
+[
+"Malva alcea",
+"Malva moschata",
+22,
+true,
+true
+],
+[
+"Verbascum densiflorum",
+"Verbascum phlomoides",
+22,
+true,
+true
+],
+[
+"Crataegus laevigata",
+"Crataegus monogyna",
+21,
+true,
+true
+],
+[
+"Dianthus inodorus",
+"Dianthus sylvestris",
+21,
+true,
+false
+],
+[
+"Papaver dubium",
+"Papaver rhoeas",
+21,
+true,
+true
+],
+[
+"Phyteuma betonicifolium",
+"Phyteuma persicifolium",
+21,
+true,
+false
+],
+[
+"Pinguicula alpina",
+"Pinguicula vulgaris",
+21,
+true,
+true
+],
+[
+"Plantago major",
+"Plantago media",
+21,
+true,
+true
+],
+[
+"Soldanella alpina",
+"Soldanella montana",
+21,
+true,
+true
+],
+[
+"Viola arvensis",
+"Viola tricolor",
+21,
+true,
+true
+],
+[
+"Viola odorata",
+"Viola suavis",
+21,
+true,
+true
+],
+[
+"Achillea millefolium",
+"Achillea setacea",
+20,
+true,
+true
+],
+[
+"Calystegia sepium",
+"Convolvulus arvensis",
+20,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum pratense",
+20,
+true,
+true
+],
+[
+"Galium album",
+"Galium mollugo",
+20,
+true,
+true
+],
+[
+"Hylotelephium maximum",
+"Hylotelephium telephium",
+20,
+true,
+true
+],
+[
+"Knautia arvensis",
+"Knautia dipsacifolia",
+20,
+true,
+true
+],
+[
+"Knautia dipsacifolia",
+"Knautia drymeja",
+20,
+true,
+true
+],
+[
+"Medicago falcata",
+"Medicago × varia",
+20,
+true,
+true
+],
+[
+"Petasites albus",
+"Tussilago farfara",
+20,
+true,
+true
+],
+[
+"Prunella grandiflora",
+"Prunella vulgaris",
+20,
+true,
+true
+],
+[
+"Thymus pulegioides",
+"Thymus serpyllum",
+20,
+true,
+true
+],
+[
+"Urtica dioica",
+"Urtica urens",
+20,
+true,
+true
+],
+[
+"Viola tricolor",
+"Viola × williamsii",
+20,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea scabiosa",
+19,
+true,
+true
+],
+[
+"Cirsium palustre",
+"Cirsium vulgare",
+19,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Dactylorhiza × braunii",
+19,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum sylvaticum",
+19,
+true,
+true
+],
+[
+"Fragaria vesca",
+"Fragaria viridis",
+19,
+true,
+true
+],
+[
+"Fragaria vesca",
+"Potentilla indica",
+19,
+true,
+true
+],
+[
+"Galinsoga parviflora",
+"Galinsoga quadriradiata",
+19,
+true,
+true
+],
+[
+"Heracleum mantegazzianum",
+"Heracleum sphondylium",
+19,
+true,
+true
+],
+[
+"Leonurus cardiaca",
+"Leonurus quinquelobatus",
+19,
+true,
+true
+],
+[
+"Medicago lupulina",
+"Trifolium dubium",
+19,
+true,
+true
+],
+[
+"Primula elatior",
+"Primula vulgaris",
+19,
+true,
+true
+],
+[
+"Saxifraga exarata",
+"Saxifraga moschata",
+19,
+true,
+false
+],
+[
+"Alchemilla mollis",
+"Alchemilla vulgaris",
+18,
+true,
+true
+],
+[
+"Campanula cochleariifolia",
+"Campanula rotundifolia",
+18,
+true,
+true
+],
+[
+"Geranium molle",
+"Geranium pyrenaicum",
+18,
+true,
+true
+],
+[
+"Hippocrepis comosa",
+"Lotus corniculatus",
+18,
+true,
+true
+],
+[
+"Jacobaea alpina",
+"Jacobaea subalpina",
+18,
+true,
+true
+],
+[
+"Leucanthemum ircutianum",
+"Leucanthemum vulgare",
+18,
+true,
+true
+],
+[
+"Lotus alpinus",
+"Lotus corniculatus",
+18,
+true,
+true
+],
+[
+"Petasites albus",
+"Petasites paradoxus",
+18,
+true,
+true
+],
+[
+"Pinus nigra",
+"Pinus sylvestris",
+18,
+true,
+true
+],
+[
+"Thymus praecox",
+"Thymus pulegioides",
+18,
+true,
+true
+],
+[
+"Centaurea montana",
+"Centaurea triumfettii",
+17,
+true,
+true
+],
+[
+"Dactylorhiza maculata",
+"Dactylorhiza majalis",
+17,
+false,
+true
+],
+[
+"Dryopteris borreri",
+"Dryopteris filix-mas",
+17,
+true,
+true
+],
+[
+"Sedum acre",
+"Sedum sexangulare",
+17,
+true,
+true
+],
+[
+"Capsella bursa-pastoris",
+"Noccaea perfoliata",
+16,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Gymnadenia conopsea",
+16,
+true,
+true
+],
+[
+"Erigeron glabratus",
+"Erigeron uniflorus",
+16,
+true,
+true
+],
+[
+"Myosotis alpestris",
+"Myosotis sylvatica",
+16,
+true,
+true
+],
+[
+"Phyteuma confusum",
+"Phyteuma hemisphaericum",
+16,
+true,
+false
+],
+[
+"Rhinanthus alectorolophus",
+"Rhinanthus minor",
+16,
+true,
+true
+],
+[
+"Salvia nemorosa",
+"Salvia pratensis",
+16,
+true,
+true
+],
+[
+"Sedum alpestre",
+"Sedum atratum",
+16,
+true,
+true
+],
+[
+"Silene nemoralis",
+"Silene nutans",
+16,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Dryopteris filix-mas",
+15,
+true,
+true
+],
+[
+"Cirsium greimleri",
+"Cirsium waldsteinii",
+15,
+false,
+false
+],
+[
+"Cyclamen hederifolium",
+"Cyclamen purpurascens",
+15,
+true,
+true
+],
+[
+"Daphne cneorum",
+"Daphne striata",
+15,
+true,
+false
+],
+[
+"Dryopteris filix-mas",
+"Matteuccia struthiopteris",
+15,
+true,
+true
+],
+[
+"Lamium album",
+"Lamium maculatum",
+15,
+true,
+true
+],
+[
+"Medicago lupulina",
+"Trifolium campestre",
+15,
+true,
+true
+],
+[
+"Phyteuma betonicifolium",
+"Phyteuma orbiculare",
+15,
+true,
+true
+],
+[
+"Rhinanthus glacialis",
+"Rhinanthus serotinus",
+15,
+true,
+true
+],
+[
+"Rubus caesius",
+"Rubus idaeus",
+15,
+true,
+true
+],
+[
+"Tilia cordata",
+"Tilia platyphyllos",
+15,
+true,
+true
+],
+[
+"Trifolium aureum",
+"Trifolium campestre",
+15,
+true,
+true
+],
+[
+"Veronica chamaedrys",
+"Veronica filiformis",
+15,
+true,
+true
+],
+[
+"Viola canina",
+"Viola riviniana",
+15,
+true,
+true
+],
+[
+"Viola × williamsii",
+"Viola × wittrockiana",
+15,
+true,
+false
+],
+[
+"Abies alba",
+"Picea abies",
+14,
+true,
+true
+],
+[
+"Achillea collina",
+"Achillea setacea",
+14,
+true,
+false
+],
+[
+"Aegopodium podagraria",
+"Chaerophyllum hirsutum",
+14,
+true,
+true
+],
+[
+"Ailanthus altissima",
+"Rhus typhina",
+14,
+true,
+true
+],
+[
+"Alchemilla alpina",
+"Alchemilla nitida",
+14,
+true,
+false
+],
+[
+"Anthriscus cerefolium",
+"Anthriscus sylvestris",
+14,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Chaerophyllum aureum",
+14,
+true,
+true
+],
+[
+"Cotoneaster divaricatus",
+"Cotoneaster horizontalis",
+14,
+true,
+true
+],
+[
+"Erigeron annuus",
+"Erigeron canadensis",
+14,
+true,
+true
+],
+[
+"Eriophorum scheuchzeri",
+"Eriophorum vaginatum",
+14,
+true,
+true
+],
+[
+"Gentiana nivalis",
+"Gentiana verna",
+14,
+true,
+true
+],
+[
+"Lamium galeobdolon",
+"Lamium maculatum",
+14,
+true,
+true
+],
+[
+"Lathyrus latifolius",
+"Lathyrus sylvestris",
+14,
+true,
+true
+],
+[
+"Lycopodium clavatum",
+"Spinulum annotinum",
+14,
+true,
+true
+],
+[
+"Narcissus pseudonarcissus",
+"Narcissus × cyclazetta",
+14,
+true,
+false
+],
+[
+"Phyteuma ovatum",
+"Phyteuma spicatum",
+14,
+true,
+true
+],
+[
+"Ranunculus acris",
+"Ranunculus repens",
+14,
+true,
+true
+],
+[
+"Taxus baccata",
+"Taxus × media",
+14,
+true,
+true
+],
+[
+"Tulipa gesneriana",
+"Tulipa gesneriana × fosteriana",
+14,
+true,
+false
+],
+[
+"Anthericum liliago",
+"Anthericum ramosum",
+13,
+true,
+true
+],
+[
+"Athyrium distentifolium",
+"Athyrium filix-femina",
+13,
+true,
+true
+],
+[
+"Cardamine flexuosa",
+"Cardamine hirsuta",
+13,
+true,
+true
+],
+[
+"Dactylorhiza majalis",
+"Dactylorhiza × braunii",
+13,
+true,
+true
+],
+[
+"Dactylorhiza majalis",
+"Dactylorhiza traunsteineri",
+13,
+true,
+true
+],
+[
+"Erigeron alpinus",
+"Erigeron uniflorus",
+13,
+true,
+true
+],
+[
+"Eruca sativa",
+"Eruca vesicaria",
+13,
+true,
+false
+],
+[
+"Gagea lutea",
+"Gagea pratensis",
+13,
+true,
+true
+],
+[
+"Gentianella austriaca",
+"Gentianella rhaetica",
+13,
+true,
+false
+],
+[
+"Heliosperma alpestre",
+"Heliosperma pusillum",
+13,
+true,
+true
+],
+[
+"Homogyne alpina",
+"Homogyne discolor",
+13,
+true,
+true
+],
+[
+"Hypochaeris radicata",
+"Leontodon hispidus",
+13,
+true,
+true
+],
+[
+"Impatiens noli-tangere",
+"Impatiens parviflora",
+13,
+true,
+true
+],
+[
+"Muscari botryoides",
+"Muscari neglectum",
+13,
+true,
+false
+],
+[
+"Muscari comosum",
+"Muscari tenuiflorum",
+13,
+true,
+false
+],
+[
+"Onobrychis arenaria",
+"Onobrychis viciifolia",
+13,
+true,
+true
+],
+[
+"Phyteuma confusum",
+"Phyteuma orbiculare",
+13,
+true,
+true
+],
+[
+"Pinus mugo",
+"Pinus sylvestris",
+13,
+true,
+true
+],
+[
+"Rhinanthus alectorolophus",
+"Rhinanthus glacialis",
+13,
+true,
+true
+],
+[
+"Scabiosa columbaria",
+"Scabiosa lucida",
+13,
+true,
+true
+],
+[
+"Ulmus glabra",
+"Ulmus minor",
+13,
+true,
+true
+],
+[
+"Xanthium orientale",
+"Xanthium strumarium",
+13,
+true,
+false
+],
+[
+"Aconitum degenii",
+"Aconitum napellus",
+12,
+true,
+true
+],
+[
+"Aconitum degenii",
+"Aconitum variegatum",
+12,
+true,
+true
+],
+[
+"Allium carinatum",
+"Allium cirrhosum",
+12,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Alnus incana",
+12,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Conium maculatum",
+12,
+true,
+true
+],
+[
+"Berberis thunbergii",
+"Berberis vulgaris",
+12,
+true,
+true
+],
+[
+"Caltha palustris",
+"Ficaria verna",
+12,
+true,
+true
+],
+[
+"Campanula cochleariifolia",
+"Campanula scheuchzeri",
+12,
+true,
+true
+],
+[
+"Chamaecytisus elongatus",
+"Chamaecytisus hirsutus",
+12,
+true,
+false
+],
+[
+"Eriocapitella hupehensis",
+"Eriocapitella × hybrida",
+12,
+true,
+true
+],
+[
+"Galeopsis pubescens",
+"Galeopsis tetrahit",
+12,
+true,
+true
+],
+[
+"Hedera canariensis",
+"Hedera helix",
+12,
+false,
+true
+],
+[
+"Hypericum perforatum",
+"Hypericum × desetangsii",
+12,
+true,
+true
+],
+[
+"Lathyrus pratensis",
+"Lotus corniculatus",
+12,
+true,
+true
+],
+[
+"Lotus corniculatus",
+"Lotus pedunculatus",
+12,
+true,
+true
+],
+[
+"Pedicularis rostratocapitata",
+"Pedicularis verticillata",
+12,
+true,
+true
+],
+[
+"Primula clusiana",
+"Primula minima",
+12,
+true,
+true
+],
+[
+"Ranunculus alpestris",
+"Ranunculus glacialis",
+12,
+true,
+true
+],
+[
+"Ranunculus lanuginosus",
+"Ranunculus repens",
+12,
+true,
+true
+],
+[
+"Reynoutria japonica",
+"Reynoutria sachalinensis",
+12,
+true,
+true
+],
+[
+"Rhinanthus glacialis",
+"Rhinanthus minor",
+12,
+true,
+true
+],
+[
+"Rumex acetosa",
+"Rumex thyrsiflorus",
+12,
+true,
+true
+],
+[
+"Saponaria pumila",
+"Silene acaulis",
+12,
+true,
+true
+],
+[
+"Sempervivum arachnoideum",
+"Sempervivum montanum",
+12,
+true,
+false
+],
+[
+"Sempervivum globiferum",
+"Sempervivum montanum",
+12,
+true,
+false
+],
+[
+"Trifolium alpestre",
+"Trifolium medium",
+12,
+true,
+true
+],
+[
+"Verbascum alpinum",
+"Verbascum nigrum",
+12,
+true,
+true
+],
+[
+"Viola odorata",
+"Viola reichenbachiana",
+12,
+true,
+true
+],
+[
+"Alyssum gmelinii",
+"Alyssum montanum",
+11,
+true,
+true
+],
+[
+"Betula pendula",
+"Betula pubescens",
+11,
+true,
+true
+],
+[
+"Calluna vulgaris",
+"Erica carnea",
+11,
+true,
+true
+],
+[
+"Cardamine amara",
+"Cardamine pratensis",
+11,
+true,
+true
+],
+[
+"Carduus defloratus",
+"Cirsium heterophyllum",
+11,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea stoebe",
+11,
+true,
+true
+],
+[
+"Centaurea scabiosa",
+"Knautia arvensis",
+11,
+true,
+true
+],
+[
+"Epipactis helleborine",
+"Epipactis muelleri",
+11,
+true,
+true
+],
+[
+"Fragaria moschata",
+"Fragaria vesca",
+11,
+true,
+true
+],
+[
+"Gagea lutea",
+"Gagea villosa",
+11,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana nivalis",
+11,
+true,
+true
+],
+[
+"Gentianella aspera",
+"Gentianella austriaca",
+11,
+true,
+true
+],
+[
+"Gentianella austriaca",
+"Gentianella germanica",
+11,
+true,
+true
+],
+[
+"Geranium molle",
+"Geranium pusillum",
+11,
+true,
+true
+],
+[
+"Geranium phaeum",
+"Geranium sylvaticum",
+11,
+true,
+true
+],
+[
+"Jacobaea carniolica",
+"Jacobaea incana",
+11,
+true,
+false
+],
+[
+"Mentha longifolia",
+"Mentha spicata",
+11,
+true,
+true
+],
+[
+"Odontites vernus",
+"Odontites vulgaris",
+11,
+true,
+false
+],
+[
+"Ornithogalum orthophyllum",
+"Ornithogalum umbellatum",
+11,
+true,
+false
+],
+[
+"Oxalis corniculata",
+"Oxalis dillenii",
+11,
+true,
+true
+],
+[
+"Ranunculus acris",
+"Ranunculus lanuginosus",
+11,
+true,
+true
+],
+[
+"Ranunculus acris",
+"Ranunculus bulbosus",
+11,
+true,
+true
+],
+[
+"Rumex crispus",
+"Rumex obtusifolius",
+11,
+true,
+true
+],
+[
+"Saxifraga bulbifera",
+"Saxifraga granulata",
+11,
+true,
+false
+],
+[
+"Silene dioica",
+"Viscaria vulgaris",
+11,
+true,
+true
+],
+[
+"Silene latifolia",
+"Silene vulgaris",
+11,
+true,
+true
+],
+[
+"Thymus odoratissimus",
+"Thymus praecox",
+11,
+true,
+true
+],
+[
+"Tragopogon dubius",
+"Tragopogon orientalis",
+11,
+true,
+true
+],
+[
+"Tragopogon dubius",
+"Tragopogon pratensis",
+11,
+true,
+false
+],
+[
+"Trifolium campestre",
+"Trifolium dubium",
+11,
+true,
+true
+],
+[
+"Typha angustifolia",
+"Typha latifolia",
+11,
+true,
+true
+],
+[
+"Valeriana officinalis",
+"Valeriana stolonifera",
+11,
+true,
+true
+],
+[
+"Veronica austriaca",
+"Veronica teucrium",
+11,
+true,
+false
+],
+[
+"Acer campestre",
+"Acer platanoides",
+10,
+true,
+true
+],
+[
+"Achillea collina",
+"Achillea millefolium",
+10,
+true,
+true
+],
+[
+"Achillea millefolium",
+"Achillea roseoalba",
+10,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Phleum pratense",
+10,
+true,
+true
+],
+[
+"Anemonoides nemorosa",
+"Anemonoides ranunculoides",
+10,
+true,
+true
+],
+[
+"Aquilegia atrata",
+"Aquilegia vulgaris",
+10,
+true,
+true
+],
+[
+"Artemisia verlotiorum",
+"Artemisia vulgaris",
+10,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Oreopteris limbosperma",
+10,
+true,
+true
+],
+[
+"Cerastium alpinum",
+"Cerastium uniflorum",
+10,
+true,
+false
+],
+[
+"Digitalis grandiflora",
+"Digitalis purpurea",
+10,
+true,
+true
+],
+[
+"Eriophorum angustifolium",
+"Eriophorum latifolium",
+10,
+true,
+true
+],
+[
+"Erodium cicutarium",
+"Erodium maculatum",
+10,
+true,
+true
+],
+[
+"Galanthus elwesii",
+"Galanthus nivalis",
+10,
+true,
+true
+],
+[
+"Gentianella aspera",
+"Gentianella rhaetica",
+10,
+true,
+true
+],
+[
+"Gymnadenia conopsea",
+"Orchis mascula",
+10,
+true,
+true
+],
+[
+"Gymnocarpium dryopteris",
+"Gymnocarpium robertianum",
+10,
+true,
+true
+],
+[
+"Hedera crebrescens",
+"Hedera helix",
+10,
+true,
+true
+],
+[
+"Hylotelephium telephium",
+"Hylotelephium × mottramianum",
+10,
+true,
+true
+],
+[
+"Jacobaea carniolica",
+"Jacobaea insubrica",
+10,
+true,
+false
+],
+[
+"Knautia arvensis",
+"Knautia drymeja",
+10,
+true,
+true
+],
+[
+"Leontodon hispidus",
+"Taraxacum officinale",
+10,
+true,
+true
+],
+[
+"Lolium multiflorum",
+"Lolium × boucheanum",
+10,
+true,
+true
+],
+[
+"Lotus dorycnium",
+"Lotus germanicus",
+10,
+false,
+false
+],
+[
+"Luzula luzuloides",
+"Luzula sylvatica",
+10,
+true,
+true
+],
+[
+"Myosotis arvensis",
+"Myosotis sylvatica",
+10,
+true,
+true
+],
+[
+"Omalotheca norvegica",
+"Omalotheca sylvatica",
+10,
+true,
+true
+],
+[
+"Pyrola media",
+"Pyrola minor",
+10,
+true,
+true
+],
+[
+"Trifolium pallescens",
+"Trifolium pratense",
+10,
+true,
+true
+],
+[
+"Abies alba",
+"Taxus baccata",
+9,
+true,
+true
+],
+[
+"Ailanthus altissima",
+"Fraxinus excelsior",
+9,
+true,
+true
+],
+[
+"Allium oleraceum",
+"Allium vineale",
+9,
+true,
+true
+],
+[
+"Allium scorodoprasum",
+"Allium vineale",
+9,
+true,
+true
+],
+[
+"Anchusa arvensis",
+"Anchusa ovata",
+9,
+true,
+false
+],
+[
+"Anemonoides nemorosa",
+"Anemonoides trifolia",
+9,
+true,
+true
+],
+[
+"Arabis pumila",
+"Arabis stellulata",
+9,
+true,
+true
+],
+[
+"Arnica montana",
+"Buphthalmum salicifolium",
+9,
+true,
+true
+],
+[
+"Asarum caucasicum",
+"Asarum europaeum",
+9,
+true,
+true
+],
+[
+"Astrantia bavarica",
+"Astrantia minor",
+9,
+false,
+false
+],
+[
+"Campanula patula",
+"Campanula rapunculus",
+9,
+true,
+true
+],
+[
+"Carduus crispus",
+"Carduus personata",
+9,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea phrygia",
+9,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea nigra",
+9,
+false,
+true
+],
+[
+"Chamaecytisus hirsutus",
+"Chamaecytisus ratisbonensis",
+9,
+true,
+false
+],
+[
+"Cirsium arvense",
+"Cirsium palustre",
+9,
+true,
+true
+],
+[
+"Dactylorhiza lapponica",
+"Dactylorhiza traunsteineri",
+9,
+true,
+true
+],
+[
+"Dianthus alpinus",
+"Dianthus deltoides",
+9,
+true,
+true
+],
+[
+"Dianthus carthusianorum",
+"Dianthus sylvestris",
+9,
+true,
+true
+],
+[
+"Dryopteris dilatata",
+"Dryopteris expansa",
+9,
+true,
+true
+],
+[
+"Euphorbia amygdaloides",
+"Euphorbia esula",
+9,
+true,
+true
+],
+[
+"Euphorbia esula",
+"Euphorbia virgata",
+9,
+true,
+false
+],
+[
+"Fragaria vesca",
+"Potentilla sterilis",
+9,
+true,
+true
+],
+[
+"Galium odoratum",
+"Galium sylvaticum",
+9,
+true,
+true
+],
+[
+"Gentiana utriculosa",
+"Gentiana verna",
+9,
+true,
+true
+],
+[
+"Gentianella anisodonta",
+"Gentianella rhaetica",
+9,
+true,
+false
+],
+[
+"Globularia bisnagarica",
+"Globularia cordifolia",
+9,
+true,
+true
+],
+[
+"Gymnadenia nigra",
+"Gymnadenia rhellicani",
+9,
+true,
+true
+],
+[
+"Heracleum austriacum",
+"Heracleum sphondylium",
+9,
+true,
+true
+],
+[
+"Knautia arvensis",
+"Scabiosa lucida",
+9,
+true,
+true
+],
+[
+"Lamium album",
+"Lamium galeobdolon",
+9,
+true,
+true
+],
+[
+"Lotus corniculatus",
+"Lotus tenuis",
+9,
+true,
+true
+],
+[
+"Lunaria annua",
+"Lunaria rediviva",
+9,
+true,
+true
+],
+[
+"Malva neglecta",
+"Malva sylvestris",
+9,
+true,
+true
+],
+[
+"Muscari armeniacum",
+"Muscari neglectum",
+9,
+true,
+true
+],
+[
+"Ornithogalum comosum",
+"Ornithogalum orthophyllum",
+9,
+true,
+false
+],
+[
+"Orobanche gracilis",
+"Orobanche lutea",
+9,
+true,
+true
+],
+[
+"Petasites hybridus",
+"Tussilago farfara",
+9,
+true,
+true
+],
+[
+"Potentilla incana",
+"Potentilla verna",
+9,
+true,
+true
+],
+[
+"Pyrola minor",
+"Pyrola rotundifolia",
+9,
+true,
+true
+],
+[
+"Ranunculus bulbosus",
+"Ranunculus repens",
+9,
+true,
+true
+],
+[
+"Rubus armeniacus",
+"Rubus bifrons",
+9,
+true,
+true
+],
+[
+"Rumex alpinus",
+"Rumex obtusifolius",
+9,
+true,
+true
+],
+[
+"Sambucus nigra",
+"Sambucus racemosa",
+9,
+true,
+true
+],
+[
+"Seseli austriacum",
+"Seseli osseum",
+9,
+true,
+false
+],
+[
+"Setaria pumila",
+"Setaria viridis",
+9,
+true,
+true
+],
+[
+"Soldanella alpina",
+"Soldanella major",
+9,
+true,
+true
+],
+[
+"Trifolium hybridum",
+"Trifolium repens",
+9,
+true,
+true
+],
+[
+"Trifolium hybridum",
+"Trifolium pratense",
+9,
+true,
+true
+],
+[
+"Verbascum lychnitis",
+"Verbascum speciosum",
+9,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Glechoma hederacea",
+8,
+true,
+true
+],
+[
+"Anacamptis morio",
+"Orchis mascula",
+8,
+true,
+true
+],
+[
+"Androsace chamaejasme",
+"Androsace obtusifolia",
+8,
+true,
+true
+],
+[
+"Angelica archangelica",
+"Angelica sylvestris",
+8,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Pteridium aquilinum",
+8,
+true,
+true
+],
+[
+"Campanula persicifolia",
+"Campanula rotundifolia",
+8,
+true,
+true
+],
+[
+"Carduus acanthoides",
+"Cirsium vulgare",
+8,
+true,
+true
+],
+[
+"Centaurea axillaris",
+"Centaurea montana",
+8,
+true,
+true
+],
+[
+"Cirsium vulgare",
+"Lophiolepis eriophora",
+8,
+true,
+true
+],
+[
+"Clinopodium menthifolium",
+"Clinopodium nepeta",
+8,
+true,
+false
+],
+[
+"Cornus sanguinea",
+"Rhamnus cathartica",
+8,
+true,
+true
+],
+[
+"Corylus avellana",
+"Ulmus glabra",
+8,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Orchis militaris",
+8,
+true,
+true
+],
+[
+"Dryopteris carthusiana",
+"Dryopteris dilatata",
+8,
+true,
+true
+],
+[
+"Dryopteris filix-mas",
+"Oreopteris limbosperma",
+8,
+true,
+true
+],
+[
+"Echium plantagineum",
+"Echium vulgare",
+8,
+true,
+true
+],
+[
+"Equisetum fluviatile",
+"Equisetum palustre",
+8,
+true,
+true
+],
+[
+"Equisetum pratense",
+"Equisetum sylvaticum",
+8,
+true,
+true
+],
+[
+"Euonymus europaeus",
+"Euonymus latifolius",
+8,
+true,
+true
+],
+[
+"Filipendula ulmaria",
+"Filipendula vulgaris",
+8,
+true,
+true
+],
+[
+"Genista germanica",
+"Genista tinctoria",
+8,
+true,
+true
+],
+[
+"Genista pilosa",
+"Genista tinctoria",
+8,
+true,
+true
+],
+[
+"Gentiana brachyphylla",
+"Gentiana brentae",
+8,
+true,
+false
+],
+[
+"Gentianella ramosa",
+"Gentianella rhaetica",
+8,
+false,
+false
+],
+[
+"Glechoma hederacea",
+"Lamium purpureum",
+8,
+true,
+true
+],
+[
+"Himantoglossum adriaticum",
+"Himantoglossum hircinum",
+8,
+true,
+false
+],
+[
+"Huperzia selago",
+"Spinulum annotinum",
+8,
+true,
+true
+],
+[
+"Iris pallida",
+"Iris × germanica",
+8,
+true,
+false
+],
+[
+"Iris sanguinea",
+"Iris sibirica",
+8,
+true,
+true
+],
+[
+"Jacobaea erucifolia",
+"Jacobaea vulgaris",
+8,
+true,
+true
+],
+[
+"Lamium galeobdolon",
+"Urtica dioica",
+8,
+true,
+true
+],
+[
+"Lonicera caprifolium",
+"Lonicera periclymenum",
+8,
+true,
+false
+],
+[
+"Medicago lupulina",
+"Medicago minima",
+8,
+true,
+true
+],
+[
+"Medicago lupulina",
+"Trifolium repens",
+8,
+true,
+true
+],
+[
+"Pedicularis kerneri",
+"Pedicularis rostratocapitata",
+8,
+true,
+true
+],
+[
+"Polypodium interjectum",
+"Polypodium vulgare",
+8,
+true,
+true
+],
+[
+"Polystichum aculeatum",
+"Polystichum lonchitis",
+8,
+true,
+true
+],
+[
+"Prunus avium",
+"Prunus padus",
+8,
+true,
+true
+],
+[
+"Pulmonaria officinalis",
+"Pulmonaria saccharata",
+8,
+true,
+true
+],
+[
+"Salvia glutinosa",
+"Stachys sylvatica",
+8,
+true,
+true
+],
+[
+"Saxifraga caesia",
+"Saxifraga paniculata",
+8,
+true,
+true
+],
+[
+"Setaria italica",
+"Setaria viridis",
+8,
+true,
+true
+],
+[
+"Spergularia marina",
+"Spergularia media",
+8,
+true,
+false
+],
+[
+"Stellaria aquatica",
+"Stellaria nemorum",
+8,
+true,
+true
+],
+[
+"Stellaria media",
+"Stellaria ruderalis",
+8,
+true,
+true
+],
+[
+"Suaeda pannonica",
+"Suaeda prostrata",
+8,
+true,
+false
+],
+[
+"Thymus odoratissimus",
+"Thymus serpyllum",
+8,
+true,
+false
+],
+[
+"Trifolium alpestre",
+"Trifolium pratense",
+8,
+true,
+true
+],
+[
+"Trifolium montanum",
+"Trifolium repens",
+8,
+true,
+true
+],
+[
+"Vicia lathyroides",
+"Vicia sativa",
+8,
+true,
+true
+],
+[
+"Viola alba",
+"Viola suavis",
+8,
+true,
+false
+],
+[
+"Alnus alnobetula",
+"Alnus incana",
+7,
+true,
+true
+],
+[
+"Alyssum alyssoides",
+"Alyssum gmelinii",
+7,
+true,
+true
+],
+[
+"Angelica sylvestris",
+"Heracleum sphondylium",
+7,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Chaerophyllum bulbosum",
+7,
+true,
+true
+],
+[
+"Arctium lappa",
+"Arctium nemorosum",
+7,
+true,
+true
+],
+[
+"Arctostaphylos uva-ursi",
+"Vaccinium vitis-idaea",
+7,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Dryopteris carthusiana",
+7,
+true,
+true
+],
+[
+"Bromus erectus",
+"Bromus inermis",
+7,
+true,
+true
+],
+[
+"Bryonia alba",
+"Bryonia cretica",
+7,
+true,
+false
+],
+[
+"Cardamine amara",
+"Cardamine flexuosa",
+7,
+true,
+true
+],
+[
+"Carduus acanthoides",
+"Cirsium arvense",
+7,
+true,
+true
+],
+[
+"Carlina biebersteinii",
+"Carlina vulgaris",
+7,
+true,
+true
+],
+[
+"Cerastium arvense",
+"Rabelera holostea",
+7,
+true,
+true
+],
+[
+"Chaerophyllum bulbosum",
+"Conium maculatum",
+7,
+true,
+false
+],
+[
+"Chamaecytisus hirsutus",
+"Chamaecytisus supinus",
+7,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Chrysosplenium oppositifolium",
+7,
+false,
+true
+],
+[
+"Cichorium intybus",
+"Cichorium pumilum",
+7,
+true,
+true
+],
+[
+"Cirsium palustre",
+"Cirsium rivulare",
+7,
+true,
+true
+],
+[
+"Cornus mas",
+"Cornus officinalis",
+7,
+false,
+true
+],
+[
+"Dactylorhiza majalis",
+"Orchis mascula",
+7,
+true,
+true
+],
+[
+"Dianthus barbatus",
+"Dianthus carthusianorum",
+7,
+true,
+true
+],
+[
+"Drosera anglica",
+"Drosera × obovata",
+7,
+true,
+true
+],
+[
+"Equisetum palustre",
+"Equisetum variegatum",
+7,
+true,
+true
+],
+[
+"Euphorbia epithymoides",
+"Euphorbia verrucosa",
+7,
+true,
+false
+],
+[
+"Ficaria verna",
+"Gagea lutea",
+7,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Juglans regia",
+7,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana brentae",
+7,
+true,
+false
+],
+[
+"Gentiana nivalis",
+"Gentiana utriculosa",
+7,
+true,
+true
+],
+[
+"Geranium robertianum",
+"Geranium sylvaticum",
+7,
+true,
+true
+],
+[
+"Geum montanum",
+"Geum reptans",
+7,
+true,
+false
+],
+[
+"Geum montanum",
+"Pulsatilla alpina",
+7,
+true,
+true
+],
+[
+"Gymnadenia bicolor",
+"Gymnadenia rhellicani",
+7,
+true,
+true
+],
+[
+"Hylotelephium jullianum",
+"Hylotelephium maximum",
+7,
+true,
+false
+],
+[
+"Hypericum maculatum",
+"Hypericum × desetangsii",
+7,
+true,
+true
+],
+[
+"Iris pseudacorus",
+"Typha latifolia",
+7,
+true,
+true
+],
+[
+"Iris sibirica",
+"Iris spuria",
+7,
+true,
+true
+],
+[
+"Linum austriacum",
+"Linum perenne",
+7,
+true,
+false
+],
+[
+"Linum austriacum",
+"Linum usitatissimum",
+7,
+true,
+false
+],
+[
+"Lolium perenne",
+"Lolium × boucheanum",
+7,
+true,
+true
+],
+[
+"Luzula pilosa",
+"Luzula sylvatica",
+7,
+true,
+true
+],
+[
+"Pedicularis asplenifolia",
+"Pedicularis kerneri",
+7,
+true,
+false
+],
+[
+"Petasites paradoxus",
+"Tussilago farfara",
+7,
+true,
+true
+],
+[
+"Pimpinella major",
+"Pimpinella saxifraga",
+7,
+true,
+true
+],
+[
+"Polygala amara",
+"Polygala vulgaris",
+7,
+true,
+true
+],
+[
+"Polygonatum latifolium",
+"Polygonatum multiflorum",
+7,
+true,
+true
+],
+[
+"Populus nigra",
+"Populus × canadensis",
+7,
+true,
+true
+],
+[
+"Potamogeton berchtoldii",
+"Potamogeton pusillus",
+7,
+true,
+false
+],
+[
+"Primula vulgaris",
+"Primula × pruhonicensis",
+7,
+true,
+true
+],
+[
+"Prunus avium",
+"Prunus cerasus",
+7,
+true,
+true
+],
+[
+"Pulsatilla grandis",
+"Pulsatilla halleri",
+7,
+true,
+false
+],
+[
+"Rosa canina",
+"Rosa corymbifera",
+7,
+true,
+true
+],
+[
+"Rubus caesius",
+"Rubus fruticosus",
+7,
+true,
+true
+],
+[
+"Salvia pratensis",
+"Salvia verticillata",
+7,
+true,
+true
+],
+[
+"Sedum alpestre",
+"Sedum annuum",
+7,
+true,
+false
+],
+[
+"Senecio ovatus",
+"Solidago virgaurea",
+7,
+true,
+true
+],
+[
+"Silene latifolia",
+"Silene nutans",
+7,
+true,
+true
+],
+[
+"Thalictrum flavum",
+"Thalictrum lucidum",
+7,
+true,
+true
+],
+[
+"Thesium linophyllon",
+"Thesium ramosum",
+7,
+true,
+false
+],
+[
+"Valeriana dioica",
+"Valeriana tripteris",
+7,
+true,
+true
+],
+[
+"Verbascum phlomoides",
+"Verbascum thapsus",
+7,
+true,
+true
+],
+[
+"Veronica alpina",
+"Veronica bellidioides",
+7,
+true,
+false
+],
+[
+"Veronica arvensis",
+"Veronica persica",
+7,
+true,
+true
+],
+[
+"Achillea atrata",
+"Achillea clusiana",
+6,
+true,
+true
+],
+[
+"Ajuga genevensis",
+"Ajuga pyramidalis",
+6,
+true,
+true
+],
+[
+"Anemonastrum narcissiflorum",
+"Pulsatilla alpina",
+6,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Daucus carota",
+6,
+true,
+true
+],
+[
+"Arabidopsis arenosa",
+"Arabidopsis halleri",
+6,
+true,
+true
+],
+[
+"Aria edulis",
+"Scandosorbus intermedia",
+6,
+true,
+true
+],
+[
+"Aria edulis",
+"Viburnum lantana",
+6,
+true,
+true
+],
+[
+"Aster bellidiastrum",
+"Bellis perennis",
+6,
+true,
+true
+],
+[
+"Astrantia major",
+"Astrantia minor",
+6,
+false,
+true
+],
+[
+"Atriplex patula",
+"Chenopodium album",
+6,
+true,
+true
+],
+[
+"Barbarea verna",
+"Barbarea vulgaris",
+6,
+true,
+true
+],
+[
+"Brassica napus",
+"Brassica rapa",
+6,
+true,
+true
+],
+[
+"Bromus sterilis",
+"Bromus tectorum",
+6,
+true,
+false
+],
+[
+"Brunnera macrophylla",
+"Omphalodes verna",
+6,
+true,
+true
+],
+[
+"Brunnera macrophylla",
+"Myosotis sylvatica",
+6,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Doronicum austriacum",
+6,
+true,
+true
+],
+[
+"Campanula latifolia",
+"Campanula rapunculoides",
+6,
+true,
+true
+],
+[
+"Campanula persicifolia",
+"Campanula rapunculoides",
+6,
+true,
+true
+],
+[
+"Cardamine bulbifera",
+"Cardamine pratensis",
+6,
+true,
+true
+],
+[
+"Cardamine flexuosa",
+"Cardamine impatiens",
+6,
+true,
+true
+],
+[
+"Cardamine hirsuta",
+"Cardamine parviflora",
+6,
+true,
+true
+],
+[
+"Carduus crispus",
+"Cirsium oleraceum",
+6,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Ulmus glabra",
+6,
+true,
+true
+],
+[
+"Centaurea scabiosa",
+"Centaurea stoebe",
+6,
+true,
+true
+],
+[
+"Chaerophyllum aureum",
+"Chaerophyllum hirsutum",
+6,
+true,
+true
+],
+[
+"Chaerophyllum hirsutum",
+"Chaerophyllum villarsii",
+6,
+true,
+true
+],
+[
+"Cirsium erisithales",
+"Cirsium oleraceum",
+6,
+true,
+true
+],
+[
+"Cirsium vulgare",
+"Codon royenii",
+6,
+false,
+true
+],
+[
+"Cotoneaster hjelmqvistii",
+"Cotoneaster horizontalis",
+6,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Dactylorhiza incarnata",
+6,
+true,
+true
+],
+[
+"Dactylorhiza sambucina",
+"Orchis pallens",
+6,
+true,
+false
+],
+[
+"Dactylorhiza majalis",
+"Dactylorhiza sambucina",
+6,
+true,
+true
+],
+[
+"Doronicum clusii",
+"Doronicum glaciale",
+6,
+true,
+false
+],
+[
+"Echinops bannaticus",
+"Echinops ritro",
+6,
+true,
+false
+],
+[
+"Epilobium alsinifolium",
+"Epilobium anagallidifolium",
+6,
+true,
+true
+],
+[
+"Euphorbia cyparissias",
+"Euphorbia virgata",
+6,
+true,
+true
+],
+[
+"Gentiana asclepiadea",
+"Gentiana cruciata",
+6,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana utriculosa",
+6,
+true,
+false
+],
+[
+"Gentiana verna",
+"Gentianopsis ciliata",
+6,
+true,
+true
+],
+[
+"Geranium columbinum",
+"Geranium dissectum",
+6,
+true,
+true
+],
+[
+"Geranium palustre",
+"Geranium sylvaticum",
+6,
+true,
+true
+],
+[
+"Geranium pusillum",
+"Geranium pyrenaicum",
+6,
+true,
+true
+],
+[
+"Geranium pyrenaicum",
+"Geranium rotundifolium",
+6,
+true,
+true
+],
+[
+"Gymnadenia bicolor",
+"Gymnadenia miniata",
+6,
+true,
+false
+],
+[
+"Gymnadenia miniata",
+"Gymnadenia rhellicani",
+6,
+true,
+true
+],
+[
+"Hedera colchica",
+"Hedera helix",
+6,
+true,
+true
+],
+[
+"Helianthemum canum",
+"Helianthemum oelandicum",
+6,
+true,
+false
+],
+[
+"Helleborus niger",
+"Helleborus × hybridus",
+6,
+true,
+true
+],
+[
+"Heracleum sphondylium",
+"Peucedanum ostruthium",
+6,
+true,
+true
+],
+[
+"Hieracium pilosum",
+"Hieracium villosum",
+6,
+true,
+true
+],
+[
+"Hordeum jubatum",
+"Hordeum murinum",
+6,
+true,
+false
+],
+[
+"Impatiens parviflora",
+"Mercurialis perennis",
+6,
+true,
+true
+],
+[
+"Iris variegata",
+"Iris × hybrida",
+6,
+true,
+false
+],
+[
+"Larix decidua",
+"Picea abies",
+6,
+true,
+true
+],
+[
+"Lathyrus latifolius",
+"Lathyrus tuberosus",
+6,
+true,
+true
+],
+[
+"Leucanthemopsis alpina",
+"Leucanthemum halleri",
+6,
+true,
+false
+],
+[
+"Leucanthemum adustum",
+"Leucanthemum vulgare",
+6,
+true,
+true
+],
+[
+"Leucojum aestivum",
+"Leucojum vernum",
+6,
+true,
+true
+],
+[
+"Lolium multiflorum",
+"Lolium perenne",
+6,
+true,
+true
+],
+[
+"Lonicera alpigena",
+"Lonicera xylosteum",
+6,
+true,
+true
+],
+[
+"Lotus corniculatus",
+"Medicago falcata",
+6,
+true,
+true
+],
+[
+"Lotus germanicus",
+"Lotus herbaceus",
+6,
+true,
+false
+],
+[
+"Lupinus polyphyllus",
+"Lupinus × regalis",
+6,
+true,
+true
+],
+[
+"Luzula luzuloides",
+"Luzula nivea",
+6,
+true,
+true
+],
+[
+"Melampyrum arvense",
+"Melampyrum barbatum",
+6,
+true,
+false
+],
+[
+"Noccaea alpestris",
+"Noccaea montana",
+6,
+true,
+false
+],
+[
+"Ornithogalum boucheanum",
+"Ornithogalum nutans",
+6,
+true,
+false
+],
+[
+"Phyteuma betonicifolium",
+"Phyteuma spicatum",
+6,
+true,
+true
+],
+[
+"Phyteuma globulariifolium",
+"Phyteuma hemisphaericum",
+6,
+true,
+false
+],
+[
+"Plantago lanceolata",
+"Plantago major",
+6,
+true,
+true
+],
+[
+"Poa annua",
+"Poa pratensis",
+6,
+true,
+true
+],
+[
+"Potentilla aurea",
+"Potentilla reptans",
+6,
+true,
+true
+],
+[
+"Primula glutinosa",
+"Primula minima",
+6,
+true,
+false
+],
+[
+"Prunus avium",
+"Prunus serotina",
+6,
+true,
+true
+],
+[
+"Pyrola media",
+"Pyrola rotundifolia",
+6,
+true,
+true
+],
+[
+"Quercus cerris",
+"Quercus pubescens",
+6,
+true,
+false
+],
+[
+"Ranunculus acris",
+"Ranunculus polyanthemos",
+6,
+true,
+true
+],
+[
+"Reseda lutea",
+"Reseda luteola",
+6,
+true,
+true
+],
+[
+"Rosa canina",
+"Rosa spinosissima",
+6,
+true,
+true
+],
+[
+"Rumex acetosa",
+"Rumex acetosella",
+6,
+true,
+true
+],
+[
+"Salix eleagnos",
+"Salix purpurea",
+6,
+true,
+true
+],
+[
+"Salix euxina",
+"Salix × fragilis",
+6,
+true,
+true
+],
+[
+"Sanguisorba minor",
+"Sanguisorba officinalis",
+6,
+true,
+true
+],
+[
+"Saxifraga caesia",
+"Saxifraga squarrosa",
+6,
+true,
+true
+],
+[
+"Schlagintweitia intybacea",
+"Urospermum dalechampii",
+6,
+false,
+false
+],
+[
+"Schoenus ferrugineus",
+"Schoenus nigricans",
+6,
+true,
+true
+],
+[
+"Senecio cacaliaster",
+"Senecio ovatus",
+6,
+true,
+true
+],
+[
+"Senecio hercynicus",
+"Senecio ovatus",
+6,
+true,
+true
+],
+[
+"Soldanella austriaca",
+"Soldanella minima",
+6,
+true,
+false
+],
+[
+"Thymus odoratissimus",
+"Thymus pulegioides",
+6,
+true,
+true
+],
+[
+"Thymus praecox",
+"Thymus serpyllum",
+6,
+true,
+true
+],
+[
+"Trifolium aureum",
+"Trifolium badium",
+6,
+true,
+true
+],
+[
+"Ulmus glabra",
+"Ulmus laevis",
+6,
+true,
+true
+],
+[
+"Utricularia vulgaris",
+"Utricularia × neglecta",
+6,
+true,
+true
+],
+[
+"Verbascum densiflorum",
+"Verbascum thapsus",
+6,
+true,
+true
+],
+[
+"Veronica officinalis",
+"Veronica serpyllifolia",
+6,
+true,
+true
+],
+[
+"Vicia cracca",
+"Vicia sepium",
+6,
+true,
+true
+],
+[
+"Vicia grandiflora",
+"Vicia lutea",
+6,
+true,
+false
+],
+[
+"Viola alba",
+"Viola odorata",
+6,
+true,
+true
+],
+[
+"Viola hirta",
+"Viola odorata",
+6,
+true,
+true
+],
+[
+"Acer campestre",
+"Acer monspessulanum",
+5,
+true,
+true
+],
+[
+"Acer pseudoplatanus",
+"Viburnum opulus",
+5,
+true,
+true
+],
+[
+"Ailanthus altissima",
+"Juglans regia",
+5,
+true,
+true
+],
+[
+"Allium carinatum",
+"Allium oleraceum",
+5,
+true,
+true
+],
+[
+"Allium rotundum",
+"Allium scorodoprasum",
+5,
+true,
+true
+],
+[
+"Alnus incana",
+"Corylus avellana",
+5,
+true,
+true
+],
+[
+"Alopecurus myosuroides",
+"Alopecurus pratensis",
+5,
+true,
+true
+],
+[
+"Amaranthus hybridus",
+"Amaranthus retroflexus",
+5,
+true,
+true
+],
+[
+"Anemonoides apennina",
+"Anemonoides blanda",
+5,
+true,
+false
+],
+[
+"Anemonoides nemorosa",
+"Isopyrum thalictroides",
+5,
+true,
+true
+],
+[
+"Anemonoides sylvestris",
+"Pulsatilla alpina",
+5,
+true,
+true
+],
+[
+"Antennaria carpatica",
+"Antennaria dioica",
+5,
+true,
+true
+],
+[
+"Anthemis arvensis",
+"Cota austriaca",
+5,
+true,
+true
+],
+[
+"Anthemis cotula",
+"Cota austriaca",
+5,
+true,
+false
+],
+[
+"Anthriscus caucalis",
+"Anthriscus sylvestris",
+5,
+true,
+true
+],
+[
+"Aquilegia alpina",
+"Aquilegia vulgaris",
+5,
+true,
+true
+],
+[
+"Aquilegia nigricans",
+"Aquilegia vulgaris",
+5,
+true,
+true
+],
+[
+"Arabidopsis arenosa",
+"Arabidopsis lyrata",
+5,
+true,
+true
+],
+[
+"Arabidopsis thaliana",
+"Capsella bursa-pastoris",
+5,
+true,
+true
+],
+[
+"Argentina anserina",
+"Potentilla reptans",
+5,
+true,
+true
+],
+[
+"Artemisia absinthium",
+"Artemisia vulgaris",
+5,
+true,
+true
+],
+[
+"Artemisia austriaca",
+"Artemisia pontica",
+5,
+true,
+false
+],
+[
+"Asplenium adulterinum",
+"Asplenium trichomanes",
+5,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Dryopteris dilatata",
+5,
+true,
+true
+],
+[
+"Atocion rupestre",
+"Gypsophila repens",
+5,
+true,
+true
+],
+[
+"Atriplex intracontinentalis",
+"Atriplex littoralis",
+5,
+false,
+false
+],
+[
+"Ballota nigra",
+"Lamium purpureum",
+5,
+true,
+true
+],
+[
+"Berberis aquifolium",
+"Berberis repens",
+5,
+false,
+true
+],
+[
+"Betonica officinalis",
+"Stachys palustris",
+5,
+true,
+true
+],
+[
+"Bromus benekenii",
+"Bromus ramosus",
+5,
+true,
+true
+],
+[
+"Campanula persicifolia",
+"Campanula scheuchzeri",
+5,
+true,
+true
+],
+[
+"Carex digitata",
+"Carex ornithopoda",
+5,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Ulmus minor",
+5,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea nervosa",
+5,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea triumfettii",
+5,
+true,
+true
+],
+[
+"Centaurium erythraea",
+"Centaurium pulchellum",
+5,
+true,
+true
+],
+[
+"Centaurium littorale",
+"Centaurium pulchellum",
+5,
+true,
+false
+],
+[
+"Anthriscus sylvestris",
+"Chaerophyllum temulum",
+5,
+true,
+true
+],
+[
+"Chenopodium giganteum",
+"Chenopodium × reynieri",
+5,
+true,
+true
+],
+[
+"Cornus alba",
+"Cornus sanguinea",
+5,
+true,
+true
+],
+[
+"Cornus mas",
+"Cornus sanguinea",
+5,
+true,
+true
+],
+[
+"Crepis biennis",
+"Sonchus arvensis",
+5,
+true,
+true
+],
+[
+"Crepis biennis",
+"Crepis tectorum",
+5,
+true,
+true
+],
+[
+"Dactylorhiza lapponica",
+"Dactylorhiza majalis",
+5,
+true,
+true
+],
+[
+"Dactylorhiza majalis",
+"Dactylorhiza × aschersoniana",
+5,
+true,
+true
+],
+[
+"Dianthus carthusianorum",
+"Dianthus giganteus",
+5,
+true,
+true
+],
+[
+"Drosera intermedia",
+"Drosera × obovata",
+5,
+true,
+true
+],
+[
+"Dryopteris dilatata",
+"Dryopteris filix-mas",
+5,
+true,
+true
+],
+[
+"Dryopteris filix-mas",
+"Pteridium aquilinum",
+5,
+true,
+true
+],
+[
+"Epilobium nutans",
+"Epilobium palustre",
+5,
+true,
+true
+],
+[
+"Epipactis helleborine",
+"Epipactis purpurata",
+5,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum ramosissimum",
+5,
+true,
+true
+],
+[
+"Equisetum arvense",
+"Equisetum fluviatile",
+5,
+true,
+true
+],
+[
+"Equisetum sylvaticum",
+"Equisetum telmateia",
+5,
+true,
+true
+],
+[
+"Euphorbia austriaca",
+"Euphorbia illirica",
+5,
+true,
+true
+],
+[
+"Euphrasia alpina",
+"Euphrasia officinalis",
+5,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Sambucus nigra",
+5,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Fraxinus pennsylvanica",
+5,
+true,
+true
+],
+[
+"Galium album",
+"Galium sylvaticum",
+5,
+true,
+true
+],
+[
+"Galium album",
+"Galium aparine",
+5,
+true,
+true
+],
+[
+"Galium aparine",
+"Galium mollugo",
+5,
+true,
+true
+],
+[
+"Gentiana asclepiadea",
+"Gentiana pneumonanthe",
+5,
+true,
+true
+],
+[
+"Gentiana brachyphylla",
+"Gentiana nivalis",
+5,
+true,
+true
+],
+[
+"Gentianella amarella",
+"Gentianella austriaca",
+5,
+false,
+false
+],
+[
+"Geranium sanguineum",
+"Geranium sylvaticum",
+5,
+true,
+true
+],
+[
+"Glechoma hederacea",
+"Veronica persica",
+5,
+true,
+true
+],
+[
+"Globularia bisnagarica",
+"Globularia nudicaulis",
+5,
+true,
+true
+],
+[
+"Hedera helix",
+"Hedera hibernica",
+5,
+false,
+true
+],
+[
+"Helleborus niger",
+"Helleborus viridis",
+5,
+true,
+true
+],
+[
+"Helleborus niger",
+"Helleborus orientalis",
+5,
+true,
+true
+],
+[
+"Hypericum perforatum",
+"Hypericum tetrapterum",
+5,
+true,
+true
+],
+[
+"Jacobaea carniolica",
+"Jacobaea norica",
+5,
+true,
+false
+],
+[
+"Lactuca serriola",
+"Sonchus oleraceus",
+5,
+true,
+true
+],
+[
+"Lactuca serriola",
+"Lactuca virosa",
+5,
+true,
+true
+],
+[
+"Lamium maculatum",
+"Lamium orvala",
+5,
+true,
+true
+],
+[
+"Libanotis pyrenaica",
+"Peucedanum cervaria",
+5,
+true,
+false
+],
+[
+"Lysimachia nemorum",
+"Lysimachia nummularia",
+5,
+true,
+true
+],
+[
+"Lythrum salicaria",
+"Lythrum virgatum",
+5,
+true,
+true
+],
+[
+"Matricaria chamomilla",
+"Tripleurospermum inodorum",
+5,
+true,
+true
+],
+[
+"Lotus corniculatus",
+"Medicago lupulina",
+5,
+true,
+true
+],
+[
+"Muscari armeniacum",
+"Muscari botryoides",
+5,
+true,
+true
+],
+[
+"Myosotis ramosissima",
+"Myosotis stricta",
+5,
+true,
+true
+],
+[
+"Neotinea ustulata",
+"Neotinea × dietrichiana",
+5,
+true,
+true
+],
+[
+"Noccaea perfoliata",
+"Thlaspi arvense",
+5,
+true,
+true
+],
+[
+"Dactylorhiza majalis",
+"Orchis militaris",
+5,
+true,
+true
+],
+[
+"Origanum majorana",
+"Origanum vulgare",
+5,
+true,
+true
+],
+[
+"Origanum vulgare",
+"Thymus pulegioides",
+5,
+true,
+true
+],
+[
+"Orobanche alba",
+"Orobanche gracilis",
+5,
+true,
+true
+],
+[
+"Oxalis dillenii",
+"Oxalis stricta",
+5,
+true,
+true
+],
+[
+"Parnassia palustris",
+"Ranunculus alpestris",
+5,
+true,
+true
+],
+[
+"Phedimus hybridus",
+"Phedimus kamtschaticus",
+5,
+true,
+false
+],
+[
+"Phyteuma nigrum",
+"Phyteuma ovatum",
+5,
+true,
+false
+],
+[
+"Picea abies",
+"Picea omorika",
+5,
+false,
+true
+],
+[
+"Polystichum aculeatum",
+"Polystichum setiferum",
+5,
+true,
+true
+],
+[
+"Potentilla aurea",
+"Potentilla crantzii",
+5,
+true,
+true
+],
+[
+"Primula elatior",
+"Primula × polyantha",
+5,
+true,
+true
+],
+[
+"Primula veris",
+"Primula × polyantha",
+5,
+true,
+true
+],
+[
+"Prunus avium",
+"Ulmus glabra",
+5,
+true,
+true
+],
+[
+"Prunus cerasifera",
+"Prunus spinosa",
+5,
+true,
+true
+],
+[
+"Pulsatilla alpina",
+"Pulsatilla vernalis",
+5,
+true,
+true
+],
+[
+"Quercus cerris",
+"Quercus robur",
+5,
+true,
+true
+],
+[
+"Ranunculus acris",
+"Ranunculus auricomus",
+5,
+true,
+true
+],
+[
+"Ranunculus auricomus",
+"Ranunculus montanus",
+5,
+true,
+true
+],
+[
+"Ranunculus bulbosus",
+"Ranunculus lanuginosus",
+5,
+true,
+true
+],
+[
+"Rosa arvensis",
+"Rosa canina",
+5,
+true,
+true
+],
+[
+"Rubus caesius",
+"Rubus saxatilis",
+5,
+true,
+true
+],
+[
+"Salix appendiculata",
+"Salix caprea",
+5,
+true,
+true
+],
+[
+"Salix glauca",
+"Salix helvetica",
+5,
+true,
+false
+],
+[
+"Salix herbacea",
+"Salix retusa",
+5,
+true,
+false
+],
+[
+"Sambucus ebulus",
+"Sambucus racemosa",
+5,
+true,
+true
+],
+[
+"Securigera varia",
+"Vicia sativa",
+5,
+true,
+true
+],
+[
+"Sedum album",
+"Sedum sexangulare",
+5,
+true,
+true
+],
+[
+"Sempervivum globiferum",
+"Sempervivum tectorum",
+5,
+true,
+false
+],
+[
+"Sempervivum montanum",
+"Sempervivum × barbulatum",
+5,
+true,
+false
+],
+[
+"Senecio vernalis",
+"Senecio vulgaris",
+5,
+true,
+true
+],
+[
+"Sesleria albicans",
+"Sesleria caerulea",
+5,
+true,
+true
+],
+[
+"Soldanella alpina",
+"Soldanella austriaca",
+5,
+true,
+true
+],
+[
+"Sonchus arvensis",
+"Sonchus asper",
+5,
+true,
+true
+],
+[
+"Stipa eriocaulis",
+"Stipa pennata",
+5,
+true,
+false
+],
+[
+"Symphyotrichum novi-belgii",
+"Symphyotrichum × versicolor",
+5,
+true,
+false
+],
+[
+"Symphytum officinale",
+"Symphytum tuberosum",
+5,
+true,
+true
+],
+[
+"Thalictrum aquilegiifolium",
+"Thalictrum minus",
+5,
+true,
+true
+],
+[
+"Ulmus laevis",
+"Ulmus minor",
+5,
+true,
+true
+],
+[
+"Valeriana celtica",
+"Valeriana elongata",
+5,
+true,
+false
+],
+[
+"Veratrum album",
+"Veratrum nigrum",
+5,
+true,
+true
+],
+[
+"Veronica agrestis",
+"Veronica persica",
+5,
+true,
+true
+],
+[
+"Veronica arvensis",
+"Veronica chamaedrys",
+5,
+true,
+true
+],
+[
+"Veronica chamaedrys",
+"Veronica montana",
+5,
+true,
+true
+],
+[
+"Viola arvensis",
+"Viola kitaibeliana",
+5,
+true,
+true
+],
+[
+"Viola tricolor",
+"Viola × wittrockiana",
+5,
+true,
+true
+],
+[
+"Acer campestre",
+"Viburnum opulus",
+4,
+true,
+true
+],
+[
+"Acer negundo",
+"Acer pseudoplatanus",
+4,
+true,
+true
+],
+[
+"Achillea atrata",
+"Achillea erba-rotta",
+4,
+true,
+true
+],
+[
+"Achillea clavennae",
+"Achillea erba-rotta",
+4,
+true,
+true
+],
+[
+"Achillea millefolium",
+"Achillea nobilis",
+4,
+true,
+true
+],
+[
+"Adenostyles alliariae",
+"Eupatorium cannabinum",
+4,
+true,
+true
+],
+[
+"Adenostyles alliariae",
+"Petasites albus",
+4,
+true,
+true
+],
+[
+"Alchemilla monticola",
+"Alchemilla vulgaris",
+4,
+true,
+true
+],
+[
+"Allium oleraceum",
+"Allium scorodoprasum",
+4,
+true,
+true
+],
+[
+"Allium schoenoprasum",
+"Allium vineale",
+4,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Corylus avellana",
+4,
+true,
+true
+],
+[
+"Angelica sylvestris",
+"Laserpitium latifolium",
+4,
+true,
+true
+],
+[
+"Anthriscus nitidus",
+"Anthriscus sylvestris",
+4,
+true,
+true
+],
+[
+"Arabis hirsuta",
+"Cardamine hirsuta",
+4,
+true,
+true
+],
+[
+"Armeria alpina",
+"Armeria maritima",
+4,
+true,
+false
+],
+[
+"Arnica montana",
+"Doronicum grandiflorum",
+4,
+true,
+true
+],
+[
+"Arrhenatherum elatius",
+"Avenula pubescens",
+4,
+true,
+true
+],
+[
+"Arrhenatherum elatius",
+"Elymus repens",
+4,
+true,
+true
+],
+[
+"Artemisia austriaca",
+"Artemisia repens",
+4,
+true,
+false
+],
+[
+"Aster alpinus",
+"Erigeron uniflorus",
+4,
+true,
+true
+],
+[
+"Bellis annua",
+"Bellis perennis",
+4,
+false,
+true
+],
+[
+"Betonica alopecuros",
+"Stachys recta",
+4,
+true,
+true
+],
+[
+"Brassica napus",
+"Mutarda arvensis",
+4,
+true,
+true
+],
+[
+"Brassica rapa",
+"Mutarda arvensis",
+4,
+true,
+true
+],
+[
+"Brassica rapa",
+"Sisymbrium loeselii",
+4,
+true,
+true
+],
+[
+"Bromus diandrus",
+"Bromus sterilis",
+4,
+true,
+false
+],
+[
+"Buddleja davidii",
+"Syringa vulgaris",
+4,
+true,
+true
+],
+[
+"Bunias orientalis",
+"Sisymbrium loeselii",
+4,
+true,
+false
+],
+[
+"Calendula arvensis",
+"Calendula officinalis",
+4,
+true,
+false
+],
+[
+"Campanula alpina",
+"Campanula scheuchzeri",
+4,
+true,
+true
+],
+[
+"Campanula barbata",
+"Campanula trachelium",
+4,
+true,
+true
+],
+[
+"Campanula cochleariifolia",
+"Campanula pulla",
+4,
+true,
+true
+],
+[
+"Campanula patula",
+"Campanula persicifolia",
+4,
+true,
+true
+],
+[
+"Carduus defloratus",
+"Cirsium palustre",
+4,
+true,
+true
+],
+[
+"Carex otrubae",
+"Carex vulpina",
+4,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Ostrya carpinifolia",
+4,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Prunus padus",
+4,
+true,
+true
+],
+[
+"Catalpa bignonioides",
+"Paulownia tomentosa",
+4,
+true,
+false
+],
+[
+"Celtis australis",
+"Celtis occidentalis",
+4,
+true,
+false
+],
+[
+"Cephalanthera rubra",
+"Epipactis atrorubens",
+4,
+true,
+true
+],
+[
+"Cerastium arvense",
+"Cerastium tomentosum",
+4,
+true,
+true
+],
+[
+"Cerastium glomeratum",
+"Cerastium holosteoides",
+4,
+true,
+true
+],
+[
+"Chamorchis alpina",
+"Dactylorhiza viridis",
+4,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Ficaria verna",
+4,
+true,
+true
+],
+[
+"Cirsium erisithales",
+"Cirsium × candolleanum",
+4,
+true,
+false
+],
+[
+"Cirsium vulgare",
+"Onopordum acanthium",
+4,
+true,
+true
+],
+[
+"Clinopodium menthifolium",
+"Clinopodium vulgare",
+4,
+true,
+true
+],
+[
+"Cornus sanguinea",
+"Philadelphus coronarius",
+4,
+true,
+true
+],
+[
+"Coronilla vaginalis",
+"Hippocrepis comosa",
+4,
+true,
+true
+],
+[
+"Corylus avellana",
+"Corylus maxima",
+4,
+true,
+true
+],
+[
+"Cotoneaster horizontalis",
+"Cotoneaster × suecicus",
+4,
+true,
+true
+],
+[
+"Agoseris aurantiaca",
+"Crepis aurea",
+4,
+false,
+true
+],
+[
+"Crepis biennis",
+"Picris hieracioides",
+4,
+true,
+true
+],
+[
+"Crepis biennis",
+"Crepis capillaris",
+4,
+true,
+true
+],
+[
+"Crocus chrysanthus",
+"Crocus × stellaris",
+4,
+true,
+false
+],
+[
+"Crocus heuffelianus",
+"Crocus vernus",
+4,
+true,
+true
+],
+[
+"Cyclamen purpurascens",
+"Cyclamen repandum",
+4,
+true,
+true
+],
+[
+"Cytisus nigricans",
+"Melilotus officinalis",
+4,
+true,
+true
+],
+[
+"Dactylorhiza incarnata",
+"Dactylorhiza traunsteineri",
+4,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Dactylorhiza traunsteineri",
+4,
+true,
+true
+],
+[
+"Dactylorhiza maculata",
+"Dactylorhiza × braunii",
+4,
+false,
+true
+],
+[
+"Dianthus armeria",
+"Dianthus carthusianorum",
+4,
+true,
+true
+],
+[
+"Dianthus balbisii",
+"Dianthus carthusianorum",
+4,
+true,
+true
+],
+[
+"Dianthus sternbergii",
+"Dianthus superbus",
+4,
+true,
+false
+],
+[
+"Doronicum clusii",
+"Doronicum grandiflorum",
+4,
+true,
+false
+],
+[
+"Dryas octopetala",
+"Ranunculus alpestris",
+4,
+true,
+true
+],
+[
+"Dryopteris affinis",
+"Dryopteris borreri",
+4,
+true,
+true
+],
+[
+"Dryopteris cambrensis",
+"Dryopteris filix-mas",
+4,
+true,
+true
+],
+[
+"Epilobium montanum",
+"Epilobium parviflorum",
+4,
+true,
+true
+],
+[
+"Erigeron alpinus",
+"Erigeron neglectus",
+4,
+true,
+false
+],
+[
+"Erigeron annuus",
+"Silene latifolia",
+4,
+true,
+true
+],
+[
+"Erigeron neglectus",
+"Erigeron uniflorus",
+4,
+true,
+true
+],
+[
+"Erysimum cheiranthoides",
+"Erysimum odoratum",
+4,
+true,
+true
+],
+[
+"Euphorbia amygdaloides",
+"Euphorbia cyparissias",
+4,
+true,
+true
+],
+[
+"Euphorbia cyparissias",
+"Euphorbia seguieriana",
+4,
+true,
+true
+],
+[
+"Euphorbia cyparissias",
+"Galium verum",
+4,
+true,
+true
+],
+[
+"Euphorbia cyparissias",
+"Linaria vulgaris",
+4,
+true,
+true
+],
+[
+"Euphorbia saratoi",
+"Euphorbia virgata",
+4,
+true,
+false
+],
+[
+"Euphrasia officinalis",
+"Euphrasia stricta",
+4,
+true,
+true
+],
+[
+"Festuca pseudovina",
+"Festuca rupicola",
+4,
+true,
+false
+],
+[
+"Forsythia suspensa",
+"Forsythia × intermedia",
+4,
+true,
+true
+],
+[
+"Fragaria moschata",
+"Fragaria viridis",
+4,
+true,
+true
+],
+[
+"Fragaria vesca",
+"Fragaria × ananassa",
+4,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Fraxinus ornus",
+4,
+true,
+true
+],
+[
+"Fumaria officinalis",
+"Fumaria vaillantii",
+4,
+true,
+false
+],
+[
+"Galanthus nivalis",
+"Galanthus woronowii",
+4,
+true,
+true
+],
+[
+"Galeopsis pubescens",
+"Galeopsis speciosa",
+4,
+true,
+true
+],
+[
+"Gentiana acaulis",
+"Gentiana alpina",
+4,
+false,
+false
+],
+[
+"Gentiana clusii",
+"Gentiana verna",
+4,
+true,
+true
+],
+[
+"Gentiana lutea",
+"Gentiana punctata",
+4,
+true,
+false
+],
+[
+"Gentiana nivalis",
+"Gentiana pumila",
+4,
+true,
+true
+],
+[
+"Gentiana pannonica",
+"Gentiana punctata",
+4,
+true,
+true
+],
+[
+"Gentianella anisodonta",
+"Gentianella germanica",
+4,
+true,
+true
+],
+[
+"Gentianella campestris",
+"Gentianella germanica",
+4,
+true,
+true
+],
+[
+"Geranium pratense",
+"Geranium wallichianum",
+4,
+true,
+true
+],
+[
+"Geranium pyrenaicum",
+"Geranium sylvaticum",
+4,
+true,
+true
+],
+[
+"Geum rivale",
+"Geum urbanum",
+4,
+true,
+true
+],
+[
+"Geum macrophyllum",
+"Geum urbanum",
+4,
+false,
+true
+],
+[
+"Gleditsia triacanthos",
+"Robinia pseudoacacia",
+4,
+true,
+true
+],
+[
+"Glyceria maxima",
+"Phragmites australis",
+4,
+true,
+true
+],
+[
+"Dactylorhiza majalis",
+"Gymnadenia conopsea",
+4,
+true,
+true
+],
+[
+"Gymnadenia conopsea",
+"Orchis militaris",
+4,
+true,
+true
+],
+[
+"Helianthemum nummularium",
+"Helianthemum oelandicum",
+4,
+true,
+true
+],
+[
+"Helleborus dumetorum",
+"Helleborus foetidus",
+4,
+true,
+true
+],
+[
+"Helleborus purpurascens",
+"Helleborus × hybridus",
+4,
+true,
+false
+],
+[
+"Hemerocallis fulva",
+"Lilium bulbiferum",
+4,
+true,
+true
+],
+[
+"Hesperis matronalis",
+"Lunaria rediviva",
+4,
+true,
+true
+],
+[
+"Hieracium piliferum",
+"Hieracium villosum",
+4,
+true,
+true
+],
+[
+"Hippocrepis comosa",
+"Securigera varia",
+4,
+true,
+true
+],
+[
+"Huperzia selago",
+"Selaginella selaginoides",
+4,
+true,
+true
+],
+[
+"Hylotelephium jullianum",
+"Hylotelephium telephium",
+4,
+true,
+true
+],
+[
+"Hypochaeris radicata",
+"Taraxacum officinale",
+4,
+true,
+true
+],
+[
+"Impatiens balsamina",
+"Impatiens glandulifera",
+4,
+true,
+true
+],
+[
+"Jacobaea carniolica",
+"Jacobaea disjuncta",
+4,
+true,
+false
+],
+[
+"Juncus conglomeratus",
+"Juncus effusus",
+4,
+true,
+true
+],
+[
+"Juncus effusus",
+"Juncus inflexus",
+4,
+true,
+true
+],
+[
+"Lactuca saligna",
+"Lactuca serriola",
+4,
+true,
+true
+],
+[
+"Lamium album",
+"Lamium purpureum",
+4,
+true,
+true
+],
+[
+"Lamium amplexicaule",
+"Lamium purpureum",
+4,
+true,
+true
+],
+[
+"Lamium purpureum",
+"Prunella vulgaris",
+4,
+true,
+true
+],
+[
+"Larix decidua",
+"Larix laricina",
+4,
+false,
+true
+],
+[
+"Leontodon hispidus",
+"Scorzoneroides helvetica",
+4,
+true,
+true
+],
+[
+"Lepidium ruderale",
+"Lepidium virginicum",
+4,
+true,
+true
+],
+[
+"Ligustrum ovalifolium",
+"Ligustrum vulgare",
+4,
+true,
+true
+],
+[
+"Lolium arundinaceum",
+"Lolium pratense",
+4,
+true,
+true
+],
+[
+"Loranthus europaeus",
+"Viscum album",
+4,
+true,
+true
+],
+[
+"Malus domestica",
+"Malus sylvestris",
+4,
+true,
+true
+],
+[
+"Medicago falcata",
+"Medicago minima",
+4,
+true,
+true
+],
+[
+"Melilotus altissimus",
+"Melilotus officinalis",
+4,
+true,
+true
+],
+[
+"Mentha aquatica",
+"Origanum vulgare",
+4,
+true,
+true
+],
+[
+"Monotropa hypopitys",
+"Neottia nidus-avis",
+4,
+true,
+true
+],
+[
+"Myosotis arvensis",
+"Myosotis ramosissima",
+4,
+true,
+true
+],
+[
+"Ophrys apifera",
+"Ophrys fuciflora",
+4,
+true,
+false
+],
+[
+"Opuntia macrorhiza",
+"Opuntia phaeacantha",
+4,
+true,
+false
+],
+[
+"Dactylorhiza fuchsii",
+"Orchis mascula",
+4,
+true,
+true
+],
+[
+"Oreomecon alpina",
+"Ranunculus glacialis",
+4,
+true,
+false
+],
+[
+"Orobanche alba",
+"Orobanche caryophyllacea",
+4,
+true,
+true
+],
+[
+"Orobanche flava",
+"Orobanche gracilis",
+4,
+true,
+true
+],
+[
+"Oxalis acetosella",
+"Oxalis montana",
+4,
+false,
+true
+],
+[
+"Oxybasis glauca",
+"Oxybasis rubra",
+4,
+true,
+false
+],
+[
+"Pedicularis elongata",
+"Pedicularis tuberosa",
+4,
+true,
+false
+],
+[
+"Persicaria lapathifolia",
+"Persicaria maculosa",
+4,
+true,
+true
+],
+[
+"Petrorhagia saxifraga",
+"Psammophiliella muralis",
+4,
+true,
+true
+],
+[
+"Phyteuma globulariifolium",
+"Phyteuma orbiculare",
+4,
+true,
+true
+],
+[
+"Phyteuma nigrum",
+"Phyteuma spicatum",
+4,
+true,
+true
+],
+[
+"Phyteuma orbiculare",
+"Phyteuma persicifolium",
+4,
+true,
+true
+],
+[
+"Harpagophytum procumbens",
+"Phyteuma orbiculare",
+4,
+false,
+true
+],
+[
+"Phyteuma persicifolium",
+"Phyteuma spicatum",
+4,
+true,
+true
+],
+[
+"Phyteuma orbiculare",
+"Phyteuma sieberi",
+4,
+true,
+true
+],
+[
+"Phytolacca acinosa",
+"Phytolacca icosandra",
+4,
+false,
+false
+],
+[
+"Picea abies",
+"Picea sitchensis",
+4,
+false,
+true
+],
+[
+"Picea abies",
+"Pinus sylvestris",
+4,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Pimpinella major",
+4,
+true,
+true
+],
+[
+"Pimpinella saxifraga",
+"Sanguisorba minor",
+4,
+true,
+true
+],
+[
+"Pinus cembra",
+"Pinus sylvestris",
+4,
+true,
+true
+],
+[
+"Plantago maritima",
+"Plantago serpentina",
+4,
+true,
+false
+],
+[
+"Polystichum lonchitis",
+"Struthiopteris spicant",
+4,
+true,
+true
+],
+[
+"Populus tremula",
+"Populus × canescens",
+4,
+true,
+true
+],
+[
+"Potentilla argentea",
+"Potentilla recta",
+4,
+true,
+false
+],
+[
+"Potentilla heptaphylla",
+"Potentilla verna",
+4,
+true,
+true
+],
+[
+"Primula auricula",
+"Primula clusiana",
+4,
+true,
+true
+],
+[
+"Primula elatior",
+"Primula intricata",
+4,
+false,
+true
+],
+[
+"Primula farinosa",
+"Primula halleri",
+4,
+true,
+true
+],
+[
+"Prunus avium",
+"Prunus cerasifera",
+4,
+true,
+true
+],
+[
+"Prunus avium",
+"Prunus spinosa",
+4,
+true,
+true
+],
+[
+"Prunus cerasifera",
+"Prunus × syriaca",
+4,
+true,
+true
+],
+[
+"Prunus insititia",
+"Prunus spinosa",
+4,
+true,
+true
+],
+[
+"Pseudoturritis turrita",
+"Turritis glabra",
+4,
+true,
+true
+],
+[
+"Pulmonaria officinalis",
+"Pulmonaria stiriaca",
+4,
+true,
+true
+],
+[
+"Pulsatilla grandis",
+"Pulsatilla patens",
+4,
+false,
+false
+],
+[
+"Pulsatilla halleri",
+"Pulsatilla vulgaris",
+4,
+true,
+false
+],
+[
+"Quercus petraea",
+"Quercus pubescens",
+4,
+true,
+false
+],
+[
+"Ranunculus bulbosus",
+"Ranunculus polyanthemos",
+4,
+true,
+true
+],
+[
+"Rhinanthus alectorolophus",
+"Rhinanthus serotinus",
+4,
+true,
+true
+],
+[
+"Rhinanthus minor",
+"Rhinanthus serotinus",
+4,
+true,
+true
+],
+[
+"Robinia pseudoacacia",
+"Robinia viscosa",
+4,
+true,
+true
+],
+[
+"Rosa arvensis",
+"Rosa spinosissima",
+4,
+true,
+true
+],
+[
+"Rosa arvensis",
+"Rosa multiflora",
+4,
+true,
+true
+],
+[
+"Rosa multiflora",
+"Sambucus nigra",
+4,
+true,
+true
+],
+[
+"Rosa pendulina",
+"Rosa rugosa",
+4,
+true,
+true
+],
+[
+"Salsola kali",
+"Salsola tragus",
+4,
+true,
+false
+],
+[
+"Sambucus nigra",
+"Viburnum opulus",
+4,
+true,
+true
+],
+[
+"Sambucus racemosa",
+"Viburnum opulus",
+4,
+true,
+true
+],
+[
+"Saponaria officinalis",
+"Silene latifolia",
+4,
+true,
+true
+],
+[
+"Saxifraga aizoides",
+"Saxifraga moschata",
+4,
+true,
+true
+],
+[
+"Scabiosa columbaria",
+"Scabiosa ochroleuca",
+4,
+true,
+true
+],
+[
+"Scilla luciliae",
+"Scilla siberica",
+4,
+true,
+false
+],
+[
+"Scrophularia canina",
+"Scrophularia juratensis",
+4,
+true,
+false
+],
+[
+"Sedum album",
+"Sedum atratum",
+4,
+true,
+true
+],
+[
+"Senecio inaequidens",
+"Senecio vernalis",
+4,
+true,
+true
+],
+[
+"Senecio inaequidens",
+"Senecio vulgaris",
+4,
+true,
+true
+],
+[
+"Senecio nemorensis",
+"Solidago virgaurea",
+4,
+true,
+true
+],
+[
+"Senecio sylvaticus",
+"Senecio vulgaris",
+4,
+true,
+true
+],
+[
+"Silene colorata",
+"Silene dioica",
+4,
+false,
+true
+],
+[
+"Silene italica",
+"Silene nemoralis",
+4,
+false,
+false
+],
+[
+"Soldanella austriaca",
+"Soldanella pusilla",
+4,
+true,
+false
+],
+[
+"Staphylea pinnata",
+"Staphylea trifolia",
+4,
+false,
+true
+],
+[
+"Stellaria media",
+"Stellaria neglecta",
+4,
+true,
+true
+],
+[
+"Symphytum grandiflorum",
+"Symphytum tuberosum",
+4,
+true,
+true
+],
+[
+"Tephroseris crispa",
+"Tephroseris longifolia",
+4,
+true,
+true
+],
+[
+"Trifolium pallescens",
+"Trifolium thalii",
+4,
+true,
+false
+],
+[
+"Trifolium pratense",
+"Trifolium thalii",
+4,
+true,
+true
+],
+[
+"Tripleurospermum inodorum",
+"Tripleurospermum maritimum",
+4,
+false,
+true
+],
+[
+"Typha latifolia",
+"Typha × glauca",
+4,
+true,
+true
+],
+[
+"Vaccinium myrtillus",
+"Vaccinium uliginosum",
+4,
+true,
+true
+],
+[
+"Valeriana dioica",
+"Valeriana officinalis",
+4,
+true,
+true
+],
+[
+"Verbascum chaixii",
+"Verbascum lychnitis",
+4,
+true,
+true
+],
+[
+"Verbascum densiflorum",
+"Verbascum lychnitis",
+4,
+true,
+true
+],
+[
+"Verbascum lychnitis",
+"Verbascum nigrum",
+4,
+true,
+true
+],
+[
+"Veronica anagallis-aquatica",
+"Veronica beccabunga",
+4,
+true,
+true
+],
+[
+"Veronica arvensis",
+"Veronica polita",
+4,
+true,
+true
+],
+[
+"Veronica chamaedrys",
+"Veronica fruticans",
+4,
+true,
+true
+],
+[
+"Veronica hederifolia",
+"Veronica triloba",
+4,
+true,
+true
+],
+[
+"Veronica officinalis",
+"Veronica prostrata",
+4,
+true,
+true
+],
+[
+"Veronica prostrata",
+"Veronica teucrium",
+4,
+true,
+false
+],
+[
+"Viburnum lantana",
+"Viburnum opulus",
+4,
+true,
+true
+],
+[
+"Vicia sepium",
+"Vicia sylvatica",
+4,
+true,
+true
+],
+[
+"Viola ambigua",
+"Viola rupestris",
+4,
+true,
+false
+],
+[
+"Viola collina",
+"Viola hirta",
+4,
+true,
+true
+],
+[
+"Viola reichenbachiana",
+"Viola × bavarica",
+4,
+true,
+true
+],
+[
+"Acer campestre",
+"Crataegus monogyna",
+3,
+true,
+true
+],
+[
+"Acer ginnala",
+"Acer tataricum",
+3,
+true,
+true
+],
+[
+"Achillea atrata",
+"Achillea ptarmica",
+3,
+true,
+true
+],
+[
+"Aconitum tauricum",
+"Aconitum variegatum",
+3,
+true,
+true
+],
+[
+"Actaea spicata",
+"Aruncus dioicus",
+3,
+true,
+true
+],
+[
+"Aegopodium podagraria",
+"Anthriscus sylvestris",
+3,
+true,
+true
+],
+[
+"Agrimonia eupatoria",
+"Agrimonia procera",
+3,
+true,
+true
+],
+[
+"Ajuga pyramidalis",
+"Bartsia alpina",
+3,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Bartsia alpina",
+3,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Salvia pratensis",
+3,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Prunella vulgaris",
+3,
+true,
+true
+],
+[
+"Alchemilla alpina",
+"Potentilla caulescens",
+3,
+true,
+true
+],
+[
+"Alchemilla anisiaca",
+"Alchemilla conjuncta",
+3,
+true,
+false
+],
+[
+"Alkekengi officinarum",
+"Solanum nigrum",
+3,
+true,
+true
+],
+[
+"Allium angulosum",
+"Allium carinatum",
+3,
+true,
+true
+],
+[
+"Allium carinatum",
+"Allium vineale",
+3,
+true,
+true
+],
+[
+"Allium lusitanicum",
+"Allium schoenoprasum",
+3,
+true,
+true
+],
+[
+"Alnus alnobetula",
+"Alnus glutinosa",
+3,
+true,
+true
+],
+[
+"Alnus alnobetula",
+"Corylus avellana",
+3,
+true,
+true
+],
+[
+"Amaranthus powellii",
+"Amaranthus retroflexus",
+3,
+true,
+true
+],
+[
+"Anacamptis morio",
+"Anacamptis palustris",
+3,
+true,
+true
+],
+[
+"Anacamptis morio",
+"Dactylorhiza majalis",
+3,
+true,
+true
+],
+[
+"Anacamptis pyramidalis",
+"Gymnadenia conopsea",
+3,
+true,
+true
+],
+[
+"Anacamptis pyramidalis",
+"Dactylorhiza fuchsii",
+3,
+true,
+true
+],
+[
+"Anchusa arvensis",
+"Anchusa officinalis",
+3,
+true,
+false
+],
+[
+"Anemonoides nemorosa",
+"Anemonoides sylvestris",
+3,
+true,
+true
+],
+[
+"Anemonoides nemorosa",
+"Pulsatilla alpina",
+3,
+true,
+true
+],
+[
+"Anemonoides nemorosa",
+"Oxalis acetosella",
+3,
+true,
+true
+],
+[
+"Anemonoides ranunculoides",
+"Ficaria verna",
+3,
+true,
+true
+],
+[
+"Anemonoides trifolia",
+"Hepatica nobilis",
+3,
+true,
+true
+],
+[
+"Anthemis arvensis",
+"Tripleurospermum inodorum",
+3,
+true,
+true
+],
+[
+"Anthriscus caucalis",
+"Anthriscus cerefolium",
+3,
+true,
+false
+],
+[
+"Anthyllis vulneraria",
+"Polygaloides chamaebuxus",
+3,
+true,
+true
+],
+[
+"Anthyllis vulneraria",
+"Primula veris",
+3,
+true,
+true
+],
+[
+"Arabidopsis arenosa",
+"Capsella bursa-pastoris",
+3,
+true,
+true
+],
+[
+"Arabidopsis arenosa",
+"Cardamine pratensis",
+3,
+true,
+true
+],
+[
+"Arabidopsis halleri",
+"Cardamine pratensis",
+3,
+true,
+true
+],
+[
+"Arabidopsis thaliana",
+"Cardamine hirsuta",
+3,
+true,
+true
+],
+[
+"Arabis alpina",
+"Arabis soyeri",
+3,
+true,
+true
+],
+[
+"Arabis alpina",
+"Arabis caucasica",
+3,
+true,
+true
+],
+[
+"Arabis auriculata",
+"Arabis nova",
+3,
+true,
+false
+],
+[
+"Arabis ciliata",
+"Arabis soyeri",
+3,
+true,
+true
+],
+[
+"Arctium lappa",
+"Arctium minus",
+3,
+true,
+true
+],
+[
+"Arenaria biflora",
+"Arenaria ciliata",
+3,
+true,
+false
+],
+[
+"Arnica montana",
+"Tragopogon orientalis",
+3,
+true,
+true
+],
+[
+"Arnica montana",
+"Senecio doronicum",
+3,
+true,
+true
+],
+[
+"Arrhenatherum elatius",
+"Bromus erectus",
+3,
+true,
+true
+],
+[
+"Arrhenatherum elatius",
+"Poa trivialis",
+3,
+true,
+true
+],
+[
+"Arrhenatherum elatius",
+"Deschampsia cespitosa",
+3,
+true,
+true
+],
+[
+"Artemisia austriaca",
+"Artemisia campestris",
+3,
+true,
+false
+],
+[
+"Artemisia genipi",
+"Artemisia umbelliformis",
+3,
+true,
+false
+],
+[
+"Aruncus dioicus",
+"Filipendula ulmaria",
+3,
+true,
+true
+],
+[
+"Asarum europaeum",
+"Hepatica nobilis",
+3,
+true,
+true
+],
+[
+"Aster amellus",
+"Symphyotrichum laeve",
+3,
+true,
+false
+],
+[
+"Aster bellidiastrum",
+"Erigeron glabratus",
+3,
+true,
+true
+],
+[
+"Astragalus alpinus",
+"Oxytropis montana",
+3,
+true,
+true
+],
+[
+"Astragalus asper",
+"Astragalus cicer",
+3,
+true,
+false
+],
+[
+"Astragalus austriacus",
+"Astragalus sulcatus",
+3,
+true,
+false
+],
+[
+"Athyrium distentifolium",
+"Dryopteris filix-mas",
+3,
+true,
+true
+],
+[
+"Atocion rupestre",
+"Cerastium arvense",
+3,
+true,
+true
+],
+[
+"Atriplex oblongifolia",
+"Atriplex patula",
+3,
+true,
+true
+],
+[
+"Ballota nigra",
+"Lamium maculatum",
+3,
+true,
+true
+],
+[
+"Ballota nigra",
+"Urtica dioica",
+3,
+true,
+true
+],
+[
+"Bellis perennis",
+"Bellis sylvestris",
+3,
+false,
+true
+],
+[
+"Bellis perennis",
+"Leucanthemum vulgare",
+3,
+true,
+true
+],
+[
+"Berberis thunbergii",
+"Cotoneaster horizontalis",
+3,
+true,
+true
+],
+[
+"Betonica hirsuta",
+"Betonica officinalis",
+3,
+true,
+true
+],
+[
+"Betonica officinalis",
+"Lythrum salicaria",
+3,
+true,
+true
+],
+[
+"Betula pendula",
+"Fagus sylvatica",
+3,
+true,
+true
+],
+[
+"Betula pendula",
+"Populus tremula",
+3,
+true,
+true
+],
+[
+"Blitum bonus-henricus",
+"Lapsana communis",
+3,
+true,
+true
+],
+[
+"Andropogon gerardi",
+"Bothriochloa ischaemum",
+3,
+false,
+false
+],
+[
+"Brachypodium pinnatum",
+"Brachypodium sylvaticum",
+3,
+true,
+true
+],
+[
+"Bromus inermis",
+"Bromus sterilis",
+3,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Pentanema salicinum",
+3,
+true,
+true
+],
+[
+"Callitriche cophocarpa",
+"Callitriche palustris",
+3,
+true,
+false
+],
+[
+"Campanula cervicaria",
+"Campanula glomerata",
+3,
+true,
+true
+],
+[
+"Campanula cespitosa",
+"Campanula cochleariifolia",
+3,
+true,
+true
+],
+[
+"Campanula lactiflora",
+"Campanula latifolia",
+3,
+true,
+false
+],
+[
+"Campanula latifolia",
+"Campanula trachelium",
+3,
+true,
+true
+],
+[
+"Campanula pulla",
+"Campanula scheuchzeri",
+3,
+true,
+true
+],
+[
+"Campanula trachelium",
+"Phyteuma spicatum",
+3,
+true,
+true
+],
+[
+"Cardamine bulbifera",
+"Cardamine pentaphyllos",
+3,
+true,
+true
+],
+[
+"Cardamine dentata",
+"Cardamine pratensis",
+3,
+true,
+true
+],
+[
+"Cardamine trifolia",
+"Oxalis acetosella",
+3,
+true,
+true
+],
+[
+"Carduus acanthoides",
+"Cirsium palustre",
+3,
+true,
+true
+],
+[
+"Carduus acanthoides",
+"Carduus crispus",
+3,
+true,
+false
+],
+[
+"Carduus acanthoides",
+"Centaurea stoebe",
+3,
+true,
+false
+],
+[
+"Carduus crispus",
+"Carduus defloratus",
+3,
+true,
+true
+],
+[
+"Carduus defloratus",
+"Cirsium arvense",
+3,
+true,
+true
+],
+[
+"Carduus personata",
+"Cirsium oleraceum",
+3,
+true,
+true
+],
+[
+"Carex acutiformis",
+"Carex riparia",
+3,
+true,
+true
+],
+[
+"Carex caryophyllea",
+"Carex montana",
+3,
+true,
+true
+],
+[
+"Carex caryophyllea",
+"Carex flacca",
+3,
+true,
+true
+],
+[
+"Carex demissa",
+"Carex flava",
+3,
+true,
+true
+],
+[
+"Carex divulsa",
+"Carex remota",
+3,
+true,
+true
+],
+[
+"Carex ferruginea",
+"Carex sempervirens",
+3,
+true,
+true
+],
+[
+"Carex flacca",
+"Carex panicea",
+3,
+true,
+true
+],
+[
+"Carex flava",
+"Carex lepidocarpa",
+3,
+true,
+true
+],
+[
+"Carex hirta",
+"Carex sylvatica",
+3,
+true,
+true
+],
+[
+"Carex nigra",
+"Carex panicea",
+3,
+true,
+true
+],
+[
+"Carlina acaulis",
+"Cirsium spinosissimum",
+3,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Corylus avellana",
+3,
+true,
+true
+],
+[
+"Centaurea cyanus",
+"Centaurea montana",
+3,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea montana",
+3,
+true,
+true
+],
+[
+"Centaurea nigra",
+"Centaurea scabiosa",
+3,
+false,
+true
+],
+[
+"Centaurium erythraea",
+"Centaurium littorale",
+3,
+true,
+true
+],
+[
+"Cerastium alpinum",
+"Cerastium arvense",
+3,
+true,
+true
+],
+[
+"Cerastium arvense",
+"Cerastium holosteoides",
+3,
+true,
+true
+],
+[
+"Cerinthe minor",
+"Pulmonaria officinalis",
+3,
+true,
+true
+],
+[
+"Chaenorhinum litorale",
+"Chaenorhinum minus",
+3,
+true,
+true
+],
+[
+"Chaerophyllum aromaticum",
+"Chaerophyllum hirsutum",
+3,
+true,
+true
+],
+[
+"Chaerophyllum hirsutum",
+"Pimpinella major",
+3,
+true,
+true
+],
+[
+"Chaerophyllum hirsutum",
+"Chaerophyllum temulum",
+3,
+true,
+true
+],
+[
+"Chamaemespilus alpina",
+"Majovskya ambigua",
+3,
+true,
+true
+],
+[
+"Chamaenerion angustifolium",
+"Chamaenerion dodonaei",
+3,
+true,
+true
+],
+[
+"Chamaenerion angustifolium",
+"Lythrum salicaria",
+3,
+true,
+true
+],
+[
+"Chenopodiastrum hybridum",
+"Chenopodiastrum murale",
+3,
+true,
+false
+],
+[
+"Chenopodium album",
+"Chenopodium betaceum",
+3,
+true,
+true
+],
+[
+"Chenopodium album",
+"Chenopodium ficifolium",
+3,
+true,
+true
+],
+[
+"Circaea canadensis",
+"Circaea lutetiana",
+3,
+true,
+true
+],
+[
+"Cirsium arvense",
+"Cirsium vulgare",
+3,
+true,
+true
+],
+[
+"Cirsium erisithales",
+"Cirsium × praealpinum",
+3,
+false,
+false
+],
+[
+"Clematis alpina",
+"Clematis vitalba",
+3,
+true,
+true
+],
+[
+"Clematis recta",
+"Clematis vitalba",
+3,
+true,
+true
+],
+[
+"Clinopodium acinos",
+"Clinopodium alpinum",
+3,
+true,
+true
+],
+[
+"Clinopodium alpinum",
+"Glechoma hederacea",
+3,
+true,
+true
+],
+[
+"Colchicum alpinum",
+"Colchicum autumnale",
+3,
+false,
+true
+],
+[
+"Colchicum autumnale",
+"Crocus tommasinianus",
+3,
+true,
+true
+],
+[
+"Convallaria majalis",
+"Maianthemum bifolium",
+3,
+true,
+true
+],
+[
+"Corallorhiza trifida",
+"Neottia nidus-avis",
+3,
+true,
+true
+],
+[
+"Cornus alba",
+"Cornus sericea",
+3,
+true,
+true
+],
+[
+"Cornus sanguinea",
+"Viburnum lantana",
+3,
+true,
+true
+],
+[
+"Cornus sanguinea",
+"Hedera helix",
+3,
+true,
+true
+],
+[
+"Cornus sanguinea",
+"Cornus sericea",
+3,
+true,
+true
+],
+[
+"Corydalis caucasica",
+"Corydalis cava",
+3,
+false,
+true
+],
+[
+"Cotoneaster dammeri",
+"Cotoneaster × suecicus",
+3,
+true,
+true
+],
+[
+"Cotoneaster divaricatus",
+"Cotoneaster hjelmqvistii",
+3,
+true,
+true
+],
+[
+"Crataegus laevigata",
+"Viburnum opulus",
+3,
+true,
+true
+],
+[
+"Crataegus marshallii",
+"Crataegus monogyna",
+3,
+false,
+true
+],
+[
+"Crepis aurea",
+"Leontodon hispidus",
+3,
+true,
+true
+],
+[
+"Crepis biennis",
+"Taraxacum officinale",
+3,
+true,
+true
+],
+[
+"Crocus heuffelianus",
+"Crocus tommasinianus",
+3,
+true,
+false
+],
+[
+"Cuscuta epithymum",
+"Cuscuta europaea",
+3,
+true,
+true
+],
+[
+"Cystopteris alpina",
+"Cystopteris fragilis",
+3,
+true,
+true
+],
+[
+"Cystopteris fragilis",
+"Cystopteris montana",
+3,
+true,
+true
+],
+[
+"Cytisus scoparius",
+"Genista pilosa",
+3,
+true,
+true
+],
+[
+"Dactylis glomerata",
+"Holcus lanatus",
+3,
+true,
+true
+],
+[
+"Dianthus alpinus",
+"Dianthus carthusianorum",
+3,
+true,
+true
+],
+[
+"Dianthus armeria",
+"Dianthus deltoides",
+3,
+true,
+true
+],
+[
+"Dianthus deltoides",
+"Dianthus sylvestris",
+3,
+true,
+true
+],
+[
+"Diplotaxis muralis",
+"Diplotaxis tenuifolia",
+3,
+true,
+true
+],
+[
+"Diplotaxis tenuifolia",
+"Eruca vesicaria",
+3,
+true,
+true
+],
+[
+"Doronicum austriacum",
+"Jacobaea alpina",
+3,
+true,
+true
+],
+[
+"Draba aizoides",
+"Draba hoppeana",
+3,
+true,
+true
+],
+[
+"Drosera anglica",
+"Drosera intermedia",
+3,
+true,
+true
+],
+[
+"Dryopteris carthusiana",
+"Dryopteris expansa",
+3,
+true,
+true
+],
+[
+"Dryopteris cristata",
+"Dryopteris filix-mas",
+3,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Dryopteris cristata",
+3,
+true,
+true
+],
+[
+"Elodea canadensis",
+"Elodea nuttallii",
+3,
+true,
+false
+],
+[
+"Epilobium anagallidifolium",
+"Epilobium palustre",
+3,
+true,
+true
+],
+[
+"Equisetum fluviatile",
+"Equisetum telmateia",
+3,
+true,
+true
+],
+[
+"Equisetum hyemale",
+"Equisetum ramosissimum",
+3,
+true,
+true
+],
+[
+"Equisetum palustre",
+"Equisetum sylvaticum",
+3,
+true,
+true
+],
+[
+"Erigeron annuus",
+"Erigeron philadelphicus",
+3,
+false,
+true
+],
+[
+"Erigeron annuus",
+"Plantago major",
+3,
+true,
+true
+],
+[
+"Erigeron annuus",
+"Leucanthemum vulgare",
+3,
+true,
+true
+],
+[
+"Erigeron canadensis",
+"Erigeron sumatrensis",
+3,
+true,
+true
+],
+[
+"Erodium acaule",
+"Erodium cicutarium",
+3,
+false,
+true
+],
+[
+"Erodium cicutarium",
+"Erodium moschatum",
+3,
+false,
+true
+],
+[
+"Erodium cicutarium",
+"Geranium robertianum",
+3,
+true,
+true
+],
+[
+"Euonymus europaeus",
+"Ligustrum vulgare",
+3,
+true,
+true
+],
+[
+"Euonymus europaeus",
+"Euonymus verrucosus",
+3,
+true,
+true
+],
+[
+"Eupatorium cannabinum",
+"Origanum vulgare",
+3,
+true,
+true
+],
+[
+"Euphorbia angulata",
+"Euphorbia dulcis",
+3,
+true,
+true
+],
+[
+"Euphorbia austriaca",
+"Euphorbia epithymoides",
+3,
+true,
+true
+],
+[
+"Euphorbia dulcis",
+"Euphorbia stricta",
+3,
+true,
+true
+],
+[
+"Euphorbia esula",
+"Euphorbia stricta",
+3,
+true,
+true
+],
+[
+"Euphorbia helioscopia",
+"Euphorbia peplus",
+3,
+true,
+true
+],
+[
+"Euphorbia peplus",
+"Lotus corniculatus",
+3,
+true,
+true
+],
+[
+"Euphorbia oblongata",
+"Euphorbia verrucosa",
+3,
+false,
+false
+],
+[
+"Fagus sylvatica",
+"Ulmus glabra",
+3,
+true,
+true
+],
+[
+"Corylus avellana",
+"Fagus sylvatica",
+3,
+true,
+true
+],
+[
+"Frangula alnus",
+"Prunus padus",
+3,
+true,
+true
+],
+[
+"Fumaria officinalis",
+"Fumaria wirtgenii",
+3,
+true,
+false
+],
+[
+"Gagea lutea",
+"Gagea minima",
+3,
+true,
+true
+],
+[
+"Gagea pratensis",
+"Gagea villosa",
+3,
+true,
+false
+],
+[
+"Galeopsis speciosa",
+"Galeopsis tetrahit",
+3,
+true,
+true
+],
+[
+"Galium album",
+"Galium lucidum",
+3,
+true,
+true
+],
+[
+"Gentiana brentae",
+"Gentiana verna",
+3,
+true,
+true
+],
+[
+"Gentiana cruciata",
+"Gentiana pannonica",
+3,
+true,
+true
+],
+[
+"Gentiana lutea",
+"Veratrum album",
+3,
+true,
+true
+],
+[
+"Gentianella anisodonta",
+"Gentianella austriaca",
+3,
+true,
+false
+],
+[
+"Gentianella anisodonta",
+"Gentianella campestris",
+3,
+true,
+false
+],
+[
+"Gentianella aspera",
+"Gentianella campestris",
+3,
+true,
+true
+],
+[
+"Gentianella austriaca",
+"Gentianella styriaca",
+3,
+true,
+false
+],
+[
+"Geranium phaeum",
+"Geum rivale",
+3,
+true,
+true
+],
+[
+"Geranium pyrenaicum",
+"Geranium robertianum",
+3,
+true,
+true
+],
+[
+"Geranium sibiricum",
+"Geranium sylvaticum",
+3,
+true,
+true
+],
+[
+"Geranium sylvaticum",
+"Geranium × oxonianum",
+3,
+true,
+true
+],
+[
+"Geum montanum",
+"Geum rivale",
+3,
+true,
+true
+],
+[
+"Geum urbanum",
+"Potentilla indica",
+3,
+true,
+true
+],
+[
+"Geum urbanum",
+"Glechoma hederacea",
+3,
+true,
+true
+],
+[
+"Globularia bisnagarica",
+"Globularia vulgaris",
+3,
+false,
+false
+],
+[
+"Gymnadenia lithopolitanica",
+"Gymnadenia widderi",
+3,
+true,
+false
+],
+[
+"Gymnadenia miniata",
+"Gymnadenia nigra",
+3,
+true,
+false
+],
+[
+"Dactylorhiza fuchsii",
+"Gymnadenia odoratissima",
+3,
+true,
+true
+],
+[
+"Gypsophila repens",
+"Petrorhagia saxifraga",
+3,
+true,
+true
+],
+[
+"Hedera helix",
+"Sambucus nigra",
+3,
+true,
+true
+],
+[
+"Heracleum austriacum",
+"Pimpinella major",
+3,
+true,
+true
+],
+[
+"Hieracium alpinum",
+"Pilosella officinarum",
+3,
+true,
+true
+],
+[
+"Hieracium alpinum",
+"Hieracium villosum",
+3,
+true,
+true
+],
+[
+"Hieracium bifidum",
+"Hieracium murorum",
+3,
+true,
+true
+],
+[
+"Hippocrepis comosa",
+"Hippocrepis emerus",
+3,
+true,
+true
+],
+[
+"Hippocrepis comosa",
+"Lathyrus pratensis",
+3,
+true,
+true
+],
+[
+"Hippophae rhamnoides",
+"Salix eleagnos",
+3,
+true,
+true
+],
+[
+"Hordeum vulgare",
+"Triticum aestivum",
+3,
+true,
+true
+],
+[
+"Hornungia alpina",
+"Saxifraga caesia",
+3,
+true,
+true
+],
+[
+"Hypochaeris radicata",
+"Pilosella officinarum",
+3,
+true,
+true
+],
+[
+"Iris arenaria",
+"Iris humilis",
+3,
+false,
+false
+],
+[
+"Iris pumila",
+"Iris × germanica",
+3,
+true,
+false
+],
+[
+"Iris sibirica",
+"Iris versicolor",
+3,
+true,
+true
+],
+[
+"Iris × germanica",
+"Iris × hybrida",
+3,
+true,
+false
+],
+[
+"Jacobaea aquatica",
+"Jacobaea erratica",
+3,
+true,
+true
+],
+[
+"Jacobaea vulgaris",
+"Senecio vernalis",
+3,
+true,
+true
+],
+[
+"Juncus compressus",
+"Juncus gerardi",
+3,
+true,
+true
+],
+[
+"Juncus compressus",
+"Juncus tenuis",
+3,
+true,
+true
+],
+[
+"Knautia arvensis",
+"Scabiosa ochroleuca",
+3,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Knautia arvensis",
+3,
+true,
+true
+],
+[
+"Lamium galeobdolon",
+"Melissa officinalis",
+3,
+true,
+true
+],
+[
+"Lemna minor",
+"Spirodela polyrhiza",
+3,
+true,
+true
+],
+[
+"Leontodon hispidus",
+"Scorzoneroides autumnalis",
+3,
+true,
+true
+],
+[
+"Leontodon hispidus",
+"Leontodon saxatilis",
+3,
+true,
+true
+],
+[
+"Lepidium campestre",
+"Noccaea perfoliata",
+3,
+true,
+true
+],
+[
+"Lepidium campestre",
+"Lepidium draba",
+3,
+true,
+true
+],
+[
+"Lonicera maackii",
+"Lonicera xylosteum",
+3,
+true,
+true
+],
+[
+"Lonicera nigra",
+"Vaccinium membranaceum",
+3,
+false,
+true
+],
+[
+"Lycopodiella inundata",
+"Spinulum annotinum",
+3,
+true,
+true
+],
+[
+"Lycopodium clavatum",
+"Lycopodium lagopus",
+3,
+true,
+true
+],
+[
+"Malva moschata",
+"Malva thuringiaca",
+3,
+true,
+true
+],
+[
+"Malva neglecta",
+"Malva pusilla",
+3,
+true,
+true
+],
+[
+"Malva arborea",
+"Malva sylvestris",
+3,
+false,
+true
+],
+[
+"Matteuccia struthiopteris",
+"Oreopteris limbosperma",
+3,
+true,
+true
+],
+[
+"Medicago lupulina",
+"Medicago sativa",
+3,
+true,
+true
+],
+[
+"Medicago minima",
+"Trifolium dubium",
+3,
+true,
+true
+],
+[
+"Melica ciliata",
+"Melica transsilvanica",
+3,
+true,
+true
+],
+[
+"Melica nutans",
+"Melica uniflora",
+3,
+true,
+true
+],
+[
+"Melissa officinalis",
+"Urtica dioica",
+3,
+true,
+true
+],
+[
+"Mercurialis ovata",
+"Mercurialis perennis",
+3,
+true,
+true
+],
+[
+"Mercurialis perennis",
+"Sambucus nigra",
+3,
+true,
+true
+],
+[
+"Molinia arundinacea",
+"Molinia caerulea",
+3,
+true,
+true
+],
+[
+"Muscari neglectum",
+"Muscari racemosum",
+3,
+false,
+false
+],
+[
+"Mutarda arvensis",
+"Sinapis alba",
+3,
+true,
+true
+],
+[
+"Mutellina purpurea",
+"Pimpinella major",
+3,
+true,
+true
+],
+[
+"Mycelis muralis",
+"Prenanthes purpurea",
+3,
+true,
+true
+],
+[
+"Mycelis muralis",
+"Sonchus oleraceus",
+3,
+true,
+true
+],
+[
+"Myosotis alpestris",
+"Myosotis scorpioides",
+3,
+true,
+true
+],
+[
+"Myosotis scorpioides",
+"Myosotis sylvatica",
+3,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Myrrhis odorata",
+3,
+true,
+true
+],
+[
+"Narcissus poeticus",
+"Narcissus × incomparabilis",
+3,
+true,
+false
+],
+[
+"Narcissus pseudonarcissus",
+"Narcissus × incomparabilis",
+3,
+true,
+false
+],
+[
+"Neotinea tridentata",
+"Orchis militaris",
+3,
+true,
+false
+],
+[
+"Oenothera glazioviana",
+"Oenothera × fallax",
+3,
+true,
+true
+],
+[
+"Onobrychis montana",
+"Onobrychis viciifolia",
+3,
+true,
+true
+],
+[
+"Onobrychis viciifolia",
+"Securigera varia",
+3,
+true,
+true
+],
+[
+"Ononis arvensis",
+"Ononis spinosa",
+3,
+true,
+true
+],
+[
+"Onosma arenaria",
+"Onosma visianii",
+3,
+true,
+false
+],
+[
+"Ophrys fuciflora",
+"Ophrys sphegodes",
+3,
+true,
+false
+],
+[
+"Ophrys sphegodes",
+"Ophrys × obscura",
+3,
+true,
+false
+],
+[
+"Oreomecon alpina",
+"Papaver cambricum",
+3,
+true,
+false
+],
+[
+"Origanum vulgare",
+"Thymus praecox",
+3,
+true,
+true
+],
+[
+"Ornithogalum divergens",
+"Ornithogalum umbellatum",
+3,
+true,
+false
+],
+[
+"Ornithogalum pyrenaicum",
+"Ornithogalum sphaerocarpum",
+3,
+true,
+false
+],
+[
+"Orobanche caryophyllacea",
+"Orobanche lutea",
+3,
+true,
+false
+],
+[
+"Orobanche gracilis",
+"Orobanche reticulata",
+3,
+true,
+true
+],
+[
+"Orobanche lutea",
+"Orobanche teucrii",
+3,
+true,
+false
+],
+[
+"Orobanche lutea",
+"Orobanche minor",
+3,
+true,
+false
+],
+[
+"Orobanche pancicii",
+"Orobanche reticulata",
+3,
+true,
+true
+],
+[
+"Oxalis acetosella",
+"Oxalis corniculata",
+3,
+true,
+true
+],
+[
+"Oxytropis lapponica",
+"Oxytropis montana",
+3,
+true,
+true
+],
+[
+"Parietaria judaica",
+"Parietaria officinalis",
+3,
+true,
+false
+],
+[
+"Pastinaca sativa",
+"Pimpinella major",
+3,
+true,
+true
+],
+[
+"Pedicularis rostratocapitata",
+"Pedicularis rostratospicata",
+3,
+true,
+true
+],
+[
+"Pedicularis rostratocapitata",
+"Pedicularis sylvatica",
+3,
+true,
+true
+],
+[
+"Persicaria amphibia",
+"Persicaria lapathifolia",
+3,
+true,
+true
+],
+[
+"Petasites albus",
+"Petasites japonicus",
+3,
+false,
+true
+],
+[
+"Petasites hybridus",
+"Rumex alpinus",
+3,
+true,
+true
+],
+[
+"Peucedanum palustre",
+"Selinum carvifolia",
+3,
+true,
+true
+],
+[
+"Phedimus ellacombeanus",
+"Phedimus spurius",
+3,
+true,
+true
+],
+[
+"Phedimus hybridus",
+"Saxifraga aizoides",
+3,
+true,
+true
+],
+[
+"Phyteuma betonicifolium",
+"Phyteuma ovatum",
+3,
+true,
+false
+],
+[
+"Phyteuma orbiculare",
+"Phyteuma scheuchzeri",
+3,
+true,
+true
+],
+[
+"Harpagophytum procumbens",
+"Phyteuma spicatum",
+3,
+false,
+true
+],
+[
+"Picea abies",
+"Picea glauca",
+3,
+false,
+true
+],
+[
+"Plantago serpentina",
+"Plantago strictissima",
+3,
+false,
+false
+],
+[
+"Platanus occidentalis",
+"Platanus × hispanica",
+3,
+true,
+false
+],
+[
+"Poa angustifolia",
+"Poa pratensis",
+3,
+true,
+true
+],
+[
+"Polygaloides chamaebuxus",
+"Vaccinium vitis-idaea",
+3,
+true,
+true
+],
+[
+"Polygonatum latifolium",
+"Polygonatum odoratum",
+3,
+true,
+true
+],
+[
+"Polygonum bellardii",
+"Polygonum patulum",
+3,
+false,
+false
+],
+[
+"Populus nigra",
+"Populus tremula",
+3,
+true,
+true
+],
+[
+"Corylus avellana",
+"Populus tremula",
+3,
+true,
+true
+],
+[
+"Portulaca granulatostellulata",
+"Portulaca oleracea",
+3,
+false,
+false
+],
+[
+"Potentilla aurea",
+"Potentilla erecta",
+3,
+true,
+true
+],
+[
+"Potentilla clusiana",
+"Potentilla nitida",
+3,
+true,
+false
+],
+[
+"Potentilla incana",
+"Potentilla pusilla",
+3,
+true,
+false
+],
+[
+"Potentilla recta",
+"Potentilla reptans",
+3,
+true,
+true
+],
+[
+"Primula clusiana",
+"Primula integrifolia",
+3,
+true,
+true
+],
+[
+"Primula veris",
+"Primula × media",
+3,
+true,
+true
+],
+[
+"Primula veris",
+"Primula vulgaris",
+3,
+true,
+true
+],
+[
+"Prunella vulgaris",
+"Thymus pulegioides",
+3,
+true,
+true
+],
+[
+"Prunus avium",
+"Prunus mahaleb",
+3,
+true,
+true
+],
+[
+"Ptelea trifoliata",
+"Trifolium repens",
+3,
+true,
+true
+],
+[
+"Puccinellia distans",
+"Puccinellia intermedia",
+3,
+true,
+true
+],
+[
+"Pulmonaria mollis",
+"Pulmonaria officinalis",
+3,
+true,
+true
+],
+[
+"Puschkinia scilloides",
+"Scilla mischtschenkoana",
+3,
+true,
+false
+],
+[
+"Quercus cerris",
+"Quercus petraea",
+3,
+true,
+false
+],
+[
+"Ranunculus acris",
+"Ranunculus tuberosus",
+3,
+true,
+true
+],
+[
+"Rhododendron hirsutum",
+"Rhodothamnus chamaecistus",
+3,
+true,
+true
+],
+[
+"Robinia pseudoacacia",
+"Xanthoceras sorbifolium",
+3,
+false,
+true
+],
+[
+"Rorippa palustris",
+"Rorippa sylvestris",
+3,
+true,
+true
+],
+[
+"Rosa canina",
+"Rosa multiflora",
+3,
+true,
+true
+],
+[
+"Rubus armeniacus",
+"Rubus canescens",
+3,
+true,
+true
+],
+[
+"Rubus bifrons",
+"Rubus fruticosus",
+3,
+true,
+true
+],
+[
+"Rubus bifrons",
+"Rubus caesius",
+3,
+true,
+true
+],
+[
+"Rubus caesius",
+"Rubus corylifolius",
+3,
+true,
+true
+],
+[
+"Rubus caesius",
+"Rubus flagellaris",
+3,
+false,
+true
+],
+[
+"Rumex alpinus",
+"Rumex arifolius",
+3,
+true,
+false
+],
+[
+"Rumex longifolius",
+"Rumex patientia",
+3,
+true,
+false
+],
+[
+"Rumex longifolius",
+"Rumex obtusifolius",
+3,
+true,
+true
+],
+[
+"Rumex maritimus",
+"Rumex palustris",
+3,
+true,
+false
+],
+[
+"Sabulina verna",
+"Sagina nodosa",
+3,
+true,
+false
+],
+[
+"Salix alba",
+"Salix × fragilis",
+3,
+true,
+true
+],
+[
+"Salix alba",
+"Salix purpurea",
+3,
+true,
+true
+],
+[
+"Salix breviserrata",
+"Salix foetida",
+3,
+true,
+false
+],
+[
+"Salix caprea",
+"Salix cinerea",
+3,
+true,
+true
+],
+[
+"Salix euxina",
+"Salix triandra",
+3,
+true,
+true
+],
+[
+"Salix retusa",
+"Salix serpillifolia",
+3,
+true,
+false
+],
+[
+"Salvia glutinosa",
+"Salvia pratensis",
+3,
+true,
+true
+],
+[
+"Salvia yangii",
+"Salvia × floriferior",
+3,
+true,
+false
+],
+[
+"Sambucus nigra",
+"Viburnum lantana",
+3,
+true,
+true
+],
+[
+"Sambucus racemosa",
+"Sorbus aucuparia",
+3,
+true,
+true
+],
+[
+"Saxifraga aizoides",
+"Saxifraga aphylla",
+3,
+true,
+true
+],
+[
+"Saxifraga aizoides",
+"Sedum alpestre",
+3,
+true,
+true
+],
+[
+"Saxifraga aphylla",
+"Saxifraga moschata",
+3,
+true,
+false
+],
+[
+"Saxifraga biflora",
+"Saxifraga × kochii",
+3,
+true,
+false
+],
+[
+"Scilla bifolia",
+"Scilla siberica",
+3,
+true,
+true
+],
+[
+"Scorzonera purpurea",
+"Scorzonera rosea",
+3,
+true,
+false
+],
+[
+"Scrophularia nodosa",
+"Scrophularia umbrosa",
+3,
+true,
+true
+],
+[
+"Selaginella selaginoides",
+"Spinulum annotinum",
+3,
+true,
+true
+],
+[
+"Senecio rupestris",
+"Senecio squalidus",
+3,
+false,
+true
+],
+[
+"Sesleria caerulea",
+"Sesleria uliginosa",
+3,
+true,
+true
+],
+[
+"Silene dioica",
+"Silene flos-cuculi",
+3,
+true,
+true
+],
+[
+"Silene latifolia",
+"Silene × hampeana",
+3,
+true,
+true
+],
+[
+"Silene latifolia",
+"Silene noctiflora",
+3,
+true,
+true
+],
+[
+"Sisymbrium irio",
+"Sisymbrium loeselii",
+3,
+true,
+false
+],
+[
+"Sisyrinchium bermudiana",
+"Sisyrinchium montanum",
+3,
+true,
+true
+],
+[
+"Sisyrinchium angustifolium",
+"Sisyrinchium montanum",
+3,
+false,
+true
+],
+[
+"Solanum americanum",
+"Solanum nigrum",
+3,
+false,
+true
+],
+[
+"Soldanella alpina",
+"Soldanella × hybrida",
+3,
+true,
+true
+],
+[
+"Soldanella major",
+"Soldanella montana",
+3,
+true,
+true
+],
+[
+"Soldanella minima",
+"Soldanella pusilla",
+3,
+true,
+false
+],
+[
+"Sonchus arvensis",
+"Sonchus oleraceus",
+3,
+true,
+true
+],
+[
+"Sonchus oleraceus",
+"Taraxacum officinale",
+3,
+true,
+true
+],
+[
+"Sorbus aucuparia",
+"Viburnum opulus",
+3,
+true,
+true
+],
+[
+"Spergularia media",
+"Spergularia rubra",
+3,
+true,
+false
+],
+[
+"Stachys alpina",
+"Stachys sylvatica",
+3,
+true,
+true
+],
+[
+"Stachys byzantina",
+"Stachys germanica",
+3,
+true,
+true
+],
+[
+"Stellaria apetala",
+"Stellaria media",
+3,
+true,
+true
+],
+[
+"Symphytum officinale",
+"Symphytum × uplandicum",
+3,
+true,
+true
+],
+[
+"Takhtajaniantha austriaca",
+"Tragopogon orientalis",
+3,
+true,
+true
+],
+[
+"Tanacetum corymbosum",
+"Tanacetum vulgare",
+3,
+true,
+true
+],
+[
+"Taraxacum officinale",
+"Tussilago farfara",
+3,
+true,
+true
+],
+[
+"Thalictrum aquilegiifolium",
+"Thalictrum pubescens",
+3,
+false,
+true
+],
+[
+"Athyrium filix-femina",
+"Thelypteris palustris",
+3,
+true,
+true
+],
+[
+"Tofieldia calyculata",
+"Tofieldia pusilla",
+3,
+true,
+true
+],
+[
+"Torilis arvensis",
+"Torilis japonica",
+3,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Traunsteinera globosa",
+3,
+true,
+true
+],
+[
+"Trifolium alpestre",
+"Trifolium rubens",
+3,
+true,
+false
+],
+[
+"Trifolium badium",
+"Trifolium spadiceum",
+3,
+true,
+false
+],
+[
+"Trifolium badium",
+"Trifolium dubium",
+3,
+true,
+true
+],
+[
+"Trifolium campestre",
+"Trifolium patens",
+3,
+true,
+true
+],
+[
+"Trifolium dubium",
+"Trifolium repens",
+3,
+true,
+true
+],
+[
+"Trifolium medium",
+"Trifolium montanum",
+3,
+true,
+true
+],
+[
+"Trifolium pallescens",
+"Trifolium repens",
+3,
+true,
+true
+],
+[
+"Typha angustifolia",
+"Typha laxmannii",
+3,
+true,
+true
+],
+[
+"Typha latifolia",
+"Typha shuttleworthii",
+3,
+true,
+true
+],
+[
+"Prunus avium",
+"Ulmus minor",
+3,
+true,
+true
+],
+[
+"Urtica dioica",
+"Urtica kioviensis",
+3,
+true,
+true
+],
+[
+"Urtica dioica",
+"Urtica gracilis",
+3,
+false,
+true
+],
+[
+"Utricularia australis",
+"Utricularia × neglecta",
+3,
+true,
+true
+],
+[
+"Valeriana excelsa",
+"Valeriana officinalis",
+3,
+true,
+true
+],
+[
+"Valeriana officinalis",
+"Valeriana tripteris",
+3,
+true,
+true
+],
+[
+"Valeriana sitchensis",
+"Valeriana tripteris",
+3,
+false,
+true
+],
+[
+"Verbascum alpinum",
+"Verbascum chaixii",
+3,
+true,
+true
+],
+[
+"Verbascum blattaria",
+"Verbascum phoeniceum",
+3,
+true,
+false
+],
+[
+"Verbascum lychnitis",
+"Verbascum thapsus",
+3,
+true,
+true
+],
+[
+"Verbascum phlomoides",
+"Verbascum virgatum",
+3,
+false,
+true
+],
+[
+"Veronica anagallis-aquatica",
+"Veronica catenata",
+3,
+true,
+true
+],
+[
+"Veronica chamaedrys",
+"Veronica officinalis",
+3,
+true,
+true
+],
+[
+"Vicia cracca",
+"Vicia sativa",
+3,
+true,
+true
+],
+[
+"Vicia hirsuta",
+"Vicia tetrasperma",
+3,
+true,
+true
+],
+[
+"Vinca herbacea",
+"Vinca minor",
+3,
+true,
+true
+],
+[
+"Viola alba",
+"Viola sororia",
+3,
+true,
+false
+],
+[
+"Viola alpina",
+"Viola calcarata",
+3,
+true,
+false
+],
+[
+"Viola calcarata",
+"Viola tricolor",
+3,
+true,
+true
+],
+[
+"Viola collina",
+"Viola riviniana",
+3,
+true,
+true
+],
+[
+"Viola hirta",
+"Viola reichenbachiana",
+3,
+true,
+true
+],
+[
+"Viola reichenbachiana",
+"Viola suavis",
+3,
+true,
+true
+],
+[
+"Waldsteinia fragarioides",
+"Waldsteinia ternata",
+3,
+false,
+false
+],
+[
+"Abies alba",
+"Pinus sylvestris",
+2,
+true,
+true
+],
+[
+"Abies alba",
+"Torreya californica",
+2,
+false,
+true
+],
+[
+"Abies alba",
+"Abies balsamea",
+2,
+false,
+true
+],
+[
+"Abies nordmanniana",
+"Picea abies",
+2,
+true,
+true
+],
+[
+"Acer campestre",
+"Fagus sylvatica",
+2,
+true,
+true
+],
+[
+"Acer ginnala",
+"Acer negundo",
+2,
+true,
+true
+],
+[
+"Acer negundo",
+"Fraxinus excelsior",
+2,
+true,
+true
+],
+[
+"Acer palmatum",
+"Acer platanoides",
+2,
+true,
+true
+],
+[
+"Acer platanoides",
+"Betula pendula",
+2,
+true,
+true
+],
+[
+"Acer platanoides",
+"Quercus robur",
+2,
+true,
+true
+],
+[
+"Acer heldreichii",
+"Acer pseudoplatanus",
+2,
+false,
+true
+],
+[
+"Acer pseudoplatanus",
+"Aesculus hippocastanum",
+2,
+true,
+true
+],
+[
+"Achillea clavennae",
+"Plantago coronopus",
+2,
+true,
+true
+],
+[
+"Achillea clavennae",
+"Achillea ptarmica",
+2,
+true,
+true
+],
+[
+"Achillea collina",
+"Achillea pannonica",
+2,
+true,
+false
+],
+[
+"Achillea millefolium",
+"Daucus carota",
+2,
+true,
+true
+],
+[
+"Aconitum lycoctonum",
+"Aconitum vulparia",
+2,
+true,
+true
+],
+[
+"Aconitum napellus",
+"Linaria purpurea",
+2,
+true,
+true
+],
+[
+"Acorus calamus",
+"Iris pseudacorus",
+2,
+true,
+true
+],
+[
+"Actaea spicata",
+"Urtica dioica",
+2,
+true,
+true
+],
+[
+"Adenostyles alliariae",
+"Petasites hybridus",
+2,
+true,
+true
+],
+[
+"Aegopodium podagraria",
+"Chaerophyllum aromaticum",
+2,
+true,
+true
+],
+[
+"Aegopodium podagraria",
+"Peucedanum ostruthium",
+2,
+true,
+true
+],
+[
+"Aethusa cynapium",
+"Daucus carota",
+2,
+true,
+true
+],
+[
+"Agrimonia agrimonoides",
+"Waldsteinia ternata",
+2,
+true,
+false
+],
+[
+"Agrimonia agrimonoides",
+"Geum urbanum",
+2,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Ajuga × hybrida",
+2,
+true,
+true
+],
+[
+"Alchemilla alpigena",
+"Alchemilla alpina",
+2,
+true,
+false
+],
+[
+"Alchemilla conjuncta",
+"Alchemilla pallens",
+2,
+true,
+false
+],
+[
+"Alchemilla crinita",
+"Alchemilla vulgaris",
+2,
+true,
+true
+],
+[
+"Alchemilla lineata",
+"Alchemilla vulgaris",
+2,
+true,
+true
+],
+[
+"Alisma gramineum",
+"Alisma lanceolatum",
+2,
+true,
+false
+],
+[
+"Alisma plantago-aquatica",
+"Pontederia cordata",
+2,
+true,
+true
+],
+[
+"Alliaria petiolata",
+"Lapsana communis",
+2,
+true,
+true
+],
+[
+"Alliaria petiolata",
+"Lunaria annua",
+2,
+true,
+true
+],
+[
+"Alliaria petiolata",
+"Glechoma hederacea",
+2,
+true,
+true
+],
+[
+"Allium lusitanicum",
+"Allium senescens",
+2,
+false,
+true
+],
+[
+"Allium lusitanicum",
+"Allium suaveolens",
+2,
+true,
+true
+],
+[
+"Allium rotundum",
+"Allium sphaerocephalon",
+2,
+true,
+false
+],
+[
+"Allium sativum",
+"Allium scorodoprasum",
+2,
+true,
+true
+],
+[
+"Allium scorodoprasum",
+"Allium sphaerocephalon",
+2,
+true,
+true
+],
+[
+"Allium ursinum",
+"Colchicum autumnale",
+2,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Betula pendula",
+2,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Frangula alnus",
+2,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Carpinus betulus",
+2,
+true,
+true
+],
+[
+"Alnus incana",
+"Aria edulis",
+2,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Phleum alpinum",
+2,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Cynosurus cristatus",
+2,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Plantago media",
+2,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Plantago lanceolata",
+2,
+true,
+true
+],
+[
+"Alyssum alyssoides",
+"Alyssum desertorum",
+2,
+true,
+false
+],
+[
+"Alyssum montanum",
+"Alyssum repens",
+2,
+true,
+false
+],
+[
+"Alyssum repens",
+"Alyssum wulfenianum",
+2,
+true,
+false
+],
+[
+"Amaranthus blitum",
+"Amaranthus viridis",
+2,
+true,
+false
+],
+[
+"Amaranthus hybridus",
+"Amaranthus powellii",
+2,
+true,
+true
+],
+[
+"Ambrosia artemisiifolia",
+"Erigeron canadensis",
+2,
+true,
+true
+],
+[
+"Ambrosia artemisiifolia",
+"Cota tinctoria",
+2,
+true,
+true
+],
+[
+"Ambrosia artemisiifolia",
+"Ambrosia psilostachya",
+2,
+false,
+true
+],
+[
+"Amelanchier alnifolia",
+"Amelanchier ovalis",
+2,
+true,
+true
+],
+[
+"Amelanchier arborea",
+"Amelanchier ovalis",
+2,
+true,
+true
+],
+[
+"Amelanchier ovalis",
+"Amelanchier × lamarckii",
+2,
+true,
+true
+],
+[
+"Anacamptis palustris",
+"Orchis mascula",
+2,
+true,
+true
+],
+[
+"Anacamptis pyramidalis",
+"Traunsteinera globosa",
+2,
+true,
+true
+],
+[
+"Anchusa arvensis",
+"Echium vulgare",
+2,
+true,
+true
+],
+[
+"Anchusa officinalis",
+"Anchusa undulata",
+2,
+false,
+false
+],
+[
+"Anchusa officinalis",
+"Echium vulgare",
+2,
+true,
+true
+],
+[
+"Androsace chamaejasme",
+"Androsace lactea",
+2,
+true,
+true
+],
+[
+"Anemonastrum narcissiflorum",
+"Dryas octopetala",
+2,
+true,
+true
+],
+[
+"Anemonoides apennina",
+"Hepatica nobilis",
+2,
+true,
+true
+],
+[
+"Anemonoides blanda",
+"Hepatica nobilis",
+2,
+true,
+true
+],
+[
+"Anemonoides ranunculoides",
+"Ranunculus auricomus",
+2,
+true,
+true
+],
+[
+"Anemonoides ranunculoides",
+"Eranthis hyemalis",
+2,
+true,
+true
+],
+[
+"Anemonoides ranunculoides",
+"Ranunculus repens",
+2,
+true,
+true
+],
+[
+"Angelica archangelica",
+"Peucedanum ostruthium",
+2,
+true,
+false
+],
+[
+"Antennaria dioica",
+"Antennaria neglecta",
+2,
+false,
+true
+],
+[
+"Anthemis cotula",
+"Tripleurospermum inodorum",
+2,
+true,
+true
+],
+[
+"Anthoxanthum nipponicum",
+"Anthoxanthum odoratum",
+2,
+true,
+true
+],
+[
+"Anthoxanthum odoratum",
+"Dactylis glomerata",
+2,
+true,
+true
+],
+[
+"Anthriscus caucalis",
+"Daucus carota",
+2,
+true,
+true
+],
+[
+"Anthriscus nitidus",
+"Chaerophyllum hirsutum",
+2,
+true,
+true
+],
+[
+"Anthyllis montana",
+"Trifolium pratense",
+2,
+true,
+true
+],
+[
+"Arabidopsis halleri",
+"Moehringia muscosa",
+2,
+true,
+true
+],
+[
+"Arabidopsis lyrata",
+"Arabidopsis thaliana",
+2,
+true,
+true
+],
+[
+"Arabidopsis thaliana",
+"Arabis procurrens",
+2,
+true,
+true
+],
+[
+"Arabis alpina",
+"Hornungia alpina",
+2,
+true,
+true
+],
+[
+"Arabis alpina",
+"Cardamine amara",
+2,
+true,
+true
+],
+[
+"Arabis hirsuta",
+"Turritis glabra",
+2,
+true,
+true
+],
+[
+"Arabis hirsuta",
+"Berteroa incana",
+2,
+true,
+true
+],
+[
+"Aralia elata",
+"Peucedanum verticillare",
+2,
+true,
+false
+],
+[
+"Arctium lappa",
+"Arctium tomentosum",
+2,
+true,
+true
+],
+[
+"Arenaria ciliata",
+"Arenaria grandiflora",
+2,
+true,
+false
+],
+[
+"Arenaria serpyllifolia",
+"Herniaria glabra",
+2,
+true,
+true
+],
+[
+"Argentina anserina",
+"Erodium cicutarium",
+2,
+true,
+true
+],
+[
+"Aria danubialis",
+"Aria edulis",
+2,
+true,
+true
+],
+[
+"Aria edulis",
+"Sorbus aucuparia",
+2,
+true,
+true
+],
+[
+"Armoracia rusticana",
+"Rumex patientia",
+2,
+true,
+true
+],
+[
+"Armoracia rusticana",
+"Rumex obtusifolius",
+2,
+true,
+true
+],
+[
+"Arnica montana",
+"Doronicum clusii",
+2,
+true,
+true
+],
+[
+"Arnica montana",
+"Jacobaea abrotanifolia",
+2,
+true,
+true
+],
+[
+"Artemisia absinthium",
+"Artemisia austriaca",
+2,
+true,
+true
+],
+[
+"Artemisia absinthium",
+"Potentilla argentea",
+2,
+true,
+true
+],
+[
+"Artemisia absinthium",
+"Centaurea stoebe",
+2,
+true,
+true
+],
+[
+"Artemisia pontica",
+"Artemisia vulgaris",
+2,
+true,
+true
+],
+[
+"Arum italicum",
+"Arum maculatum",
+2,
+true,
+true
+],
+[
+"Aruncus dioicus",
+"Aruncus sylvester",
+2,
+false,
+true
+],
+[
+"Arundo donax",
+"Phragmites australis",
+2,
+true,
+true
+],
+[
+"Asperula tinctoria",
+"Galium austriacum",
+2,
+true,
+false
+],
+[
+"Asplenium ruta-muraria",
+"Asplenium trichomanes",
+2,
+true,
+true
+],
+[
+"Asplenium platyneuron",
+"Asplenium trichomanes",
+2,
+false,
+true
+],
+[
+"Asplenium viride",
+"Polystichum aculeatum",
+2,
+true,
+true
+],
+[
+"Asplenium viride",
+"Polystichum lonchitis",
+2,
+true,
+true
+],
+[
+"Aster alpinus",
+"Aster bellidiastrum",
+2,
+true,
+true
+],
+[
+"Aster alpinus",
+"Aster amellus",
+2,
+true,
+true
+],
+[
+"Aster bellidiastrum",
+"Erigeron uniflorus",
+2,
+true,
+true
+],
+[
+"Aster bellidiastrum",
+"Erigeron annuus",
+2,
+true,
+true
+],
+[
+"Aster bellidiastrum",
+"Leucanthemum vulgare",
+2,
+true,
+true
+],
+[
+"Astragalus asper",
+"Astragalus onobrychis",
+2,
+true,
+false
+],
+[
+"Astragalus cicer",
+"Astragalus glycyphyllos",
+2,
+true,
+true
+],
+[
+"Astragalus glycyphyllos",
+"Securigera varia",
+2,
+true,
+true
+],
+[
+"Astrantia bavarica",
+"Astrantia major",
+2,
+true,
+true
+],
+[
+"Astrantia major",
+"Sanicula europaea",
+2,
+true,
+true
+],
+[
+"Athamanta cretensis",
+"Meum athamanticum",
+2,
+true,
+true
+],
+[
+"Athyrium distentifolium",
+"Oreopteris limbosperma",
+2,
+true,
+true
+],
+[
+"Atriplex prostrata",
+"Oxybasis chenopodioides",
+2,
+true,
+false
+],
+[
+"Avena fatua",
+"Bromus sterilis",
+2,
+true,
+true
+],
+[
+"Avenula pubescens",
+"Helictochloa versicolor",
+2,
+true,
+true
+],
+[
+"Avenula pubescens",
+"Dactylis glomerata",
+2,
+true,
+true
+],
+[
+"Ballota nigra",
+"Lamium album",
+2,
+true,
+false
+],
+[
+"Ballota nigra",
+"Marrubium vulgare",
+2,
+true,
+false
+],
+[
+"Barbarea vulgaris",
+"Brassica napus",
+2,
+true,
+true
+],
+[
+"Barbarea vulgaris",
+"Rorippa palustris",
+2,
+true,
+true
+],
+[
+"Bellis perennis",
+"Erigeron uniflorus",
+2,
+true,
+true
+],
+[
+"Bellis perennis",
+"Erigeron annuus",
+2,
+true,
+true
+],
+[
+"Berberis aquifolium",
+"Berberis vulgaris",
+2,
+true,
+true
+],
+[
+"Berberis aquifolium",
+"Ilex aquifolium",
+2,
+true,
+true
+],
+[
+"Berberis repens",
+"Berberis × decumbens",
+2,
+false,
+false
+],
+[
+"Berula erecta",
+"Helosciadium nodiflorum",
+2,
+false,
+false
+],
+[
+"Berula erecta",
+"Nasturtium officinale",
+2,
+true,
+true
+],
+[
+"Berula erecta",
+"Pastinaca sativa",
+2,
+true,
+true
+],
+[
+"Betonica officinalis",
+"Dactylorhiza fuchsii",
+2,
+true,
+true
+],
+[
+"Ajuga reptans",
+"Betonica officinalis",
+2,
+true,
+true
+],
+[
+"Bidens frondosa",
+"Bidens tripartita",
+2,
+true,
+true
+],
+[
+"Bidens aurea",
+"Bidens triplinervia",
+2,
+false,
+false
+],
+[
+"Biscutella laevigata",
+"Draba aizoides",
+2,
+true,
+true
+],
+[
+"Bistorta amplexicaulis",
+"Bistorta officinalis",
+2,
+true,
+true
+],
+[
+"Bistorta officinalis",
+"Traunsteinera globosa",
+2,
+true,
+true
+],
+[
+"Bistorta officinalis",
+"Bistorta vivipara",
+2,
+true,
+true
+],
+[
+"Bistorta vivipara",
+"Plantago lanceolata",
+2,
+true,
+true
+],
+[
+"Botrychium lunaria",
+"Botrychium onondagense",
+2,
+true,
+true
+],
+[
+"Brachypodium sylvaticum",
+"Calamagrostis arundinacea",
+2,
+true,
+true
+],
+[
+"Briza media",
+"Molinia caerulea",
+2,
+true,
+true
+],
+[
+"Briza media",
+"Briza minor",
+2,
+false,
+true
+],
+[
+"Bromus hordeaceus",
+"Lolium pratense",
+2,
+true,
+true
+],
+[
+"Bromus hordeaceus",
+"Trisetum flavescens",
+2,
+true,
+true
+],
+[
+"Bromus japonicus",
+"Bromus squarrosus",
+2,
+true,
+false
+],
+[
+"Buglossoides arvensis",
+"Buglossoides incrassata",
+2,
+true,
+false
+],
+[
+"Bunias orientalis",
+"Lepidium draba",
+2,
+true,
+false
+],
+[
+"Buphthalmum salicifolium",
+"Pentanema britannica",
+2,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Pentanema hirtum",
+2,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Leontodon incanus",
+2,
+true,
+true
+],
+[
+"Callitriche palustris",
+"Callitriche platycarpa",
+2,
+true,
+true
+],
+[
+"Caltha palustris",
+"Petasites paradoxus",
+2,
+true,
+true
+],
+[
+"Caltha palustris",
+"Eranthis hyemalis",
+2,
+true,
+true
+],
+[
+"Caltha palustris",
+"Ranunculus repens",
+2,
+true,
+true
+],
+[
+"Calystegia sepium",
+"Ficaria verna",
+2,
+true,
+true
+],
+[
+"Campanula bononiensis",
+"Campanula glomerata",
+2,
+true,
+true
+],
+[
+"Campanula cespitosa",
+"Campanula rotundifolia",
+2,
+true,
+true
+],
+[
+"Campanula glomerata",
+"Campanula trachelium",
+2,
+true,
+true
+],
+[
+"Campanula portenschlagiana",
+"Campanula poscharskyana",
+2,
+true,
+false
+],
+[
+"Campanula rapunculoides",
+"Stachys sylvatica",
+2,
+true,
+true
+],
+[
+"Campanula rapunculoides",
+"Campanula rapunculus",
+2,
+true,
+true
+],
+[
+"Campanula trachelium",
+"Urtica dioica",
+2,
+true,
+true
+],
+[
+"Capsella bursa-pastoris",
+"Capsella grandiflora",
+2,
+false,
+true
+],
+[
+"Capsella bursa-pastoris",
+"Thlaspi arvense",
+2,
+true,
+true
+],
+[
+"Capsella bursa-pastoris",
+"Lepidium virginicum",
+2,
+true,
+true
+],
+[
+"Cardamine amara",
+"Cardamine occulta",
+2,
+true,
+true
+],
+[
+"Cardamine amara",
+"Cardamine trifolia",
+2,
+true,
+true
+],
+[
+"Cardamine amara",
+"Cardamine impatiens",
+2,
+true,
+true
+],
+[
+"Cardamine bulbifera",
+"Cardamine bulbosa",
+2,
+false,
+true
+],
+[
+"Cardamine bulbifera",
+"Hesperis matronalis",
+2,
+true,
+true
+],
+[
+"Cardamine diphylla",
+"Cardamine enneaphyllos",
+2,
+false,
+true
+],
+[
+"Cardamine hirsuta",
+"Cardamine impatiens",
+2,
+true,
+true
+],
+[
+"Capsella bursa-pastoris",
+"Cardamine hirsuta",
+2,
+true,
+true
+],
+[
+"Cardamine resedifolia",
+"Hornungia alpina",
+2,
+true,
+true
+],
+[
+"Cardamine diphylla",
+"Cardamine waldsteinii",
+2,
+false,
+false
+],
+[
+"Carduus acanthoides",
+"Carduus defloratus",
+2,
+true,
+true
+],
+[
+"Carduus crispus",
+"Cirsium vulgare",
+2,
+true,
+true
+],
+[
+"Carduus defloratus",
+"Carduus nutans",
+2,
+true,
+true
+],
+[
+"Carduus nutans",
+"Centaurea scabiosa",
+2,
+true,
+true
+],
+[
+"Carduus nutans",
+"Cirsium vulgare",
+2,
+true,
+true
+],
+[
+"Carduus personata",
+"Cirsium heterophyllum",
+2,
+true,
+true
+],
+[
+"Carex acutiformis",
+"Carex buekii",
+2,
+true,
+true
+],
+[
+"Carex acutiformis",
+"Scirpus sylvaticus",
+2,
+true,
+true
+],
+[
+"Carex atrata",
+"Carex parviflora",
+2,
+true,
+false
+],
+[
+"Carex brizoides",
+"Carex remota",
+2,
+true,
+true
+],
+[
+"Carex brunnescens",
+"Carex canescens",
+2,
+true,
+true
+],
+[
+"Carex buekii",
+"Carex × vratislaviensis",
+2,
+false,
+false
+],
+[
+"Carex caryophyllea",
+"Carex praecox",
+2,
+true,
+true
+],
+[
+"Carex caryophyllea",
+"Carex humilis",
+2,
+true,
+true
+],
+[
+"Carex caryophyllea",
+"Carex supina",
+2,
+true,
+true
+],
+[
+"Carex caryophyllea",
+"Carex pallescens",
+2,
+true,
+true
+],
+[
+"Carex demissa",
+"Carex oederi",
+2,
+true,
+true
+],
+[
+"Carex elata",
+"Carex × prolixa",
+2,
+true,
+true
+],
+[
+"Carex flacca",
+"Carex frigida",
+2,
+true,
+true
+],
+[
+"Carex flacca",
+"Carex nigra",
+2,
+true,
+true
+],
+[
+"Carex flacca",
+"Carex hirta",
+2,
+true,
+true
+],
+[
+"Carex flacca",
+"Carex pendula",
+2,
+true,
+true
+],
+[
+"Carex fritschii",
+"Carex pilulifera",
+2,
+true,
+true
+],
+[
+"Carex hirta",
+"Dactylis glomerata",
+2,
+true,
+true
+],
+[
+"Carex montana",
+"Carex umbrosa",
+2,
+true,
+true
+],
+[
+"Carex muricata",
+"Carex spicata",
+2,
+true,
+true
+],
+[
+"Carex nigra",
+"Carex × elytroides",
+2,
+true,
+true
+],
+[
+"Carex praecox",
+"Carex stenophylla",
+2,
+true,
+true
+],
+[
+"Carex rostrata",
+"Carex vesicaria",
+2,
+true,
+true
+],
+[
+"Carex sylvatica",
+"Deschampsia cespitosa",
+2,
+true,
+true
+],
+[
+"Carduus defloratus",
+"Carlina acaulis",
+2,
+true,
+true
+],
+[
+"Carlina acaulis",
+"Cirsium palustre",
+2,
+true,
+true
+],
+[
+"Carlina acaulis",
+"Codon royenii",
+2,
+false,
+true
+],
+[
+"Carlina acaulis",
+"Carlina vulgaris",
+2,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Carum carvi",
+2,
+true,
+true
+],
+[
+"Castanea sativa",
+"Juglans regia",
+2,
+true,
+true
+],
+[
+"Carpinus betulus",
+"Castanea sativa",
+2,
+true,
+true
+],
+[
+"Centaurea cyanus",
+"Centaurea jacea",
+2,
+true,
+true
+],
+[
+"Centaurea jacea",
+"Centaurea macroptilon",
+2,
+true,
+true
+],
+[
+"Centaurea montana",
+"Phyteuma orbiculare",
+2,
+true,
+true
+],
+[
+"Centaurea nigrescens",
+"Centaurea phrygia",
+2,
+true,
+true
+],
+[
+"Centaurea nigra",
+"Centaurea phrygia",
+2,
+false,
+true
+],
+[
+"Centaurea phrygia",
+"Centaurea scabiosa",
+2,
+true,
+true
+],
+[
+"Centaurea scabiosa",
+"Centaurea triumfettii",
+2,
+true,
+true
+],
+[
+"Cephalanthera damasonium",
+"Cephalanthera × schulzei",
+2,
+true,
+true
+],
+[
+"Cephalanthera damasonium",
+"Epipactis helleborine",
+2,
+true,
+true
+],
+[
+"Cephalanthera longifolia",
+"Cephalanthera rubra",
+2,
+true,
+true
+],
+[
+"Cerastium arvense",
+"Cerastium uniflorum",
+2,
+true,
+true
+],
+[
+"Cerastium carinthiacum",
+"Cerastium uniflorum",
+2,
+true,
+true
+],
+[
+"Cerastium fontanum",
+"Cerastium glomeratum",
+2,
+true,
+true
+],
+[
+"Cerastium latifolium",
+"Cerastium uniflorum",
+2,
+true,
+true
+],
+[
+"Cerinthe minor",
+"Linum flavum",
+2,
+true,
+false
+],
+[
+"Chamaecytisus hirsutus",
+"Hippocrepis emerus",
+2,
+true,
+true
+],
+[
+"Chamaecytisus hirsutus",
+"Lotus corniculatus",
+2,
+true,
+true
+],
+[
+"Chamaecytisus ratisbonensis",
+"Genista tinctoria",
+2,
+true,
+true
+],
+[
+"Chamaenerion angustifolium",
+"Epilobium hirsutum",
+2,
+true,
+true
+],
+[
+"Chamaenerion angustifolium",
+"Impatiens glandulifera",
+2,
+true,
+true
+],
+[
+"Chelidonium asiaticum",
+"Chelidonium majus",
+2,
+false,
+true
+],
+[
+"Chelidonium majus",
+"Ranunculus lanuginosus",
+2,
+true,
+true
+],
+[
+"Chenopodium album",
+"Erigeron annuus",
+2,
+true,
+true
+],
+[
+"Cherleria sedoides",
+"Silene acaulis",
+2,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Euphorbia helioscopia",
+2,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Geum urbanum",
+2,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Glechoma hederacea",
+2,
+true,
+true
+],
+[
+"Chrysosplenium alternifolium",
+"Euphorbia cyparissias",
+2,
+true,
+true
+],
+[
+"Circaea alpina",
+"Circaea lutetiana",
+2,
+true,
+true
+],
+[
+"Cirsium arvense",
+"Cirsium heterophyllum",
+2,
+true,
+true
+],
+[
+"Cirsium arvense",
+"Codon royenii",
+2,
+false,
+true
+],
+[
+"Cirsium canum",
+"Cirsium pannonicum",
+2,
+true,
+false
+],
+[
+"Cirsium canum",
+"Cirsium heterophyllum",
+2,
+true,
+false
+],
+[
+"Cirsium erisithales",
+"Sonchus asper",
+2,
+true,
+true
+],
+[
+"Cirsium greimleri",
+"Cirsium rivulare",
+2,
+true,
+true
+],
+[
+"Cirsium heterophyllum",
+"Cirsium rivulare",
+2,
+true,
+true
+],
+[
+"Cirsium oleraceum",
+"Cirsium × rigens",
+2,
+true,
+true
+],
+[
+"Cirsium oleraceum",
+"Cirsium spinosissimum",
+2,
+true,
+true
+],
+[
+"Cirsium rivulare",
+"Cirsium vulgare",
+2,
+true,
+true
+],
+[
+"Cirsium spinosissimum",
+"Cirsium vulgare",
+2,
+true,
+true
+],
+[
+"Clematis alpina",
+"Clematis occidentalis",
+2,
+false,
+true
+],
+[
+"Clematis virginiana",
+"Clematis vitalba",
+2,
+false,
+true
+],
+[
+"Clinopodium alpinum",
+"Thymus pulegioides",
+2,
+true,
+true
+],
+[
+"Clinopodium alpinum",
+"Thymus praecox",
+2,
+true,
+true
+],
+[
+"Clinopodium vulgare",
+"Origanum vulgare",
+2,
+true,
+true
+],
+[
+"Colchicum autumnale",
+"Colchicum umbrosum",
+2,
+false,
+true
+],
+[
+"Colchicum autumnale",
+"Convallaria majalis",
+2,
+true,
+true
+],
+[
+"Colutea arborescens",
+"Robinia pseudoacacia",
+2,
+true,
+true
+],
+[
+"Comarum palustre",
+"Potentilla reptans",
+2,
+true,
+true
+],
+[
+"Comastoma nanum",
+"Gentianella anisodonta",
+2,
+true,
+false
+],
+[
+"Convolvulus arvensis",
+"Fallopia convolvulus",
+2,
+true,
+true
+],
+[
+"Cornus mas",
+"Syringa vulgaris",
+2,
+true,
+true
+],
+[
+"Cornus mas",
+"Fagus sylvatica",
+2,
+true,
+true
+],
+[
+"Coronilla coronata",
+"Hippocrepis comosa",
+2,
+true,
+true
+],
+[
+"Corydalis intermedia",
+"Corydalis solida",
+2,
+true,
+false
+],
+[
+"Cota austriaca",
+"Tanacetum corymbosum",
+2,
+true,
+false
+],
+[
+"Cota austriaca",
+"Tripleurospermum inodorum",
+2,
+true,
+true
+],
+[
+"Cota austriaca",
+"Leucanthemum vulgare",
+2,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Cota tinctoria",
+2,
+true,
+true
+],
+[
+"Cotoneaster dielsianus",
+"Cotoneaster divaricatus",
+2,
+true,
+true
+],
+[
+"Cotoneaster integerrimus",
+"Cotoneaster tomentosus",
+2,
+true,
+true
+],
+[
+"Cotoneaster integerrimus",
+"Symphoricarpos albus",
+2,
+true,
+true
+],
+[
+"Crataegus laevigata",
+"Rosa multiflora",
+2,
+true,
+true
+],
+[
+"Crataegus monogyna",
+"Crataegus rhipidophylla",
+2,
+true,
+true
+],
+[
+"Crepis biennis",
+"Hieracium umbellatum",
+2,
+true,
+true
+],
+[
+"Crepis capillaris",
+"Crepis tectorum",
+2,
+true,
+true
+],
+[
+"Crepis capillaris",
+"Lapsana communis",
+2,
+true,
+true
+],
+[
+"Crepis foetida",
+"Leontodon hispidus",
+2,
+true,
+true
+],
+[
+"Crepis jacquinii",
+"Crepis terglouensis",
+2,
+true,
+false
+],
+[
+"Crepis pontana",
+"Hypochaeris uniflora",
+2,
+true,
+false
+],
+[
+"Crocus biflorus",
+"Crocus vernus",
+2,
+true,
+true
+],
+[
+"Crocus tommasinianus",
+"Crocus vernus",
+2,
+true,
+true
+],
+[
+"Cruciata laevipes",
+"Veronica arvensis",
+2,
+true,
+true
+],
+[
+"Cryptogramma crispa",
+"Cystopteris alpina",
+2,
+true,
+true
+],
+[
+"Cuscuta campestris",
+"Cuscuta epithymum",
+2,
+true,
+true
+],
+[
+"Cymbalaria muralis",
+"Glechoma hederacea",
+2,
+true,
+true
+],
+[
+"Cynanchica neilreichii",
+"Cynanchica pyrenaica",
+2,
+true,
+false
+],
+[
+"Athyrium filix-femina",
+"Cystopteris fragilis",
+2,
+true,
+true
+],
+[
+"Alopecurus pratensis",
+"Dactylis glomerata",
+2,
+true,
+true
+],
+[
+"Dactylis glomerata",
+"Polypogon viridis",
+2,
+true,
+true
+],
+[
+"Dactylorhiza incarnata",
+"Gymnadenia conopsea",
+2,
+true,
+true
+],
+[
+"Dactylorhiza sambucina",
+"Orchis militaris",
+2,
+true,
+false
+],
+[
+"Daphne cneorum",
+"Daphne mezereum",
+2,
+true,
+true
+],
+[
+"Daphne laureola",
+"Euphorbia amygdaloides",
+2,
+true,
+true
+],
+[
+"Daphne mezereum",
+"Rubus saxatilis",
+2,
+true,
+true
+],
+[
+"Daucus carota",
+"Seseli annuum",
+2,
+true,
+true
+],
+[
+"Daucus carota",
+"Pimpinella saxifraga",
+2,
+true,
+true
+],
+[
+"Daucus carota",
+"Heracleum sphondylium",
+2,
+true,
+true
+],
+[
+"Daucus carota",
+"Torilis japonica",
+2,
+true,
+true
+],
+[
+"Delphinium ajacis",
+"Delphinium consolida",
+2,
+true,
+false
+],
+[
+"Delphinium consolida",
+"Geranium dissectum",
+2,
+true,
+true
+],
+[
+"Dianthus alpinus",
+"Dianthus sylvestris",
+2,
+true,
+true
+],
+[
+"Dianthus armeria",
+"Dianthus giganteiformis",
+2,
+true,
+true
+],
+[
+"Dianthus armeria",
+"Dianthus barbatus",
+2,
+true,
+true
+],
+[
+"Dianthus barbatus",
+"Dianthus chinensis × barbatus",
+2,
+true,
+true
+],
+[
+"Dianthus deltoides",
+"Dianthus giganteiformis",
+2,
+true,
+true
+],
+[
+"Dianthus deltoides",
+"Silene acaulis",
+2,
+true,
+true
+],
+[
+"Dianthus glacialis",
+"Silene acaulis",
+2,
+true,
+true
+],
+[
+"Dianthus glacialis",
+"Dianthus sylvestris",
+2,
+true,
+false
+],
+[
+"Dianthus plumarius",
+"Dianthus sternbergii",
+2,
+true,
+false
+],
+[
+"Dianthus praecox",
+"Dianthus superbus",
+2,
+true,
+false
+],
+[
+"Dianthus hyssopifolius",
+"Dianthus sternbergii",
+2,
+false,
+false
+],
+[
+"Digitalis purpurea",
+"Verbascum chaixii",
+2,
+true,
+true
+],
+[
+"Digitaria ciliaris",
+"Digitaria sanguinalis",
+2,
+true,
+true
+],
+[
+"Dittrichia graveolens",
+"Dittrichia viscosa",
+2,
+true,
+true
+],
+[
+"Doronicum austriacum",
+"Telekia speciosa",
+2,
+true,
+true
+],
+[
+"Doronicum caucasicum",
+"Doronicum pardalianches",
+2,
+true,
+false
+],
+[
+"Doronicum glaciale",
+"Doronicum grandiflorum",
+2,
+true,
+false
+],
+[
+"Doronicum grandiflorum",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Draba verna",
+"Stellaria media",
+2,
+true,
+true
+],
+[
+"Drosera anglica",
+"Drosera rotundifolia",
+2,
+true,
+true
+],
+[
+"Drosera rotundifolia",
+"Drosera × obovata",
+2,
+true,
+true
+],
+[
+"Dryas octopetala",
+"Pulsatilla alpina",
+2,
+true,
+true
+],
+[
+"Dryopteris carthusiana",
+"Dryopteris filix-mas",
+2,
+true,
+true
+],
+[
+"Dysphania botrys",
+"Dysphania pumilio",
+2,
+true,
+false
+],
+[
+"Echinops ritro",
+"Echinops sphaerocephalus",
+2,
+true,
+false
+],
+[
+"Echium gaditanum",
+"Echium vulgare",
+2,
+false,
+true
+],
+[
+"Elymus repens",
+"Lolium perenne",
+2,
+true,
+true
+],
+[
+"Epilobium alpestre",
+"Epilobium montanum",
+2,
+true,
+true
+],
+[
+"Epilobium anagallidifolium",
+"Epilobium nutans",
+2,
+true,
+false
+],
+[
+"Epilobium hirsutum",
+"Silene dioica",
+2,
+true,
+true
+],
+[
+"Epilobium montanum",
+"Epilobium palustre",
+2,
+true,
+true
+],
+[
+"Epimedium alpinum",
+"Epimedium × versicolor",
+2,
+true,
+false
+],
+[
+"Epipactis helleborine",
+"Epipactis palustris",
+2,
+true,
+true
+],
+[
+"Equisetum palustre",
+"Equisetum pratense",
+2,
+true,
+true
+],
+[
+"Equisetum pratense",
+"Equisetum telmateia",
+2,
+true,
+true
+],
+[
+"Eranthis hyemalis",
+"Ficaria verna",
+2,
+true,
+true
+],
+[
+"Erechtites hieraciifolius",
+"Eupatorium cannabinum",
+2,
+true,
+true
+],
+[
+"Erigeron acris",
+"Erigeron droebachensis",
+2,
+true,
+true
+],
+[
+"Erigeron canadensis",
+"Solidago canadensis",
+2,
+true,
+true
+],
+[
+"Erigeron glabratus",
+"Erigeron neglectus",
+2,
+true,
+true
+],
+[
+"Erinus alpinus",
+"Primula minima",
+2,
+true,
+false
+],
+[
+"Eriocapitella japonica",
+"Eriocapitella × hybrida",
+2,
+false,
+false
+],
+[
+"Eriophorum vaginatum",
+"Trichophorum alpinum",
+2,
+true,
+true
+],
+[
+"Erodium ciconium",
+"Erodium cicutarium",
+2,
+true,
+true
+],
+[
+"Erodium cicutarium",
+"Erodium malacoides",
+2,
+false,
+true
+],
+[
+"Erysimum odoratum",
+"Erysimum sylvestre",
+2,
+true,
+false
+],
+[
+"Euonymus europaeus",
+"Rhamnus cathartica",
+2,
+true,
+true
+],
+[
+"Euonymus latifolius",
+"Euonymus verrucosus",
+2,
+true,
+true
+],
+[
+"Euphorbia amygdaloides",
+"Euphorbia dulcis",
+2,
+true,
+true
+],
+[
+"Euphorbia amygdaloides",
+"Euphorbia helioscopia",
+2,
+true,
+true
+],
+[
+"Euphorbia austriaca",
+"Euphorbia palustris",
+2,
+true,
+true
+],
+[
+"Euphorbia characias",
+"Euphorbia lathyris",
+2,
+true,
+false
+],
+[
+"Euphorbia esula",
+"Euphorbia seguieriana",
+2,
+true,
+false
+],
+[
+"Euphorbia glareosa",
+"Euphorbia pannonica",
+2,
+true,
+false
+],
+[
+"Euphorbia illirica",
+"Euphorbia palustris",
+2,
+true,
+false
+],
+[
+"Euphorbia platyphyllos",
+"Euphorbia stricta",
+2,
+true,
+true
+],
+[
+"Euphorbia verrucosa",
+"Euphorbia virgata",
+2,
+true,
+false
+],
+[
+"Euphrasia officinalis",
+"Euphrasia salisburgensis",
+2,
+true,
+true
+],
+[
+"Alnus glutinosa",
+"Fagus sylvatica",
+2,
+true,
+true
+],
+[
+"Fagus orientalis",
+"Fagus sylvatica",
+2,
+false,
+true
+],
+[
+"Fallopia baldschuanica",
+"Fallopia scandens",
+2,
+false,
+false
+],
+[
+"Fallopia convolvulus",
+"Fallopia dumetorum",
+2,
+true,
+true
+],
+[
+"Ficaria verna",
+"Gagea pratensis",
+2,
+true,
+true
+],
+[
+"Centella asiatica",
+"Ficaria verna",
+2,
+false,
+true
+],
+[
+"Fragaria viridis",
+"Rubus caesius",
+2,
+true,
+true
+],
+[
+"Frangula alnus",
+"Prunus avium",
+2,
+true,
+true
+],
+[
+"Fraxinus angustifolia",
+"Fraxinus excelsior",
+2,
+true,
+true
+],
+[
+"Gaillardia pulchella",
+"Gaillardia × grandiflora",
+2,
+true,
+false
+],
+[
+"Galanthus nivalis",
+"Leucojum vernum",
+2,
+true,
+true
+],
+[
+"Galatella cana",
+"Galatella sedifolia",
+2,
+false,
+false
+],
+[
+"Euthamia occidentalis",
+"Galatella linosyris",
+2,
+false,
+false
+],
+[
+"Galega officinalis",
+"Vicia sylvatica",
+2,
+true,
+true
+],
+[
+"Galeopsis bifida",
+"Galeopsis tetrahit",
+2,
+true,
+true
+],
+[
+"Galium album",
+"Galium anisophyllon",
+2,
+true,
+true
+],
+[
+"Galium album",
+"Galium spurium",
+2,
+true,
+true
+],
+[
+"Galium anisophyllon",
+"Galium megalospermum",
+2,
+true,
+true
+],
+[
+"Galium anisophyllon",
+"Galium saxatile",
+2,
+true,
+true
+],
+[
+"Galium eruptivum",
+"Galium glaucum",
+2,
+true,
+false
+],
+[
+"Galium rotundifolium",
+"Lotus corniculatus",
+2,
+true,
+true
+],
+[
+"Galium album",
+"Galium verum",
+2,
+true,
+true
+],
+[
+"Genista germanica",
+"Genista sagittalis",
+2,
+true,
+true
+],
+[
+"Genista pilosa",
+"Hippocrepis comosa",
+2,
+true,
+true
+],
+[
+"Genista pilosa",
+"Lotus corniculatus",
+2,
+true,
+true
+],
+[
+"Genista sagittalis",
+"Medicago falcata",
+2,
+true,
+true
+],
+[
+"Gentiana acaulis",
+"Gentiana verna",
+2,
+true,
+true
+],
+[
+"Gentiana acaulis",
+"Gentiana asclepiadea",
+2,
+true,
+true
+],
+[
+"Gentiana bavarica",
+"Gentiana pumila",
+2,
+true,
+false
+],
+[
+"Gentiana lutea",
+"Veratrum lobelianum",
+2,
+true,
+false
+],
+[
+"Gentiana lutea",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Gentianella amarella",
+"Gentianella aspera",
+2,
+false,
+true
+],
+[
+"Gentianella campestris",
+"Gentianella rhaetica",
+2,
+true,
+false
+],
+[
+"Gentianella austriaca",
+"Gentianella campestris",
+2,
+true,
+false
+],
+[
+"Geranium dissectum",
+"Ranunculus acris",
+2,
+true,
+true
+],
+[
+"Erodium cicutarium",
+"Geranium pusillum",
+2,
+true,
+true
+],
+[
+"Geranium pyrenaicum",
+"Geranium sanguineum",
+2,
+true,
+true
+],
+[
+"Geum montanum",
+"Pulsatilla scherfelii",
+2,
+true,
+false
+],
+[
+"Geum montanum",
+"Ranunculus bulbosus",
+2,
+true,
+true
+],
+[
+"Geum montanum",
+"Geum triflorum",
+2,
+false,
+false
+],
+[
+"Geum reptans",
+"Geum triflorum",
+2,
+false,
+false
+],
+[
+"Gladiolus illyricus",
+"Gladiolus palustris",
+2,
+true,
+true
+],
+[
+"Gymnadenia austriaca",
+"Gymnadenia miniata",
+2,
+true,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Gymnadenia densiflora",
+2,
+true,
+true
+],
+[
+"Gymnadenia odoratissima",
+"Gymnadenia × intermedia",
+2,
+true,
+true
+],
+[
+"Gymnadenia odoratissima",
+"Gymnadenia × heufleri",
+2,
+true,
+true
+],
+[
+"Gymnadenia odoratissima",
+"Platanthera bifolia",
+2,
+true,
+true
+],
+[
+"Gymnadenia conopsea",
+"Gymnadenia × intermedia",
+2,
+true,
+true
+],
+[
+"Gymnocarpium dryopteris",
+"Sorbus aucuparia",
+2,
+true,
+true
+],
+[
+"Hedera algeriensis",
+"Hedera helix",
+2,
+true,
+true
+],
+[
+"Helianthemum alpestre",
+"Helianthemum oelandicum",
+2,
+true,
+true
+],
+[
+"Helianthemum alpestre",
+"Potentilla erecta",
+2,
+true,
+true
+],
+[
+"Helianthemum apenninum",
+"Helianthemum canum",
+2,
+true,
+false
+],
+[
+"Helianthemum canum",
+"Helianthemum nummularium",
+2,
+true,
+true
+],
+[
+"Helianthemum nummularium",
+"Polygaloides chamaebuxus",
+2,
+true,
+true
+],
+[
+"Helianthemum nummularium",
+"Potentilla aurea",
+2,
+true,
+true
+],
+[
+"Helianthus hirsutus",
+"Helianthus tuberosus",
+2,
+false,
+true
+],
+[
+"Anemonoides nemorosa",
+"Helleborus niger",
+2,
+true,
+true
+],
+[
+"Helleborus niger",
+"Prunus laurocerasus",
+2,
+true,
+true
+],
+[
+"Anemonoides nemorosa",
+"Hepatica nobilis",
+2,
+true,
+true
+],
+[
+"Hepatica nobilis",
+"Scilla siberica",
+2,
+true,
+true
+],
+[
+"Heracleum austriacum",
+"Orlaya grandiflora",
+2,
+true,
+true
+],
+[
+"Heracleum sibiricum",
+"Heracleum sphondylium",
+2,
+false,
+true
+],
+[
+"Heracleum sosnowskyi",
+"Heracleum sphondylium",
+2,
+false,
+true
+],
+[
+"Hesperis matronalis",
+"Lunaria annua",
+2,
+true,
+true
+],
+[
+"Hieracium lachenalii",
+"Hieracium murorum",
+2,
+true,
+true
+],
+[
+"Hieracium murorum",
+"Hieracium rotundatum",
+2,
+true,
+true
+],
+[
+"Hieracium murorum",
+"Hieracium transylvanicum",
+2,
+true,
+true
+],
+[
+"Hieracium murorum",
+"Lapsana communis",
+2,
+true,
+true
+],
+[
+"Himantoglossum adriaticum",
+"Orchis simia",
+2,
+true,
+false
+],
+[
+"Homogyne alpina",
+"Homogyne sylvestris",
+2,
+true,
+true
+],
+[
+"Homogyne sylvestris",
+"Saxifraga rotundifolia",
+2,
+true,
+true
+],
+[
+"Humulus lupulus",
+"Humulus scandens",
+2,
+false,
+true
+],
+[
+"Humulus lupulus",
+"Viburnum opulus",
+2,
+true,
+true
+],
+[
+"Hylotelephium maximum",
+"Hylotelephium × mottramianum",
+2,
+true,
+false
+],
+[
+"Hylotelephium maximum",
+"Lepidium draba",
+2,
+true,
+false
+],
+[
+"Hypericum hirsutum",
+"Hypericum montanum",
+2,
+true,
+true
+],
+[
+"Hypericum maculatum",
+"Hypericum richeri",
+2,
+false,
+true
+],
+[
+"Hypericum maculatum",
+"Hypericum tetrapterum",
+2,
+true,
+true
+],
+[
+"Hypericum maculatum",
+"Hypericum punctatum",
+2,
+false,
+true
+],
+[
+"Hypericum montanum",
+"Hypericum tetrapterum",
+2,
+true,
+true
+],
+[
+"Hypochaeris radicata",
+"Tragopogon orientalis",
+2,
+true,
+true
+],
+[
+"Crepis biennis",
+"Hypochaeris radicata",
+2,
+true,
+true
+],
+[
+"Hypochaeris uniflora",
+"Leontodon hispidus",
+2,
+true,
+true
+],
+[
+"Impatiens balfourii",
+"Impatiens glandulifera",
+2,
+true,
+true
+],
+[
+"Impatiens noli-tangere",
+"Prunus padus",
+2,
+true,
+true
+],
+[
+"Inula helenium",
+"Telekia speciosa",
+2,
+true,
+true
+],
+[
+"Iris pseudacorus",
+"Stratiotes aloides",
+2,
+true,
+true
+],
+[
+"Iris pseudacorus",
+"Iris sibirica",
+2,
+true,
+true
+],
+[
+"Isatis tinctoria",
+"Rorippa austriaca",
+2,
+true,
+false
+],
+[
+"Jacobaea alpina",
+"Tephroseris crispa",
+2,
+true,
+true
+],
+[
+"Jacobaea alpina",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Jacobaea alpina",
+"Jacobaea vulgaris",
+2,
+true,
+true
+],
+[
+"Jacobaea carniolica",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Jacobaea paludosa",
+"Tephroseris crispa",
+2,
+true,
+true
+],
+[
+"Juglans nigra",
+"Juglans regia",
+2,
+true,
+true
+],
+[
+"Juglans regia",
+"Ulmus minor",
+2,
+true,
+true
+],
+[
+"Juglans regia",
+"Sambucus racemosa",
+2,
+true,
+true
+],
+[
+"Juncus articulatus",
+"Luzula pilosa",
+2,
+true,
+true
+],
+[
+"Juniperus communis",
+"Larix decidua",
+2,
+true,
+true
+],
+[
+"Knautia dipsacifolia",
+"Scabiosa lucida",
+2,
+true,
+true
+],
+[
+"Knautia arvensis",
+"Knautia longifolia",
+2,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Koelreuteria paniculata",
+2,
+true,
+true
+],
+[
+"Lactuca serriola",
+"Sonchus arvensis",
+2,
+true,
+true
+],
+[
+"Lamium album",
+"Melissa officinalis",
+2,
+true,
+true
+],
+[
+"Lamium galeobdolon",
+"Salvia glutinosa",
+2,
+true,
+true
+],
+[
+"Lamium hybridum",
+"Lamium purpureum",
+2,
+true,
+true
+],
+[
+"Larix decidua",
+"Pinus sylvestris",
+2,
+true,
+true
+],
+[
+"Lathraea squamaria",
+"Petasites hybridus",
+2,
+true,
+true
+],
+[
+"Lathyrus heterophyllus",
+"Lathyrus sylvestris",
+2,
+true,
+true
+],
+[
+"Lathyrus linifolius",
+"Lathyrus vernus",
+2,
+true,
+false
+],
+[
+"Lathyrus linifolius",
+"Lathyrus sylvestris",
+2,
+true,
+true
+],
+[
+"Lathyrus niger",
+"Vicia cracca",
+2,
+true,
+true
+],
+[
+"Lathyrus vernus",
+"Vicia sepium",
+2,
+true,
+true
+],
+[
+"Lepidium draba",
+"Reseda lutea",
+2,
+true,
+true
+],
+[
+"Ligustrum vulgare",
+"Syringa vulgaris",
+2,
+true,
+true
+],
+[
+"Ligustrum vulgare",
+"Rubus caesius",
+2,
+true,
+true
+],
+[
+"Linum austriacum",
+"Veronica chamaedrys",
+2,
+true,
+true
+],
+[
+"Linum hirsutum",
+"Linum usitatissimum",
+2,
+true,
+false
+],
+[
+"Lobelia erinus",
+"Viola × wittrockiana",
+2,
+true,
+false
+],
+[
+"Lolium perenne",
+"Lolium pratense",
+2,
+true,
+true
+],
+[
+"Lonicera alpigena",
+"Lonicera conjugialis",
+2,
+false,
+true
+],
+[
+"Lonicera caerulea",
+"Lonicera nigra",
+2,
+true,
+true
+],
+[
+"Lonicera caerulea",
+"Lonicera xylosteum",
+2,
+true,
+true
+],
+[
+"Lonicera caerulea",
+"Vaccinium ovalifolium",
+2,
+false,
+true
+],
+[
+"Lonicera nigra",
+"Lonicera xylosteum",
+2,
+true,
+true
+],
+[
+"Lonicera nigra",
+"Vaccinium ovalifolium",
+2,
+false,
+true
+],
+[
+"Lonicera tatarica",
+"Lonicera xylosteum",
+2,
+true,
+true
+],
+[
+"Lonicera xylosteum",
+"Viburnum lantana",
+2,
+true,
+true
+],
+[
+"Lotus dorycnium",
+"Lotus herbaceus",
+2,
+false,
+false
+],
+[
+"Lotus corniculatus",
+"Lotus maritimus",
+2,
+true,
+true
+],
+[
+"Lupinus polyphyllus",
+"Lupinus rivularis",
+2,
+false,
+true
+],
+[
+"Luzula campestris",
+"Luzula pilosa",
+2,
+true,
+true
+],
+[
+"Luzula luzuloides",
+"Luzula multiflora",
+2,
+true,
+true
+],
+[
+"Luzula luzuloides",
+"Luzula pilosa",
+2,
+true,
+true
+],
+[
+"Lycium barbarum",
+"Lycium chinense",
+2,
+true,
+false
+],
+[
+"Lycopodium clavatum",
+"Selaginella selaginoides",
+2,
+true,
+true
+],
+[
+"Lysimachia foemina",
+"Lysimachia loeflingii",
+2,
+true,
+false
+],
+[
+"Lysimachia nummularia",
+"Potentilla reptans",
+2,
+true,
+true
+],
+[
+"Lythrum salicaria",
+"Stachys palustris",
+2,
+true,
+true
+],
+[
+"Malva alcea",
+"Malva thuringiaca",
+2,
+true,
+true
+],
+[
+"Malva parviflora",
+"Malva sylvestris",
+2,
+true,
+true
+],
+[
+"Malva assurgentiflora",
+"Malva sylvestris",
+2,
+false,
+true
+],
+[
+"Geranium pyrenaicum",
+"Malva sylvestris",
+2,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Matteuccia struthiopteris",
+2,
+true,
+true
+],
+[
+"Medicago sativa",
+"Securigera varia",
+2,
+true,
+true
+],
+[
+"Medicago sativa",
+"Trifolium pratense",
+2,
+true,
+true
+],
+[
+"Melampyrum arvense",
+"Melampyrum cristatum",
+2,
+true,
+false
+],
+[
+"Melampyrum pratense",
+"Polygaloides chamaebuxus",
+2,
+true,
+true
+],
+[
+"Melilotus albus",
+"Melilotus dentatus",
+2,
+true,
+true
+],
+[
+"Medicago lupulina",
+"Melilotus officinalis",
+2,
+true,
+true
+],
+[
+"Lotus corniculatus",
+"Melilotus officinalis",
+2,
+true,
+true
+],
+[
+"Mentha aquatica",
+"Mentha longifolia",
+2,
+true,
+true
+],
+[
+"Mentha longifolia",
+"Mentha × dumetorum",
+2,
+true,
+true
+],
+[
+"Mentha longifolia",
+"Phacelia tanacetifolia",
+2,
+true,
+true
+],
+[
+"Micranthes stellaris",
+"Saxifraga cuneifolia",
+2,
+true,
+true
+],
+[
+"Micranthes stellaris",
+"Saxifraga rotundifolia",
+2,
+true,
+true
+],
+[
+"Minuartia mucronata",
+"Minuartia setacea",
+2,
+true,
+false
+],
+[
+"Moehringia ciliata",
+"Sabulina verna",
+2,
+true,
+false
+],
+[
+"Moehringia muscosa",
+"Sabulina michauxii",
+2,
+false,
+true
+],
+[
+"Mutarda arvensis",
+"Sisymbrium loeselii",
+2,
+true,
+true
+],
+[
+"Myosotis alpestris",
+"Myosotis asiatica",
+2,
+false,
+true
+],
+[
+"Myosotis arvensis",
+"Myosotis stricta",
+2,
+true,
+true
+],
+[
+"Myosotis decumbens",
+"Myosotis sylvatica",
+2,
+true,
+true
+],
+[
+"Myosotis laxa",
+"Myosotis nemorosa",
+2,
+true,
+true
+],
+[
+"Myosotis nemorosa",
+"Myosotis scorpioides",
+2,
+true,
+true
+],
+[
+"Myosotis latifolia",
+"Myosotis sylvatica",
+2,
+false,
+true
+],
+[
+"Chaerophyllum hirsutum",
+"Myrrhis odorata",
+2,
+true,
+true
+],
+[
+"Najas marina",
+"Najas minor",
+2,
+true,
+true
+],
+[
+"Nasturtium microphyllum",
+"Nasturtium officinale",
+2,
+true,
+true
+],
+[
+"Neotinea tridentata",
+"Neotinea × dietrichiana",
+2,
+true,
+false
+],
+[
+"Neotinea ustulata",
+"Orchis militaris",
+2,
+true,
+true
+],
+[
+"Neottia ovata",
+"Platanthera bifolia",
+2,
+true,
+true
+],
+[
+"Nepeta racemosa",
+"Nepeta × faassenii",
+2,
+true,
+false
+],
+[
+"Nepeta racemosa",
+"Salvia verticillata",
+2,
+true,
+true
+],
+[
+"Noccaea alpestris",
+"Noccaea rotundifolia",
+2,
+true,
+false
+],
+[
+"Oenothera biennis",
+"Oenothera × fallax",
+2,
+true,
+true
+],
+[
+"Carduus acanthoides",
+"Onopordum acanthium",
+2,
+true,
+true
+],
+[
+"Ophrys insectifera",
+"Ophrys sphegodes",
+2,
+true,
+true
+],
+[
+"Oreochloa disticha",
+"Sesleria caerulea",
+2,
+true,
+true
+],
+[
+"Oreopteris limbosperma",
+"Pteridium aquilinum",
+2,
+true,
+true
+],
+[
+"Orobanche alba",
+"Orobanche reticulata",
+2,
+true,
+true
+],
+[
+"Orobanche caryophyllacea",
+"Orobanche teucrii",
+2,
+true,
+false
+],
+[
+"Orobanche flava",
+"Orobanche salviae",
+2,
+true,
+true
+],
+[
+"Orobanche lutea",
+"Orobanche reticulata",
+2,
+true,
+true
+],
+[
+"Oxalis corniculata",
+"Oxalis stricta",
+2,
+true,
+true
+],
+[
+"Oxybasis chenopodioides",
+"Oxybasis rubra",
+2,
+true,
+false
+],
+[
+"Oxytropis campestris",
+"Pedicularis tuberosa",
+2,
+true,
+false
+],
+[
+"Oxytropis montana",
+"Oxytropis triflora",
+2,
+true,
+true
+],
+[
+"Papaver albiflorum",
+"Papaver dubium",
+2,
+true,
+false
+],
+[
+"Papaver confine",
+"Papaver dubium",
+2,
+true,
+false
+],
+[
+"Papaver rhoeas",
+"Papaver somniferum",
+2,
+true,
+true
+],
+[
+"Parnassia palustris",
+"Pinguicula alpina",
+2,
+true,
+true
+],
+[
+"Pastinaca sativa",
+"Pimpinella saxifraga",
+2,
+true,
+true
+],
+[
+"Heracleum sphondylium",
+"Pastinaca sativa",
+2,
+true,
+true
+],
+[
+"Pedicularis asplenifolia",
+"Pedicularis rostratocapitata",
+2,
+true,
+true
+],
+[
+"Pedicularis asplenifolia",
+"Pedicularis verticillata",
+2,
+true,
+false
+],
+[
+"Pedicularis portenschlagii",
+"Pedicularis rostratocapitata",
+2,
+true,
+true
+],
+[
+"Pedicularis rosea",
+"Pedicularis verticillata",
+2,
+true,
+false
+],
+[
+"Pentanema britannica",
+"Pentanema hirtum",
+2,
+true,
+false
+],
+[
+"Pentanema britannica",
+"Pentanema salicinum",
+2,
+true,
+true
+],
+[
+"Pentanema squarrosum",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Petasites hybridus",
+"Petasites japonicus",
+2,
+false,
+true
+],
+[
+"Petasites japonicus",
+"Petasites paradoxus",
+2,
+false,
+true
+],
+[
+"Petunia integrifolia",
+"Petunia × atkinsiana",
+2,
+true,
+false
+],
+[
+"Peucedanum oreoselinum",
+"Selinum carvifolia",
+2,
+true,
+true
+],
+[
+"Peucedanum palustre",
+"Silaum silaus",
+2,
+true,
+true
+],
+[
+"Dactylis glomerata",
+"Phalaris arundinacea",
+2,
+true,
+true
+],
+[
+"Phedimus spurius",
+"Phedimus stolonifer",
+2,
+true,
+true
+],
+[
+"Phelipanche arenaria",
+"Phelipanche purpurea",
+2,
+true,
+false
+],
+[
+"Phleum alpinum",
+"Phleum pratense",
+2,
+true,
+true
+],
+[
+"Phleum phleoides",
+"Phleum pratense",
+2,
+true,
+true
+],
+[
+"Dactylis glomerata",
+"Phleum pratense",
+2,
+true,
+true
+],
+[
+"Phlomoides tuberosa",
+"Salvia verticillata",
+2,
+true,
+true
+],
+[
+"Phragmites australis",
+"Typha latifolia",
+2,
+true,
+true
+],
+[
+"Harpagophytum procumbens",
+"Phyteuma betonicifolium",
+2,
+false,
+false
+],
+[
+"Phyteuma betonicifolium",
+"Phyteuma hemisphaericum",
+2,
+true,
+false
+],
+[
+"Picea abies",
+"Picea pungens",
+2,
+true,
+true
+],
+[
+"Pinguicula alpina",
+"Primula clusiana",
+2,
+true,
+true
+],
+[
+"Pinus cembra",
+"Pinus nigra",
+2,
+true,
+false
+],
+[
+"Pinus cembra",
+"Pinus mugo",
+2,
+true,
+true
+],
+[
+"Plantago altissima",
+"Plantago lanceolata",
+2,
+true,
+true
+],
+[
+"Plantago lanceolata",
+"Sanguisorba officinalis",
+2,
+true,
+true
+],
+[
+"Bellis perennis",
+"Plantago major",
+2,
+true,
+true
+],
+[
+"Plantago media",
+"Plantago urvillei",
+2,
+false,
+true
+],
+[
+"Platanthera bifolia",
+"Platanthera metabifolia",
+2,
+false,
+true
+],
+[
+"Dactylorhiza fuchsii",
+"Platanthera bifolia",
+2,
+true,
+true
+],
+[
+"Poa alpina",
+"Poa molinerii",
+2,
+true,
+false
+],
+[
+"Poa nemoralis",
+"Poa trivialis",
+2,
+true,
+true
+],
+[
+"Poa glauca",
+"Poa nemoralis",
+2,
+false,
+false
+],
+[
+"Poa pratensis",
+"Poa trivialis",
+2,
+true,
+true
+],
+[
+"Polygala alpestris",
+"Polygala amara",
+2,
+true,
+true
+],
+[
+"Polygala comosa",
+"Veronica prostrata",
+2,
+true,
+true
+],
+[
+"Polygala comosa",
+"Polygala major",
+2,
+true,
+true
+],
+[
+"Polygala comosa",
+"Polygala nicaeensis",
+2,
+true,
+true
+],
+[
+"Polygala vulgaris",
+"Veronica prostrata",
+2,
+true,
+true
+],
+[
+"Polygonatum multiflorum",
+"Polygonatum pubescens",
+2,
+false,
+true
+],
+[
+"Polygonatum biflorum",
+"Polygonatum multiflorum",
+2,
+false,
+true
+],
+[
+"Polygonatum multiflorum",
+"Streptopus amplexifolius",
+2,
+true,
+true
+],
+[
+"Polygonatum biflorum",
+"Polygonatum odoratum",
+2,
+false,
+true
+],
+[
+"Polypodium vulgare",
+"Struthiopteris spicant",
+2,
+true,
+true
+],
+[
+"Dryopteris filix-mas",
+"Polystichum aculeatum",
+2,
+true,
+true
+],
+[
+"Dryopteris filix-mas",
+"Polystichum braunii",
+2,
+true,
+true
+],
+[
+"Athyrium filix-femina",
+"Polystichum setiferum",
+2,
+true,
+true
+],
+[
+"Populus nigra",
+"Syringa vulgaris",
+2,
+true,
+true
+],
+[
+"Hedera helix",
+"Populus nigra",
+2,
+true,
+true
+],
+[
+"Potamogeton natans",
+"Potamogeton nodosus",
+2,
+true,
+true
+],
+[
+"Potentilla argentea",
+"Potentilla incana",
+2,
+true,
+false
+],
+[
+"Potentilla aurea",
+"Ranunculus montanus",
+2,
+true,
+true
+],
+[
+"Potentilla caulescens",
+"Potentilla clusiana",
+2,
+true,
+true
+],
+[
+"Potentilla erecta",
+"Potentilla reptans",
+2,
+true,
+true
+],
+[
+"Potentilla heptaphylla",
+"Potentilla pusilla",
+2,
+true,
+false
+],
+[
+"Potentilla heptaphylla",
+"Ranunculus bulbosus",
+2,
+true,
+true
+],
+[
+"Potentilla incana",
+"Potentilla reptans",
+2,
+true,
+true
+],
+[
+"Potentilla indica",
+"Potentilla sterilis",
+2,
+true,
+true
+],
+[
+"Potentilla micrantha",
+"Potentilla sterilis",
+2,
+true,
+true
+],
+[
+"Primula auricula",
+"Primula veris",
+2,
+true,
+true
+],
+[
+"Primula clusiana",
+"Primula farinosa",
+2,
+true,
+true
+],
+[
+"Primula minima",
+"Primula wulfeniana",
+2,
+true,
+false
+],
+[
+"Primula minima",
+"Silene acaulis",
+2,
+true,
+true
+],
+[
+"Primula minima",
+"Silene dioica",
+2,
+true,
+true
+],
+[
+"Primula vulgaris",
+"Primula × polyantha",
+2,
+true,
+true
+],
+[
+"Prunus mahaleb",
+"Prunus padus",
+2,
+true,
+true
+],
+[
+"Prunus padus",
+"Sambucus nigra",
+2,
+true,
+true
+],
+[
+"Cornus sanguinea",
+"Prunus padus",
+2,
+true,
+true
+],
+[
+"Prunus padus",
+"Prunus serotina",
+2,
+true,
+true
+],
+[
+"Prunus spinosa",
+"Prunus × fruticans",
+2,
+false,
+true
+],
+[
+"Prunus spinosa",
+"Rhamnus saxatilis",
+2,
+true,
+true
+],
+[
+"Prunus padus",
+"Prunus spinosa",
+2,
+true,
+true
+],
+[
+"Pseudorchis albida",
+"Pseudorchis straminea",
+2,
+false,
+true
+],
+[
+"Pseudorchis albida",
+"Tofieldia calyculata",
+2,
+true,
+true
+],
+[
+"Picea abies",
+"Pseudotsuga menziesii",
+2,
+true,
+true
+],
+[
+"Pulmonaria officinalis",
+"Silene dioica",
+2,
+true,
+true
+],
+[
+"Pulsatilla montana",
+"Pulsatilla pratensis",
+2,
+false,
+false
+],
+[
+"Pulsatilla pratensis",
+"Pulsatilla vulgaris",
+2,
+true,
+false
+],
+[
+"Pulsatilla montana",
+"Pulsatilla vernalis",
+2,
+false,
+false
+],
+[
+"Pyrola chlorantha",
+"Pyrola media",
+2,
+true,
+true
+],
+[
+"Quercus pubescens",
+"Quercus robur",
+2,
+true,
+true
+],
+[
+"Rabelera holostea",
+"Stellaria graminea",
+2,
+true,
+true
+],
+[
+"Ranunculus aconitifolius",
+"Ranunculus alpestris",
+2,
+true,
+true
+],
+[
+"Ranunculus auricomus",
+"Ranunculus vindobonensis",
+2,
+true,
+false
+],
+[
+"Ranunculus auricomus",
+"Ranunculus variabilis",
+2,
+true,
+false
+],
+[
+"Ranunculus auricomus",
+"Ranunculus bulbosus",
+2,
+true,
+true
+],
+[
+"Ranunculus flammula",
+"Ranunculus lingua",
+2,
+true,
+true
+],
+[
+"Ranunculus fluitans",
+"Ranunculus trichophyllus",
+2,
+true,
+true
+],
+[
+"Ranunculus acris",
+"Ranunculus montanus",
+2,
+true,
+true
+],
+[
+"Ranunculus montanus",
+"Ranunculus repens",
+2,
+true,
+true
+],
+[
+"Rapistrum perenne",
+"Rapistrum rugosum",
+2,
+true,
+true
+],
+[
+"Rapistrum rugosum",
+"Sisymbrium loeselii",
+2,
+true,
+true
+],
+[
+"Prunus spinosa",
+"Rhamnus cathartica",
+2,
+true,
+true
+],
+[
+"Petasites hybridus",
+"Rheum rhabarbarum",
+2,
+true,
+true
+],
+[
+"Rhinanthus borbasii",
+"Rhinanthus minor",
+2,
+true,
+true
+],
+[
+"Rhododendron ferrugineum",
+"Rhodothamnus chamaecistus",
+2,
+true,
+true
+],
+[
+"Ribes alpinum",
+"Viburnum opulus",
+2,
+true,
+true
+],
+[
+"Ribes rubrum",
+"Viburnum opulus",
+2,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Robinia pseudoacacia",
+2,
+true,
+true
+],
+[
+"Rorippa austriaca",
+"Sisymbrium strictissimum",
+2,
+true,
+false
+],
+[
+"Rorippa sylvestris",
+"Sisymbrium loeselii",
+2,
+true,
+true
+],
+[
+"Rosa gallica",
+"Rosa marginata",
+2,
+true,
+false
+],
+[
+"Rosa micrantha",
+"Rosa rubiginosa",
+2,
+true,
+true
+],
+[
+"Rosa tomentosa",
+"Rosa villosa",
+2,
+true,
+true
+],
+[
+"Rubus armeniacus",
+"Rubus procerus",
+2,
+true,
+true
+],
+[
+"Rubus corylifolius",
+"Rubus praecox",
+2,
+true,
+false
+],
+[
+"Rubus idaeus",
+"Rubus saxatilis",
+2,
+true,
+true
+],
+[
+"Rudbeckia fulgida",
+"Rudbeckia hirta",
+2,
+true,
+true
+],
+[
+"Rumex acetosa",
+"Rumex arifolius",
+2,
+true,
+true
+],
+[
+"Rumex acetosa",
+"Rumex obtusifolius",
+2,
+true,
+true
+],
+[
+"Rumex conglomeratus",
+"Rumex obtusifolius",
+2,
+true,
+true
+],
+[
+"Rumex crispus",
+"Rumex patientia",
+2,
+true,
+true
+],
+[
+"Rumex crispus",
+"Rumex longifolius",
+2,
+true,
+true
+],
+[
+"Rumex maritimus",
+"Rumex stenophyllus",
+2,
+true,
+false
+],
+[
+"Rumex maritimus",
+"Rumex obtusifolius",
+2,
+true,
+true
+],
+[
+"Salicornia europaea",
+"Salicornia perennans",
+2,
+false,
+false
+],
+[
+"Salix alba",
+"Salix triandra",
+2,
+true,
+true
+],
+[
+"Salix alpina",
+"Salix breviserrata",
+2,
+true,
+false
+],
+[
+"Salix alpina",
+"Salix retusa",
+2,
+true,
+false
+],
+[
+"Salix breviserrata",
+"Salix helvetica",
+2,
+true,
+false
+],
+[
+"Salix caprea",
+"Salix myrsinifolia",
+2,
+true,
+true
+],
+[
+"Salix herbacea",
+"Salix reticulata",
+2,
+true,
+false
+],
+[
+"Olea europaea",
+"Salix purpurea",
+2,
+false,
+true
+],
+[
+"Salix viminalis",
+"Salix × fragilis",
+2,
+true,
+true
+],
+[
+"Salvia austriaca",
+"Salvia pratensis",
+2,
+true,
+true
+],
+[
+"Salvia nemorosa",
+"Salvia verticillata",
+2,
+true,
+true
+],
+[
+"Salvia pratensis",
+"Salvia sclarea",
+2,
+true,
+true
+],
+[
+"Sambucus ebulus",
+"Sambucus nigra",
+2,
+true,
+true
+],
+[
+"Sambucus racemosa",
+"Sambucus sibirica",
+2,
+false,
+true
+],
+[
+"Sambucus racemosa",
+"Staphylea pinnata",
+2,
+true,
+true
+],
+[
+"Saponaria officinalis",
+"Solidago gigantea",
+2,
+true,
+true
+],
+[
+"Saponaria officinalis",
+"Silene vulgaris",
+2,
+true,
+true
+],
+[
+"Saussurea alpina",
+"Saussurea pygmaea",
+2,
+true,
+false
+],
+[
+"Saxifraga aspera",
+"Saxifraga bryoides",
+2,
+true,
+false
+],
+[
+"Saxifraga biflora",
+"Saxifraga oppositifolia",
+2,
+true,
+false
+],
+[
+"Saxifraga bryoides",
+"Saxifraga exarata",
+2,
+true,
+false
+],
+[
+"Saxifraga bryoides",
+"Saxifraga moschata",
+2,
+true,
+false
+],
+[
+"Saxifraga bronchialis",
+"Saxifraga bryoides",
+2,
+false,
+false
+],
+[
+"Saxifraga crustata",
+"Saxifraga paniculata",
+2,
+true,
+true
+],
+[
+"Saxifraga exarata",
+"Saxifraga paniculata",
+2,
+true,
+true
+],
+[
+"Saxifraga hostii",
+"Saxifraga paniculata",
+2,
+true,
+true
+],
+[
+"Echeveria secunda",
+"Saxifraga paniculata",
+2,
+false,
+true
+],
+[
+"Scabiosa canescens",
+"Scabiosa triandra",
+2,
+true,
+true
+],
+[
+"Scabiosa columbaria",
+"Scabiosa triandra",
+2,
+true,
+true
+],
+[
+"Knautia arvensis",
+"Scabiosa columbaria",
+2,
+true,
+true
+],
+[
+"Scirpus radicans",
+"Scirpus sylvaticus",
+2,
+true,
+true
+],
+[
+"Scorzonera cana",
+"Scorzonera laciniata",
+2,
+false,
+false
+],
+[
+"Securigera securidaca",
+"Securigera varia",
+2,
+false,
+true
+],
+[
+"Sedum acre",
+"Sedum alpestre",
+2,
+true,
+true
+],
+[
+"Sedum acre",
+"Sedum album",
+2,
+true,
+true
+],
+[
+"Sedum hispanicum",
+"Sedum pallidum",
+2,
+true,
+false
+],
+[
+"Selaginella helvetica",
+"Selaginella selaginoides",
+2,
+true,
+true
+],
+[
+"Senecio inaequidens",
+"Senecio rupestris",
+2,
+true,
+true
+],
+[
+"Senecio ovatus",
+"Senecio sarracenicus",
+2,
+true,
+true
+],
+[
+"Senecio ovatus",
+"Senecio triangularis",
+2,
+false,
+true
+],
+[
+"Senecio viscosus",
+"Senecio vulgaris",
+2,
+true,
+true
+],
+[
+"Senecio vulgaris",
+"Tussilago farfara",
+2,
+true,
+true
+],
+[
+"Senecio vulgaris",
+"Sonchus asper",
+2,
+true,
+true
+],
+[
+"Serratula tinctoria",
+"Symphytum officinale",
+2,
+true,
+true
+],
+[
+"Seseli osseum",
+"Seseli pallasii",
+2,
+true,
+false
+],
+[
+"Silene nutans",
+"Silene vulgaris",
+2,
+true,
+true
+],
+[
+"Centaurea scabiosa",
+"Silybum marianum",
+2,
+true,
+true
+],
+[
+"Crepis biennis",
+"Sisymbrium officinale",
+2,
+true,
+true
+],
+[
+"Solanum nigrum",
+"Solanum villosum",
+2,
+true,
+true
+],
+[
+"Solidago altissima",
+"Solidago canadensis",
+2,
+true,
+true
+],
+[
+"Solidago gigantea",
+"Solidago juncea",
+2,
+false,
+true
+],
+[
+"Solidago gigantea",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Buphthalmum salicifolium",
+"Solidago virgaurea",
+2,
+true,
+true
+],
+[
+"Cirsium arvense",
+"Sonchus asper",
+2,
+true,
+true
+],
+[
+"Cirsium vulgare",
+"Sonchus asper",
+2,
+true,
+true
+],
+[
+"Sorbaria sorbifolia",
+"Sorbaria tomentosa",
+2,
+true,
+false
+],
+[
+"Fraxinus excelsior",
+"Sorbus aucuparia",
+2,
+true,
+true
+],
+[
+"Sparganium angustifolium",
+"Sparganium erectum",
+2,
+true,
+true
+],
+[
+"Sparganium emersum",
+"Sparganium erectum",
+2,
+true,
+true
+],
+[
+"Salvia pratensis",
+"Stachys sylvatica",
+2,
+true,
+true
+],
+[
+"Sambucus nigra",
+"Staphylea pinnata",
+2,
+true,
+true
+],
+[
+"Stellaria aquatica",
+"Stellaria media",
+2,
+true,
+true
+],
+[
+"Stellaria graminea",
+"Stellaria palustris",
+2,
+false,
+true
+],
+[
+"Cerastium arvense",
+"Stellaria graminea",
+2,
+true,
+true
+],
+[
+"Suaeda maritima",
+"Suaeda pannonica",
+2,
+false,
+false
+],
+[
+"Erigeron annuus",
+"Symphyotrichum lanceolatum",
+2,
+true,
+true
+],
+[
+"Symphytum bulbosum",
+"Symphytum tuberosum",
+2,
+true,
+true
+],
+[
+"Symphytum grandiflorum",
+"Symphytum officinale",
+2,
+true,
+true
+],
+[
+"Rumex obtusifolius",
+"Symphytum officinale",
+2,
+true,
+true
+],
+[
+"Symphytum officinale",
+"Verbascum nigrum",
+2,
+true,
+true
+],
+[
+"Syringa josikaea",
+"Syringa vulgaris",
+2,
+true,
+false
+],
+[
+"Sambucus nigra",
+"Syringa vulgaris",
+2,
+true,
+true
+],
+[
+"Syringa vulgaris",
+"Viburnum opulus",
+2,
+true,
+true
+],
+[
+"Tanacetum corymbosum",
+"Tripleurospermum inodorum",
+2,
+true,
+true
+],
+[
+"Taraxacum erythrospermum",
+"Taraxacum officinale",
+2,
+true,
+false
+],
+[
+"Taraxacum palustre",
+"Taraxacum pauckertianum",
+2,
+true,
+false
+],
+[
+"Thalictrum lucidum",
+"Thalictrum simplex",
+2,
+true,
+true
+],
+[
+"Thalictrum minus",
+"Thalictrum simplex",
+2,
+true,
+true
+],
+[
+"Thesium alpinum",
+"Thesium rostratum",
+2,
+true,
+true
+],
+[
+"Thesium bavarum",
+"Thesium pyrenaicum",
+2,
+true,
+false
+],
+[
+"Thymus kosteleckyanus",
+"Thymus pulegioides",
+2,
+true,
+true
+],
+[
+"Thymus kosteleckyanus",
+"Thymus pannonicus",
+2,
+true,
+false
+],
+[
+"Thymus odoratissimus",
+"Thymus vulgaris",
+2,
+true,
+false
+],
+[
+"Thymus pannonicus",
+"Thymus serpyllum",
+2,
+true,
+false
+],
+[
+"Thymus pannonicus",
+"Thymus pulegioides",
+2,
+true,
+true
+],
+[
+"Anthriscus sylvestris",
+"Torilis japonica",
+2,
+true,
+true
+],
+[
+"Leontodon hispidus",
+"Tragopogon orientalis",
+2,
+true,
+true
+],
+[
+"Trifolium badium",
+"Trifolium campestre",
+2,
+true,
+true
+],
+[
+"Trifolium badium",
+"Trifolium repens",
+2,
+true,
+true
+],
+[
+"Trifolium badium",
+"Trifolium pratense",
+2,
+true,
+true
+],
+[
+"Trifolium fragiferum",
+"Trifolium repens",
+2,
+true,
+true
+],
+[
+"Trifolium montanum",
+"Trifolium pallescens",
+2,
+true,
+true
+],
+[
+"Trifolium montanum",
+"Trifolium pratense",
+2,
+true,
+true
+],
+[
+"Leucanthemum vulgare",
+"Tripleurospermum inodorum",
+2,
+true,
+true
+],
+[
+"Prunus padus",
+"Ulmus minor",
+2,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Ulmus minor",
+2,
+true,
+true
+],
+[
+"Vaccinium myrtillus",
+"Vaccinium vitis-idaea",
+2,
+true,
+true
+],
+[
+"Valeriana montana",
+"Valeriana officinalis",
+2,
+true,
+true
+],
+[
+"Verbascum blattaria",
+"Verbascum lychnitis",
+2,
+true,
+true
+],
+[
+"Verbascum chaixii",
+"Verbascum sinuatum",
+2,
+false,
+true
+],
+[
+"Verbascum densiflorum",
+"Verbascum speciosum",
+2,
+true,
+true
+],
+[
+"Verbascum densiflorum",
+"Verbascum nigrum",
+2,
+true,
+true
+],
+[
+"Verbascum nigrum",
+"Verbascum phlomoides",
+2,
+true,
+true
+],
+[
+"Veronica alpina",
+"Veronica wormskjoldii",
+2,
+false,
+false
+],
+[
+"Veronica alpina",
+"Veronica serpyllifolia",
+2,
+true,
+true
+],
+[
+"Veronica arvensis",
+"Veronica praecox",
+2,
+true,
+true
+],
+[
+"Veronica arvensis",
+"Veronica peregrina",
+2,
+true,
+true
+],
+[
+"Veronica austriaca",
+"Veronica chamaedrys",
+2,
+true,
+true
+],
+[
+"Veronica bellidioides",
+"Veronica fruticans",
+2,
+true,
+true
+],
+[
+"Glechoma hederacea",
+"Veronica filiformis",
+2,
+true,
+true
+],
+[
+"Veronica hederifolia",
+"Veronica polita",
+2,
+true,
+true
+],
+[
+"Veronica hederifolia",
+"Veronica persica",
+2,
+true,
+true
+],
+[
+"Veronica orchidea",
+"Veronica spicata",
+2,
+true,
+false
+],
+[
+"Veronica praecox",
+"Veronica triphyllos",
+2,
+true,
+false
+],
+[
+"Veronica triphyllos",
+"Veronica verna",
+2,
+true,
+false
+],
+[
+"Viburnum opulus",
+"Viburnum plicatum",
+2,
+true,
+true
+],
+[
+"Vicia cracca",
+"Vicia hirsuta",
+2,
+true,
+true
+],
+[
+"Vicia sativa",
+"Vicia villosa",
+2,
+true,
+true
+],
+[
+"Erodium cicutarium",
+"Vicia sativa",
+2,
+true,
+true
+],
+[
+"Vicia tenuifolia",
+"Vicia villosa",
+2,
+true,
+true
+],
+[
+"Viola alba",
+"Viola reichenbachiana",
+2,
+true,
+true
+],
+[
+"Viola alba",
+"Viola rupestris",
+2,
+true,
+false
+],
+[
+"Viola ambigua",
+"Viola suavis",
+2,
+true,
+false
+],
+[
+"Viola arvensis",
+"Viola × wittrockiana",
+2,
+true,
+true
+],
+[
+"Viola arvensis",
+"Viola lutea",
+2,
+true,
+true
+],
+[
+"Viola biflora",
+"Viola glabella",
+2,
+false,
+true
+],
+[
+"Viola canina",
+"Viola reichenbachiana",
+2,
+true,
+true
+],
+[
+"Viola canina",
+"Viola rupestris",
+2,
+true,
+true
+],
+[
+"Viola collina",
+"Viola suavis",
+2,
+true,
+true
+],
+[
+"Viola elatior",
+"Viola pumila",
+2,
+true,
+false
+],
+[
+"Viola hirta",
+"Viola suavis",
+2,
+true,
+true
+],
+[
+"Viola odorata",
+"Viola × scabra",
+2,
+true,
+true
+],
+[
+"Viola odorata",
+"Viola riviniana",
+2,
+true,
+true
+],
+[
+"Viola reichenbachiana",
+"Viola × scabra",
+2,
+true,
+true
+],
+[
+"Fraxinus excelsior",
+"Viscum album",
+2,
+true,
+true
+]
+]
+}
