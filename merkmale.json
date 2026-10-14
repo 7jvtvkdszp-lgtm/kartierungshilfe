@@ -11291,6 +11291,37 @@
 ]
 ],
 "ok": false
+},
+"Knautia dipsacifolia|Knautia drymeja": {
+"m": [
+[
+"zentrale Blattrosette",
+"fehlt, Blütentriebe endständig",
+"vorhanden, Blütentriebe kommen seitlich"
+],
+[
+"Blätter",
+"länglich-elliptisch, meist unter 10 Zähne je Seite",
+"breit eiförmig, 10 oder mehr Kerbzähne je Seite"
+],
+[
+"beim Anfassen",
+"rau, steifhaarig",
+"samtig weich, flaumig"
+],
+[
+"Haare am Kelchgrund",
+"deutlich, 1–2 mm lang",
+"winzig, höchstens 0,5 mm"
+],
+[
+"Randblüten",
+"stark vergrößert, strahlend",
+"kaum vergrößert"
+]
+],
+"ok": true,
+"src": "Thomas"
 }
 }
 }
