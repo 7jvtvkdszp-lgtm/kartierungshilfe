@@ -572,7 +572,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 60</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 61</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2542,7 +2542,7 @@ function renderWish() {
   ul.innerHTML = [...list].sort((a, b) => a.s.localeCompare(b.s)).map(w => `<li><button class="pick plain" data-s="${esc(w.s)}"><span class="sci">${esc(w.s)}</span>${w.c ? `<br><span class="cn">${esc(w.c)}</span>` : ''}</button>
       <span class="chips">${isLifer(w.s) ? '<span class="chip lifer">Lifer</span>' : ''}${mine.has(w.s) ? '<span class="chip ok">✓ gefunden</span>' : sp[w.s] ? '<span class="chip season">hier bekannt</span>' : ''}<button class="x" data-del="${esc(w.s)}" aria-label="Entfernen">✕</button></span></li>`).join('')
     + (others ? `<li class="muted small">${others} Einträge in anderen Quadranten, sie erscheinen dort.</li>` : '');
-  ul.querySelectorAll('button.pick').forEach(b => b.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: b.dataset.s, c: commonName(b.dataset.s) }); });
+  ul.querySelectorAll('button.pick').forEach(b => b.onclick = () => { openFromList(b.dataset.s); });
   ul.querySelectorAll('button.x').forEach(b => b.onclick = () => { wish = wish.filter(w => !(w.s === b.dataset.del && w.q === here.id)); store.set('wish', wish); renderWish(); updateWishNote(); });
 }
 
@@ -2754,7 +2754,7 @@ function renderTour() {
   const gm = 'https://www.google.com/maps/dir/?' + new URLSearchParams({ api: '1', origin: `${ref.lat},${ref.lon}`, destination: `${pts[pts.length - 1].la},${pts[pts.length - 1].lo}`, waypoints: pts.slice(0, -1).map(p => `${p.la},${p.lo}`).join('|'), travelmode: 'driving' });
   ul.innerHTML = `<li><a class="btn" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center" href="${gm}" target="_blank" rel="noopener">Ganze Tour in Google Maps${tour.stops.length > 10 ? ' (erste 10)' : ''}</a></li>`
     + tour.stops.map((p, i) => `<li><span><b class="num">${i + 1}.</b> <span class="sci">${esc(p.s)}</span>${p.c ? `<br><span class="cn">${esc(p.c)}</span>` : ''}<br><span class="cn">${fmtDate(p.date)} · ${esc(p.u)}${p.n > 1 ? ` · ${p.n} Funde` : ''} · ${toQuad(p.la, p.lo).id}${p.acc ? ` · ± ${Math.round(p.acc)} m` : ''}</span><br><span class="small"><a href="https://maps.apple.com/?daddr=${p.la},${p.lo}" target="_blank" rel="noopener">Weg dorthin</a> · <a href="https://www.inaturalist.org/observations/${p.id}" target="_blank" rel="noopener">Beobachtung</a> · <button class="linkbtn" data-s="${esc(p.s)}">Prüfen</button></span></span><span class="d">${km(p.d)}</span></li>`).join('');
-  ul.querySelectorAll('button.linkbtn').forEach(b => b.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: b.dataset.s, c: commonName(b.dataset.s) }); });
+  ul.querySelectorAll('button.linkbtn').forEach(b => b.onclick = () => { openFromList(b.dataset.s); });
   $('tourMapWrap').hidden = false;
   if (!window.L || $('view-map').hidden) return;
   if (tourMap) { tourMap.remove(); tourMap = null; }
@@ -2793,7 +2793,7 @@ function renderLiferStats() {
   const max = Math.max(...years.map(([, l]) => l.length));
   el.innerHTML = `<div class="small" style="margin:6px 0"><b class="num">${firsts.length}</b> Arten insgesamt.</div>` + years.map(([y, l]) => `<details class="ly"><summary><span><b>${y}</b>${l.length === max ? ' 🏆' : ''}</span><span><b class="num">${l.length}</b> Lifer · <span class="muted num">${finds.get(y) || 0} Funde</span></span></summary>
     <ul class="list">${l.sort((a, b) => a.d.localeCompare(b.d)).map(f => `<li class="tap" data-s="${esc(f.s)}"><span class="sci">${esc(f.s)}</span><span class="d">${fmtDate(f.d)}</span></li>`).join('')}</ul></details>`).join('');
-  el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: li.dataset.s, c: commonName(li.dataset.s) }); });
+  el.querySelectorAll('li.tap').forEach(li => li.onclick = () => { openFromList(li.dataset.s); });
   // Monate: für ein Jahr oder über alle Jahre zusammen
   const sel = $('liferMonthSel'), ys = [...byYear.keys()].sort().reverse();
   const opts = ['alle', ...ys];
@@ -3145,6 +3145,7 @@ function companionsAt(target, Q, ph) {
   return [...seen].filter(s => s !== target && isLifer(s) && s.includes(' ')).map(s => ({ s, p: phenoOf(s) }))
     .filter(r => r.p && r.p.h[ph.peak] >= r.p.max * 0.3).sort((a, b) => b.p.tot - a.p.tot);
 }
+let lzOpen = null; // aufgeklappte Art bleibt beim Zurückkommen aus „Prüfen“ offen
 function renderLifeTargets() {
   const ul = $('lzList'); if (!ul) return;
   if (!pheno) { $('lzStatus').textContent = 'Die Beobachtungszeiten werden gerade auf GitHub berechnet. Sobald sie fertig sind, erscheint hier die Liste.'; ul.innerHTML = ''; return; }
@@ -3163,7 +3164,7 @@ function renderLifeTargets() {
   ul.innerHTML = rows.map((r, i) => {
     const nq = r.nq !== undefined ? r.nq : nearestQuad(r.s, ref), comp = nq ? companionsAt(r.s, nq.Q, r.p) : [];
     const soon = (r.p.peak - now + 24) % 24;
-    return `<li><details class="lz" data-i="${i}"><summary class="sp">${spBody(r.s, `${r.p.tot} Meldungen${nq ? ` · nächster Fund ${km(nq.d)}` : ''}`, `<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span>${rlChip(r.s)}`)}</summary>
+    return `<li><details class="lz" data-i="${i}" data-s="${esc(r.s)}"${r.s === lzOpen ? ' open' : ''}><summary class="sp">${spBody(r.s, `${r.p.tot} Meldungen${nq ? ` · nächster Fund ${km(nq.d)}` : ''}`, `<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span>${rlChip(r.s)}`)}</summary>
       <div class="lzbody small">
         <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}, mit ${Math.round(100 * r.p.max / r.p.tot)} % aller Meldungen des Jahres (${r.p.max} von ${r.p.tot}). Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
         ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : `<div>${atlas ? 'In den Österreich-Daten kein Quadrant mit Funden.' : 'Die Österreich-Daten sind noch nicht geladen, darum fehlt der nächste Quadrant hier.'}</div>`}
@@ -3172,7 +3173,8 @@ function renderLifeTargets() {
         ${comp.length ? `<div><b>Mitnahme-Lifer</b> (rund um ${nq.Q.id}, in diesem Zeitfenster gemeldet): ${comp.slice(0, 8).map(c => `<span class="comp" data-s="${esc(c.s)}"><i>${esc(c.s)}</i></span>`).join(', ')}${comp.length > 8 ? ` und ${comp.length - 8} weitere` : ''}.</div>` : nq ? '<div>Keine weiteren Lifer rund um diesen Quadranten zur selben Zeit.</div>' : ''}
       </div></details></li>`;
   }).join('') || '<li class="muted">Keine Lifer mit Meldungen gefunden.</li>';
-  const open = sp => { showTab('check'); lastQuery = ''; $('back').hidden = true; pick({ s: sp, c: commonName(sp) }); window.scrollTo(0, 0); };
+  const open = sp => { openFromList(sp); };
+  ul.querySelectorAll('details.lz').forEach(d => d.addEventListener('toggle', () => { if (d.open) lzOpen = d.dataset.s; else if (lzOpen === d.dataset.s) lzOpen = null; }));
   ul.querySelectorAll('.comp').forEach(a => a.onclick = () => open(a.dataset.s));
   ul.querySelectorAll('[data-check]').forEach(b => b.onclick = () => open(b.dataset.check));
   ul.querySelectorAll('[data-pt]').forEach(b => b.onclick = async () => {
