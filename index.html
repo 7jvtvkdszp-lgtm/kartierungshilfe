@@ -180,7 +180,7 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px }
 details.merk { border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; margin-top: 6px; font-size: 13.5px }
 details.merk summary { cursor: pointer; font-weight: 600 }
 details.merk table { width: 100%; border-collapse: collapse; margin-top: 6px }
-details.merk th, details.merk td { text-align: left; vertical-align: top; padding: 4px 4px; border-top: 1px solid var(--line) }
+details.merk th, details.merk td { text-align: left; vertical-align: top; padding: 4px 4px; border-top: 1px solid var(--line); overflow-wrap: anywhere; hyphens: auto }
 details.merk td:first-child { color: var(--muted); width: 28% }
 .chip.ending { background: #c2410c; color: #fff }
 .mbars { display: grid; grid-template-columns: 34px 1fr 64px; gap: 3px 8px; align-items: center; font-size: 13px }
@@ -572,7 +572,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 62</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 63</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2490,7 +2490,9 @@ async function loadMerk() {
 function merkFor(a, b) {
   if (!merk) return null;
   const [x, y] = [a, b].sort(), e = merk.pairs[x + '|' + y]; if (!e) return null;
-  return { ok: e.ok, rows: e.m.map(([m, p, q]) => x === a ? [m, p, q] : [m, q, p]) };
+  // je Merkmal optional 4. Feld true = von Thomas im Feld bestätigt; ok = ganzes Paar geprüft
+  const rows = e.m.map(([m, p, q, ok]) => x === a ? [m, p, q, ok || e.ok] : [m, q, p, ok || e.ok]);
+  return { ok: e.ok || rows.every(r => r[3]), part: rows.some(r => r[3]), rows };
 }
 function merkHtml(s, others) {
   const seen = new Set(), parts = [];
@@ -2498,9 +2500,9 @@ function merkHtml(s, others) {
   for (const o of list) {
     if (seen.has(o)) continue; seen.add(o);
     const e = merkFor(s, o); if (!e) continue;
-    parts.push(`<details class="merk"><summary>Unterschied zu <i>${esc(o)}</i>${e.ok ? '' : ' <span class="chip unsure">ungeprüft</span>'}</summary>
+    parts.push(`<details class="merk"><summary>Unterschied zu <i>${esc(o)}</i>${e.ok ? ' <span class="chip ok">geprüft</span>' : e.part ? ' <span class="chip unsure">teilweise geprüft</span>' : ' <span class="chip unsure">ungeprüft</span>'}</summary>
       <table><tr><th></th><th><i>${esc(s.split(' ')[0][0] + '. ' + s.split(' ').slice(1).join(' '))}</i></th><th><i>${esc(o.split(' ')[0][0] + '. ' + o.split(' ').slice(1).join(' '))}</i></th></tr>
-      ${e.rows.map(([m, p, q]) => `<tr><td>${esc(m)}</td><td>${esc(p)}</td><td>${esc(q)}</td></tr>`).join('')}</table></details>`);
+      ${e.rows.map(([m, p, q, ok]) => `<tr><td>${ok ? '<b style="color:var(--found)">✓</b> ' : ''}${esc(m)}</td><td>${esc(p)}</td><td>${esc(q)}</td></tr>`).join('')}</table></details>`);
   }
   return parts.length ? `<div class="small"><b>Abgrenzung</b> <span class="muted">(Merkmale von Claude formuliert${parts.some(p => p.includes('ungeprüft')) ? ', noch nicht von dir geprüft' : ''})</span></div>${parts.join('')}` : '';
 }
