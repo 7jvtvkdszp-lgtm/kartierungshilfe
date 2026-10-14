@@ -572,7 +572,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 61</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 62</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -821,16 +821,28 @@ function wordsPrefix(tokens, text) {
   for (const t of tokens) { while (j < words.length && !words[j].startsWith(t)) j++; if (j++ >= words.length) return false; }
   return true;
 }
+// Suche über alle Arten (Wunsch von Thomas): eigene Funde und der ganze Österreich-Atlas, auch offline.
+// Schreibvarianten gelten als gleich (drymeia/drymeja, sylvestris/silvestris, ae/e, Doppelbuchstaben).
+const fuzz = t => t.replace(/[jy]/g, 'i').replace(/ae|oe/g, 'e').replace(/ph/g, 'f').replace(/th/g, 't').replace(/(.)\1/g, '$1');
+let searchIdx = null, searchKey = '';
+function searchNames() {
+  const key = index.names.length + '|' + (atlas ? atlas.sp.size : 0);
+  if (searchKey === key) return searchIdx;
+  const names = new Set(index.names); if (atlas) for (const k of atlas.sp.keys()) names.add(k);
+  searchIdx = [...names].map(s => { const c = index.common.get(s) || (atlas && atlas.sp.get(s)?.c) || '', a = norm(s), b = norm(c); return { s, c, a, b, fa: fuzz(a), fb: fuzz(b), own: index.bySp.has(s) }; });
+  searchKey = key; return searchIdx;
+}
 function localMatches(q) {
   const n = norm(q); if (!n) return [];
-  const tokens = n.split(' ');
+  const f = fuzz(n), tokens = n.split(' '), ftok = f.split(' ');
   const out = [];
-  for (const s of index.names) {
-    const a = norm(s), b = norm(index.common.get(s));
-    const score = a.startsWith(n) ? 0 : wordsPrefix(tokens, a) ? 1 : b.startsWith(n) ? 2 : wordsPrefix(tokens, b) ? 3 : a.includes(n) ? 4 : b.includes(n) ? 5 : -1;
-    if (score >= 0) out.push({ s, c: index.common.get(s), score });
+  for (const x of searchNames()) {
+    const score = x.a.startsWith(n) ? 0 : wordsPrefix(tokens, x.a) ? 1 : x.b.startsWith(n) ? 2 : wordsPrefix(tokens, x.b) ? 3
+      : x.fa.startsWith(f) || wordsPrefix(ftok, x.fa) ? 4 : x.fb.startsWith(f) || wordsPrefix(ftok, x.fb) ? 5 : x.a.includes(n) || x.fa.includes(f) ? 6 : x.b.includes(n) ? 7 : -1;
+    if (score >= 0) out.push({ s: x.s, c: x.c, score, own: x.own });
   }
-  return out.sort((x, y) => x.score - y.score || x.s.localeCompare(y.s)).slice(0, 8);
+  // gleiche Trefferstufe: eigene Arten zuerst
+  return out.sort((x, y) => x.score - y.score || y.own - x.own || x.s.includes('×') - y.s.includes('×') || x.s.localeCompare(y.s)).slice(0, 10);
 }
 function renderSugg(local, online) {
   const ul = $('sugg');
