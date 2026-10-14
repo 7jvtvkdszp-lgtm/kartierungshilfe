@@ -181,7 +181,10 @@ details.merk { border: 1px solid var(--line); border-radius: 10px; padding: 6px 
 details.merk summary { cursor: pointer; font-weight: 600 }
 details.merk table { width: 100%; border-collapse: collapse; margin-top: 6px }
 details.merk th, details.merk td { text-align: left; vertical-align: top; padding: 4px 4px; border-top: 1px solid var(--line); overflow-wrap: anywhere; hyphens: auto }
-details.merk td:first-child { color: var(--muted); width: 28% }
+details.merk td:first-child { color: var(--muted); width: 26%; overflow-wrap: normal; hyphens: auto }
+details.merk td.mfbc { width: 1%; white-space: nowrap; padding-left: 2px }
+button.mfb:not(.linkbtn) { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; min-width: 30px; min-height: 30px; margin: 0 0 4px 2px; font-size: 14px; color: var(--muted); display: block }
+button.mfb.on { background: var(--found-bg); color: var(--found); border-color: var(--found) }
 .chip.ending { background: #c2410c; color: #fff }
 .mbars { display: grid; grid-template-columns: 34px 1fr 64px; gap: 3px 8px; align-items: center; font-size: 13px }
 .mbars .b { height: 14px; background: #7c3aed; border-radius: 3px; min-width: 1px }
@@ -563,6 +566,13 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="row"><select class="field" id="liferMonthSel" style="flex:0 0 auto;width:auto"></select></div>
         <div id="liferMonths"></div>
       </details>
+      <details class="panel fold" id="fold-data-merkmal-rueckmeldungen">
+        <summary><h2>Merkmal-Rückmeldungen</h2></summary>
+        <p class="small muted" style="margin:0">Deine ✓/✗ zu den Abgrenzungsmerkmalen. „Kopieren“ und im Chat an Claude schicken, dann werden sie für alle eingetragen. Danach „Erledigt“ tippen.</p>
+        <div class="small" id="mfbSum"></div>
+        <div class="row"><button class="btn primary" id="mfbCopy">Kopieren</button><button class="btn" id="mfbClear">Erledigt</button></div>
+        <ul class="list" id="mfbList"></ul>
+      </details>
       <details class="panel fold" id="fold-data-sichern">
         <summary><h2>Sichern</h2></summary>
         <p class="small muted" style="margin:0">Sichert Tagesliste, Einstellungen und Exportstand in eine Datei (z. B. in iCloud Drive). Die Funde selbst kommen ohnehin von iNaturalist. Beim Wiederherstellen wird die Tagesliste zusammengeführt.</p>
@@ -572,7 +582,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 63</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 64</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2406,7 +2416,7 @@ async function offerFile(file, statusEl) {
 }
 async function doBackup(statusEl) {
   const { token, ...safeSettings } = settings; // der Token wird nicht mitgesichert
-  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish, tracks };
+  const data = { app: 'kartierungshilfe', v: 1, t: new Date().toISOString(), settings: safeSettings, day, export: expMeta, here, taxIds, wish, tracks, merkFb };
   const file = new File([JSON.stringify(data)], `kartierungshilfe-sicherung-${todayIso()}.json`, { type: 'application/json' });
   if (!(await offerFile(file, statusEl))) return false;
   store.set('lastBackup', Date.now()); store.set('backupSnooze', 0);
@@ -2440,6 +2450,7 @@ $('restoreFile').addEventListener('change', async e => {
     day = [...day, ...(d.day || []).filter(x => !ids.has(x.id))]; store.set('day', day);
     if (d.export) { expMeta = d.export; store.set('export', expMeta); renderExpLabel(); }
     if (d.wish) { const ws = new Set(wish.map(w => w.s + '|' + w.q)); wish = [...wish, ...d.wish.filter(w => !ws.has(w.s + '|' + w.q))]; store.set('wish', wish); renderWish(); updateWishNote(); }
+    if (d.merkFb) { for (const [k, fb] of Object.entries(d.merkFb)) merkFb[k] = Object.assign(merkFb[k] || {}, fb); store.set('merkFb', merkFb); renderMerkFb(); }
     if (d.taxIds) { taxIds = Object.assign(taxIds, d.taxIds); store.set('taxIds', taxIds); }
     if (d.tracks) { // Spuren je Tag zusammenführen, Punkte nach Zeit
       for (const [dd, a] of Object.entries(d.tracks)) { const m = new Map([...(tracks[dd] || []), ...a].map(p => [p[2], p])); tracks[dd] = [...m.values()].sort((x, y) => x[2] - y[2]); }
@@ -2494,18 +2505,56 @@ function merkFor(a, b) {
   const rows = e.m.map(([m, p, q, ok]) => x === a ? [m, p, q, ok || e.ok] : [m, q, p, ok || e.ok]);
   return { ok: e.ok || rows.every(r => r[3]), part: rows.some(r => r[3]), rows };
 }
+// Rückmeldungen aus dem Feld (Wunsch von Thomas): je Merkmal ✓ (stimmt) oder ✗ (falsch, mit Notiz).
+// Gespeichert in kh.merkFb { 'A|B': { Merkmal: { v: 'ok'|'bad', n: Notiz, t } } }, über „Kopieren“ an Claude, der merkmale.json nachzieht.
+var merkFb = store.get('merkFb', {}), merkOpen = new Set();
 function merkHtml(s, others) {
   const seen = new Set(), parts = [];
   const list = [...others, ...(merk ? Object.keys(merk.pairs).flatMap(k => { const [x, y] = k.split('|'); return x === s ? [y] : y === s ? [x] : []; }) : [])];
   for (const o of list) {
     if (seen.has(o)) continue; seen.add(o);
     const e = merkFor(s, o); if (!e) continue;
-    parts.push(`<details class="merk"><summary>Unterschied zu <i>${esc(o)}</i>${e.ok ? ' <span class="chip ok">geprüft</span>' : e.part ? ' <span class="chip unsure">teilweise geprüft</span>' : ' <span class="chip unsure">ungeprüft</span>'}</summary>
-      <table><tr><th></th><th><i>${esc(s.split(' ')[0][0] + '. ' + s.split(' ').slice(1).join(' '))}</i></th><th><i>${esc(o.split(' ')[0][0] + '. ' + o.split(' ').slice(1).join(' '))}</i></th></tr>
-      ${e.rows.map(([m, p, q, ok]) => `<tr><td>${ok ? '<b style="color:var(--found)">✓</b> ' : ''}${esc(m)}</td><td>${esc(p)}</td><td>${esc(q)}</td></tr>`).join('')}</table></details>`);
+    const key = [s, o].sort().join('|'), fb = merkFb[key] || {};
+    const rows = e.rows.filter(r => fb[r[0]]?.v !== 'bad'), bad = e.rows.filter(r => fb[r[0]]?.v === 'bad');
+    const okAll = rows.length && rows.every(r => r[3] || fb[r[0]]?.v === 'ok'), part = rows.some(r => r[3] || fb[r[0]]?.v === 'ok');
+    parts.push(`<details class="merk" data-k="${esc(key)}"${merkOpen.has(key) ? ' open' : ''}><summary>Unterschied zu <i>${esc(o)}</i>${okAll ? ' <span class="chip ok">geprüft</span>' : part ? ' <span class="chip unsure">teilweise geprüft</span>' : ' <span class="chip unsure">ungeprüft</span>'}</summary>
+      <table><tr><th></th><th><i>${esc(s.split(' ')[0][0] + '. ' + s.split(' ').slice(1).join(' '))}</i></th><th><i>${esc(o.split(' ')[0][0] + '. ' + o.split(' ').slice(1).join(' '))}</i></th><th></th></tr>
+      ${rows.map(([m, p, q, ok]) => { const mine = fb[m]?.v === 'ok';
+        return `<tr><td>${ok || mine ? '<b style="color:var(--found)">✓</b> ' : ''}${esc(m)}</td><td>${esc(p)}</td><td>${esc(q)}</td><td class="mfbc">${ok ? '' : `<button class="mfb${mine ? ' on' : ''}" data-k="${esc(key)}" data-m="${esc(m)}" data-v="ok" aria-label="stimmt">✓</button><button class="mfb" data-k="${esc(key)}" data-m="${esc(m)}" data-v="bad" aria-label="falsch">✗</button>`}</td></tr>`; }).join('')}</table>
+      ${bad.length ? `<div class="small muted">Als falsch markiert: ${bad.map(r => `${esc(r[0])}${fb[r[0]].n ? ` („${esc(fb[r[0]].n)}“)` : ''} <button class="linkbtn mfb" data-k="${esc(key)}" data-m="${esc(r[0])}" data-v="undo">rückgängig</button>`).join(' · ')}</div>` : ''}</details>`);
   }
-  return parts.length ? `<div class="small"><b>Abgrenzung</b> <span class="muted">(Merkmale von Claude formuliert${parts.some(p => p.includes('ungeprüft')) ? ', noch nicht von dir geprüft' : ''})</span></div>${parts.join('')}` : '';
+  return parts.length ? `<div class="small"><b>Abgrenzung</b> <span class="muted">(Merkmale von Claude formuliert. ✓ = stimmt, ✗ = falsch; deine Rückmeldungen schickst du unter Daten › Merkmal-Rückmeldungen)</span></div>${parts.join('')}` : '';
 }
+document.addEventListener('toggle', e => { const d = e.target; if (d.matches && d.matches('details.merk')) { if (d.open) merkOpen.add(d.dataset.k); else merkOpen.delete(d.dataset.k); } }, true);
+document.addEventListener('click', e => {
+  const b = e.target.closest('button.mfb'); if (!b) return;
+  e.preventDefault();
+  const k = b.dataset.k, m = b.dataset.m, v = b.dataset.v, fb = merkFb[k] || (merkFb[k] = {});
+  if (v === 'undo' || fb[m]?.v === v) delete fb[m];
+  else if (v === 'bad') { const n = window.prompt(`„${m}“ ist falsch. Wie ist es richtig? (leer lassen geht auch)`, ''); if (n === null) return; fb[m] = { v, n: n.trim(), t: Date.now() }; }
+  else fb[m] = { v, t: Date.now() };
+  if (!Object.keys(fb).length) delete merkFb[k];
+  store.set('merkFb', merkFb); merkOpen.add(k);
+  if (current) renderTaxBox(current); renderMerkFb();
+});
+function merkFbText() {
+  const lines = [];
+  for (const [k, fb] of Object.entries(merkFb)) for (const [m, x] of Object.entries(fb)) lines.push(`${k.replace('|', ' / ')}: ${m} ${x.v === 'ok' ? 'stimmt' : 'falsch' + (x.n ? ' – richtig: ' + x.n : '')}`);
+  return lines;
+}
+function renderMerkFb() {
+  const el = $('mfbList'); if (!el) return;
+  const lines = merkFbText();
+  $('mfbSum').textContent = lines.length ? `${lines.length} Rückmeldung${lines.length > 1 ? 'en' : ''} gesammelt.` : 'Noch keine Rückmeldungen. Unter Prüfen kannst du bei „Unterschied zu …“ jedes Merkmal mit ✓ oder ✗ markieren.';
+  el.innerHTML = lines.slice(0, 200).map(l => `<li class="small">${esc(l)}</li>`).join('');
+  $('mfbCopy').disabled = $('mfbClear').disabled = !lines.length;
+}
+$('mfbCopy').onclick = async () => {
+  const t = 'Merkmal-Rückmeldungen:\n' + merkFbText().join('\n');
+  try { await navigator.clipboard.writeText(t); $('mfbSum').textContent = 'Kopiert. Jetzt im Chat an Claude einfügen.'; }
+  catch { window.prompt('Zum Kopieren markieren:', t); }
+};
+$('mfbClear').onclick = () => { if (!window.confirm('Alle Rückmeldungen als erledigt löschen? Erst, wenn Claude sie eingetragen hat.')) return; merkFb = {}; store.set('merkFb', merkFb); renderMerkFb(); if (current) renderTaxBox(current); };
 function renderTaxBox(cur) {
   const box = $('taxBox'); if (!box) return;
   if (!navigator.onLine && !taxInfo[cur.s]) { box.innerHTML = merkHtml(cur.s, []); return; }
@@ -3465,7 +3514,7 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas(); loadRl(); loadPheno(); loadMerk();
+  loadAtlas(); loadRl(); loadPheno(); loadMerk(); renderMerkFb();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }

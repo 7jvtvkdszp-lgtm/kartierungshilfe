@@ -27,6 +27,7 @@ Web-App fürs iPhone: bestimmt per GPS den Quadranten der Floristischen Kartieru
 - **v61:** Zurück-Knopf (und Wischen) nach „unter Prüfen öffnen“ auch aus Lifer-Zielen, Lifer-Tour, Lifer-Statistik und Wunschliste; die aufgeklappte Lifer-Ziel-Art bleibt offen.
 - **v62:** Suche unter Prüfen findet alle Arten des Österreich-Atlas, auch offline, und verzeiht Schreibvarianten (drymeia/drymeja, silvestris/sylvestris).
 - **v63:** Abgrenzung: einzelne Merkmale können als von Thomas im Feld bestätigt markiert werden (4. Feld true, ✓ vor dem Merkmal, „teilweise geprüft“); falsche Merkmale werden gelöscht oder korrigiert.
+- **v64:** Abgrenzung: je Merkmal ✓ (stimmt) / ✗ (falsch, mit Notiz) direkt in der App; gesammelt unter Daten › Merkmal-Rückmeldungen (Kopieren → an Claude, der merkmale.json nachzieht), auch in der Sicherung.
 - **v54:** Atlas ohne Stichjahr wird sofort neu geholt (nicht erst nach einem Tag); Tipp „Verschollen“ zeigt immer eine Zeile (auch „keine Art“ oder „Atlas wird geladen“).
 - **v53:** „Jetzt oder nie“ nur noch für Arten der 11 Mondsee-Irrsee-Quadranten, die dort noch nicht (oder nicht mehr) kartiert sind; mit dem Quadranten der besten Fundchance und der Zahl weiterer offener Quadranten.
 - **v52:** Fix (neu ausgeliefert, erster Pages-Deploy schlug fehl): Mondsee-Irrsee-Konstanten ganz oben im Skript (v50/v51 brachen beim Start ab, wenn gespeicherte Lohnende Quadranten angezeigt wurden: homeChip vor der Initialisierung).
