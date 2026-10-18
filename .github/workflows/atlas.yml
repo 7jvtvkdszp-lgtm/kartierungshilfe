@@ -19,6 +19,16 @@ jobs:
       - run: python scripts/build_atlas.py inat
       - uses: actions/upload-artifact@v4
         with: { name: part-inat, path: part_inat.json, retention-days: 3 }
+  inatrg:   # eigener Job, sonst reicht das Zeitlimit des iNat-Jobs nicht
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python scripts/build_atlas.py inatrg
+      - uses: actions/upload-artifact@v4
+        with: { name: part-inatrg, path: part_inatrg.json, retention-days: 3 }
   gbif:
     runs-on: ubuntu-latest
     timeout-minutes: 340
@@ -30,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: part-gbif, path: "part_gbif.json\nscripts/gbif_names.json", retention-days: 3 }
   merge:
-    needs: [inat, gbif]
+    needs: [inat, gbif, inatrg]
     if: always() && needs.inat.result == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +52,9 @@ jobs:
       - uses: actions/download-artifact@v4
         if: needs.gbif.result == 'success'
         with: { name: part-gbif }
+      - uses: actions/download-artifact@v4
+        if: needs.inatrg.result == 'success'
+        with: { name: part-inatrg }
       - run: python scripts/build_atlas.py rg
       - run: python scripts/build_atlas.py merge
       - name: atlas.json einspielen

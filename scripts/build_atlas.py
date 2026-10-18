@@ -6,7 +6,11 @@
   python build_atlas.py merge  -> atlas.json      (Vereinigung: Art kommt im Quadranten vor, wenn eine Quelle sie meldet)
 Beide Teile holen je Quadrant zusätzlich die Arten der letzten RECENT Jahre; was im Quadranten nur davor gemeldet
 wurde, steht im atlas.json als vierter Eintrag der Artzeile (Liste der Quadranten-Indizes) = verschollen.
+  python build_atlas.py inatrg -> part_inatrg.json (iNaturalist, je Quadrant nur Arten mit Forschungsqualität)
   python build_atlas.py rgfilter -> atlas.json    (nur den Einzelmeldungs-Filter auf ein vorhandenes atlas.json anwenden)
+Bestätigt/unbestätigt (Wunsch von Thomas, ab November 2026): iNat holt je Quadrant zusätzlich die Arten mit
+Forschungsqualität. Was im Quadranten nur iNat ohne Forschungsqualität meldet (kein GBIF), steht als fünfter Eintrag
+der Artzeile (Liste der Quadranten-Indizes) = unbestätigt; die App entscheidet nur mit bestätigten Funden.
 Einzelmeldungen: eine Art mit nur einer Meldung in ganz Österreich, die nur von iNaturalist kommt und dort keine
 Forschungsqualität hat, wird weggelassen (Wunsch von Thomas).
 Läuft monatlich als GitHub Action, braucht nur die Python-Standardbibliothek."""
@@ -121,6 +125,17 @@ def run_inat():
         if found: recent[quad_id(r2, c2)] = sorted(inat_quad(s, n, w, e, common, {'d1': f'{y0}-01-01'}))
         if k % 100 == 0: print(f'iNat {k + 1}/{len(cl)}', file=sys.stderr)
     return {'border': border, 'q': [quad_id(r2, c2) for r2, c2 in cl], 'd': data, 'c': common, 'r': recent, 'ry': y0}
+
+def run_inatrg():
+    """Eigener Lauf (sonst sprengt der iNat-Teil das Zeitlimit): je Quadrant die Arten mit Forschungsqualität."""
+    cl, _ = cells()
+    rg, common = {}, {}
+    for k, (r2, c2) in enumerate(cl):
+        s, n, w, e = bounds(r2, c2)
+        found = inat_quad(s, n, w, e, common, {'quality_grade': 'research'})
+        if found: rg[quad_id(r2, c2)] = sorted(found)
+        if k % 100 == 0: print(f'iNat Forschungsqualität {k + 1}/{len(cl)}', file=sys.stderr)
+    return {'g': rg}
 
 def name_key(n):
     return re.sub(r'×|-|\s+x\s+|\s+', '', n.lower())
@@ -245,6 +260,12 @@ def merge():
     # aktuell (letzte RECENT Jahre) gemeldet: (Art, Quadrant-Index); nur wenn beide Teile die Angabe haben
     has_recent = all('r' in p for p in parts.values())
     recent = {(n, qi[qid]) for p in parts.values() for qid, ns in p.get('r', {}).items() if qid in qi for n in ns}
+    # bestätigt: iNat mit Forschungsqualität oder GBIF; nur wenn der iNat-Teil die Angabe hat
+    try: g = json.load(open('part_inatrg.json', encoding='utf-8'))['g']
+    except Exception as e: g = None; print(f'inatrg fehlt, ohne bestätigt/unbestätigt: {e}', file=sys.stderr)
+    has_rg = g is not None
+    confirmed = {(n, qi[qid]) for qid, ns in (g or {}).items() if qid in qi for n in ns}
+    if 'gbif' in parts: confirmed |= {(n, qi[qid]) for qid, found in parts['gbif']['d'].items() if qid in qi for n in found}
     for src, p in parts.items():
         common.update({k: v for k, v in p['c'].items() if k not in common or src == 'inat'})
         for qid, found in p['d'].items():
@@ -261,17 +282,20 @@ def merge():
         q = [q[i] for i in used]
         species = {s: {remap[i]: c for i, c in d.items()} for s, d in species.items()}
         recent = {(n, remap[i]) for n, i in recent if i in remap}
+        confirmed = {(n, remap[i]) for n, i in confirmed if i in remap}
     def row(name, d):
         r = [name, common.get(name, ''), [x for i in sorted(d) for x in (i, d[i])]]
         old = [i for i in sorted(d) if (name, i) not in recent] if has_recent else []
-        if old: r.append(old)
+        unconf = [i for i in sorted(d) if (name, i) not in confirmed] if has_rg else []
+        if old or unconf: r.append(old)
+        if unconf: r.append(unconf)
         return r
     ry = max((p.get('ry', 0) for p in parts.values()), default=0)
     out = {'v': 2, 't': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
            'src': ['iNaturalist'] + ([f'GBIF {parts["gbif"]["years"][0]}–{parts["gbif"]["years"][1]}'] if 'gbif' in parts else []),
            'n': len(q), 'q': q,
            's': [row(name, d) for name, d in sorted(species.items())],
-           'drop': gone, **({'ry': ry} if has_recent else {})}
+           'drop': gone, **({'ry': ry} if has_recent else {}), **({'u': 1} if has_rg else {})}
     json.dump(out, open('atlas.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(f'atlas.json: {len(q)} Quadranten, {len(species)} Arten, Quellen {out["src"]}', file=sys.stderr)
 
@@ -281,5 +305,5 @@ if __name__ == '__main__':
     elif mode == 'rg': run_rg()
     elif mode == 'rgfilter': rg_filter()
     else:
-        res = run_inat() if mode == 'inat' else run_gbif()
+        res = run_inat() if mode == 'inat' else run_inatrg() if mode == 'inatrg' else run_gbif()
         json.dump(res, open(f'part_{mode}.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
