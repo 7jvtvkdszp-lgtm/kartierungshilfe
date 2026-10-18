@@ -54,9 +54,14 @@ def species_rows(src):
             out[k] = [k, '', c, nat, bl, next((r[5] for r in rs if r[5]), ''), next((r[6] for r in rs if r[6]), ''), rs[0][7], 1, []]
     return out
 
+# feste Zuordnungen, wo die iNat-Suche nichts oder Falsches findet. iNat führt die Goldnesseln nur als Lamium galeobdolon;
+# ohne diese Zeilen landete dort allein die Silber-Goldnessel (n) und die heimische Art galt als Neophyt (Thomas, 18.10.)
+RL_FIX = {'Galeobdolon flavidum': 'Lamium galeobdolon', 'Galeobdolon montanum': 'Lamium galeobdolon'}
+
 def inat_species(name, cache):
     """iNaturalist-Artname zu einem Namen der Roten Liste. Exakter Treffer vor Synonym-Treffer
     (sonst landet z. B. Gentiana pumila bei Centaurium maritimum, das dieses Synonym ebenfalls trägt)."""
+    if name in RL_FIX: cache[name] = RL_FIX[name]; return RL_FIX[name]
     if cache.get(name) == name: return name
     res = None
     for path in ('taxa', 'taxa/autocomplete'):
@@ -129,7 +134,9 @@ def main():
         exact = key(r[0]) == name
         prev = rows.get(name)
         if prev:
-            c, nat, bl = combine([prev[0], r]); base = r if exact and not prev[1] else prev[0]
+            c, nat, bl = combine([prev[0], r])
+            # Name und Text: genau passendes Taxon, sonst lieber eine heimische Sippe als einen Neophyten
+            base = r if (exact or (prev[0][2] == 'n' and r[2] != 'n')) and not prev[1] else prev[0]
             r = [base[0], base[1], c, nat, bl] + base[5:]; exact = exact or prev[1]
         rows[name] = (r, exact)
         if n % 200 == 0:
