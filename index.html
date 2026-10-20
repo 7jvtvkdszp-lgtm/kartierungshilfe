@@ -250,6 +250,15 @@ details.lz .lzbody { padding: 6px 0 2px; display: flex; flex-direction: column; 
 .taxphoto { margin: 8px 0 4px }
 .taxphoto img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 10px; display: block; background: var(--line) }
 .taxphoto figcaption { font-size: 11px; color: var(--muted); margin-top: 2px }
+/* Pflanze des Tages (v69): Foto links, Namen, Gründe als Chips, Rang und Punkte */
+.potd .pcard { display: flex; gap: 12px; align-items: flex-start; cursor: pointer }
+.potd .pimg { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 10px; object-fit: cover; background: var(--line); display: block }
+.potd .pimg.none { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 30px }
+.potd .pbody { display: flex; flex-direction: column; gap: 3px; min-width: 0 }
+.potd .pbody .sci { font-style: italic; font-weight: 600 }
+.potd .chips { justify-content: flex-start; margin-top: 2px }
+.potd .pcredit { font-size: 11px; color: var(--muted); overflow-wrap: anywhere }
+.potd .row .btn { min-height: 36px; padding: 6px 12px }
 .simlist { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 6px; -webkit-overflow-scrolling: touch }
 .sim { flex: 0 0 92px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; color: inherit; font: inherit; font-size: 11px; text-align: center; padding: 0; cursor: pointer }
 .sim img, .sim .noimg { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: var(--line); display: block }
@@ -274,6 +283,10 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
 
 <button class="totop" id="toTop" hidden aria-label="Nach oben">↑</button>
 <div class="wrap">
+  <details class="panel fold potd" id="foldPotd" open>
+    <summary><h2>Pflanze des Tages</h2><span class="small muted num" id="potdWhen"></span></summary>
+    <div id="potd"></div>
+  </details>
   <section class="qhead" aria-live="polite">
     <div>
       <div class="label" id="qlabel">Quadrant</div>
@@ -655,6 +668,22 @@ const PLAY_BONUS = {
 // Rote Liste Österreich (Kategorie wie rlChip, im Naturraum des Quadranten die stärkere): Prozent der Grundpunkte.
 // RE/RE? (ausgestorben, verschollen) wie CR – ein Fund wäre eine Sensation; G (Gefährdung unbekannten Ausmaßes) wie VU; DD, LC: 0.
 const PLAY_RL = { NT: 10, VU: 25, G: 25, EN: 50, CR: 100, RE: 100, 'RE?': 100, DD: 0 };
+// ---------- Pflanze des Tages (v69, Idee wie „Vogel des Tages“ in Merlin). Ganz oben wegen TDZ (v52) ----------
+// Gewicht einer Kandidatin = Saison × Fundchance × Kartierbedarf × Lifer × Seltenheit (Faktoren multipliziert).
+const POTD_W = {
+  seasonIn: 1, // laut pheno.json jetzt in Saison (Halbmonat im Fenster um den Höhepunkt mit ≥ 30 % der Spitze)
+  seasonOut: 0.08, // außerhalb der Saison: stark abgewertet, aber nicht ausgeschlossen
+  seasonUnknown: 0.4, // keine Beobachtungszeiten zur Art (und keine Monatsdaten der Umgebung)
+  chanceMin: 0.15, // Fundchance 0 % zählt noch so viel; dazu kommt Fundchance/100 (also Faktor 0,15 bis 1,15)
+  never: 2, // im Viertel noch nie selbst kartiert
+  due: 1, // im Viertel kartiert, aber vor mehr als REPEAT_YEARS Jahren (fällig)
+  lifer: 3, // in Österreich noch nie gefunden: deutlich höher
+  rare: 0.6, // Seltenheit: Faktor 1 + rare × (Q-Rang + B-Rang) / 2N, also 1 bis 1,6; ohne Rang wie die seltenste Art
+};
+const POTD_ALT = 12; // so viele Arten in der Reihenfolge des Tages merken (Knopf „Andere“)
+const POTD_LIC = { cc0: 'CC0', 'cc-by': 'CC BY', 'cc-by-nc': 'CC BY-NC' }; // nur diese Fotolizenzen zeigen (Wunsch von Thomas)
+var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
+var potdGo = false, potdPhBusy = new Set();
 // ---------- Raster ----------
 const LAT0 = 56, LON0 = 5 + 40 / 60;
 const pad = n => String(n).padStart(2, '0');
@@ -871,6 +900,7 @@ const tabs = ['check', 'home', 'list', 'map', 'day', 'play', 'data', 'off'];
 function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
+  $('foldPotd').hidden = t !== 'check'; // Pflanze des Tages nur im Tab Prüfen, über der Positionsbestimmung
   if (t === 'list') renderList();
   if (t === 'map') { showMap(); setTimeout(() => { if (typeof renderTour === 'function') renderTour(); if (typeof renderLifeTargets === 'function') renderLifeTargets(); }, 60); }
   if (t === 'day') renderDay();
@@ -1407,7 +1437,7 @@ const nearTxt = n => !n ? '' : n.d === 0 ? `hier in ${n.id}` : `nächster Fund $
 $('listFilter').addEventListener('input', renderList);
 // nach jedem Neuzeichnen der Artenliste (Positionswechsel, neue Daten) auch Wunschliste und Hinweis auffrischen
 const _renderList = renderList;
-renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); if (typeof renderOff === 'function') renderOff(); if (typeof renderFreq === 'function') renderFreq(); if (typeof renderHomeTab === 'function') renderHomeTab(); };
+renderList = function () { _renderList(); if (wish) { updateWishNote(); renderWish(); } if (typeof renderTips === 'function') renderTips(); if (typeof renderTally === 'function') renderTally(); if (typeof renderOff === 'function') renderOff(); if (typeof renderFreq === 'function') renderFreq(); if (typeof renderHomeTab === 'function') renderHomeTab(); renderPotd(); };
 
 // ---------- Daten laden ----------
 function saveAll() {
@@ -3032,7 +3062,7 @@ $('tallyFilter').addEventListener('input', renderTally);
 // Ein- und Ausklappen merken
 $('fold-list-freq').addEventListener('toggle', e => { if (e.target.open) renderFreq(); });
 $('fold-map-lifer-tour').addEventListener('toggle', e => { if (e.target.open && tourMap) setTimeout(() => tourMap.invalidateSize(), 50); });
-for (const id of ['foldTally', 'foldDay', ...[...document.querySelectorAll('#view-map details.fold, #view-data details.fold, #view-list details.fold')].map(d => d.id)]) {
+for (const id of ['foldTally', 'foldDay', 'foldPotd', ...[...document.querySelectorAll('#view-map details.fold, #view-data details.fold, #view-list details.fold')].map(d => d.id)]) {
   const el = $(id), k = 'fold-' + id;
   try { const v = localStorage.getItem(k); if (v === '0') el.open = false; else if (v === '1') el.open = true; } catch {}
   el.addEventListener('toggle', () => { try { localStorage.setItem(k, el.open ? '1' : '0'); } catch {} });
@@ -3731,6 +3761,136 @@ async function loadRanks() {
   } catch { /* noch keine ranks.json oder kein Empfang */ }
 }
 
+// ---------- Pflanze des Tages (v69): eine lohnende Art aus der Umgebung, einmal am Tag gewählt ----------
+// Zufallszahl je Datum und Art (FNV-1a mit Nachmischen), 0 < u < 1: gleicher Tag = gleiche Zahl, unabhängig von der Kandidatenliste
+function potdHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995); h ^= h >>> 15;
+  return ((h >>> 0) + 0.5) / 4294967296;
+}
+// Saison: 1 = jetzt (Halbmonat im Saisonfenster laut pheno.json), 0 = nicht, null = unbekannt. Ohne pheno: Monatsdaten der Umgebung
+function potdSeason(s, Q) {
+  const p = phenoOf(s);
+  if (p && p.tot >= 3) { const h = halfNow(); return (p.from <= p.to ? h >= p.from && h <= p.to : h >= p.from || h <= p.to) ? 1 : 0; }
+  const sea = seasonSet(Q);
+  return sea ? (sea.has(s) ? 1 : 0) : null;
+}
+// eigener Stand im Viertel (nur genaue Koordinaten, wie quadStatus): never | due | ok
+function potdStatus(s, Q) {
+  const ds = (index.byQuad.get(Q.id)?.get(s) || []).filter(o => !o.x && o.d).map(o => o.d).sort();
+  if (!ds.length) return { st: 'never' };
+  const last = ds.pop();
+  return { st: isDue(last) ? 'due' : 'ok', last };
+}
+function potdWeight(s, Q, st) {
+  const W = POTD_W, sea = potdSeason(s, Q), N = ranks ? ranks.n : 0, r = playRank(s);
+  const rare = N ? 1 + W.rare * (r ? (r[0] + r[2]) / (2 * N) : 1) : 1;
+  return (sea == null ? W.seasonUnknown : sea ? W.seasonIn : W.seasonOut) * (W.chanceMin + chance(s, Q).pct / 100)
+    * (st.st === 'never' ? W.never : W.due) * (isLifer(s) ? W.lifer : 1) * rare;
+}
+// Kandidaten: bestätigte Arten (spOf: Atlas + iNat live) des Viertels und seiner 8 Nachbarn, die du hier nicht in den letzten
+// REPEAT_YEARS Jahren kartiert hast. Gewichteter Zufall ohne Zurücklegen (Efraimidis–Spirakis: Schlüssel log(u) / Gewicht):
+// die Reihenfolge ergibt sich aus dem Datum, „Andere“ zeigt die nächste.
+function potdChoose(Q) {
+  const cand = new Set(), d = todayIso();
+  for (const id of [Q.id, ...NB.map(([dr, dc]) => neighbour(Q, dr, dc).id)]) for (const s of Object.keys(spOf(id) || {})) if (s.includes(' ') && !isHybrid(s)) cand.add(s);
+  const rows = [];
+  for (const s of cand) {
+    const st = potdStatus(s, Q); if (st.st === 'ok') continue;
+    rows.push({ s, k: Math.log(potdHash(d + '|' + s)) / potdWeight(s, Q, st) });
+  }
+  return rows.sort((a, b) => b.k - a.k || a.s.localeCompare(b.s)).slice(0, POTD_ALT).map(r => r.s);
+}
+// Punkte wie im Play-Tab für einen Fund heute im Viertel (Annäherung: ohne Sperren durch verschleierte Grundfeld-Funde)
+function potdPoints(s, Q, st) {
+  if (!ranks) return null;
+  const N = ranks.n, r = playRank(s), base = r ? r[0] + r[2] : 2 * PLAY_OUTSIDE_RANK(N), bon = [];
+  const add = (k, label, pct) => bon.push({ label, pts: playBon(k, base, pct) });
+  const firstHere = !(index.byQuad.get(Q.id)?.get(s) || []).length;
+  let inAtlas = 0;
+  if (atlas) { const e = atlas.sp.get(s), i = atlas.q.indexOf(Q.id); if (e && i >= 0) for (const occ of [e.occ, e.occU]) for (let j = 0; j < occ.length; j += 2) if (occ[j] === i) inAtlas += occ[j + 1]; }
+  const isFirst = firstHere && !!atlas && !inAtlas;
+  if (isFirst) add('first', PLAY_BONUS.first.label);
+  if (isLifer(s)) add('lifer', PLAY_BONUS.lifer.label);
+  if (!isFirst && firstHere && atlas && atlas.ry && atlas.oldByQuad.get(Q.id)?.has(s)) {
+    const old = atlas.oldByQuad.get(Q.id), sp = spOf(Q.id) || {};
+    const sib = (AGG_OF.get(s) || []).some(x => x !== s && ((sp[x] && !old.has(x)) || (index.byQuad.get(Q.id)?.get(x) || []).length));
+    if (!sib) add('lost', PLAY_BONUS.lost.label);
+  }
+  const rc = playRl(s, Q); if (rc) add('rl', 'RL ' + rc, PLAY_RL[rc]);
+  // neu für Bundesland/Naturraum: nur, wenn du die Art dort noch nirgends gefunden hast
+  const ownQs = [...new Set((index.bySp.get(s) || []).filter(o => !o.x).map(o => o.k))].map(parseQuad).filter(Boolean);
+  const bs = blStatus(s, Q), ns = natStatus(s, Q);
+  const codes = [...(bs ? bs.missing.filter(c => !ownQs.some(q => blOf(q).includes(c))).map(c => BL_SHORT[c]) : []),
+    ...(ns ? ns.newCodes.filter(c => !ownQs.some(q => natOf(q).includes(c))) : [])];
+  if (codes.length) add('area', 'neu für ' + codes.join('/'));
+  return { base, bon, r, sum: base + bon.reduce((a, b) => a + b.pts, 0), area: codes };
+}
+// Artfoto: nur mit Lizenz CC0, CC BY oder CC BY-NC (Standardfoto, sonst das erste passende der Taxonfotos), mit Urheber und Lizenz
+function potdPhoto(s) {
+  if (potdPhBusy.has(s) || !navigator.onLine) return; // je Art und Sitzung nur ein Versuch
+  potdPhBusy.add(s);
+  (async () => {
+    const id = await taxonId(s);
+    if (!id) { potd.ph[s] = { u: '' }; return; }
+    const r = await fetch(`https://api.inaturalist.org/v1/taxa/${id}?locale=de`); if (!r.ok) return;
+    const t = ((await r.json()).results || [])[0]; if (!t) return;
+    const ok = p => p && POTD_LIC[(p.license_code || '').toLowerCase()] && (p.medium_url || p.url);
+    const p = [t.default_photo, ...(t.taxon_photos || []).map(x => x && x.photo)].find(ok);
+    potd.ph[s] = p ? { u: p.medium_url || p.url.replace('/square.', '/medium.'), a: p.attribution || '', l: p.license_code.toLowerCase() } : { u: '' };
+    if (p) potdCache(potd.ph[s].u);
+  })().catch(() => {}).finally(() => { if (potd) { store.set('potd', potd); renderPotd(); } });
+}
+// Foto auch ohne Service Worker in den dauerhaften Foto-Cache (kh-photos, siehe sw.js) legen, damit es offline da ist
+function potdCache(u) {
+  if (!('caches' in window) || !u) return;
+  caches.open('kh-photos').then(c => c.match(u).then(h => h || fetch(u, { mode: 'no-cors' }).then(r => c.put(u, r)))).catch(() => {});
+}
+function renderPotd() {
+  const el = $('potd'); if (!el) return;
+  if (potd === undefined) potd = store.get('potd', null);
+  const d = todayIso();
+  // einmal am Tag wählen: beim ersten Öffnen mit Position und geladenen Daten; danach bleibt die Wahl, auch beim Herumgehen
+  if ((!potd || potd.d !== d) && here && potdGo && spOf(here.id)) {
+    const ph = potd ? potd.ph || {} : {}, keep = {};
+    Object.keys(ph).slice(-40).forEach(k => { keep[k] = ph[k]; }); // Fotoangaben der letzten Tage behalten
+    potd = { d, q: here.id, list: potdChoose(here), i: 0, ph: keep };
+    store.set('potd', potd);
+  }
+  if (!potd || potd.d !== d) {
+    $('potdWhen').textContent = '';
+    el.innerHTML = `<div class="small muted">${!here ? 'Bestimme die Position, dann suche ich dir eine lohnende Pflanze für heute aus der Umgebung aus.'
+      : 'Sobald die Artdaten für die Umgebung von ' + esc(here.id) + ' geladen sind, erscheint hier die Pflanze des Tages.'}</div>`;
+    return;
+  }
+  $('potdWhen').textContent = `${fmtDate(d)} · ${potd.q}`;
+  if (!potd.list.length) { el.innerHTML = `<div class="small muted">Rund um ${esc(potd.q)} ist alles bekannte in den letzten ${REPEAT_YEARS} Jahren kartiert. Heute keine Pflanze offen.</div>`; return; }
+  const s = potd.list[potd.i % potd.list.length], Q = parseQuad(potd.q), cn = commonName(s), st = potdStatus(s, Q);
+  const sea = potdSeason(s, Q), c = chance(s, Q), P = potdPoints(s, Q, st), ph = potd.ph[s];
+  if (ph === undefined) potdPhoto(s);
+  const chips = [
+    sea === 1 ? '<span class="chip season">in Saison</span>' : sea === 0 ? '<span class="chip unsure">nicht in Saison</span>' : '',
+    isLifer(s) ? '<span class="chip lifer">Lifer</span>' : '',
+    st.st === 'never' ? '<span class="chip new">im Viertel noch nie kartiert</span>' : st.st === 'due' ? `<span class="chip due">fällig · zuletzt ${st.last.slice(0, 4)}</span>` : `<span class="chip ok">✓ kartiert ${fmtDate(st.last)}</span>`,
+    `<span class="chip ${c.pct >= 50 ? 'ok' : c.pct >= 25 ? 'due' : 'unsure'}">Fundchance ${c.pct} %</span>`,
+    (() => { const rc = playRl(s, Q); return rc ? `<span class="chip rl">RL ${esc(rc)}</span>` : isNeo(s) ? '<span class="chip neo">Neophyt</span>' : ''; })(),
+    P && P.area.length ? `<span class="chip blnew">neu für ${esc(P.area.join('/'))}</span>` : '',
+  ].join('');
+  const rank = !ranks ? '<span class="muted">Rangliste noch nicht geladen</span>' : P.r ? `Q ${P.r[0]}/${ranks.n} · B ${P.r[2]}/${ranks.n}` : '<span class="muted">nicht in der Rangliste</span>';
+  const pts = !P ? '' : st.st === 'ok' ? `<div class="small muted">In ${esc(potd.q)} schon gewertet, wieder fällig ab ${fmtDate(dueDate(st.last))}.</div>`
+    : `<div class="small">bringt hier ca. <b class="num">${fmtPts(P.sum)}</b> Punkte <span class="muted">(Grund ${fmtPts(P.base)}${P.bon.map(b => ` + ${esc(b.label)} ${fmtPts(b.pts)}`).join('')})</span></div>`;
+  const img = ph && ph.u ? `<img class="pimg" src="${esc(ph.u)}" alt="${esc(s)}" onerror="this.outerHTML='<div class=&quot;pimg none&quot;>✿</div>'">` : '<div class="pimg none" aria-hidden="true">✿</div>';
+  el.innerHTML = `<div class="pcard" data-s="${esc(s)}" role="button" tabindex="0">${img}<div class="pbody"><span class="sci">${esc(s)}</span>${cn ? `<span>${esc(cn)}</span>` : ''}
+      <span class="chips">${chips}</span><div class="small">Rang: ${rank}</div>${pts}</div></div>
+    ${ph && ph.u ? `<div class="pcredit">Foto: ${esc(ph.a)} · ${POTD_LIC[ph.l] || ''} · iNaturalist</div>` : ph ? '<div class="pcredit">Kein frei lizenziertes Foto (CC0, CC BY, CC BY-NC) auf iNaturalist.</div>' : ''}
+    <div class="row">${potd.list.length > 1 ? `<button class="btn" id="potdNext">Andere (${potd.i % potd.list.length + 1}/${potd.list.length})</button>` : ''}<span class="small muted">gewählt für ${esc(potd.q)}${here && here.id !== potd.q ? `, du bist in ${esc(here.id)}` : ''}</span></div>`;
+  const card = el.querySelector('.pcard');
+  card.onclick = () => { lastQuery = ''; $('back').hidden = true; pick({ s, c: cn }); $('result').scrollIntoView({ block: 'start' }); };
+  card.onkeydown = e => { if (e.key === 'Enter') card.onclick(); };
+  const nx = $('potdNext'); if (nx) nx.onclick = () => { potd.i = (potd.i + 1) % potd.list.length; store.set('potd', potd); renderPotd(); };
+}
+
 // ---------- Start ----------
 $('user').value = settings.user;
 $('onlyPlants').checked = settings.onlyPlants;
@@ -3758,7 +3918,10 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas(); loadRl(); loadPheno(); loadRanks(); loadMerk(); renderMerkFb();
+  // Pflanze des Tages erst wählen, wenn Atlas, Rote Liste, Beobachtungszeiten und Rangliste da sind (spätestens nach 20 s)
+  const potdStart = () => { if (!potdGo) { potdGo = true; renderPotd(); } };
+  Promise.allSettled([loadAtlas(), loadRl(), loadPheno(), loadRanks()]).then(potdStart); setTimeout(potdStart, 20000);
+  loadMerk(); renderMerkFb();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }
