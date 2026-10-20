@@ -542,12 +542,14 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <summary><h2>Rangliste Beobachtungen</h2><span class="small muted">nach verifizierten Beob. in Österreich</span></summary>
         <div id="rl-b-moves"></div>
         <input class="field" id="rl-b-q" placeholder="Art suchen" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <label class="row small" style="gap:6px"><input type="checkbox" id="rl-b-lif"> Nur Lifer <span class="muted num" id="rl-b-lifn"></span></label>
         <ul class="list" id="rl-b-list"></ul>
       </details>
       <details class="panel fold" id="fold-play-rl-q">
         <summary><h2>Rangliste Verbreitung</h2><span class="small muted">nach bestätigten Viertelquadranten</span></summary>
         <div id="rl-q-moves"></div>
         <input class="field" id="rl-q-q" placeholder="Art suchen" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <label class="row small" style="gap:6px"><input type="checkbox" id="rl-q-lif"> Nur Lifer <span class="muted num" id="rl-q-lifn"></span></label>
         <ul class="list" id="rl-q-list"></ul>
       </details>
       <details class="panel fold" id="fold-play-regeln">
@@ -3826,7 +3828,9 @@ function renderRankList(kind) {
     a: Object.entries(ranks.s).sort((x, y) => x[1][K.ri] - y[1][K.ri] || x[0].localeCompare(y[0]))
       .map(([s, r]) => ({ s, r, key: skey(s + ' ' + (index.common.get(s) || (atlas && atlas.sp.get(s)?.c) || '')) })) };
   const q = skey($('rl-' + kind + '-q').value), all = rankSorted[kind].a;
-  const rows = q ? all.filter(x => x.key.includes(q)) : all, n = rankShown[kind];
+  const lif = $('rl-' + kind + '-lif').checked, base = lif ? all.filter(x => isLifer(x.s)) : all; // „Nur Lifer“ (Thomas, 20.10.2026)
+  $('rl-' + kind + '-lifn').textContent = lif ? fmtPts(base.length) : '';
+  const rows = q ? base.filter(x => x.key.includes(q)) : base, n = rankShown[kind];
   const row = x => spRow(x.s, `${fmtPts(x.r[K.ci])} ${K.unit} · <span class="muted">${K.other(x.r)}</span>`, deltaChip(rankDelta(x.s, K.k, x.r)) + ownChip(x.s), '', `Rang ${x.r[K.ri]}`);
   ul.innerHTML = (rows.slice(0, n).map(row).join('') || '<li class="muted">Keine Art gefunden.</li>')
     + (rows.length > n ? `<li style="display:block"><button class="btn rlmore">Weitere ${Math.min(RANK_BLOCK, rows.length - n)} laden (noch ${fmtPts(rows.length - n)})</button></li>` : '');
@@ -3852,6 +3856,8 @@ function renderRankList(kind) {
 for (const kind of ['b', 'q']) {
   $('fold-play-rl-' + kind).addEventListener('toggle', () => renderRankList(kind));
   $('rl-' + kind + '-q').addEventListener('input', () => { rankShown[kind] = RANK_BLOCK; renderRankList(kind); });
+  const lc = $('rl-' + kind + '-lif'); lc.checked = store.get('rlLifer-' + kind, false);
+  lc.addEventListener('change', () => { store.set('rlLifer-' + kind, lc.checked); rankShown[kind] = RANK_BLOCK; renderRankList(kind); });
 }
 // Kleiner Verlauf beider Ränge über die Monate (Rang 1 oben), in der Artansicht unter der Rangzeile; ab zwei Monaten
 function rankSpark(s) {
