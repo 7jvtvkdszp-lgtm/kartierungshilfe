@@ -688,11 +688,12 @@ const PLAY_BONUS = {
 // RE/RE? (ausgestorben, verschollen) wie CR – ein Fund wäre eine Sensation; G (Gefährdung unbekannten Ausmaßes) wie VU; DD, LC: 0.
 const PLAY_RL = { NT: 10, VU: 25, G: 25, EN: 50, CR: 100, RE: 100, 'RE?': 100, DD: 0 };
 // ---------- Pflanze des Tages (v69, Idee wie „Vogel des Tages“ in Merlin). Ganz oben wegen TDZ (v52) ----------
-// Gewicht einer Kandidatin = Saison × Fundchance × Kartierbedarf × Lifer × Seltenheit (Faktoren multipliziert).
+// Nur Arten, die jetzt in Saison sind (v71, Thomas: „nicht in Saison“ nie; anders als in der Bestimmung, wo Saison nur gewichtet).
+// Arten mit unbekannter Saison nur als Rückfall, wenn weniger als POTD_MIN_SEASON Saisonarten da sind, und dann nach ihnen.
+const POTD_MIN_SEASON = 5;
+const POTD_FINDABLE = 0.15; // in Saison auch außerhalb des Fensters, wenn der aktuelle Halbmonat ≥ 15 % der Spitze hat (noch auffindbar)
+// Gewicht einer Kandidatin = Fundchance × Kartierbedarf × Lifer × Seltenheit (Faktoren multipliziert).
 const POTD_W = {
-  seasonIn: 1, // laut pheno.json jetzt in Saison (Halbmonat im Fenster um den Höhepunkt mit ≥ 30 % der Spitze)
-  seasonOut: 0.08, // außerhalb der Saison: stark abgewertet, aber nicht ausgeschlossen
-  seasonUnknown: 0.4, // keine Beobachtungszeiten zur Art (und keine Monatsdaten der Umgebung)
   chanceMin: 0.15, // Fundchance 0 % zählt noch so viel; dazu kommt Fundchance/100 (also Faktor 0,15 bis 1,15)
   never: 2, // im Viertel noch nie selbst kartiert
   due: 1, // im Viertel kartiert, aber vor mehr als REPEAT_YEARS Jahren (fällig)
@@ -701,7 +702,7 @@ const POTD_W = {
 };
 const POTD_ALT = 12; // so viele Arten in der Reihenfolge des Tages merken (Knopf „Andere“)
 const POTD_LIC = { cc0: 'CC0', 'cc-by': 'CC BY', 'cc-by-nc': 'CC BY-NC' }; // nur diese Fotolizenzen zeigen (Wunsch von Thomas)
-var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
+var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { v: 2 (Regel v71), d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
 var potdGo = false, potdPhBusy = new Set();
 // ---------- Ranglisten und Monatsverlauf im Play-Tab (v70). Ganz oben wegen TDZ (v52) ----------
 const RANK_BLOCK = 100; // so viele Zeilen je Nachladen
@@ -3899,10 +3900,11 @@ function potdHash(str) {
   h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995); h ^= h >>> 15;
   return ((h >>> 0) + 0.5) / 4294967296;
 }
-// Saison: 1 = jetzt (Halbmonat im Saisonfenster laut pheno.json), 0 = nicht, null = unbekannt. Ohne pheno: Monatsdaten der Umgebung
+// Saison: 1 = jetzt (Halbmonat im Saisonfenster laut pheno.json oder dort noch auffindbar), 0 = nicht, null = unbekannt.
+// Ohne pheno zur Art: Monatsdaten der Umgebung (diesen Monat gemeldet)
 function potdSeason(s, Q) {
   const p = phenoOf(s);
-  if (p && p.tot >= 3) { const h = halfNow(); return (p.from <= p.to ? h >= p.from && h <= p.to : h >= p.from || h <= p.to) ? 1 : 0; }
+  if (p && p.tot >= 3) { const h = halfNow(); return (p.from <= p.to ? h >= p.from && h <= p.to : h >= p.from || h <= p.to) || p.h[h] >= p.max * POTD_FINDABLE ? 1 : 0; }
   const sea = seasonSet(Q);
   return sea ? (sea.has(s) ? 1 : 0) : null;
 }
@@ -3914,23 +3916,25 @@ function potdStatus(s, Q) {
   return { st: isDue(last) ? 'due' : 'ok', last };
 }
 function potdWeight(s, Q, st) {
-  const W = POTD_W, sea = potdSeason(s, Q), N = ranks ? ranks.n : 0, r = playRank(s);
+  const W = POTD_W, N = ranks ? ranks.n : 0, r = playRank(s);
   const rare = N ? 1 + W.rare * (r ? (r[0] + r[2]) / (2 * N) : 1) : 1;
-  return (sea == null ? W.seasonUnknown : sea ? W.seasonIn : W.seasonOut) * (W.chanceMin + chance(s, Q).pct / 100)
-    * (st.st === 'never' ? W.never : W.due) * (isLifer(s) ? W.lifer : 1) * rare;
+  return (W.chanceMin + chance(s, Q).pct / 100) * (st.st === 'never' ? W.never : W.due) * (isLifer(s) ? W.lifer : 1) * rare;
 }
 // Kandidaten: bestätigte Arten (spOf: Atlas + iNat live) des Viertels und seiner 8 Nachbarn, die du hier nicht in den letzten
 // REPEAT_YEARS Jahren kartiert hast. Gewichteter Zufall ohne Zurücklegen (Efraimidis–Spirakis: Schlüssel log(u) / Gewicht):
-// die Reihenfolge ergibt sich aus dem Datum, „Andere“ zeigt die nächste.
+// die Reihenfolge ergibt sich aus dem Datum, „Andere“ zeigt die nächste. Nur Saisonarten; unbekannte Saison nur als Rückfall dahinter.
 function potdChoose(Q) {
   const cand = new Set(), d = todayIso();
   for (const id of [Q.id, ...NB.map(([dr, dc]) => neighbour(Q, dr, dc).id)]) for (const s of Object.keys(spOf(id) || {})) if (s.includes(' ') && !isHybrid(s)) cand.add(s);
-  const rows = [];
+  const tiers = { 1: [], null: [] };
   for (const s of cand) {
     const st = potdStatus(s, Q); if (st.st === 'ok') continue;
-    rows.push({ s, k: Math.log(potdHash(d + '|' + s)) / potdWeight(s, Q, st) });
+    const sea = potdSeason(s, Q); if (sea === 0) continue; // nicht in Saison: nie
+    tiers[sea].push({ s, k: Math.log(potdHash(d + '|' + s)) / potdWeight(s, Q, st) });
   }
-  return rows.sort((a, b) => b.k - a.k || a.s.localeCompare(b.s)).slice(0, POTD_ALT).map(r => r.s);
+  const order = a => a.sort((x, y) => y.k - x.k || x.s.localeCompare(y.s)).map(r => r.s);
+  const inS = order(tiers[1]);
+  return (inS.length >= POTD_MIN_SEASON ? inS : [...inS, ...order(tiers.null)]).slice(0, POTD_ALT);
 }
 // Punkte wie im Play-Tab für einen Fund heute im Viertel (Annäherung: ohne Sperren durch verschleierte Grundfeld-Funde)
 function potdPoints(s, Q, st) {
@@ -3985,8 +3989,16 @@ function renderPotd() {
   if ((!potd || potd.d !== d) && here && potdGo && spOf(here.id)) {
     const ph = potd ? potd.ph || {} : {}, keep = {};
     Object.keys(ph).slice(-40).forEach(k => { keep[k] = ph[k]; }); // Fotoangaben der letzten Tage behalten
-    potd = { d, q: here.id, list: potdChoose(here), i: 0, ph: keep };
+    potd = { v: 2, d, q: here.id, list: potdChoose(here), i: 0, ph: keep };
     store.set('potd', potd);
+  }
+  // Tageswahl nach der alten Regel (v69, Saison nur gewichtet): behalten, wenn die gezeigte Art in Saison ist (nur die
+  // Reihenfolge für „Andere“ neu), sonst neu wählen
+  if (potd && potd.d === d && potd.v !== 2 && potdGo) {
+    const Q = parseQuad(potd.q), cur = potd.list[potd.i % (potd.list.length || 1)], list = potdChoose(Q);
+    if (cur && potdSeason(cur, Q) === 1) { potd.list = [cur, ...list.filter(x => x !== cur)].slice(0, POTD_ALT); potd.i = 0; }
+    else { potd.list = list; potd.i = 0; }
+    potd.v = 2; store.set('potd', potd);
   }
   if (!potd || potd.d !== d) {
     $('potdWhen').textContent = '';
