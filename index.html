@@ -693,6 +693,7 @@ const PLAY_RL = { NT: 10, VU: 25, G: 25, EN: 50, CR: 100, RE: 100, 'RE?': 100, D
 // Nur Arten, die jetzt in Saison sind (v71, Thomas: „nicht in Saison“ nie; anders als in der Bestimmung, wo Saison nur gewichtet).
 // Arten mit unbekannter Saison nur als Rückfall, wenn weniger als POTD_MIN_SEASON Saisonarten da sind, und dann nach ihnen.
 const POTD_MIN_SEASON = 5;
+const POTD_CHANCE_MIN = 35; // nur Arten mit Fundchance ab 35 % (Thomas, 20.10.2026: „sonst macht es keinen Spaß“)
 const POTD_FINDABLE = 0.15; // in Saison auch außerhalb des Fensters, wenn der aktuelle Halbmonat ≥ 15 % der Spitze hat (noch auffindbar)
 // Gewicht einer Kandidatin = Fundchance × Kartierbedarf × Lifer × Seltenheit (Faktoren multipliziert).
 const POTD_W = {
@@ -704,7 +705,7 @@ const POTD_W = {
 };
 const POTD_ALT = 12; // so viele Arten in der Reihenfolge des Tages merken (Knopf „Andere“)
 const POTD_LIC = { cc0: 'CC0', 'cc-by': 'CC BY', 'cc-by-nc': 'CC BY-NC' }; // nur diese Fotolizenzen zeigen (Wunsch von Thomas)
-var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { v: 2 (Regel v71), d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
+var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { v: 3 (Regel v73), d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
 var potdGo = false, potdPhBusy = new Set();
 // ---------- Ranglisten und Monatsverlauf im Play-Tab (v70). Ganz oben wegen TDZ (v52) ----------
 const RANK_BLOCK = 100; // so viele Zeilen je Nachladen
@@ -3936,6 +3937,7 @@ function potdChoose(Q) {
   for (const s of cand) {
     const st = potdStatus(s, Q); if (st.st === 'ok') continue;
     const sea = potdSeason(s, Q); if (sea === 0) continue; // nicht in Saison: nie
+    if (chance(s, Q).pct < POTD_CHANCE_MIN) continue;
     tiers[sea].push({ s, k: Math.log(potdHash(d + '|' + s)) / potdWeight(s, Q, st) });
   }
   const order = a => a.sort((x, y) => y.k - x.k || x.s.localeCompare(y.s)).map(r => r.s);
@@ -3995,16 +3997,16 @@ function renderPotd() {
   if ((!potd || potd.d !== d) && here && potdGo && spOf(here.id)) {
     const ph = potd ? potd.ph || {} : {}, keep = {};
     Object.keys(ph).slice(-40).forEach(k => { keep[k] = ph[k]; }); // Fotoangaben der letzten Tage behalten
-    potd = { v: 2, d, q: here.id, list: potdChoose(here), i: 0, ph: keep };
+    potd = { v: 3, d, q: here.id, list: potdChoose(here), i: 0, ph: keep };
     store.set('potd', potd);
   }
   // Tageswahl nach der alten Regel (v69, Saison nur gewichtet): behalten, wenn die gezeigte Art in Saison ist (nur die
   // Reihenfolge für „Andere“ neu), sonst neu wählen
-  if (potd && potd.d === d && potd.v !== 2 && potdGo) {
+  if (potd && potd.d === d && potd.v !== 3 && potdGo) {
     const Q = parseQuad(potd.q), cur = potd.list[potd.i % (potd.list.length || 1)], list = potdChoose(Q);
-    if (cur && potdSeason(cur, Q) === 1) { potd.list = [cur, ...list.filter(x => x !== cur)].slice(0, POTD_ALT); potd.i = 0; }
+    if (cur && list.includes(cur)) { potd.list = [cur, ...list.filter(x => x !== cur)].slice(0, POTD_ALT); potd.i = 0; }
     else { potd.list = list; potd.i = 0; }
-    potd.v = 2; store.set('potd', potd);
+    potd.v = 3; store.set('potd', potd);
   }
   if (!potd || potd.d !== d) {
     $('potdWhen').textContent = '';
@@ -4013,7 +4015,7 @@ function renderPotd() {
     return;
   }
   $('potdWhen').textContent = `${fmtDate(d)} · ${potd.q}`;
-  if (!potd.list.length) { el.innerHTML = `<div class="small muted">Rund um ${esc(potd.q)} ist alles bekannte in den letzten ${REPEAT_YEARS} Jahren kartiert. Heute keine Pflanze offen.</div>`; return; }
+  if (!potd.list.length) { el.innerHTML = `<div class="small muted">Rund um ${esc(potd.q)} ist heute keine offene Saisonart mit Fundchance ab ${POTD_CHANCE_MIN} % übrig. Heute keine Pflanze.</div>`; return; }
   const s = potd.list[potd.i % potd.list.length], Q = parseQuad(potd.q), cn = commonName(s), st = potdStatus(s, Q);
   const sea = potdSeason(s, Q), c = chance(s, Q), P = potdPoints(s, Q, st), ph = potd.ph[s];
   if (ph === undefined) potdPhoto(s);
