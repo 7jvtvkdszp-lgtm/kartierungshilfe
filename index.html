@@ -259,6 +259,13 @@ details.lz .lzbody { padding: 6px 0 2px; display: flex; flex-direction: column; 
 .potd .chips { justify-content: flex-start; margin-top: 2px }
 .potd .pcredit { font-size: 11px; color: var(--muted); overflow-wrap: anywhere }
 .potd .row .btn { min-height: 36px; padding: 6px 12px }
+/* Ranglisten (v70): Auf-/Abstieg gegenüber dem Vormonat, eigene Arten und Lifer dezent */
+.chip.rup { border: 1px solid var(--found); color: var(--found) }
+.chip.rdown { border: 1px solid var(--warn); color: var(--warn) }
+.chip.mine { background: transparent; color: var(--found); border: 1px solid var(--line) }
+.chip.lifer2 { background: transparent; color: #7c3aed; border: 1px solid #c4b5fd }
+.rspark { display: block; margin-top: 4px }
+.rspark text { font-size: 10px; fill: var(--muted) }
 .simlist { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 6px; -webkit-overflow-scrolling: touch }
 .sim { flex: 0 0 92px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; color: inherit; font: inherit; font-size: 11px; text-align: center; padding: 0; cursor: pointer }
 .sim img, .sim .noimg { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: var(--line); display: block }
@@ -531,6 +538,18 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <summary><h2>Kartiertage</h2><span class="small muted" id="playDaysInfo"></span></summary>
         <div id="playDays"></div>
       </details>
+      <details class="panel fold" id="fold-play-rl-b">
+        <summary><h2>Rangliste Beobachtungen</h2><span class="small muted">nach verifizierten Beob. in Österreich</span></summary>
+        <div id="rl-b-moves"></div>
+        <input class="field" id="rl-b-q" placeholder="Art suchen" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <ul class="list" id="rl-b-list"></ul>
+      </details>
+      <details class="panel fold" id="fold-play-rl-q">
+        <summary><h2>Rangliste Verbreitung</h2><span class="small muted">nach bestätigten Viertelquadranten</span></summary>
+        <div id="rl-q-moves"></div>
+        <input class="field" id="rl-q-q" placeholder="Art suchen" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <ul class="list" id="rl-q-list"></ul>
+      </details>
       <details class="panel fold" id="fold-play-regeln">
         <summary><h2>So zählen die Punkte</h2></summary>
         <div class="small" id="playRules"></div>
@@ -684,6 +703,15 @@ const POTD_ALT = 12; // so viele Arten in der Reihenfolge des Tages merken (Knop
 const POTD_LIC = { cc0: 'CC0', 'cc-by': 'CC BY', 'cc-by-nc': 'CC BY-NC' }; // nur diese Fotolizenzen zeigen (Wunsch von Thomas)
 var potd; // erst beim ersten Zeichnen aus dem Speicher (store ist hier noch nicht da): { d: Datum, q: Viertel, list: [Arten], i: gezeigte Art, ph: { Art: { u, a, l } | { u: '' } } }
 var potdGo = false, potdPhBusy = new Set();
+// ---------- Ranglisten und Monatsverlauf im Play-Tab (v70). Ganz oben wegen TDZ (v52) ----------
+const RANK_BLOCK = 100; // so viele Zeilen je Nachladen
+var ranksHist = null; // ranks-hist.json: { v, t, m: [Monate], n: [N je Monat], s: { Art: [qRang, bRang, qRang, bRang, …] } }, 0 = nicht in der Rangliste
+var rankShown = { b: RANK_BLOCK, q: RANK_BLOCK }, rankSorted = {}, rankMoves = {};
+// b = nach verifizierten Beobachtungen (B-Rang), q = nach bestätigten Viertelquadranten (Q-Rang); Indizes in ranks.s[Art] = [qRang, qZahl, bRang, bZahl]
+const RANK_KIND = {
+  b: { k: 1, ri: 2, ci: 3, unit: 'Beob.', other: r => `Q ${r[0]}` },
+  q: { k: 0, ri: 0, ci: 1, unit: 'Viertel', other: r => `B ${r[2]}` },
+};
 // ---------- Raster ----------
 const LAT0 = 56, LON0 = 5 + 40 / 60;
 const pad = n => String(n).padStart(2, '0');
@@ -3062,7 +3090,7 @@ $('tallyFilter').addEventListener('input', renderTally);
 // Ein- und Ausklappen merken
 $('fold-list-freq').addEventListener('toggle', e => { if (e.target.open) renderFreq(); });
 $('fold-map-lifer-tour').addEventListener('toggle', e => { if (e.target.open && tourMap) setTimeout(() => tourMap.invalidateSize(), 50); });
-for (const id of ['foldTally', 'foldDay', 'foldPotd', ...[...document.querySelectorAll('#view-map details.fold, #view-data details.fold, #view-list details.fold')].map(d => d.id)]) {
+for (const id of ['foldTally', 'foldDay', 'foldPotd', 'fold-play-rl-b', 'fold-play-rl-q', ...[...document.querySelectorAll('#view-map details.fold, #view-data details.fold, #view-list details.fold')].map(d => d.id)]) {
   const el = $(id), k = 'fold-' + id;
   try { const v = localStorage.getItem(k); if (v === '0') el.open = false; else if (v === '1') el.open = true; } catch {}
   el.addEventListener('toggle', () => { try { localStorage.setItem(k, el.open ? '1' : '0'); } catch {} });
@@ -3614,7 +3642,7 @@ function rankLine(s) {
   if (!s || !s.includes(' ')) return '';
   if (!ranks) return '<div class="small muted">Rang: Rangliste noch nicht geladen.</div>';
   const t = rankText(s);
-  return `<div class="small">Rang: ${t || '<span class="muted">nicht in der Rangliste</span> (keine verifizierte Beobachtung in Österreich)'}</div>`;
+  return `<div class="small">Rang: ${t || '<span class="muted">nicht in der Rangliste</span> (keine verifizierte Beobachtung in Österreich)'}</div>${rankSpark(s)}`;
 }
 const playBon = (k, base, pct) => { const b = PLAY_BONUS[k] || { pct: 0, min: 0 }, p = pct != null ? pct : b.pct; return Math.round(Math.max(base * p / 100, p ? b.min : 0)); };
 // Rote-Liste-Bonus: Kategorie Österreich, im Naturraum des Quadranten die stärkere (wie rlChip); Neophyten und Taxa s. str. ohne
@@ -3745,6 +3773,7 @@ function renderPlay() {
     <p style="margin:0 0 6px">Boni in Prozent der Grundpunkte, zusammengezählt: Erstnachweis im Viertel (der Atlas kennt die Art dort nur von dir) ${bl('first')} · Lifer Österreich (dein erster Fund der Art) ${bl('lifer')} · Wiederfund einer verschollenen Art (im Viertel nur vor ${atlas && atlas.ry || 'dem Stichjahr'} gemeldet) ${bl('lost')} · Rote Liste NT +${PLAY_RL.NT} %, VU/G +${PLAY_RL.VU} %, EN +${PLAY_RL.EN} %, CR/RE +${PLAY_RL.CR} % · neu für Bundesland oder Naturraum ${bl('area')}.</p>
     <p style="margin:0" class="muted">Die Boni werden mit den heutigen Daten bewertet (Atlas, Rote Liste, gespeicherte „bald vorbei“-Daten), auch für alte Funde: eine rückwirkende Annäherung. Die Ränge ändern sich monatlich mit dem neuen Atlas.</p>`;
   bindPlay($('view-play'));
+  renderRankList('b'); renderRankList('q');
 }
 async function loadRanks() {
   try { const raw = await kv.get('ranks'); if (raw && raw.s) { ranks = raw; if (current) showResult(current); renderPlay(); } } catch {}
@@ -3759,6 +3788,107 @@ async function loadRanks() {
     kv.set('ranks', raw); ranks = raw;
     if (current) showResult(current); renderPlay();
   } catch { /* noch keine ranks.json oder kein Empfang */ }
+}
+
+// ---------- Ranglisten Beobachtungen / Verbreitung und Monatsverlauf der Ränge (v70) ----------
+// Verlaufszeile einer Art (Namen wie im Atlas abgleichen, wie playRank)
+function histRow(s) {
+  if (!ranksHist) return null;
+  const r = ranksHist.s[s]; if (r) return r;
+  if (!ranksHist.byKey) ranksHist.byKey = new Map(Object.entries(ranksHist.s).map(([k, v]) => [atlasKey(k), v]));
+  return ranksHist.byKey.get(atlasKey(s)) || null;
+}
+const monthLabel = m => `${MONTHS_LONG[+m.slice(5) - 1]} ${m.slice(0, 4)}`;
+// Vormonat: letzter Monat im Verlauf vor dem Monat der aktuellen ranks.json (-1 = keiner)
+function prevIdx() {
+  if (!ranksHist || !ranks) return -1;
+  const cur = (ranks.t || '').slice(0, 7);
+  for (let i = ranksHist.m.length - 1; i >= 0; i--) if (ranksHist.m[i] < cur) return i;
+  return -1;
+}
+// Rangänderung gegenüber dem Vormonat; k = 0 (Q) oder 1 (B). null = kein Vergleich, { neu } = im Vormonat nicht in der Rangliste
+function rankDelta(s, k, r = playRank(s)) {
+  const i = prevIdx(); if (i < 0 || !r) return null;
+  const h = histRow(s), pr = h ? h[i * 2 + k] : 0;
+  return pr ? { d: pr - r[k ? 2 : 0], pr, cur: r[k ? 2 : 0] } : { neu: true };
+}
+const deltaChip = x => !x ? '' : x.neu ? '<span class="chip blnew">neu</span>' : x.d > 0 ? `<span class="chip rup">▲${fmtPts(x.d)}</span>` : x.d < 0 ? `<span class="chip rdown">▼${fmtPts(-x.d)}</span>` : '';
+const ownChip = s => index.bySp.has(s) ? '<span class="chip mine">✓ gefunden</span>' : '<span class="chip lifer2">Lifer</span>';
+function renderRankList(kind) {
+  const box = $('fold-play-rl-' + kind); if (!box || !box.open || $('view-play').hidden) return;
+  const K = RANK_KIND[kind], ul = $('rl-' + kind + '-list'), mv = $('rl-' + kind + '-moves');
+  if (!ranks) { mv.innerHTML = ''; ul.innerHTML = '<li class="muted">Rangliste (ranks.json) noch nicht geladen. Einmal mit Empfang öffnen.</li>'; return; }
+  // sortiert nach Rang (dann Name), mit Suchtext aus wissenschaftlichem und deutschem Namen (ohne Bindestriche, Schreibvarianten
+  // wie bei der Suche unter Prüfen); neu bei neuer Rangliste, neuem Atlas oder neuen Funden (deutsche Namen)
+  const skey = t => fuzz(norm(t).replace(/-/g, '')), tk = [ranks.t, atlas && atlas.t, obs.length].join('|');
+  if (!rankSorted[kind] || rankSorted[kind].t !== tk) rankSorted[kind] = { t: tk,
+    a: Object.entries(ranks.s).sort((x, y) => x[1][K.ri] - y[1][K.ri] || x[0].localeCompare(y[0]))
+      .map(([s, r]) => ({ s, r, key: skey(s + ' ' + (index.common.get(s) || (atlas && atlas.sp.get(s)?.c) || '')) })) };
+  const q = skey($('rl-' + kind + '-q').value), all = rankSorted[kind].a;
+  const rows = q ? all.filter(x => x.key.includes(q)) : all, n = rankShown[kind];
+  const row = x => spRow(x.s, `${fmtPts(x.r[K.ci])} ${K.unit} · <span class="muted">${K.other(x.r)}</span>`, deltaChip(rankDelta(x.s, K.k, x.r)) + ownChip(x.s), '', `Rang ${x.r[K.ri]}`);
+  ul.innerHTML = (rows.slice(0, n).map(row).join('') || '<li class="muted">Keine Art gefunden.</li>')
+    + (rows.length > n ? `<li style="display:block"><button class="btn rlmore">Weitere ${Math.min(RANK_BLOCK, rows.length - n)} laden (noch ${fmtPts(rows.length - n)})</button></li>` : '');
+  // Größte Auf- und Absteiger gegenüber dem Vormonat (Top 10)
+  const pi = prevIdx();
+  if (pi < 0) mv.innerHTML = `<div class="small muted">${ranksHist ? 'Vergleich ab dem nächsten Monatsupdate.' : 'Monatsverlauf noch nicht geladen.'}</div>`;
+  else {
+    const mk = ranks.t + '|' + ranksHist.m.join();
+    if (!rankMoves[kind] || rankMoves[kind].mk !== mk) {
+      const ds = all.map(x => ({ s: x.s, x: rankDelta(x.s, K.k, x.r) })).filter(e => e.x && !e.x.neu && e.x.d);
+      rankMoves[kind] = { mk, up: ds.filter(e => e.x.d > 0).sort((a, b) => b.x.d - a.x.d || a.s.localeCompare(b.s)).slice(0, 10),
+        down: ds.filter(e => e.x.d < 0).sort((a, b) => a.x.d - b.x.d || a.s.localeCompare(b.s)).slice(0, 10) };
+    }
+    const M = rankMoves[kind], mrow = e => spRow(e.s, `Rang ${e.x.pr} → ${e.x.cur}`, deltaChip(e.x) + ownChip(e.s));
+    const wasOpen = !!mv.querySelector('details[open]'); // beim Suchen und Nachladen offen lassen
+    mv.innerHTML = `<details class="ly"${wasOpen ? ' open' : ''}><summary><span><b>Größte Aufsteiger / Absteiger</b></span><span class="small muted">seit ${monthLabel(ranksHist.m[pi])}</span></summary>
+      <div class="small" style="margin-top:6px"><b>Aufsteiger</b></div><ul class="list">${M.up.map(mrow).join('') || '<li class="muted">keine</li>'}</ul>
+      <div class="small"><b>Absteiger</b></div><ul class="list">${M.down.map(mrow).join('') || '<li class="muted">keine</li>'}</ul></details>`;
+  }
+  box.querySelectorAll('li.tap[data-s]').forEach(li => li.onclick = () => openFromList(li.dataset.s));
+  const more = ul.querySelector('.rlmore'); if (more) more.onclick = () => { rankShown[kind] += RANK_BLOCK; renderRankList(kind); };
+}
+for (const kind of ['b', 'q']) {
+  $('fold-play-rl-' + kind).addEventListener('toggle', () => renderRankList(kind));
+  $('rl-' + kind + '-q').addEventListener('input', () => { rankShown[kind] = RANK_BLOCK; renderRankList(kind); });
+}
+// Kleiner Verlauf beider Ränge über die Monate (Rang 1 oben), in der Artansicht unter der Rangzeile; ab zwei Monaten
+function rankSpark(s) {
+  if (!ranksHist || !s.includes(' ')) return '';
+  const h = histRow(s); if (!h) return '';
+  const pts = ranksHist.m.map((m, i) => ({ m, q: h[i * 2], b: h[i * 2 + 1] }));
+  const r = playRank(s), cur = ranks && (ranks.t || '').slice(0, 7);
+  if (r && cur && cur > ranksHist.m[ranksHist.m.length - 1]) pts.push({ m: cur, q: r[0], b: r[2] }); // aktuelle Rangliste schon neuer als der Verlauf
+  const p = pts.filter(x => x.q || x.b); if (p.length < 2) return '';
+  const vals = p.flatMap(x => [x.q, x.b]).filter(Boolean), lo = Math.min(...vals), hi = Math.max(...vals), span = Math.max(hi - lo, 1);
+  const W = 280, H = 70, x0 = 38, x1 = W - 6, y0 = 8, y1 = H - 18;
+  const X = i => x0 + i * (x1 - x0) / (p.length - 1), Y = v => y0 + (v - lo) / span * (y1 - y0);
+  const line = (k, col) => {
+    const xy = p.map((x, i) => x[k] ? [X(i), Y(x[k])] : null).filter(Boolean);
+    return `<polyline points="${xy.map(([a, b]) => a.toFixed(1) + ',' + b.toFixed(1)).join(' ')}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>`
+      + xy.map(([a, b]) => `<circle cx="${a.toFixed(1)}" cy="${b.toFixed(1)}" r="2.5" fill="${col}"/>`).join('');
+  };
+  return `<svg class="rspark" viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Rangverlauf Q und B">
+    <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--line)"/><line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="var(--line)"/>
+    <text x="${x0 - 4}" y="${y0 + 3}" text-anchor="end">${lo}</text><text x="${x0 - 4}" y="${y1 + 3}" text-anchor="end">${hi}</text>
+    ${line('q', 'var(--accent)')}${line('b', '#7c3aed')}
+    <text x="${x0}" y="${H - 4}">${monthLabel(p[0].m)}</text><text x="${x1}" y="${H - 4}" text-anchor="end">${monthLabel(p[p.length - 1].m)}</text></svg>
+    <div class="small muted">Rangverlauf: <b style="color:var(--accent)">Q</b> · <b style="color:#7c3aed">B</b>, Rang 1 oben</div>`;
+}
+// Offline wie ranks.json: aus IndexedDB, mit Empfang höchstens einmal am Tag nachsehen
+async function loadRanksHist() {
+  const done = () => { rankMoves = {}; if (current) showResult(current); renderPlay(); };
+  try { const raw = await kv.get('ranksHist'); if (raw && raw.s) { ranksHist = raw; done(); } } catch {}
+  const age = ranksHist ? Date.now() - new Date(store.get('ranksHistChecked', 0)) : Infinity;
+  if (!navigator.onLine || age < 864e5) return;
+  try {
+    const r = await fetch('ranks-hist.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const raw = await r.json();
+    store.set('ranksHistChecked', new Date().toISOString());
+    if (ranksHist && raw.t === ranksHist.t) return;
+    kv.set('ranksHist', raw); ranksHist = raw; done();
+  } catch { /* noch kein Verlauf oder kein Empfang */ }
 }
 
 // ---------- Pflanze des Tages (v69): eine lohnende Art aus der Umgebung, einmal am Tag gewählt ----------
@@ -3921,7 +4051,7 @@ kvInit().then(() => {
   // Pflanze des Tages erst wählen, wenn Atlas, Rote Liste, Beobachtungszeiten und Rangliste da sind (spätestens nach 20 s)
   const potdStart = () => { if (!potdGo) { potdGo = true; renderPotd(); } };
   Promise.allSettled([loadAtlas(), loadRl(), loadPheno(), loadRanks()]).then(potdStart); setTimeout(potdStart, 20000);
-  loadMerk(); renderMerkFb();
+  loadRanksHist(); loadMerk(); renderMerkFb();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }

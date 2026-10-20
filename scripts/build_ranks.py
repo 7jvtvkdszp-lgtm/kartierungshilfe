@@ -8,8 +8,14 @@ Rangliste nur über die in Österreich verifizierten Arten (iNat-Forschungsquali
 
 Format: {"v": 1, "t": Erstellzeit, "a": Stand des Atlas, "n": N, "s": {Art: [qRang, qZahl, bRang, bZahl]}}
 Aufruf: python scripts/build_ranks.py (im Monatslauf .github/workflows/atlas.yml nach build_atlas.py merge)
+
+Monatsverlauf (v70): bei jedem Lauf zusätzlich ranks/JJJJ-MM.json (Monat der Erstellzeit, ein späterer Lauf im selben Monat
+überschreibt ihn) = {"v": 1, "m": Monat, "t", "n": N, "s": {Art: [qRang, bRang]}} mit denselben Namen wie ranks.json,
+und ranks-hist.json für die App: die letzten bis zu 24 Monate, {"v": 1, "t": Erstellzeit des letzten, "m": [Monate], "n": [N je Monat],
+"s": {Art: [qRang, bRang, qRang, bRang, …]}} in der Reihenfolge von m, 0 = in dem Monat nicht in der Rangliste.
+python scripts/build_ranks.py --nur-verlauf legt nur Schnappschuss und Verlauf aus der vorhandenen ranks.json an.
 """
-import json, re, sys
+import glob, json, os, re, sys
 from datetime import datetime, timezone
 
 # wie TAX_FIX in index.html: diese Namen gelten in Österreich immer als die rechte Art
@@ -47,6 +53,24 @@ def main():
            's': {s: [qr[s], q[s], br[s], counts[s]] for s in sorted(counts)}}
     json.dump(out, open('ranks.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(f'ranks.json: {len(counts)} verifizierte Arten, {sum(1 for v in q.values() if not v)} ohne bestätigten Quadranten', file=sys.stderr)
+    history(out)
+
+HIST_MONTHS = 24
+
+def history(out):
+    """Monats-Schnappschuss ranks/JJJJ-MM.json schreiben und ranks-hist.json aus den letzten HIST_MONTHS Monaten bauen."""
+    month = out['t'][:7]
+    os.makedirs('ranks', exist_ok=True)
+    snap = {'v': 1, 'm': month, 't': out['t'], 'n': out['n'], 's': {s: [r[0], r[2]] for s, r in out['s'].items()}}
+    json.dump(snap, open(f'ranks/{month}.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    files = sorted(f for f in glob.glob('ranks/*.json') if re.search(r'/\d{4}-\d{2}\.json$', f.replace(os.sep, '/')))[-HIST_MONTHS:]
+    snaps = [json.load(open(f, encoding='utf-8')) for f in files]
+    names = sorted({s for sn in snaps for s in sn['s']})
+    hist = {'v': 1, 't': snaps[-1]['t'], 'm': [sn['m'] for sn in snaps], 'n': [sn['n'] for sn in snaps],
+            's': {s: [x for sn in snaps for x in sn['s'].get(s, [0, 0])] for s in names}}
+    json.dump(hist, open('ranks-hist.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+    print(f'ranks/{month}.json, ranks-hist.json: {len(snaps)} Monat(e), {len(names)} Arten', file=sys.stderr)
 
 if __name__ == '__main__':
-    main()
+    if '--nur-verlauf' in sys.argv: history(json.load(open('ranks.json', encoding='utf-8')))
+    else: main()
