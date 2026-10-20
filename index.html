@@ -651,8 +651,6 @@ const PLAY_BONUS = {
   lifer: { pct: 100, min: 100, label: 'Lifer Österreich' },
   lost: { pct: 50, min: 50, label: 'Wiederfund verschollen' },
   area: { pct: 100, min: 100, label: 'neu für' }, // neu für Bundesland oder Naturraum laut Roter Liste
-  home: { pct: 10, min: 0, label: HOME_NAME },
-  ending: { pct: 20, min: 0, label: 'Jetzt oder nie' },
 };
 // Rote Liste Österreich (Kategorie wie rlChip, im Naturraum des Quadranten die stärkere): Prozent der Grundpunkte.
 // RE/RE? (ausgestorben, verschollen) wie CR – ein Fund wäre eine Sensation; G (Gefährdung unbekannten Ausmaßes) wie VU; DD, LC: 0.
@@ -3662,10 +3660,7 @@ function playScore() {
     const bs = blOk ? blStatus(o.s, Q) : null, ns = nrOk ? natStatus(o.s, Q) : null;
     const codes = [...(bs ? bs.missing.map(c => ['BL' + c, BL_SHORT[c]]) : []), ...(ns ? ns.newCodes.map(c => ['NR' + c, c]) : [])].filter(([c]) => !areaDone.has(o.s + '|' + c));
     if (codes.length) { codes.forEach(([c]) => areaDone.add(o.s + '|' + c)); add('area', 'neu für ' + codes.map(c => c[1]).join('/')); }
-    if (ids.some(id => HOME_SET.has(id))) add('home', PLAY_BONUS.home.label); // verschleiert: Grundfeld enthält ein HOME-Viertel
-    // Jetzt oder nie im Fundmonat: nur wenn die App für das Viertel (verschleiert: eines der vier) und den Monat die
-    // „bald vorbei“-Daten gespeichert hat (Umgebung 5×5 Quadranten, beim Besuch geladen). Fehlen sie, entfällt der Bonus.
-    if (ids.some(id => { const ek = season['E|' + id + '|' + +o.d.slice(5, 7)]; return ek && ek.sp.some(e => e[0] === o.s); })) add('ending', PLAY_BONUS.ending.label);
+    // Kein Bonus für Mondsee-Irrsee und Jetzt oder nie (Thomas, 20.10.2026)
     const it = { o, s: o.s, q: where, gf: gfMode, r, out, base, bon, sum: base + bon.reduce((a, b) => a + b.pts, 0) };
     D.items.push(it); D.pts += it.sum; items.push(it);
   }
@@ -3717,7 +3712,7 @@ function renderPlay() {
   const B = PLAY_BONUS, bl = k => `+${B[k].pct} %${B[k].min ? `, mindestens ${B[k].min}` : ''}`;
   $('playRules').innerHTML = `<p style="margin:0 0 6px">Jeder eigene Fund (iNaturalist, Gefäßpflanzen, Österreich, auf Art bestimmt) bringt <b>Grundpunkte = Q-Rang + B-Rang</b>. Die Ränge gelten in der Rangliste der ${ranks ? ranks.n : 'N'} in Österreich verifizierten Arten (Forschungsqualität): <b>Q</b> nach Zahl der bestätigten Viertelquadranten im Atlas, <b>B</b> nach Zahl der verifizierten Beobachtungen, jeweils die häufigste Art = Rang 1. Je seltener, desto mehr Punkte. Gleichstand = gleicher Platz. Arten ohne verifizierte Beobachtung in Österreich zählen bei beiden Rängen als N.</p>
     <p style="margin:0 0 6px">Punkte gibt es je Art und Viertel einmal in ${REPEAT_YEARS} Jahren: der erste Fund zählt, weitere Funde dort in den ${REPEAT_YEARS} Jahren danach nicht. Gattungsfunde zählen nicht, sie stehen grau beim Tag. Funde mit verschleierten Koordinaten (meist gefährdete Arten) zählen nach <b>Grundfeld</b> (z. B. 8146 statt 8146/1): je Art und Grundfeld einmal in ${REPEAT_YEARS} Jahren, ein gewerteter Viertelfund dort sperrt sie und umgekehrt. Erstnachweis und Verschollen gelten dann für alle vier Viertel zusammen, Bundesland und Naturraum nur, wenn das Grundfeld eindeutig in einem liegt, ${HOME_NAME}, wenn es ein Viertel des Gebiets enthält. iNaturalist verschiebt verschleierte Punkte zufällig innerhalb einer 0,2°-Zelle, das Grundfeld kann daher daneben liegen. Mit genauen Koordinaten (API-Token oder CSV-Import) zählt der Fund normal nach Viertel.</p>
-    <p style="margin:0 0 6px">Boni in Prozent der Grundpunkte, zusammengezählt: Erstnachweis im Viertel (der Atlas kennt die Art dort nur von dir) ${bl('first')} · Lifer Österreich (dein erster Fund der Art) ${bl('lifer')} · Wiederfund einer verschollenen Art (im Viertel nur vor ${atlas && atlas.ry || 'dem Stichjahr'} gemeldet) ${bl('lost')} · Rote Liste NT +${PLAY_RL.NT} %, VU/G +${PLAY_RL.VU} %, EN +${PLAY_RL.EN} %, CR/RE +${PLAY_RL.CR} % · neu für Bundesland oder Naturraum ${bl('area')} · ${HOME_NAME} ${bl('home')} · Jetzt oder nie im Fundmonat ${bl('ending')}.</p>
+    <p style="margin:0 0 6px">Boni in Prozent der Grundpunkte, zusammengezählt: Erstnachweis im Viertel (der Atlas kennt die Art dort nur von dir) ${bl('first')} · Lifer Österreich (dein erster Fund der Art) ${bl('lifer')} · Wiederfund einer verschollenen Art (im Viertel nur vor ${atlas && atlas.ry || 'dem Stichjahr'} gemeldet) ${bl('lost')} · Rote Liste NT +${PLAY_RL.NT} %, VU/G +${PLAY_RL.VU} %, EN +${PLAY_RL.EN} %, CR/RE +${PLAY_RL.CR} % · neu für Bundesland oder Naturraum ${bl('area')}.</p>
     <p style="margin:0" class="muted">Die Boni werden mit den heutigen Daten bewertet (Atlas, Rote Liste, gespeicherte „bald vorbei“-Daten), auch für alte Funde: eine rückwirkende Annäherung. Die Ränge ändern sich monatlich mit dem neuen Atlas.</p>`;
   bindPlay($('view-play'));
 }
