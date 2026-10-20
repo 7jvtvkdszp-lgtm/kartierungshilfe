@@ -624,7 +624,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 66</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 67</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -3590,12 +3590,12 @@ function rankLine(s) {
 }
 const playBon = (k, base, pct) => { const b = PLAY_BONUS[k] || { pct: 0, min: 0 }, p = pct != null ? pct : b.pct; return Math.round(Math.max(base * p / 100, p ? b.min : 0)); };
 // Rote-Liste-Bonus: Kategorie Österreich, im Naturraum des Quadranten die stärkere (wie rlChip); Neophyten und Taxa s. str. ohne
-function playRl(s, Q) {
+function playRl(s, Q, nrOk = true) {
   const r = rlOf(s); if (!r || isNeo(s) || strict(r)) return null;
   let best = null;
   const take = c => { c = (c || '').replace(/\*/g, '').trim(); if (PLAY_RL[c] && (!best || PLAY_RL[c] > PLAY_RL[best])) best = c; };
   take(r.c);
-  const ns = natStatus(s, Q); if (ns) ns.cats.forEach(([, v]) => take(v));
+  const ns = nrOk && natStatus(s, Q); if (ns) ns.cats.forEach(([, v]) => take(v)); // Naturraum nur, wenn eindeutig
   return best;
 }
 // Alle eigenen Funde bewerten (chronologisch). Boni werden mit den heutigen Daten bewertet: rückwirkende Annäherung.
@@ -3614,48 +3614,59 @@ function playScore() {
   // Lifer: chronologisch erster eigener Fund der Art in Österreich (nur Artrang, wie isLifer)
   const liferObs = new Map();
   for (const o of sorted) if (!(o.r > 10) && o.s.includes(' ') && o.la != null && !liferObs.has(o.s)) liferObs.set(o.s, o);
-  const counted = new Map(), areaDone = new Set(), days = new Map(), items = [];
+  const counted = new Map(), everIn = new Set(), areaDone = new Set(), days = new Map(), items = [];
   const day = d => days.get(d) || (days.set(d, { d, pts: 0, items: [], skip: [], track: !!(tracks[d] && tracks[d].length > 1) }), days.get(d));
   for (const o of sorted) {
     const D = day(o.d);
     if (o.r > 10 || !o.s.includes(' ')) { D.skip.push({ o, why: 'nur Gattung' }); continue; }
     if (o.la == null) { D.skip.push({ o, why: 'ohne Koordinaten' }); continue; }
-    // verschleierte Koordinaten: der Quadrant ist nicht eindeutig (wie überall in der App), darum ohne Punkte
-    if (o.x) { D.skip.push({ o, why: 'Koordinaten verschleiert, Quadrant unklar' }); continue; }
-    const Q = toQuad(o.la, o.lo), k = o.s + '|' + Q.id, last = counted.get(k);
-    // je Art und Viertel einmal in REPEAT_YEARS Jahren: ab dem gewerteten Fund zählt erst wieder ein Fund nach dueDate
-    if (last && o.d < dueDate(last)) { D.skip.push({ o, q: Q.id, why: `schon gewertet am ${fmtDate(last)}` }); continue; }
-    counted.set(k, o.d);
-    const firstHere = !last; // dein erster Fund der Art in diesem Viertel
+    // verschleierte Koordinaten (v67, Wunsch von Thomas, meist gefährdete Arten): ohne genaue Lage wird nach Grundfeld gewertet.
+    // Liegen genaue Koordinaten vor (private Lage per Token oder CSV), ist o.x = 0 und der Fund zählt normal nach Viertel.
+    const gfMode = !!o.x, Q = toQuad(o.la, o.lo);
+    const qs = gfMode ? [1, 2, 3, 4].map(n => quadFromRC(Q.R, Q.C, n)) : [Q]; // betroffene Viertel
+    const ids = qs.map(x => x.id), gk = o.s + '|GF' + Q.gf;
+    // je Art und Viertel (bzw. Grundfeld) einmal in REPEAT_YEARS Jahren. Ein gewerteter Grundfeld-Fund sperrt alle vier Viertel,
+    // ein gewerteter Viertelfund sperrt das Grundfeld (und umgekehrt).
+    const locks = gfMode ? [gk, ...ids.map(id => o.s + '|' + id)] : [o.s + '|' + Q.id, gk];
+    const last = locks.map(k => counted.get(k)).filter(Boolean).sort().pop();
+    const where = gfMode ? `Grundfeld ${Q.gf} (verschleiert)` : Q.id;
+    if (last && o.d < dueDate(last)) { D.skip.push({ o, q: where, why: `schon gewertet am ${fmtDate(last)}` }); continue; }
+    // dein erster gewerteter Fund der Art hier (Viertel bzw. ganzes Grundfeld), vor dem Eintragen prüfen
+    const firstHere = gfMode ? !ids.some(id => everIn.has(o.s + '|' + id)) && !everIn.has(gk) : !everIn.has(o.s + '|' + Q.id);
+    counted.set(gfMode ? gk : o.s + '|' + Q.id, o.d);
+    if (gfMode) everIn.add(gk); else everIn.add(o.s + '|' + Q.id);
     const r = playRank(o.s), out = !r;
     const qr = out ? PLAY_OUTSIDE_RANK(N) : r[0], br = out ? PLAY_OUTSIDE_RANK(N) : r[2], base = qr + br;
     const bon = [], add = (k2, label, pct) => bon.push({ k: k2, label, pts: playBon(k2, base, pct) });
-    // Erstnachweis im Viertel (Annäherung): der Atlas meldet die Art hier höchstens so oft, wie du sie hier selbst gefunden hast,
-    // also stammen alle Meldungen vermutlich von dir. Der Atlas umfasst iNaturalist und GBIF der letzten 20 Jahre.
-    const ownHere = (index.byQuad.get(Q.id)?.get(o.s) || []).length;
-    const isFirst = firstHere && atlas && atlasN(o.s, Q.id) <= ownHere;
-    if (isFirst) add('first', PLAY_BONUS.first.label);
+    // Erstnachweis (Annäherung): der Atlas meldet die Art im Viertel (verschleiert: in allen vier Vierteln zusammen) höchstens so oft,
+    // wie du sie dort selbst gefunden hast, also stammen alle Meldungen vermutlich von dir. Atlas = iNaturalist + GBIF der letzten 20 Jahre.
+    const ownHere = ids.reduce((n, id) => n + (index.byQuad.get(id)?.get(o.s) || []).length, 0);
+    const isFirst = firstHere && atlas && ids.reduce((n, id) => n + atlasN(o.s, id), 0) <= ownHere;
+    if (isFirst) add('first', gfMode ? 'Erstnachweis im Grundfeld' : PLAY_BONUS.first.label);
     if (liferObs.get(o.s) === o) add('lifer', PLAY_BONUS.lifer.label);
-    // Wiederfund einer verschollenen Art (wie lostList): im Viertel nur Meldungen vor atlas.ry, dein erster Fund hier,
+    // Wiederfund einer verschollenen Art (wie lostList): in den Vierteln nur Meldungen vor atlas.ry, dein erster Fund hier,
     // keine andere Art der Gruppe (AGG) hier aktuell gemeldet oder vorher von dir gefunden. Annäherung: hat dein eigener
     // Fund (seit atlas.ry) die Art im Atlas schon „aktuell“ gemacht, ist der Wiederfund rückwirkend nicht mehr erkennbar.
-    const old = atlas && atlas.ry && atlas.oldByQuad.get(Q.id);
-    if (!isFirst && firstHere && old && old.has(o.s)) {
-      const spQ = spOf(Q.id) || {};
-      const sib = (AGG_OF.get(o.s) || []).some(x => x !== o.s && ((spQ[x] && !old.has(x)) || (index.byQuad.get(Q.id)?.get(x) || []).some(p => p.d && p.d < o.d)));
-      if (!sib) add('lost', PLAY_BONUS.lost.label);
+    if (!isFirst && firstHere && atlas && atlas.ry) {
+      const olds = ids.map(id => atlas.oldByQuad.get(id) || new Set());
+      const fresh = (s, k) => { const sp = spOf(ids[k]) || {}; return !!sp[s] && !olds[k].has(s); };
+      const lost = olds.some(old => old.has(o.s)) && !ids.some((id, k) => fresh(o.s, k));
+      const sib = (AGG_OF.get(o.s) || []).some(x => x !== o.s && ids.some((id, k) => fresh(x, k) || (index.byQuad.get(id)?.get(x) || []).some(p => p.d && p.d < o.d)));
+      if (lost && !sib) add('lost', PLAY_BONUS.lost.label);
     }
-    const rc = playRl(o.s, Q); if (rc) add('rl', 'RL ' + rc, PLAY_RL[rc]);
+    // Bundesland und Naturraum: verschleiert nur, wenn das ganze Grundfeld eindeutig in einem Land bzw. Naturraum liegt
+    const one = f => { const c = new Set(qs.flatMap(f)); return c.size === 1; };
+    const blOk = !gfMode || one(blOf), nrOk = !gfMode || one(natOf);
+    const rc = playRl(o.s, Q, nrOk); if (rc) add('rl', 'RL ' + rc, PLAY_RL[rc]);
     // neu für Bundesland oder Naturraum (wie blChip): nur für deinen ersten gewerteten Fund der Art dort
-    const bs = blStatus(o.s, Q), ns = natStatus(o.s, Q);
+    const bs = blOk ? blStatus(o.s, Q) : null, ns = nrOk ? natStatus(o.s, Q) : null;
     const codes = [...(bs ? bs.missing.map(c => ['BL' + c, BL_SHORT[c]]) : []), ...(ns ? ns.newCodes.map(c => ['NR' + c, c]) : [])].filter(([c]) => !areaDone.has(o.s + '|' + c));
     if (codes.length) { codes.forEach(([c]) => areaDone.add(o.s + '|' + c)); add('area', 'neu für ' + codes.map(c => c[1]).join('/')); }
-    if (HOME_SET.has(Q.id)) add('home', PLAY_BONUS.home.label);
-    // Jetzt oder nie im Fundmonat: nur wenn die App für dieses Viertel und den Monat die „bald vorbei“-Daten gespeichert hat
-    // (Umgebung 5×5 Quadranten, beim Besuch geladen). Fehlen sie, entfällt der Bonus.
-    const ek = season['E|' + Q.id + '|' + +o.d.slice(5, 7)];
-    if (ek && ek.sp.some(e => e[0] === o.s)) add('ending', PLAY_BONUS.ending.label);
-    const it = { o, s: o.s, q: Q.id, r, out, base, bon, sum: base + bon.reduce((a, b) => a + b.pts, 0) };
+    if (ids.some(id => HOME_SET.has(id))) add('home', PLAY_BONUS.home.label); // verschleiert: Grundfeld enthält ein HOME-Viertel
+    // Jetzt oder nie im Fundmonat: nur wenn die App für das Viertel (verschleiert: eines der vier) und den Monat die
+    // „bald vorbei“-Daten gespeichert hat (Umgebung 5×5 Quadranten, beim Besuch geladen). Fehlen sie, entfällt der Bonus.
+    if (ids.some(id => { const ek = season['E|' + id + '|' + +o.d.slice(5, 7)]; return ek && ek.sp.some(e => e[0] === o.s); })) add('ending', PLAY_BONUS.ending.label);
+    const it = { o, s: o.s, q: where, gf: gfMode, r, out, base, bon, sum: base + bon.reduce((a, b) => a + b.pts, 0) };
     D.items.push(it); D.pts += it.sum; items.push(it);
   }
   const byYear = new Map(), byMonth = new Map(); let total = 0;
@@ -3705,7 +3716,7 @@ function renderPlay() {
   $('playDays').innerHTML = P.days.map(D => playDayHtml(D, false)).join('') || '<div class="small muted">Noch keine Funde.</div>';
   const B = PLAY_BONUS, bl = k => `+${B[k].pct} %${B[k].min ? `, mindestens ${B[k].min}` : ''}`;
   $('playRules').innerHTML = `<p style="margin:0 0 6px">Jeder eigene Fund (iNaturalist, Gefäßpflanzen, Österreich, auf Art bestimmt) bringt <b>Grundpunkte = Q-Rang + B-Rang</b>. Die Ränge gelten in der Rangliste der ${ranks ? ranks.n : 'N'} in Österreich verifizierten Arten (Forschungsqualität): <b>Q</b> nach Zahl der bestätigten Viertelquadranten im Atlas, <b>B</b> nach Zahl der verifizierten Beobachtungen, jeweils die häufigste Art = Rang 1. Je seltener, desto mehr Punkte. Gleichstand = gleicher Platz. Arten ohne verifizierte Beobachtung in Österreich zählen bei beiden Rängen als N.</p>
-    <p style="margin:0 0 6px">Punkte gibt es je Art und Viertel einmal in ${REPEAT_YEARS} Jahren: der erste Fund zählt, weitere Funde dort in den ${REPEAT_YEARS} Jahren danach nicht. Gattungsfunde und Funde mit verschleierten Koordinaten (Quadrant unklar) zählen nicht, sie stehen grau beim Tag.</p>
+    <p style="margin:0 0 6px">Punkte gibt es je Art und Viertel einmal in ${REPEAT_YEARS} Jahren: der erste Fund zählt, weitere Funde dort in den ${REPEAT_YEARS} Jahren danach nicht. Gattungsfunde zählen nicht, sie stehen grau beim Tag. Funde mit verschleierten Koordinaten (meist gefährdete Arten) zählen nach <b>Grundfeld</b> (z. B. 8146 statt 8146/1): je Art und Grundfeld einmal in ${REPEAT_YEARS} Jahren, ein gewerteter Viertelfund dort sperrt sie und umgekehrt. Erstnachweis und Verschollen gelten dann für alle vier Viertel zusammen, Bundesland und Naturraum nur, wenn das Grundfeld eindeutig in einem liegt, ${HOME_NAME}, wenn es ein Viertel des Gebiets enthält. iNaturalist verschiebt verschleierte Punkte zufällig innerhalb einer 0,2°-Zelle, das Grundfeld kann daher daneben liegen. Mit genauen Koordinaten (API-Token oder CSV-Import) zählt der Fund normal nach Viertel.</p>
     <p style="margin:0 0 6px">Boni in Prozent der Grundpunkte, zusammengezählt: Erstnachweis im Viertel (der Atlas kennt die Art dort nur von dir) ${bl('first')} · Lifer Österreich (dein erster Fund der Art) ${bl('lifer')} · Wiederfund einer verschollenen Art (im Viertel nur vor ${atlas && atlas.ry || 'dem Stichjahr'} gemeldet) ${bl('lost')} · Rote Liste NT +${PLAY_RL.NT} %, VU/G +${PLAY_RL.VU} %, EN +${PLAY_RL.EN} %, CR/RE +${PLAY_RL.CR} % · neu für Bundesland oder Naturraum ${bl('area')} · ${HOME_NAME} ${bl('home')} · Jetzt oder nie im Fundmonat ${bl('ending')}.</p>
     <p style="margin:0" class="muted">Die Boni werden mit den heutigen Daten bewertet (Atlas, Rote Liste, gespeicherte „bald vorbei“-Daten), auch für alte Funde: eine rückwirkende Annäherung. Die Ränge ändern sich monatlich mit dem neuen Atlas.</p>`;
   bindPlay($('view-play'));
