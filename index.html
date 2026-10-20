@@ -97,13 +97,23 @@ li.unconf { opacity: .6 }
 .list li.ok .sci, .list li.ok .d { color: var(--found) }
 .list li.tap { cursor: pointer }
 .tabs.seg { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) }
-nav.tabs { grid-template-columns: repeat(10, 1fr) }
+nav.tabs { grid-template-columns: repeat(30, 1fr) }
 #homeModes { grid-template-columns: repeat(12, 1fr) }
 #homeModes button { grid-column: span 4; font-size: 12.5px; padding: 0 }
 #homeModes button[data-m="jon"] { grid-column: span 5 }
 #homeModes button[data-m="lif"] { grid-column: span 3 }
-nav.tabs button { grid-column: span 2; font-size: 14px }
-nav.tabs #tab-check, nav.tabs #tab-home { grid-column: span 5 }
+nav.tabs button { grid-column: span 5; font-size: 14px }
+nav.tabs #tab-check, nav.tabs #tab-home { grid-column: span 15 }
+/* Play-Tab (v66): Punkte für eigene Funde */
+.playtot { font-size: 34px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums }
+.chip.bonus { background: #a16207; color: #fff }
+.chip.track { border: 1px solid #1d4ed8; color: #1d4ed8 }
+.list li.pskip { opacity: .55; font-size: 13px; padding: 5px 2px }
+.pitem .ppts { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap }
+details.pday > summary { display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; font-variant-numeric: tabular-nums; list-style: none }
+details.pday > summary::-webkit-details-marker { display: none }
+details.pday.recent { border: 2px solid var(--accent); border-radius: 12px; padding: 0 10px 6px }
+.rankline { font-variant-numeric: tabular-nums }
 /* Mondsee-Irrsee-Tab: Kachelkarte der 11 Quadranten in ihrer Lage zueinander */
 .hgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px }
 .hgrid button { border: 2px solid transparent; border-radius: 10px; padding: 6px 4px; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.15 }
@@ -290,6 +300,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
     <button role="tab" id="tab-list" aria-selected="false">Arten</button>
     <button role="tab" id="tab-map" aria-selected="false">Karte</button>
     <button role="tab" id="tab-day" aria-selected="false">Heute</button>
+    <button role="tab" id="tab-play" aria-selected="false">Play</button>
     <button role="tab" id="tab-data" aria-selected="false">Daten</button>
     <button role="tab" id="tab-off" aria-selected="false">Offline</button>
   </nav>
@@ -484,6 +495,36 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
     </div>
   </section>
 
+  <section id="view-play" class="view" hidden>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <h2>Play <span class="muted small">Punkte für deine Funde</span></h2>
+        <div id="playTotal"></div>
+        <div class="small muted" id="playStatus"></div>
+      </div>
+      <div class="panel" id="playRecentBox">
+        <h2>Deine letzten Kartierungen <span class="muted small">die zwei letzten Tage mit Begehungsspur</span></h2>
+        <div id="playRecent"></div>
+      </div>
+      <details class="panel fold" id="fold-play-jahre">
+        <summary><h2>Punkte je Jahr und Monat</h2></summary>
+        <div id="playYears"></div>
+      </details>
+      <details class="panel fold" id="fold-play-bestenliste" open>
+        <summary><h2>Bestenliste</h2><span class="small muted">die 10 wertvollsten Funde</span></summary>
+        <ul class="list" id="playTop"></ul>
+      </details>
+      <details class="panel fold" id="fold-play-kartiertage" open>
+        <summary><h2>Kartiertage</h2><span class="small muted" id="playDaysInfo"></span></summary>
+        <div id="playDays"></div>
+      </details>
+      <details class="panel fold" id="fold-play-regeln">
+        <summary><h2>So zählen die Punkte</h2></summary>
+        <div class="small" id="playRules"></div>
+      </details>
+    </div>
+  </section>
+
   <section id="view-off" class="view" hidden>
     <div class="panel">
       <h2>Offline vorbereiten</h2>
@@ -583,7 +624,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 65</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 66</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -598,6 +639,24 @@ const HOME_NAME = 'Mondsee-Irrsee';
 const HOME = ['8045/2', '8045/4', '8046/3', '8145/2', '8145/4', '8146/1', '8146/2', '8146/3', '8146/4', '8246/1', '8246/2'];
 const HOME_SET = new Set(HOME);
 const homeChip = id => HOME_SET.has(id) ? `<span class="chip home">${HOME_NAME}</span>` : '';
+// ---------- Play (v66): Punkte für eigene Funde. Konstanten ganz oben, weil beim Start gebraucht (TDZ, siehe v52) ----------
+// Ränge aus ranks.json (scripts/build_ranks.py, monatlich mit dem Atlas): { v, t, a, n, s: { Art: [qRang, qZahl, bRang, bZahl] } }
+var ranks = null, playCache = null, playOpenDays = new Set();
+// Arten außerhalb der Rangliste (keine verifizierte Beobachtung in Österreich) bekommen bei beiden Rängen den Höchstwert N
+// (Thomas' Regel 2): sie zählen also mindestens so viel wie die seltenste verifizierte Art.
+const PLAY_OUTSIDE_RANK = n => n;
+// Boni in Prozent der Grundpunkte (Q-Rang + B-Rang), additiv; min = Mindestpunkte des Bonus. Thomas will sie später ändern.
+const PLAY_BONUS = {
+  first: { pct: 50, min: 50, label: 'Erstnachweis im Viertel' },
+  lifer: { pct: 100, min: 100, label: 'Lifer Österreich' },
+  lost: { pct: 50, min: 50, label: 'Wiederfund verschollen' },
+  area: { pct: 100, min: 100, label: 'neu für' }, // neu für Bundesland oder Naturraum laut Roter Liste
+  home: { pct: 10, min: 0, label: HOME_NAME },
+  ending: { pct: 20, min: 0, label: 'Jetzt oder nie' },
+};
+// Rote Liste Österreich (Kategorie wie rlChip, im Naturraum des Quadranten die stärkere): Prozent der Grundpunkte.
+// RE/RE? (ausgestorben, verschollen) wie CR – ein Fund wäre eine Sensation; G (Gefährdung unbekannten Ausmaßes) wie VU; DD, LC: 0.
+const PLAY_RL = { NT: 10, VU: 25, G: 25, EN: 50, CR: 100, RE: 100, 'RE?': 100, DD: 0 };
 // ---------- Raster ----------
 const LAT0 = 56, LON0 = 5 + 40 / 60;
 const pad = n => String(n).padStart(2, '0');
@@ -810,7 +869,7 @@ $('manualForm').onsubmit = e => {
 };
 
 // ---------- Tabs ----------
-const tabs = ['check', 'home', 'list', 'map', 'day', 'data', 'off'];
+const tabs = ['check', 'home', 'list', 'map', 'day', 'play', 'data', 'off'];
 function showTab(t) {
   for (const x of tabs) { $('tab-' + x).setAttribute('aria-selected', x === t); $('view-' + x).hidden = x !== t; }
   store.set('tab', t);
@@ -820,6 +879,7 @@ function showTab(t) {
   if (t === 'home') renderHomeTab();
   if (t === 'check') renderBackupNag();
   if (t === 'off') renderOff();
+  if (t === 'play') renderPlay();
 }
 for (const t of tabs) $('tab-' + t).onclick = () => showTab(t);
 
@@ -925,7 +985,7 @@ function inatLink(sp, b) {
 }
 function showResult(cur) {
   const el = $('result');
-  if (!here) { el.innerHTML = `<div class="msg info">Erst die Position bestimmen, dann sage ich dir, ob <i>${esc(cur.s)}</i> hier schon gefunden ist.</div>`; return; }
+  if (!here) { el.innerHTML = `<div class="msg info">Erst die Position bestimmen, dann sage ich dir, ob <i>${esc(cur.s)}</i> hier schon gefunden ist.${rankLine(cur.s)}</div>`; return; }
   const all = index.bySp.get(cur.s) || [];
   const inQ = all.filter(o => o.k === here.id);
   const exact = inQ.filter(o => !o.x), fuzzy = inQ.filter(o => o.x);
@@ -940,6 +1000,7 @@ function showResult(cur) {
       <div class="small">${exact.length} Fund${exact.length > 1 ? 'e' : ''} in diesem Quadranten.</div>
       ${areaLine(cur.s) ? `<div class="small">${areaLine(cur.s)}</div>` : ''}
       ${freqLine(cur.s)}
+      ${rankLine(cur.s)}
       ${nbLine(cur.s)}
       ${extraLines(cur.s, !due)}
       <a href="${inatLink(cur.s, b)}" target="_blank" rel="noopener">Funde auf iNaturalist ansehen</a></div>`;
@@ -962,6 +1023,7 @@ function showResult(cur) {
     <div class="row">${dayButton(cur, 'new')}${wishButton(cur)}</div>
     <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
     ${freqLine(cur.s)}
+    ${rankLine(cur.s)}
     ${nbLine(cur.s)}
     ${extraLines(cur.s, false)}
     ${all.length ? `<a href="${inatLink(cur.s)}" target="_blank" rel="noopener">Alle eigenen Funde auf iNaturalist</a>` : ''}</div>`;
@@ -1371,7 +1433,7 @@ function renderStats() {
   hint.innerHTML = obs.length
     ? (meta.lastSync ? `<div class="small muted">Deine Funde: Stand ${new Date(meta.lastSync).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>` : '')
     : '<div class="msg info">Noch keine Funde auf dem Gerät. Lade sie unter „Daten“, solange du Empfang hast.</div>';
-  if (statsReady) { renderOpenIds(); renderYear(); renderHome(); renderAcc(); renderLiferStats(); renderNewNear(); checkNewNear(); }
+  if (statsReady) { renderOpenIds(); renderYear(); renderHome(); renderAcc(); renderLiferStats(); renderNewNear(); checkNewNear(); renderPlay(); }
 }
 let statsReady = false;
 function fromApi(o) {
@@ -3078,7 +3140,7 @@ async function loadRl() {
   if (navigator.onLine && (!natQ || Date.now() - new Date(store.get('nrChecked', 0)) > 30 * 864e5)) {
     try { const r = await fetch('naturraum.json', { cache: 'no-cache' }); if (r.ok) { const nr = await r.json(); natQ = nr.q; kv.set('naturraum', nr); store.set('nrChecked', new Date().toISOString()); } } catch {}
   }
-  try { const raw = await kv.get('rl'); if (raw) { rl = prepRl(raw); if (atlas) assignFreq(atlas.sp); renderList(); if (current) showResult(current); } } catch {}
+  try { const raw = await kv.get('rl'); if (raw) { rl = prepRl(raw); if (atlas) assignFreq(atlas.sp); renderList(); if (current) showResult(current); renderPlay(); } } catch {}
   const age = rl ? Date.now() - new Date(store.get('rlChecked41', 0)) : Infinity;
   if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
   try {
@@ -3088,7 +3150,7 @@ async function loadRl() {
     store.set('rlChecked41', new Date().toISOString());
     if (rl && raw.t === rl.t) return;
     await kv.set('rl', raw); rl = prepRl(raw); if (atlas) assignFreq(atlas.sp);
-    renderList(); if (current) showResult(current);
+    renderList(); if (current) showResult(current); renderPlay();
   } catch { /* noch keine rl.json oder kein Empfang */ }
 }
 
@@ -3240,6 +3302,7 @@ function renderLifeTargets() {
     const soon = (r.p.peak - now + 24) % 24;
     return `<li><details class="lz" data-i="${i}" data-s="${esc(r.s)}"${r.s === lzOpen ? ' open' : ''}><summary class="sp">${spBody(r.s, `${r.p.tot} Meldungen${nq ? ` · nächster Fund ${km(nq.d)}` : ''}`, `<span class="chip ${soon <= 2 ? 'season' : 'unsure'}">${HALF(r.p.peak)}</span>${rlChip(r.s)}`)}</summary>
       <div class="lzbody small">
+        ${rankLine(r.s)}
         <div><b>Bestes Zeitfenster:</b> ${HALF(r.p.peak)}, mit ${Math.round(100 * r.p.max / r.p.tot)} % aller Meldungen des Jahres (${r.p.max} von ${r.p.tot}). Saison etwa ${HALF_SHORT(r.p.from)} bis ${HALF_SHORT(r.p.to)}.</div>
         ${nq ? `<div><b>Nächster Quadrant mit Funden:</b> ${nq.Q.id}, etwa ${km(nq.d)} entfernt (Quadrantenmitte).</div>` : `<div>${atlas ? 'In den Österreich-Daten kein Quadrant mit Funden.' : 'Die Österreich-Daten sind noch nicht geladen, darum fehlt der nächste Quadrant hier.'}</div>`}
         <div><button class="linkbtn" data-check="${esc(r.s)}">${esc(r.s)} unter „Prüfen“ öffnen</button></div>
@@ -3436,7 +3499,7 @@ function prepAtlas(raw) {
   return { t: raw.t, n: raw.n, q: raw.q, rc, byRC, byQuad, byQuadU, anyQ, hasU: !!raw.u, oldByQuad, ry: raw.ry || null, sp, total: sp.size, src: raw.src || ['iNaturalist'] };
 }
 async function loadAtlas() {
-  try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); } } catch {}
+  try { const raw = await kv.get('atlas'); if (raw) { atlas = prepAtlas(raw); renderList(); renderTips(); drawGrid(true); renderPlay(); } } catch {}
   // Atlas ohne Stichjahr (vor Oktober 2026) sofort neu holen, sonst höchstens einmal am Tag
   const age = atlas && atlas.ry ? Date.now() - new Date(store.get('atlasChecked41', 0)) : Infinity;
   if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
@@ -3448,7 +3511,7 @@ async function loadAtlas() {
     if (atlas && raw.t === atlas.t) return;
     await kv.set('atlas', raw); atlas = prepAtlas(raw);
     if (!$('view-data').hidden) renderHome();
-    renderList(); renderTips(); drawGrid(true); if (current) showResult(current);
+    renderList(); renderTips(); drawGrid(true); if (current) showResult(current); renderPlay();
   } catch { /* noch keine Atlasdatei oder kein Empfang */ }
 }
 const atlasSrc = () => atlas && atlas.src.length > 1 ? 'Auf iNaturalist und GBIF' : 'Auf iNaturalist';
@@ -3505,6 +3568,163 @@ function showDistr(s) {
   distrMap.fitBounds([[46.37, 9.53], [49.02, 17.17]]);
 }
 
+// ---------- Play (v66): Punkte für eigene Funde nach Seltenheit in Österreich ----------
+// Rang einer Art: [qRang, qZahl, bRang, bZahl] oder null (nicht in der Rangliste). Namen wie im Atlas abgleichen (atlasKey).
+function playRank(s) {
+  if (!ranks) return null;
+  const r = ranks.s[s]; if (r) return r;
+  if (!ranks.byKey) ranks.byKey = new Map(Object.entries(ranks.s).map(([k, v]) => [atlasKey(k), v]));
+  return ranks.byKey.get(atlasKey(s)) || null;
+}
+function rankText(s) {
+  const r = playRank(s), N = ranks ? ranks.n : 0;
+  if (!r) return null;
+  return `<span class="rankline" title="${r[1]} Viertel, ${r[3]} verifizierte Beob. in Österreich">Q ${r[0]}/${N} · B ${r[2]}/${N}</span> <span class="muted small">(${r[1]} Viertel, ${r[3]} Beob.)</span>`;
+}
+// Zeile in jeder Artdetailansicht
+function rankLine(s) {
+  if (!s || !s.includes(' ')) return '';
+  if (!ranks) return '<div class="small muted">Rang: Rangliste noch nicht geladen.</div>';
+  const t = rankText(s);
+  return `<div class="small">Rang: ${t || '<span class="muted">nicht in der Rangliste</span> (keine verifizierte Beobachtung in Österreich)'}</div>`;
+}
+const playBon = (k, base, pct) => { const b = PLAY_BONUS[k] || { pct: 0, min: 0 }, p = pct != null ? pct : b.pct; return Math.round(Math.max(base * p / 100, p ? b.min : 0)); };
+// Rote-Liste-Bonus: Kategorie Österreich, im Naturraum des Quadranten die stärkere (wie rlChip); Neophyten und Taxa s. str. ohne
+function playRl(s, Q) {
+  const r = rlOf(s); if (!r || isNeo(s) || strict(r)) return null;
+  let best = null;
+  const take = c => { c = (c || '').replace(/\*/g, '').trim(); if (PLAY_RL[c] && (!best || PLAY_RL[c] > PLAY_RL[best])) best = c; };
+  take(r.c);
+  const ns = natStatus(s, Q); if (ns) ns.cats.forEach(([, v]) => take(v));
+  return best;
+}
+// Alle eigenen Funde bewerten (chronologisch). Boni werden mit den heutigen Daten bewertet: rückwirkende Annäherung.
+function playScore() {
+  const key = [obs.length, meta.lastSync, ranks && ranks.t, atlas && atlas.t, rl && rl.t, natQ ? 1 : 0, Object.keys(season).length, Object.keys(tracks).length].join('|');
+  if (playCache && playCache.key === key) return playCache;
+  const N = ranks ? ranks.n : 0;
+  const qIdx = atlas ? new Map(atlas.q.map((id, i) => [id, i])) : null;
+  // alle Atlas-Meldungen (bestätigt und unbestätigt) der Art im Viertel, für den Erstnachweis
+  const atlasN = (s, id) => {
+    const e = atlas.sp.get(s), i = qIdx.get(id); if (!e || i == null) return 0;
+    let n = 0; for (const occ of [e.occ, e.occU]) for (let j = 0; j < occ.length; j += 2) if (occ[j] === i) n += occ[j + 1];
+    return n;
+  };
+  const sorted = obs.filter(o => o.d && o.s).sort((a, b) => a.d.localeCompare(b.d) || (a.ti || '').localeCompare(b.ti || '') || a.i - b.i);
+  // Lifer: chronologisch erster eigener Fund der Art in Österreich (nur Artrang, wie isLifer)
+  const liferObs = new Map();
+  for (const o of sorted) if (!(o.r > 10) && o.s.includes(' ') && o.la != null && !liferObs.has(o.s)) liferObs.set(o.s, o);
+  const counted = new Map(), areaDone = new Set(), days = new Map(), items = [];
+  const day = d => days.get(d) || (days.set(d, { d, pts: 0, items: [], skip: [], track: !!(tracks[d] && tracks[d].length > 1) }), days.get(d));
+  for (const o of sorted) {
+    const D = day(o.d);
+    if (o.r > 10 || !o.s.includes(' ')) { D.skip.push({ o, why: 'nur Gattung' }); continue; }
+    if (o.la == null) { D.skip.push({ o, why: 'ohne Koordinaten' }); continue; }
+    // verschleierte Koordinaten: der Quadrant ist nicht eindeutig (wie überall in der App), darum ohne Punkte
+    if (o.x) { D.skip.push({ o, why: 'Koordinaten verschleiert, Quadrant unklar' }); continue; }
+    const Q = toQuad(o.la, o.lo), k = o.s + '|' + Q.id, last = counted.get(k);
+    // je Art und Viertel einmal in REPEAT_YEARS Jahren: ab dem gewerteten Fund zählt erst wieder ein Fund nach dueDate
+    if (last && o.d < dueDate(last)) { D.skip.push({ o, q: Q.id, why: `schon gewertet am ${fmtDate(last)}` }); continue; }
+    counted.set(k, o.d);
+    const firstHere = !last; // dein erster Fund der Art in diesem Viertel
+    const r = playRank(o.s), out = !r;
+    const qr = out ? PLAY_OUTSIDE_RANK(N) : r[0], br = out ? PLAY_OUTSIDE_RANK(N) : r[2], base = qr + br;
+    const bon = [], add = (k2, label, pct) => bon.push({ k: k2, label, pts: playBon(k2, base, pct) });
+    // Erstnachweis im Viertel (Annäherung): der Atlas meldet die Art hier höchstens so oft, wie du sie hier selbst gefunden hast,
+    // also stammen alle Meldungen vermutlich von dir. Der Atlas umfasst iNaturalist und GBIF der letzten 20 Jahre.
+    const ownHere = (index.byQuad.get(Q.id)?.get(o.s) || []).length;
+    const isFirst = firstHere && atlas && atlasN(o.s, Q.id) <= ownHere;
+    if (isFirst) add('first', PLAY_BONUS.first.label);
+    if (liferObs.get(o.s) === o) add('lifer', PLAY_BONUS.lifer.label);
+    // Wiederfund einer verschollenen Art (wie lostList): im Viertel nur Meldungen vor atlas.ry, dein erster Fund hier,
+    // keine andere Art der Gruppe (AGG) hier aktuell gemeldet oder vorher von dir gefunden. Annäherung: hat dein eigener
+    // Fund (seit atlas.ry) die Art im Atlas schon „aktuell“ gemacht, ist der Wiederfund rückwirkend nicht mehr erkennbar.
+    const old = atlas && atlas.ry && atlas.oldByQuad.get(Q.id);
+    if (!isFirst && firstHere && old && old.has(o.s)) {
+      const spQ = spOf(Q.id) || {};
+      const sib = (AGG_OF.get(o.s) || []).some(x => x !== o.s && ((spQ[x] && !old.has(x)) || (index.byQuad.get(Q.id)?.get(x) || []).some(p => p.d && p.d < o.d)));
+      if (!sib) add('lost', PLAY_BONUS.lost.label);
+    }
+    const rc = playRl(o.s, Q); if (rc) add('rl', 'RL ' + rc, PLAY_RL[rc]);
+    // neu für Bundesland oder Naturraum (wie blChip): nur für deinen ersten gewerteten Fund der Art dort
+    const bs = blStatus(o.s, Q), ns = natStatus(o.s, Q);
+    const codes = [...(bs ? bs.missing.map(c => ['BL' + c, BL_SHORT[c]]) : []), ...(ns ? ns.newCodes.map(c => ['NR' + c, c]) : [])].filter(([c]) => !areaDone.has(o.s + '|' + c));
+    if (codes.length) { codes.forEach(([c]) => areaDone.add(o.s + '|' + c)); add('area', 'neu für ' + codes.map(c => c[1]).join('/')); }
+    if (HOME_SET.has(Q.id)) add('home', PLAY_BONUS.home.label);
+    // Jetzt oder nie im Fundmonat: nur wenn die App für dieses Viertel und den Monat die „bald vorbei“-Daten gespeichert hat
+    // (Umgebung 5×5 Quadranten, beim Besuch geladen). Fehlen sie, entfällt der Bonus.
+    const ek = season['E|' + Q.id + '|' + +o.d.slice(5, 7)];
+    if (ek && ek.sp.some(e => e[0] === o.s)) add('ending', PLAY_BONUS.ending.label);
+    const it = { o, s: o.s, q: Q.id, r, out, base, bon, sum: base + bon.reduce((a, b) => a + b.pts, 0) };
+    D.items.push(it); D.pts += it.sum; items.push(it);
+  }
+  const byYear = new Map(), byMonth = new Map(); let total = 0;
+  for (const it of items) { total += it.sum; const y = it.o.d.slice(0, 4), m = it.o.d.slice(0, 7); byYear.set(y, (byYear.get(y) || 0) + it.sum); byMonth.set(m, (byMonth.get(m) || 0) + it.sum); }
+  const dayList = [...days.values()].filter(D => D.items.length || D.skip.length).sort((a, b) => b.d.localeCompare(a.d));
+  playCache = { key, total, byYear, byMonth, days: dayList, items, N };
+  return playCache;
+}
+const fmtPts = n => n.toLocaleString('de-AT');
+function playItemHtml(it, withDate) {
+  const rk = it.out ? `<span class="muted">nicht in der Rangliste: Q ${it.base / 2}/${playCache.N} · B ${it.base / 2}/${playCache.N}</span>` : rankText(it.s);
+  return `<li class="tap sp pitem" data-s="${esc(it.s)}">${spBody(it.s, `${withDate ? fmtDate(it.o.d) + ' · ' : ''}${it.q} · ${rk}`,
+    `<span class="chip unsure">Grund ${fmtPts(it.base)}</span>${it.bon.map(b => `<span class="chip bonus">${esc(b.label)} +${fmtPts(b.pts)}</span>`).join('')}<span class="chip ok">= ${fmtPts(it.sum)}</span>`)}</li>`;
+}
+function playDayBody(D) {
+  return `<ul class="list">${D.items.slice().sort((a, b) => b.sum - a.sum).map(it => playItemHtml(it)).join('')}${D.skip.map(x => `<li class="pskip"><span><i>${esc(x.o.s)}</i>${x.q ? ' · ' + x.q : ''}</span><span>${esc(x.why)}</span></li>`).join('')}</ul>`;
+}
+function playDayHtml(D, recent) {
+  const open = recent || playOpenDays.has(D.d);
+  return `<details class="pday${recent ? ' recent' : ''}" data-d="${D.d}"${open ? ' open' : ''}><summary><span><b>${fmtDate(D.d)}</b>${D.track ? ' <span class="chip track">Track</span>' : ''}</span><span><b class="num">${fmtPts(D.pts)}</b> Punkte · <span class="muted num">${D.items.length} Art${D.items.length === 1 ? '' : 'en'}</span></span></summary>${open ? playDayBody(D) : ''}</details>`;
+}
+function bindPlay(root) {
+  root.querySelectorAll('details.pday').forEach(d => d.addEventListener('toggle', () => {
+    if (d.classList.contains('recent')) return;
+    if (d.open) { playOpenDays.add(d.dataset.d); if (!d.querySelector('ul')) { const D = playCache.days.find(x => x.d === d.dataset.d); if (D) { d.insertAdjacentHTML('beforeend', playDayBody(D)); bindPlay(d); } } }
+    else playOpenDays.delete(d.dataset.d);
+  }));
+  root.querySelectorAll('li.tap[data-s]').forEach(li => { if (!li.onclick) li.onclick = () => openFromList(li.dataset.s); });
+}
+function renderPlay() {
+  if ($('view-play').hidden) return;
+  const P = playScore();
+  const years = [...P.byYear].sort((a, b) => b[0].localeCompare(a[0]));
+  const y0 = String(new Date().getFullYear()), mNow = todayIso().slice(0, 7);
+  $('playTotal').innerHTML = `<div class="playtot">${fmtPts(P.total)} <span class="small muted" style="font-size:14px;font-weight:600">Punkte</span></div>
+    <div class="small">${y0}: <b class="num">${fmtPts(P.byYear.get(y0) || 0)}</b> · ${MONTHS_LONG[new Date().getMonth()]}: <b class="num">${fmtPts(P.byMonth.get(mNow) || 0)}</b> · ${P.items.length} gewertete Funde an ${P.days.filter(D => D.items.length).length} Tagen</div>`;
+  $('playStatus').textContent = !obs.length ? 'Noch keine Funde geladen (Daten › Funde aktualisieren).'
+    : !ranks ? 'Rangliste (ranks.json) noch nicht geladen: alle Arten zählen vorerst als außerhalb der Rangliste. Einmal mit Empfang öffnen.'
+    : `Rangliste: ${ranks.n} in Österreich verifizierte Arten, Stand ${fmtDate((ranks.a || ranks.t).slice(0, 10))}.${atlas ? '' : ' Atlas noch nicht geladen: ohne Erstnachweis- und Verschollen-Bonus.'}${rl ? '' : ' Rote Liste noch nicht geladen.'}`;
+  $('playYears').innerHTML = years.length ? years.map(([y, n]) => `<details class="ly"><summary><span><b>${y}</b></span><span><b class="num">${fmtPts(n)}</b> Punkte</span></summary><ul class="list">${
+    [...P.byMonth].filter(([m]) => m.startsWith(y)).sort((a, b) => a[0].localeCompare(b[0])).map(([m, v]) => `<li><span>${MONTHS_LONG[+m.slice(5) - 1]}</span><span class="num">${fmtPts(v)}</span></li>`).join('')}</ul></details>`).join('') : '<div class="small muted">Noch keine Punkte.</div>';
+  const rec = P.days.filter(D => D.track).slice(0, 2);
+  $('playRecentBox').hidden = !rec.length;
+  $('playRecent').innerHTML = rec.map(D => playDayHtml(D, true)).join('');
+  $('playTop').innerHTML = P.items.slice().sort((a, b) => b.sum - a.sum || b.o.d.localeCompare(a.o.d)).slice(0, 10).map(it => playItemHtml(it, true)).join('') || '<li class="muted">Noch keine gewerteten Funde.</li>';
+  $('playDaysInfo').textContent = P.days.length ? `${P.days.length} Tage` : '';
+  $('playDays').innerHTML = P.days.map(D => playDayHtml(D, false)).join('') || '<div class="small muted">Noch keine Funde.</div>';
+  const B = PLAY_BONUS, bl = k => `+${B[k].pct} %${B[k].min ? `, mindestens ${B[k].min}` : ''}`;
+  $('playRules').innerHTML = `<p style="margin:0 0 6px">Jeder eigene Fund (iNaturalist, Gefäßpflanzen, Österreich, auf Art bestimmt) bringt <b>Grundpunkte = Q-Rang + B-Rang</b>. Die Ränge gelten in der Rangliste der ${ranks ? ranks.n : 'N'} in Österreich verifizierten Arten (Forschungsqualität): <b>Q</b> nach Zahl der bestätigten Viertelquadranten im Atlas, <b>B</b> nach Zahl der verifizierten Beobachtungen, jeweils die häufigste Art = Rang 1. Je seltener, desto mehr Punkte. Gleichstand = gleicher Platz. Arten ohne verifizierte Beobachtung in Österreich zählen bei beiden Rängen als N.</p>
+    <p style="margin:0 0 6px">Punkte gibt es je Art und Viertel einmal in ${REPEAT_YEARS} Jahren: der erste Fund zählt, weitere Funde dort in den ${REPEAT_YEARS} Jahren danach nicht. Gattungsfunde und Funde mit verschleierten Koordinaten (Quadrant unklar) zählen nicht, sie stehen grau beim Tag.</p>
+    <p style="margin:0 0 6px">Boni in Prozent der Grundpunkte, zusammengezählt: Erstnachweis im Viertel (der Atlas kennt die Art dort nur von dir) ${bl('first')} · Lifer Österreich (dein erster Fund der Art) ${bl('lifer')} · Wiederfund einer verschollenen Art (im Viertel nur vor ${atlas && atlas.ry || 'dem Stichjahr'} gemeldet) ${bl('lost')} · Rote Liste NT +${PLAY_RL.NT} %, VU/G +${PLAY_RL.VU} %, EN +${PLAY_RL.EN} %, CR/RE +${PLAY_RL.CR} % · neu für Bundesland oder Naturraum ${bl('area')} · ${HOME_NAME} ${bl('home')} · Jetzt oder nie im Fundmonat ${bl('ending')}.</p>
+    <p style="margin:0" class="muted">Die Boni werden mit den heutigen Daten bewertet (Atlas, Rote Liste, gespeicherte „bald vorbei“-Daten), auch für alte Funde: eine rückwirkende Annäherung. Die Ränge ändern sich monatlich mit dem neuen Atlas.</p>`;
+  bindPlay($('view-play'));
+}
+async function loadRanks() {
+  try { const raw = await kv.get('ranks'); if (raw && raw.s) { ranks = raw; if (current) showResult(current); renderPlay(); } } catch {}
+  const age = ranks ? Date.now() - new Date(store.get('ranksChecked', 0)) : Infinity;
+  if (!navigator.onLine || age < 864e5) return; // höchstens einmal am Tag nachsehen (unverändert: kurze 304-Antwort)
+  try {
+    const r = await fetch('ranks.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const raw = await r.json();
+    store.set('ranksChecked', new Date().toISOString());
+    if (ranks && raw.t === ranks.t) return;
+    kv.set('ranks', raw); ranks = raw;
+    if (current) showResult(current); renderPlay();
+  } catch { /* noch keine ranks.json oder kein Empfang */ }
+}
+
 // ---------- Start ----------
 $('user').value = settings.user;
 $('onlyPlants').checked = settings.onlyPlants;
@@ -3532,7 +3752,7 @@ kvInit().then(() => {
   if (ui && ui.y) window.scrollTo(0, ui.y);
   if (!here || staleGps()) locate(); else if (navigator.onLine) loadArea(false);
   updateWishNote(); renderWish(); checkNewNear(); renderTips();
-  loadAtlas(); loadRl(); loadPheno(); loadMerk(); renderMerkFb();
+  loadAtlas(); loadRl(); loadPheno(); loadRanks(); loadMerk(); renderMerkFb();
 });
 // Beim Öffnen die Position neu bestimmen, wenn die letzte GPS-Position älter als 15 Minuten ist (nicht im Mitlaufen-Modus)
 function staleGps() { return here && here.src === 'gps' && !watchId && Date.now() - (here.t || 0) > 15 * 60e3; }

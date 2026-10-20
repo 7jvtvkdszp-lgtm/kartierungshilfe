@@ -57,11 +57,12 @@ jobs:
         with: { name: part-inatrg }
       - run: python scripts/build_atlas.py rg
       - run: python scripts/build_atlas.py merge
+      - run: python scripts/build_ranks.py   # Ränge für den Play-Tab (ranks.json)
       - name: atlas.json einspielen
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add atlas.json scripts/inat_rg.json
+          git add atlas.json scripts/inat_rg.json ranks.json
           git add scripts/gbif_names.json 2>/dev/null || true
           git commit -m "Österreich-Atlas aktualisiert" || exit 0
           git pull --rebase origin main
