@@ -658,7 +658,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 67</span></summary>
+        <summary>Zum Raster <span class="muted small" id="appVer">· App-Version</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -4086,6 +4086,8 @@ function autoSync() {
 autoSync();
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') autoSync(); });
 // Updates: neue Version suchen, sobald die App geöffnet wird, und nach dem Wechsel einmal neu laden
+// Versionsanzeige aus dem Namen des aktiven Offline-Caches (VERSION in sw.js), damit sie nie mehr veraltet (bis v73 stand fest „67“)
+if (window.caches) caches.keys().then(ks => { const v = ks.map(k => k.match(/^kh-(\d[\d.]*)$/)).filter(Boolean).map(m => m[1]).pop(); if (v) $('appVer').textContent = '· App-Version ' + v; }).catch(() => {});
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const hadController = !!navigator.serviceWorker.controller;
   let reloaded = false;
