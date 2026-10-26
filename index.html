@@ -352,7 +352,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="hgrid" id="homeGrid"></div>
       </div>
       <div class="panel">
-        <h2>Wohin als Nächstes?</h2>
+        <h2>Wohin als Nächstes? <span class="muted small">alle 11 Quadranten</span></h2>
         <p class="small muted" style="margin:0">Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1), von November bis Februar auch die Winterliste (×1). Ein grober Richtwert.</p>
         <ul class="list" id="homeRank"></ul>
       </div>
@@ -658,7 +658,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.0</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.1</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2442,9 +2442,9 @@ function renderHomeTab() {
   }
   $('homeGrid').innerHTML = cells.join('');
   $('homeGrid').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { homeSel = b.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); });
-  // Rangliste: die ersten fünf
+  // Rangliste: alle 11 Quadranten (Thomas 26.10.: Überblick über das ganze Gebiet)
   const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
-  $('homeRank').innerHTML = ranked.slice(0, 5).map((m, i) => `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() ? chip(m.win.length, 'season', 'Winter') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`).join('');
+  $('homeRank').innerHTML = ranked.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() ? chip(m.win.length, 'season', 'Winter') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
   $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
