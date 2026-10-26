@@ -353,7 +353,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
       </div>
       <div class="panel">
         <h2>Wohin als Nächstes? <span class="muted small">alle 11 Quadranten</span></h2>
-        <p class="small muted" style="margin:0"><b>Erwartete Ausbeute jetzt</b> (Standard): wie viele Arten, die du dort nie oder vor mehr als 5 Jahren kartiert hast, du bei einem Besuch jetzt wahrscheinlich findest. Gerechnet über alle Arten des Quadranten und seiner 8 Nachbarn: Fundchance × Saison (in Saison voll, außerhalb ×0,1, unbekannt ×0,5). <b>Punkte</b>: Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1), von November bis Februar auch die Winterliste (×1). Ein grober Richtwert.</p>
+        <p class="small muted" style="margin:0"><b>Erwartete Ausbeute jetzt</b> (Standard): wie viele Arten, die du dort nie oder vor mehr als 5 Jahren kartiert hast, du bei einem Besuch jetzt wahrscheinlich findest. Gerechnet über alle Arten des Quadranten und seiner 8 Nachbarn: Fundchance × Saison (in Saison voll, außerhalb ×0,02, unbekannt ×0,3). <b>Punkte</b>: Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1), von November bis Februar auch die Winterliste (×1). Ein grober Richtwert.</p>
         <div class="row" style="gap:6px;margin:6px 0 2px;align-items:center"><span class="small muted">Reihen nach</span>
           <select class="field" id="homeSortKey" style="flex:1 1 auto;width:auto"></select>
           <button class="btn" id="homeSortDir" style="flex:0 0 auto;width:auto;padding:0 10px"></button></div>
@@ -661,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.4</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.5</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2400,7 +2400,7 @@ let homeSel = store.get('homeSel', null), homeMode = store.get('homeMode', 'jon'
 // Reihung der Liste „Wohin als Nächstes?“ (Thomas 26.10.): Merkmal + Richtung, v = Zahl (größer = „mehr“)
 let homeSort = store.get('homeSort2', { k: 'exp', d: true }); // ab 2.4 neuer Schlüssel: Standard „Erwartete Ausbeute“
 // Saisonfaktor der erwarteten Ausbeute: in Saison laut pheno.json/Umgebung, außerhalb, unbekannt
-const HOME_EXP_SEASON = { yes: 1, no: 0.1, unknown: 0.5 };
+const HOME_EXP_SEASON = { yes: 1, no: 0.02, unknown: 0.3 }; // Thomas 26.10.: außerhalb der Saison noch weniger
 const HOME_SORT = {
   exp: { t: 'Erwartete Ausbeute jetzt', v: m => m.exp, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   score: { t: 'Punkte (Rangliste)', v: m => m.score, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
@@ -2484,7 +2484,7 @@ function renderHomeTab() {
   $('homeSortDir').onclick = () => { homeSort = { k: sk, d: !desc }; store.set('homeSort2', homeSort); renderHomeTab(); };
   const qSorted = [...ms].sort((a, b) => (desc ? 1 : -1) * (S.v(b) - S.v(a)) || b.score - a.score || a.last.localeCompare(b.last));
   const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
-  $('homeRank').innerHTML = qSorted.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${sk !== 'score' ? `Punkte-Rang ${rankOf.get(m.id)} · ` : ''}${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${sk === 'exp' ? `<span class="chip ok num">≈ ${Math.round(m.exp)} Arten</span>${m.expLif >= 0.5 ? `<span class="chip lifer num">≈ ${Math.round(m.expLif)} Lifer</span>` : ''}` : ''}${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() || sk === 'win' ? chip(m.win.length, 'season', 'Winter') : ''}${sk === 'dueAll' ? chip(m.dueAll, 'due', 'fällig gesamt') : ''}${sk === 'done' ? chip(m.done.length, 'ok', 'kartiert') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
+  $('homeRank').innerHTML = qSorted.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${sk !== 'score' ? `Punkte-Rang ${rankOf.get(m.id)} · ` : ''}${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() || sk === 'win' ? chip(m.win.length, 'season', 'Winter') : ''}${sk === 'dueAll' ? chip(m.dueAll, 'due', 'fällig gesamt') : ''}${sk === 'done' ? chip(m.done.length, 'ok', 'kartiert') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
   $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
