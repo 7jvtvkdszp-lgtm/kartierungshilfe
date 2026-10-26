@@ -658,7 +658,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 67</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.0</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -848,7 +848,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmtDate = d => d ? d.split('-').reverse().join('.') : '–';
 // Wiederholungskartierung: eine Art im Quadranten zählt nach REPEAT_YEARS Jahren wieder als fällig
-const REPEAT_YEARS = 3;
+const REPEAT_YEARS = 5; // Thomas 26.10.2026: 3 Jahre im Feld nicht praktikabel
 const dueDate = d => { const [y, m, t] = d.split('-'); return `${+y + REPEAT_YEARS}-${m}-${t}`; };
 const todayIso = () => { const n = new Date(); return `${n.getFullYear()}-${pad(n.getMonth() + 1)}-${pad(n.getDate())}`; };
 const isDue = d => !d || dueDate(d) <= todayIso();
