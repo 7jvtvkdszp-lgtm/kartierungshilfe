@@ -354,6 +354,9 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
       <div class="panel">
         <h2>Wohin als Nächstes? <span class="muted small">alle 11 Quadranten</span></h2>
         <p class="small muted" style="margin:0">Rangliste nach dem, was jetzt im Quadranten zu holen ist: Lifer in Saison (×5), „Jetzt oder nie“ (×3), wieder fällige Arten in Saison (×2), verschollene Arten in Saison (×1), von November bis Februar auch die Winterliste (×1). Ein grober Richtwert.</p>
+        <div class="row" style="gap:6px;margin:6px 0 2px;align-items:center"><span class="small muted">Reihen nach</span>
+          <select class="field" id="homeSortKey" style="flex:1 1 auto;width:auto"></select>
+          <button class="btn" id="homeSortDir" style="flex:0 0 auto;width:auto;padding:0 10px"></button></div>
         <ul class="list" id="homeRank"></ul>
       </div>
       <div class="panel">
@@ -658,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.1</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.2</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2394,6 +2397,19 @@ function renderHome() {
 
 // ---------- Tab Mondsee-Irrsee (Thomas, 09.10.: eigener Tab statt in den anderen versteckt) ----------
 let homeSel = store.get('homeSel', null), homeMode = store.get('homeMode', 'jon');
+// Reihung der Liste „Wohin als Nächstes?“ (Thomas 26.10.): Merkmal + Richtung, v = Zahl (größer = „mehr“)
+let homeSort = store.get('homeSort', { k: 'score', d: true });
+const HOME_SORT = {
+  score: { t: 'Punkte (Rangliste)', v: m => m.score, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  lif: { t: 'Lifer in Saison', v: m => m.lif.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  jon: { t: 'Jetzt oder nie', v: m => m.jon.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  due: { t: 'Fällig in Saison', v: m => m.due.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  lost: { t: 'Verschollen in Saison', v: m => m.lost.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  win: { t: 'Winterliste', v: m => m.win.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  pct: { t: 'Anteil kartiert (%)', v: m => quadCoverage(m.id).pct ?? -1, hi: '↓ höchster zuerst', lo: '↑ niedrigster zuerst' },
+  done: { t: 'Kartierte Arten', v: m => m.done.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  last: { t: 'Letzter Besuch', v: m => m.last ? Date.parse(m.last) / 864e5 : -1e9, hi: '↓ kürzlich zuerst', lo: '↑ am längsten her zuerst' },
+};
 const H_RC = id => { const Q = parseQuad(id); return [Q.R * 2 + (Q.q > 2 ? 1 : 0), Q.C * 2 + (Q.q % 2 === 0 ? 1 : 0)]; };
 // Saison und „bald vorbei“ gelten für die Umgebung: was für irgendeinen der Quadranten (oder den Standort) geladen ist
 const unionOf = (fn, ids) => { let u = null; for (const id of ids) { const m = fn(parseQuad(id)); if (m) { u = u || new Set(); for (const k of m.keys ? m.keys() : m) u.add(k); } } return u; };
@@ -2442,9 +2458,15 @@ function renderHomeTab() {
   }
   $('homeGrid').innerHTML = cells.join('');
   $('homeGrid').querySelectorAll('button[data-q]').forEach(b => b.onclick = () => { homeSel = b.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); });
-  // Rangliste: alle 11 Quadranten (Thomas 26.10.: Überblick über das ganze Gebiet)
+  // Rangliste: alle 11 Quadranten (Thomas 26.10.: Überblick über das ganze Gebiet), nach Merkmal reihbar
+  const sk = HOME_SORT[homeSort.k] ? homeSort.k : 'score', S = HOME_SORT[sk], desc = homeSort.d !== false;
+  $('homeSortKey').innerHTML = Object.entries(HOME_SORT).filter(([k]) => k !== 'win' || isWinter() || sk === 'win').map(([k, o]) => `<option value="${k}"${k === sk ? ' selected' : ''}>${o.t}</option>`).join('');
+  $('homeSortDir').textContent = desc ? S.hi : S.lo;
+  $('homeSortKey').onchange = e => { homeSort = { k: e.target.value, d: true }; store.set('homeSort', homeSort); renderHomeTab(); };
+  $('homeSortDir').onclick = () => { homeSort = { k: sk, d: !desc }; store.set('homeSort', homeSort); renderHomeTab(); };
+  const qSorted = [...ms].sort((a, b) => (desc ? 1 : -1) * (S.v(b) - S.v(a)) || b.score - a.score || a.last.localeCompare(b.last));
   const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
-  $('homeRank').innerHTML = ranked.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() ? chip(m.win.length, 'season', 'Winter') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
+  $('homeRank').innerHTML = qSorted.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${sk !== 'score' ? `Rang ${rankOf.get(m.id)} · ` : ''}${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() || sk === 'win' ? chip(m.win.length, 'season', 'Winter') : ''}${sk === 'done' ? chip(m.done.length, 'ok', 'kartiert') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
   $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
