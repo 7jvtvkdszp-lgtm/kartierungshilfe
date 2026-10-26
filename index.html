@@ -661,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.2</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.3</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -2403,6 +2403,7 @@ const HOME_SORT = {
   score: { t: 'Punkte (Rangliste)', v: m => m.score, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   lif: { t: 'Lifer in Saison', v: m => m.lif.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   jon: { t: 'Jetzt oder nie', v: m => m.jon.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
+  dueAll: { t: 'Fällig (gesamt)', v: m => m.dueAll, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   due: { t: 'Fällig in Saison', v: m => m.due.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   lost: { t: 'Verschollen in Saison', v: m => m.lost.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
   win: { t: 'Winterliste', v: m => m.win.length, hi: '↓ meiste zuerst', lo: '↑ wenigste zuerst' },
@@ -2417,7 +2418,7 @@ function homeMetrics(id) {
   const ids = [...HOME, ...(here ? [here.id] : [])];
   const sea = unionOf(seasonSet, ids), ends = unionOf(endingMap, ids);
   const Q = parseQuad(id), sp = spOf(id) || {}, mineQ = index.byQuad.get(id);
-  const r = { id, jon: [], lif: [], due: [], lost: [], done: [], win: [], last: '' };
+  const r = { id, jon: [], lif: [], due: [], dueAll: 0, lost: [], done: [], win: [], last: '' };
   for (const os of (mineQ || new Map()).values()) for (const o of os) if (!o.x && o.d && o.d > r.last) r.last = o.d;
   for (const s of Object.keys(sp)) {
     if (!s.includes(' ')) continue;
@@ -2427,6 +2428,7 @@ function homeMetrics(id) {
     if (open && ends && ends.has(s)) r.jon.push(c);
     if (isLifer(s) && inSea) r.lif.push(c);
     if (due && inSea) r.due.push(c);
+    if (due) r.dueAll++; // fällig unabhängig von der Saison (Reihung „Fällig gesamt“)
     const wk = open && winterKind(s); if (wk) r.win.push({ ...c, wk });
   }
   r.lost = lostList(Q).filter(x => !sea || sea.has(x.s));
@@ -2466,7 +2468,7 @@ function renderHomeTab() {
   $('homeSortDir').onclick = () => { homeSort = { k: sk, d: !desc }; store.set('homeSort', homeSort); renderHomeTab(); };
   const qSorted = [...ms].sort((a, b) => (desc ? 1 : -1) * (S.v(b) - S.v(a)) || b.score - a.score || a.last.localeCompare(b.last));
   const chip = (n, cls, t) => n ? `<span class="chip ${cls} num">${n} ${t}</span>` : '';
-  $('homeRank').innerHTML = qSorted.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${sk !== 'score' ? `Rang ${rankOf.get(m.id)} · ` : ''}${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() || sk === 'win' ? chip(m.win.length, 'season', 'Winter') : ''}${sk === 'done' ? chip(m.done.length, 'ok', 'kartiert') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
+  $('homeRank').innerHTML = qSorted.map((m, i) => { const cov = quadCoverage(m.id); return `<li class="tap" data-q="${m.id}"><span><b class="num">${i + 1}. ${m.id}</b> <span class="cn">${sk !== 'score' ? `Rang ${rankOf.get(m.id)} · ` : ''}${cov.pct != null ? cov.pct + ' % kartiert · ' : ''}${m.last ? 'zuletzt ' + fmtDate(m.last) : 'noch nie besucht'}${here && here.id === m.id ? ' · du bist hier' : ''}</span><br><span class="chips">${chip(m.lif.length, 'lifer', 'Lifer')}${chip(m.jon.length, 'ending', 'jetzt oder nie')}${chip(m.due.length, 'due', 'fällig')}${chip(m.lost.length, 'unsure', 'verschollen')}${isWinter() || sk === 'win' ? chip(m.win.length, 'season', 'Winter') : ''}${sk === 'dueAll' ? chip(m.dueAll, 'due', 'fällig gesamt') : ''}${sk === 'done' ? chip(m.done.length, 'ok', 'kartiert') : ''}${m.score ? '' : '<span class="muted small">gerade nichts Dringendes</span>'}</span></span><span class="chip ok num">${Math.round(m.score)}</span></li>`; }).join('');
   $('homeRank').querySelectorAll('li[data-q]').forEach(li => li.onclick = () => { homeSel = li.dataset.q; store.set('homeSel', homeSel); renderHomeTab(); $('homeQTitle').scrollIntoView({ behavior: 'smooth' }); });
   // Liste für den gewählten Quadranten
   const m = byId.get(homeSel);
