@@ -661,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.5</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.6</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -771,7 +771,7 @@ let index = null;
 
 // Artname auf Artebene: Unterarten/Varietäten werden zur Art zusammengefasst
 // Taxonomische Festlegungen von Thomas: diese Namen gelten in Österreich immer als die rechte Art
-const TAX_FIX = { 'Dactylorhiza maculata': 'Dactylorhiza fuchsii' };
+const TAX_FIX = { 'Dactylorhiza maculata': 'Dactylorhiza fuchsii', 'Carex pendula': 'Carex agastachys' };
 const canonTax = s => TAX_FIX[s] || s;
 // Aggregate und ihre in den letzten Jahren abgetrennten Kleinarten (Thomas: Dryopteris affinis → D. borreri).
 // Ist eine Art der Gruppe im Quadranten aktuell gemeldet, gilt keine der anderen als verschollen. Weitere Gruppen hier eintragen.
@@ -804,7 +804,7 @@ const WINTER_WOOD = new Set(('Abies Acer Aesculus Ailanthus Alnus Amelanchier Ar
 const WINTER_FERN = new Set(('Asplenium Athyrium Blechnum Ceterach Cryptogramma Diphasiastrum Dryopteris Huperzia Lycopodiella Lycopodium Matteuccia Osmunda Polypodium Polystichum ' +
   'Pteridium Selaginella Woodsia').split(' '));
 const WINTER_SP = new Set(['Equisetum hyemale', 'Equisetum variegatum', 'Clematis vitalba', 'Polygala chamaebuxus', 'Hepatica nobilis', 'Asarum europaeum', 'Vinca minor',
-  'Luzula sylvatica', 'Luzula nivea', 'Carex pendula', 'Carex sylvatica', 'Carex digitata', 'Carex pilosa', 'Carex alba', 'Sesleria caerulea', 'Saxifraga paniculata',
+  'Luzula sylvatica', 'Luzula nivea', 'Carex agastachys', 'Carex sylvatica', 'Carex digitata', 'Carex pilosa', 'Carex alba', 'Sesleria caerulea', 'Saxifraga paniculata',
   'Globularia cordifolia', 'Lamium galeobdolon', 'Lamium montanum']);
 const WINTER_GEN = new Set(['Helleborus', 'Pyrola', 'Orthilia', 'Moneses', 'Chimaphila', 'Sempervivum', 'Jovibarba', 'Sedum']);
 const WINTER_NOT = new Set(['Sambucus ebulus', 'Vaccinium oxycoccos']); // krautig bzw. im Winter kaum zu finden
@@ -3154,7 +3154,9 @@ function prepRl(raw) {
   const by = new Map();
   for (const [s, rn, de, c, nat, bl, va, ar, ld, sub] of raw.s) {
     const b = {}; bl.split('|').forEach((v, i) => { b[raw.bl[i]] = v; });
-    by.set(s, { c, nat: nat.split('|'), bl: b, va, ar, ld, de, rn, sub });
+    // TAX_FIX: Eintrag unter dem in Österreich geltenden Namen (z. B. Carex pendula s.lat. → C. agastachys), die rechte Art geht vor
+    const k = canonTax(s); if (k !== s && by.has(k)) continue;
+    by.set(k, { c, nat: nat.split('|'), bl: b, va, ar, ld, de, rn, sub });
   }
   const q = {}; for (const k in raw.q) q[k] = raw.q[k].split(',');
   return { t: raw.t, by, q, natCodes: raw.nat, quelle: raw.quelle };
