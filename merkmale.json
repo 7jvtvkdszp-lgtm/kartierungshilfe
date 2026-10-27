@@ -1,6 +1,6 @@
 {
 "v": 1,
-"t": "2026-10-14",
+"t": "2026-10-27",
 "pairs": {
 "Erigeron annuus|Erigeron strigosus": {
 "m": [
@@ -940,22 +940,32 @@
 "Carex agastachys|Carex pendula": {
 "m": [
 [
-"Wuchsgröße",
-"30–70 cm, zierlich",
-"kräftig, 1–1,5 m"
+"Blatthäutchen untere/mittlere Blätter",
+"auffällig rötlich-purpurn",
+"weißlich, trocken bräunlich (selten unten leicht rötlich)"
 ],
 [
-"Weibliche Ähren",
-"dünn, locker, 3–7 cm",
-"dicht, walzlich, 7–16 cm, hängend"
+"Stiel unterste Ähre und Achse zwischen den obersten ♀ Ähren",
+"deutlich rau (Finger/Lupe)",
+"glatt bis schwach rau"
 ],
 [
-"Blattbreite",
-"ca. 5–10 mm",
-"bis 2 cm"
+"Nüsschen im Schlauch (Lupe)",
+"verkehrt-eiförmig, oben am breitesten",
+"elliptisch, in der Mitte am breitesten"
+],
+[
+"Größe und Ähren",
+"gleich groß, trennen nicht",
+"gleich groß, trennen nicht"
+],
+[
+"Vorkommen",
+"östliche Sippe, in Österreich die übliche",
+"westliche Sippe (in Bayern nur Spessart/Odenwald), bei uns eher Gartenflüchtling"
 ]
 ],
-"ok": false
+"ok": true
 },
 "Galium aparine|Galium spurium": {
 "m": [
@@ -24953,26 +24963,6 @@
 ],
 "ok": false
 },
-"Carex flacca|Carex pendula": {
-"m": [
-[
-"Größe",
-"20–50 cm",
-"80–150 cm"
-],
-[
-"Weibliche Ährchen",
-"2–5 cm",
-"7–16 cm, lang hängend"
-],
-[
-"Blattbreite",
-"2–5 mm",
-"bis 2 cm"
-]
-],
-"ok": false
-},
 "Carex hirta|Dactylis glomerata": {
 "m": [
 [
@@ -33849,6 +33839,26 @@
 "Blätter",
 "grob gezähnt, behaart",
 "ganzrandig, kahl, glänzend"
+]
+],
+"ok": false
+},
+"Carex agastachys|Carex flacca": {
+"m": [
+[
+"Größe",
+"80–150 cm",
+"20–50 cm"
+],
+[
+"Weibliche Ährchen",
+"7–16 cm, lang hängend",
+"2–5 cm"
+],
+[
+"Blattbreite",
+"bis 2 cm",
+"2–5 mm"
 ]
 ],
 "ok": false

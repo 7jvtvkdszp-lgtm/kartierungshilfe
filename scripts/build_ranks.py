@@ -19,7 +19,7 @@ import glob, json, os, re, sys
 from datetime import datetime, timezone
 
 # wie TAX_FIX in index.html: diese Namen gelten in Österreich immer als die rechte Art
-TAX_FIX = {'Dactylorhiza maculata': 'Dactylorhiza fuchsii'}
+TAX_FIX = {'Dactylorhiza maculata': 'Dactylorhiza fuchsii', 'Carex pendula': 'Carex agastachys'}
 canon = lambda s: TAX_FIX.get(s, s)
 # wie atlasKey in index.html: Schreibvarianten (Bindestrich, ×) auf einen Schlüssel
 key = lambda s: re.sub(r'×|-|\s+x\s+|\s+', '', s.lower())
