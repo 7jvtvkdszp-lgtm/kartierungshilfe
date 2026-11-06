@@ -661,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.8</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.9</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -1242,6 +1242,44 @@ function nearestPt(s, Q, ref) {
   let best = Infinity; for (const [la, lo] of a) best = Math.min(best, dist(ref, { la, lo }));
   return best;
 }
+// „Nach Entfernung“ (Thomas, 06.11.2026): alles Fällige im Quadranten und den 8 Nachbarn, je Art der nächste Fundpunkt.
+// Fällig = in diesem Quadranten nie mit genauen Koordinaten gefunden oder letzter Fund älter als REPEAT_YEARS (gilt auch für Lifer).
+function dueNearby(C, ref, keep, sea) {
+  const best = new Map();
+  for (const Q of [C, ...NB.map(([dr, dc]) => neighbour(C, dr, dc))]) {
+    const sp = spOf(Q.id); if (!sp) continue;
+    const own = index.byQuad.get(Q.id);
+    for (const s of Object.keys(sp)) {
+      if (!keep(s)) continue;
+      const last = (own?.get(s) || []).filter(o => !o.x).map(o => o.d).sort().pop();
+      if (last !== undefined && !isDue(last)) continue;
+      const pt = nearestPt(s, Q, ref), b = best.get(s);
+      if (b && (b.pt ?? 1e12) <= (pt ?? 1e12) && !(b.pt == null && pt == null && Q === C)) continue;
+      best.set(s, { s, q: Q.id, pt, last, ...chance(s, Q), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s) });
+    }
+  }
+  return [...best.values()].sort((x, y) => (x.pt ?? 1e12) - (y.pt ?? 1e12) || (y.q === C.id) - (x.q === C.id) || y.pct - x.pct || x.s.localeCompare(y.s));
+}
+function dueMeta(r) {
+  const where = r.q === here.id ? 'hier' : 'in ' + r.q;
+  const d = r.pt != null ? `nächster Fundpunkt ${km(r.pt)} ${where}` : pts[r.q] ? `${where}, ohne genauen Fundpunkt` : navigator.onLine ? `${where}, Fundpunkte werden geladen …` : `${where}, Fundpunkte mit Empfang laden`;
+  return d + (r.last ? ` · <span class="due">wieder fällig</span> (zuletzt ${r.last.slice(0, 4)})` : '');
+}
+// Fundpunkte der 8 Nachbarn im Hintergrund nachladen (nur online, je Quadrant 30 Tage gespeichert)
+let ptsAroundBusy = false;
+async function loadPtsAround(C) {
+  if (ptsAroundBusy || !navigator.onLine) return;
+  const todo = [C, ...NB.map(([dr, dc]) => neighbour(C, dr, dc))].filter(Q => !pts[Q.id] || Date.now() - new Date(pts[Q.id].t) > AREA_MAX_AGE);
+  if (!todo.length) return;
+  ptsAroundBusy = true;
+  try {
+    for (const Q of todo) {
+      try { await loadPts(Q); } catch { break; }
+      if (here === C && listMode === 'miss' && missSort === 'km') renderList();
+      await sleep(1100);
+    }
+  } finally { ptsAroundBusy = false; }
+}
 let area = {}; // Quadrant -> { t, f, sp: { Art: [Beobachtungen, deutscher Name] } }, liegt in IndexedDB
 let areaBusy = false;
 const areaOk = id => area[id] && area[id].f === filterKey();
@@ -1416,7 +1454,8 @@ function renderList() {
     ? `Arten, die in diesem Quadranten bekannt sind, aber nur vor ${atlas && atlas.ry || '(Atlas fehlt)'} gemeldet wurden und die du hier selbst noch nie gefunden hast. Oben: was jetzt Saison hat und in vielen Nachbarquadranten noch aktuell gemeldet wird. Darunter sind auch kritische Sippen, die früher oft nur so bestimmt wurden.`
     : listMode === 'exp'
     ? 'Arten, die in mindestens einem der Nachbarquadranten bekannt sind, hier aber noch nie gemeldet wurden. 4/8 heißt: in 4 von 8 Nachbarquadranten bekannt. „jetzt“: in diesem Monat in der Umgebung beobachtet.'
-    : 'Nur Arten, die in diesem Quadranten auf iNaturalist oder GBIF bekannt sind. Fundchance: Beobachtungen im Quadranten (60 %) und Verbreitung in den Nachbarquadranten (40 %), ein grober Richtwert. „jetzt“: in diesem Monat in der Umgebung beobachtet. Entfernung: von deinem Standort zum nächsten öffentlichen iNaturalist-Fundpunkt der Art im Quadranten.';
+    : 'Nur Arten, die in diesem Quadranten auf iNaturalist oder GBIF bekannt sind. Fundchance: Beobachtungen im Quadranten (60 %) und Verbreitung in den Nachbarquadranten (40 %), ein grober Richtwert. „jetzt“: in diesem Monat in der Umgebung beobachtet. Entfernung: von deinem Standort zum nächsten öffentlichen iNaturalist-Fundpunkt der Art im Quadranten.'
+      + (missSort === 'km' ? ' „Nach Entfernung“ zeigt alles, was du kartieren kannst, im Quadranten und in den 8 Nachbarn: nie gefunden (auch Lifer) oder vor mehr als ' + REPEAT_YEARS + ' Jahren. Jede Art steht einmal, beim nächsten Fundpunkt, mit dem Quadranten, in dem du sie dort kartierst.' : '');
   const f = norm($('listFilter').value);
   const match = s => !f || norm(s).includes(f) || norm(commonName(s)).includes(f);
   const ul = $('speciesList');
@@ -1449,17 +1488,19 @@ function renderList() {
     const sea = seasonSet(here), onlySea = $('onlySeason').checked && sea, onlyRed = $('onlyRed').checked, onlyLif = $('onlyLif').checked;
     const ref = refPos();
     filterCounts([...cand].filter(s => !mine.has(s) && match(s)), sea);
-    const rows = [...cand].filter(s => !mine.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)) && (!onlyLif || isLifer(s)))
+    const keep = s => match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)) && (!onlyLif || isLifer(s));
+    const rows = missSort === 'km' ? dueNearby(here, ref, keep, sea)
+      : [...cand].filter(s => !mine.has(s) && keep(s))
       .map(s => ({ s, ...chance(s, here), now: sea ? sea.has(s) : false, red: isRed(s), lif: isLifer(s), pt: nearestPt(s, here, ref) }))
-      .sort(missSort === 'km' ? (x, y) => (x.pt ?? 1e12) - (y.pt ?? 1e12) || y.pct - x.pct || x.s.localeCompare(y.s)
-        : (x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+      .sort((x, y) => y.pct - x.pct || y.inQ - x.inQ || x.s.localeCompare(y.s));
+    if (missSort === 'km') loadPtsAround(here);
     const un = Object.entries(spU(here.id)).filter(([s]) => !mine.has(s) && !cand.has(s) && match(s) && (!onlySea || sea.has(s)) && (!onlyRed || isRed(s)) && (!onlyLif || isLifer(s)))
       .sort((x, y) => y[1][0] - x[1][0] || x[0].localeCompare(y[0]));
     const unRows = un.length ? `<li class="muted small">Nur unbestätigt gemeldet (iNaturalist ohne Forschungsqualität), zählt nicht für Fundchance und Ziele:</li>`
       + un.map(([s, [n]]) => spRow(s, `${n} Beob. ohne Forschungsqualität`, `${isLifer(s) ? '<span class="chip lifer">Lifer</span>' : ''}${rlChip(s)}<span class="chip unsure">unbestätigt</span>`, 'unconf')).join('') : '';
-    $('listTitle').textContent = `Noch nicht gefunden in ${here.id} (${rows.length})`;
+    $('listTitle').textContent = missSort === 'km' ? `Fällig in ${here.id} und Nachbarn (${rows.length})` : `Noch nicht gefunden in ${here.id} (${rows.length})`;
     ul.innerHTML = !a ? `<li class="muted">Noch keine iNaturalist-Daten für ${here.id}. ${navigator.onLine ? 'Sie werden gerade geladen.' : 'Lade sie, sobald du Empfang hast.'}</li>`
-      : rows.length ? rows.map(r => spRow(r.s, r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : navigator.onLine ? 'Fundpunkte werden geladen …' : 'Fundpunkte mit Empfang laden',
+      : rows.length ? rows.map(r => spRow(r.s, missSort === 'km' ? dueMeta(r) : r.pt != null ? `nächster Fundpunkt ${km(r.pt)}` : pts[here.id] ? 'ohne genauen Fundpunkt' : navigator.onLine ? 'Fundpunkte werden geladen …' : 'Fundpunkte mit Empfang laden',
           `${r.lif ? '<span class="chip lifer">Lifer</span>' : ''}${blChip(r.s)}${rlChip(r.s)}${r.now ? (isEnding(r.s) ? '<span class="chip ending">bald vorbei</span>' : '<span class="chip season">jetzt</span>') : ''}${freqChip(r.s)}<span class="chip ${r.pct >= 50 ? 'ok' : r.pct >= 25 ? 'due' : 'unsure'}">${r.pct} %</span>`)).join('') + unRows
       : `<li class="muted">${cand.size ? 'Keine offenen Arten für diesen Filter.' : 'Auf iNaturalist ist hier noch nichts bestätigt gemeldet.'}</li>` + unRows;
   }
