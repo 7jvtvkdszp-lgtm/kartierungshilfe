@@ -661,7 +661,7 @@ button.x { background: none; border: 0; color: var(--muted); font-size: 16px; pa
         <div class="small muted" id="backupLast"></div>
       </details>
       <details class="panel">
-        <summary>Zum Raster <span class="muted small">· App-Version 2.6</span></summary>
+        <summary>Zum Raster <span class="muted small">· App-Version 2.7</span></summary>
         <p class="small muted" style="margin:0">Raster der Floristischen Kartierung Österreichs (Kartierung der Flora Mitteleuropas): Grundfeld 10′ Länge × 6′ Breite, Zeilen ab 56° N, Spalten ab 5° 40′ O. Viertel: 1 NW, 2 NO, 3 SW, 4 SO. Ein Viertel misst rund 6,2 × 5,6 km. Koordinaten in WGS84.</p>
       </details>
     </div>
@@ -795,23 +795,61 @@ const AGG = {
   'Poa pratensis': ['Poa angustifolia', 'Poa humilis'],
   'Pulmonaria officinalis': ['Pulmonaria obscura'],
 };
-// Winterliste (Wunsch von Thomas): Arten, die man von November bis Februar ohne Blüte ansprechen kann.
-// Claudes Startliste, Thomas passt sie an: Gattung gilt ganz, sonst einzelne Arten.
-const WINTER_WOOD = new Set(('Abies Acer Aesculus Ailanthus Alnus Amelanchier Arctostaphylos Berberis Betula Buddleja Buxus Calluna Carpinus Castanea Chamaecytisus Colutea Cornus Corylus ' +
-  'Cotinus Cotoneaster Crataegus Cytisus Daphne Dryas Elaeagnus Empetrum Erica Euonymus Fagus Forsythia Frangula Fraxinus Genista Hedera Hippophae Ilex Juglans Juniperus Kerria Laburnum ' +
-  'Larix Ligustrum Loiseleuria Lonicera Lycium Mahonia Malus Mespilus Morus Myricaria Parthenocissus Philadelphus Picea Pinus Platanus Populus Prunus Pseudotsuga Pyrus Quercus Rhamnus ' +
-  'Rhododendron Rhodothamnus Rhus Ribes Robinia Rosa Salix Sambucus Sorbus Spiraea Staphylea Symphoricarpos Syringa Taxus Thuja Tilia Ulmus Vaccinium Viburnum Viscum Vitis').split(' '));
-const WINTER_FERN = new Set(('Asplenium Athyrium Blechnum Ceterach Cryptogramma Diphasiastrum Dryopteris Huperzia Lycopodiella Lycopodium Matteuccia Osmunda Polypodium Polystichum ' +
-  'Pteridium Selaginella Woodsia').split(' '));
-const WINTER_SP = new Set(['Equisetum hyemale', 'Equisetum variegatum', 'Clematis vitalba', 'Polygala chamaebuxus', 'Hepatica nobilis', 'Asarum europaeum', 'Vinca minor',
-  'Luzula sylvatica', 'Luzula nivea', 'Carex agastachys', 'Carex sylvatica', 'Carex digitata', 'Carex pilosa', 'Carex alba', 'Sesleria caerulea', 'Saxifraga paniculata',
-  'Globularia cordifolia', 'Lamium galeobdolon', 'Lamium montanum']);
-const WINTER_GEN = new Set(['Helleborus', 'Pyrola', 'Orthilia', 'Moneses', 'Chimaphila', 'Sempervivum', 'Jovibarba', 'Sedum']);
-const WINTER_NOT = new Set(['Sambucus ebulus', 'Vaccinium oxycoccos']); // krautig bzw. im Winter kaum zu finden
+// Winterliste (Thomas, 06.11.2026): Arten mit mindestens 30 iNat-Meldungen mit Forschungsqualität in Österreich von November bis Februar
+// (Auswertung scripts/winter_rg.py → scripts/winter_rg.json). Gattungslisten unten nur für die Anzeige Gehölz/Farn/Kraut.
+const WINTER = new Set((
+  'Abies alba|Acer campestre|Acer negundo|Acer platanoides|Acer pseudoplatanus|Achillea millefolium|Adonis vernalis|Aegonychon purpurocaeruleum|' +
+  'Aegopodium podagraria|Aesculus hippocastanum|Ailanthus altissima|Ajuga reptans|Alkekengi officinarum|Alliaria petiolata|Allium ursinum|Alnus glutinosa|' +
+  'Alnus incana|Alyssum gmelinii|Amaranthus retroflexus|Anemonoides nemorosa|Angelica sylvestris|Anthriscus cerefolium|Anthriscus sylvestris|' +
+  'Anthyllis vulneraria|Antirrhinum majus|Arctium lappa|Artemisia absinthium|Artemisia vulgaris|Arum cylindraceum|Arum maculatum|Aruncus dioicus|' +
+  'Asarum europaeum|Asplenium adiantum-nigrum|Asplenium cuneifolium|Asplenium ruta-muraria|Asplenium scolopendrium|Asplenium septentrionale|' +
+  'Asplenium trichomanes|Asplenium viride|Aster amellus|Athyrium filix-femina|Atropa bella-donna|Ballota nigra|Bellis perennis|Berberis aquifolium|' +
+  'Berberis vulgaris|Berteroa incana|Berula erecta|Betonica officinalis|Betula pendula|Borago officinalis|Brachypodium sylvaticum|Buddleja davidii|' +
+  'Buphthalmum salicifolium|Bupleurum falcatum|Calamagrostis epigejos|Calendula officinalis|Calluna vulgaris|Caltha palustris|Campanula persicifolia|' +
+  'Campanula rapunculoides|Campanula trachelium|Capsella bursa-pastoris|Cardamine hirsuta|Cardamine impatiens|Cardamine trifolia|Carduus acanthoides|' +
+  'Carduus defloratus|Carlina acaulis|Carlina vulgaris|Carpinus betulus|Castanea sativa|Centaurea jacea|Centaurea scabiosa|Centaurea stoebe|' +
+  'Centranthus ruber|Cerastium holosteoides|Chelidonium majus|Chrysosplenium alternifolium|Cichorium intybus|Cirsium arvense|Cirsium oleraceum|' +
+  'Cirsium palustre|Cirsium vulgare|Clematis vitalba|Clinopodium vulgare|Cornus mas|Cornus sanguinea|Corylus avellana|Crataegus monogyna|Crepis foetida|' +
+  'Crocus tommasinianus|Cyclamen coum|Cyclamen purpurascens|Cymbalaria muralis|Cytisus scoparius|Dactylis glomerata|Daphne laureola|Daphne mezereum|' +
+  'Datura stramonium|Daucus carota|Dianthus carthusianorum|Dictamnus albus|Dipsacus fullonum|Dipsacus laciniatus|Dipsacus pilosus|Draba verna|' +
+  'Dryopteris borreri|Dryopteris carthusiana|Dryopteris dilatata|Dryopteris filix-mas|Echium vulgare|Elaeagnus angustifolia|Epipactis helleborine|' +
+  'Equisetum hyemale|Equisetum telmateia|Equisetum variegatum|Eragrostis minor|Eranthis hyemalis|Erica carnea|Erigeron annuus|Erigeron canadensis|' +
+  'Erodium cicutarium|Eryngium campestre|Euonymus europaeus|Euonymus verrucosus|Eupatorium cannabinum|Euphorbia amygdaloides|Euphorbia cyparissias|' +
+  'Euphorbia helioscopia|Euphorbia lathyris|Euphorbia peplus|Fagus sylvatica|Falcaria vulgaris|Ficaria verna|Filipendula ulmaria|Fragaria vesca|' +
+  'Frangula alnus|Fraxinus excelsior|Gagea lutea|Galanthus elwesii|Galanthus nivalis|Galanthus woronowii|Galinsoga quadriradiata|Galium aparine|' +
+  'Galium odoratum|Galium rotundifolium|Galium sylvaticum|Genista pilosa|Gentiana asclepiadea|Gentiana verna|Geranium phaeum|Geranium pusillum|' +
+  'Geranium pyrenaicum|Geranium robertianum|Geranium sanguineum|Geum urbanum|Glechoma hederacea|Globularia cordifolia|Hedera helix|' +
+  'Helianthemum nummularium|Helleborus foetidus|Helleborus niger|Helleborus × hybridus|Hepatica nobilis|Heracleum sphondylium|Himantoglossum adriaticum|' +
+  'Hippophae rhamnoides|Humulus lupulus|Hypericum perforatum|Hypochaeris radicata|Ilex aquifolium|Impatiens glandulifera|Iris pseudacorus|Juglans regia|' +
+  'Juncus effusus|Juncus inflexus|Juniperus communis|Knautia arvensis|Lamium album|Lamium amplexicaule|Lamium galeobdolon|Lamium maculatum|' +
+  'Lamium purpureum|Lapsana communis|Larix decidua|Lathyrus latifolius|Lathyrus vernus|Leucojum vernum|Ligustrum vulgare|Linaria genistifolia|' +
+  'Linaria vulgaris|Lonicera ligustrina|Loranthus europaeus|Lunaria annua|Lunaria rediviva|Lycium barbarum|Lycopus europaeus|Lysimachia nummularia|' +
+  'Lythrum salicaria|Malva neglecta|Malva sylvestris|Medicago lupulina|Melittis melissophyllum|Mercurialis annua|Mercurialis ovata|Mercurialis perennis|' +
+  'Mycelis muralis|Nasturtium officinale|Neottia nidus-avis|Onopordum acanthium|Onosma visianii|Origanum vulgare|Orthilia secunda|Oxalis acetosella|' +
+  'Oxalis corniculata|Paulownia tomentosa|Pentanema squarrosum|Petasites albus|Peucedanum alsaticum|Phragmites australis|Phytolacca americana|Picea abies|' +
+  'Picris hieracioides|Pilosella officinarum|Pimpinella saxifraga|Pinus cembra|Pinus mugo|Pinus nigra|Pinus sylvestris|Plantago lanceolata|Plantago major|' +
+  'Plantago media|Polygaloides chamaebuxus|Polypodium vulgare|Polystichum aculeatum|Polystichum lonchitis|Populus alba|Populus nigra|Populus tremula|' +
+  'Portulaca oleracea|Potentilla argentea|Potentilla caulescens|Potentilla incana|Potentilla indica|Potentilla reptans|Primula auricula|Primula elatior|' +
+  'Primula vulgaris|Prunella vulgaris|Prunus avium|Prunus laurocerasus|Prunus mahaleb|Prunus spinosa|Pseudoturritis turrita|Pteridium aquilinum|' +
+  'Pulmonaria officinalis|Pulsatilla grandis|Quercus cerris|Quercus petraea|Quercus pubescens|Quercus robur|Quercus rubra|Rabelera holostea|' +
+  'Ranunculus acris|Ranunculus bulbosus|Ranunculus lanuginosus|Ranunculus repens|Reseda lutea|Reynoutria japonica|Reynoutria × bohemica|' +
+  'Rhamnus cathartica|Rhododendron hirsutum|Rhus typhina|Robinia pseudoacacia|Rosa spinosissima|Rubus armeniacus|Rubus caesius|Rubus idaeus|' +
+  'Rumex obtusifolius|Salix caprea|Salvia glutinosa|Salvia nemorosa|Salvia pratensis|Sambucus ebulus|Sambucus nigra|Sanguisorba minor|Sanicula europaea|' +
+  'Saponaria officinalis|Scabiosa ochroleuca|Scilla vindobonensis|Scrophularia nodosa|Scrophularia umbrosa|Securigera varia|Sedum acre|Sedum album|' +
+  'Sedum sexangulare|Selaginella helvetica|Sempervivum globiferum|Senecio inaequidens|Senecio vulgaris|Sesleria caerulea|Setaria viridis|Silene coronaria|' +
+  'Silene latifolia|Silene vulgaris|Sisymbrium loeselii|Solanum nigrum|Soleirolia soleirolii|Solidago canadensis|Solidago gigantea|Solidago virgaurea|' +
+  'Sonchus asper|Sonchus oleraceus|Sorbus aucuparia|Spinulum annotinum|Stachys sylvatica|Stellaria media|Struthiopteris spicant|Symphoricarpos albus|' +
+  'Symphytum officinale|Syringa vulgaris|Takhtajaniantha austriaca|Tanacetum vulgare|Taxus baccata|Taxus × media|Teucrium chamaedrys|Teucrium montanum|' +
+  'Thlaspi arvense|Thymus pulegioides|Torminalis glaberrima|Tragopogon orientalis|Trifolium pratense|Trifolium repens|Tripleurospermum inodorum|' +
+  'Tulipa sylvestris|Tussilago farfara|Typha latifolia|Ulmus minor|Urtica dioica|Vaccinium myrtillus|Vaccinium vitis-idaea|Verbascum chaixii|' +
+  'Verbascum thapsus|Veronica beccabunga|Veronica chamaedrys|Veronica hederifolia|Veronica officinalis|Veronica persica|Veronica polita|' +
+  'Veronica sublobata|Viburnum lantana|Viburnum opulus|Viburnum rhytidophyllum|Vicia sepium|Vinca major|Vinca minor|Viola odorata|Viscum album').split('|'));
+const WINTER_WOOD = new Set('Abies Acer Aesculus Ailanthus Alnus Amelanchier Arctostaphylos Berberis Betula Buddleja Buxus Calluna Carpinus Castanea Chamaecytisus Clematis Colutea Cornus Corylus Cotinus Cotoneaster Crataegus Cytisus Daphne Dryas Elaeagnus Empetrum Erica Euonymus Fagus Forsythia Frangula Fraxinus Genista Hedera Hippophae Ilex Juglans Juniperus Kerria Laburnum Larix Ligustrum Loiseleuria Lonicera Loranthus Lycium Mahonia Malus Mespilus Morus Myricaria Parthenocissus Paulownia Philadelphus Picea Pinus Platanus Polygaloides Populus Prunus Pseudotsuga Pyrus Quercus Rhamnus Rhododendron Rhodothamnus Rhus Ribes Robinia Rosa Rubus Salix Sambucus Sorbus Spiraea Staphylea Symphoricarpos Syringa Taxus Thuja Tilia Torminalis Ulmus Vaccinium Viburnum Viscum Vitis'.split(' '));
+const WINTER_FERN = new Set('Asplenium Athyrium Blechnum Ceterach Cryptogramma Diphasiastrum Dryopteris Equisetum Huperzia Lycopodiella Lycopodium Matteuccia Osmunda Polypodium Polystichum Pteridium Selaginella Spinulum Struthiopteris Woodsia'.split(' '));
 function winterKind(s) {
-  if (WINTER_NOT.has(s) || !s.includes(' ')) return '';
+  if (!WINTER.has(s)) return '';
   const g = s.split(' ')[0];
-  return WINTER_WOOD.has(g) ? 'Gehölz' : WINTER_FERN.has(g) ? 'Farn' : WINTER_SP.has(s) || WINTER_GEN.has(g) ? 'wintergrün' : '';
+  return WINTER_WOOD.has(g) && s !== 'Sambucus ebulus' ? 'Gehölz' : WINTER_FERN.has(g) ? 'Farn' : 'Kraut';
 }
 const isWinter = () => [10, 11, 0, 1].includes(new Date().getMonth()); // November bis Februar
 const AGG_OF = new Map(); // Art → alle Arten ihrer Gruppe
@@ -2493,7 +2531,7 @@ function renderHomeTab() {
   const HELP = { jon: m.ends ? 'Hier bekannt, von dir noch nicht oder nicht mehr kartiert, im nächsten Monat in der Umgebung kaum noch gemeldet.' : 'Die Daten zu „bald vorbei“ fehlen noch (mit Empfang unter Prüfen laden).',
     lif: 'Hier bekannte Arten, die du in Österreich noch nie gefunden hast' + (m.sea ? ', in Saison.' : '.'), due: `Von dir hier vor mehr als ${REPEAT_YEARS} Jahren kartiert` + (m.sea ? ', in Saison.' : '.'),
     lost: `Hier nur vor ${atlas && atlas.ry || '–'} gemeldet, von dir nie gefunden` + (m.sea ? ', in Saison.' : '.'),
-    win: `Gehölze, Farne und wintergrüne Arten, die hier bekannt und von dir noch nicht oder nicht mehr kartiert sind. Auch ohne Blüte ansprechbar, gut für Begehungen von November bis Februar` + (isWinter() ? ' (zählen jetzt in der Rangliste mit).' : '.'),
+    win: `Arten, die in Österreich von November bis Februar oft gemeldet und bestätigt werden (mind. 30 iNat-Funde mit Forschungsqualität), hier bekannt und von dir noch nicht oder nicht mehr kartiert. Gut für Begehungen im Winter` + (isWinter() ? ' (zählen jetzt in der Rangliste mit).' : '.'),
     done: `Alle Arten, die du hier schon kartiert hast, alphabetisch. Orange = älter als ${REPEAT_YEARS} Jahre, wieder fällig.` };
   $('homeQHelp').textContent = HELP[homeMode];
   const rows = m[homeMode];
