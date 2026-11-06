@@ -1,0 +1,23 @@
+name: Winterliste auswerten (einmalig)
+on:
+  push:
+    branches: [claude/project-thread-0l23sk]
+    paths: ['scripts/winter_rg.py', '.github/workflows/winter-rg.yml']
+permissions:
+  contents: write
+jobs:
+  winter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python scripts/winter_rg.py
+      - name: Ergebnis einspielen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/winter_rg.json
+          git commit -m "Winterliste: iNat-Forschungsqualität Nov–Feb" || exit 0
+          git push origin HEAD:${GITHUB_REF_NAME}
